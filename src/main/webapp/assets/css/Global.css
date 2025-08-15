@@ -1,0 +1,133 @@
+@charset "utf-8";
+
+/* 전체 설정 */
+body {
+    font-family: 'inter';
+}
+
+a {
+    text-decoration: none;  /* 밑줄 제거 */
+    color: inherit;         /* 부모 요소의 색상 상속 */
+}
+
+/* header | content | footer css */
+
+.controller {
+    width: 100%;
+}
+
+header {
+    border-bottom: 1px solid #ccc;
+}
+
+footer {
+    border-top: 1px solid #ccc;
+    background-color: #F9F7F4;
+}
+
+
+/* sector css */
+
+.sector {
+    width: 1280px;
+    margin: 0px auto;
+}
+
+#sec-header {
+    height: 80px;
+    display: flex;
+    /* background-color: aliceblue; */
+    justify-content: space-between;
+}
+
+#sec-content {
+    height: auto;       /* 원하는 높이 자유롭게 설정 가능 */
+    margin: 0px auto;
+    /* background-color: antiquewhite; */
+}
+
+.sec-content-main {
+    width: 1280px;
+    display: flex;
+    margin: 0px auto;
+}
+
+#sec-footer {
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    padding: 10px 0px;
+    margin: 0px auto;
+}
+
+/* header css */
+
+#sec-header .left-side {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+#sec-header .right-side {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 5px;
+}
+
+.header-logo {
+    width: 150px;
+    height: 37px;
+}
+
+.header-menu {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.header-sub {
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.header-usermenu {
+    font-size: 14px;
+}
+
+.header-icon {
+    width: 20px;
+    height: 20px;
+}
+
+.header-shopping-cart {
+    margin-right: 20px;
+}
+
+/* content css */
+.sec-sub-title {
+    height: 60px;
+	display: flex;
+    border-bottom: 1px solid #ccc;
+	align-items: center;
+}
+
+.sec-content-main .left-main, .sec-content-main .right-main {
+    width: 640px;
+}
+
+/* left-main, right-main 높이 설정 */
+.content-height {
+    height: auto;
+}
+
+/* footer css */
+
+.footer-links a, .company-info{
+    margin: 0px 15px;
+    padding: 7px 0px;
+    line-height: 30px;
+    font-size: 13px;
+    color: #929292;
+}
