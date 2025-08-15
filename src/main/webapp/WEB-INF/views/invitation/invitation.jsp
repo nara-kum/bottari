@@ -16,16 +16,16 @@
     <header class="controller">
         <div id="sec-header" class="sector">
             <div class="left-side">
-                <a href=""><img class="header-logo" src="../../asset/Logo_colored.svg"></a>
+                <a href=""><img class="header-logo" src="../../../assets/icon/Logo_colored.svg"></a>
                 <h1 class="header-menu"><a href="">캘린더</a></h1>
                 <h1 class="header-menu"><a href="">펀딩</a></h1>
                 <h1 class="header-menu"><a href="">초대장</a></h1>
                 <h1 class="header-menu"><a href="">구매내역</a></h1>
             </div>
             <div class="right-side">
-                <a href=""><img class="header-icon header-shopping-cart" src="../../asset/icon-shopping-cart.svg"></a>
+                <a href=""><img class="header-icon header-shopping-cart" src="../../../assets/icon/icon-shopping-cart.svg"></a>
                 <h1 class="header-usermenu">사용자이름</h1>
-                <a href=""><img class="header-icon" src="../../asset/icon-caret-down.svg"></a>
+                <a href=""><img class="header-icon" src="../../../assets/icon/icon-caret-down.svg"></a>
             </div>
         </div>
     </header>
@@ -34,7 +34,7 @@
     <content class="controller">
         <div id="sec-content" class="sector">
             <div class="sec-sub-title">
-                <h2>나의 초대장</h2>
+                <h2 class="header-sub">나의 초대장</h2>
             </div>
             <div class="sec-content-main">
 
@@ -44,11 +44,47 @@
                     </div>
 
                     <div class="card-container">
-                        <div class="card">
-                            <div class="buttons"><button>수정하기</button><button>전체보기</button></div>
+
+                        <div class="card" data-has-funding="false">
+                            <div class="thumb-wrap">
+                                <img class="thumb" src="https://picsum.photos/seed/a/400/300" alt="대표 이미지">
+                                <a class="badge-funding" href="/funding?inviteId=123" aria-label="펀딩 3개 연결됨">
+                                    <span class="ico">🎁</span> 펀딩 
+                                    <!-- <span class="cnt">3</span> -->
+                                </a>
+                            </div>
+                            <!-- 제목과 날짜 -->
+                            <div class="meta" style="text-align:center; padding:10px;">
+                                <strong>나라 결혼식</strong><br>
+                                <span>2025.08.11</span>
+                            </div>
+
+                            <!-- 버튼 -->
+                            <div class="buttons">
+                                <button>수정하기</button>
+                                <button>전체보기</button>
+                            </div>
                         </div>
-                        <div class="card">
-                            <div class="buttons"><button>수정하기</button><button>전체보기</button></div>
+
+                        <div class="card" data-has-funding="true">
+                            <div class="thumb-wrap">
+                                <img class="thumb" src="https://picsum.photos/seed/a/400/300" alt="대표 이미지">
+                                <a class="badge-funding" href="/funding?inviteId=123" aria-label="펀딩 3개 연결됨">
+                                    <span class="ico">🎁</span> 펀딩 
+                                    <!-- <span class="cnt">3</span> -->
+                                </a>
+                            </div>
+                            <!-- 제목과 날짜 -->
+                            <div class="meta" style="text-align:center; padding:10px;">
+                                <strong>준호 생일</strong><br>
+                                <span>2025.09.06</span>
+                            </div>
+
+                            <!-- 버튼 -->
+                            <div class="buttons">
+                                <button>수정하기</button>
+                                <button>전체보기</button>
+                            </div>
                         </div>
                         <div class="card">
                             <div class="buttons"><button>수정하기</button><button>전체보기</button></div>
@@ -56,6 +92,10 @@
                         <div class="card">
                             <div class="buttons"><button class="disabled">수정하기</button><button>전체보기</button></div>
                         </div>
+                    </div>
+                    <!-- 더보기 버튼 -->
+                    <div class="more-wrap">
+                        <button class="btn-more" id="btnMore">더보기</button>
                     </div>
                 </div>
             </div>
@@ -94,6 +134,15 @@
             </div>
         </div>
     </footer>
+
+    <script>
+        document.getElementById('btnMore')?.addEventListener('click', () => {
+            // TODO: 여기서 다음 16개를 불러와서 .card-container에 append
+            // 데이터를 다 불러오면 버튼 비활성화:
+            // document.getElementById('btnMore').disabled = true;
+        });
+    </script>
+
 </body>
 
 </html>

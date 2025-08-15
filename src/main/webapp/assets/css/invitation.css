@@ -1,11 +1,15 @@
 @charset "UTF-8";
-
-/*리스트*/
 /* ==== 공통 콘텐츠 ==== */
-.content {
+/* .content {
   max-width: 1280px;
   margin: 0 auto;
   padding: 30px 20px 0;
+} */
+
+.sec-content-main {
+  display: flex;
+  justify-content: center;
+  padding: 30px 0;
 }
 
 .list-stack {
@@ -20,7 +24,6 @@
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  padding: 10px 0px 0px 0px;
 }
 
 /* ==== 목록 전용 버튼 (주황 유지) ==== */
@@ -46,12 +49,13 @@
   width: 200px;
   height: 300px;
   border-radius: 12px;
-  box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.1);
+  /* box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.1); */
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
   align-items: center;
   padding-bottom: 16px;
+  border: 1px solid #e0e0e0;
 }
 
 .buttons {
@@ -73,6 +77,124 @@
 .card button.disabled {
   background: #e0e0e0;
   color: #999;
+  cursor: not-allowed;
+}
+
+/* 썸네일 래퍼/이미지 */
+.thumb-wrap {
+  position: relative;
+  width: 100%;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.thumb {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  display: block;
+}
+
+/* 기본은 숨김 */
+.badge-funding {
+  display: none;
+}
+
+/* 펀딩이 있으면 표시 */
+.card[data-has-funding="true"] .badge-funding {
+  display: inline-flex;
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  gap: 6px;
+  align-items: center;
+  padding: 4px 10px;
+  background: rgba(242, 92, 5, .95);
+  color: #fff;
+  border-radius: 14px;
+  font-size: 12px;
+  text-decoration: none;
+  border: 1px solid rgba(0, 0, 0, .06);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, .15);
+}
+
+.badge-funding:hover {
+  filter: brightness(.98);
+}
+
+.meta {
+  text-align: center;
+  padding: 10px 0 8px;
+}
+
+.meta .title {
+  font-size: 15px;
+  font-weight: 800;
+  margin: 0 0 4px;
+}
+
+.meta .date {
+  font-size: 13px;
+  color: #444;
+  font-weight: 700;
+}
+
+.buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.buttons button {
+  background: #f25c05;
+  color: #fff;
+  border: none;
+  border-radius: 18px;
+  padding: 6px 12px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.buttons button.disabled {
+  background: #e0e0e0;
+  color: #999;
+  cursor: not-allowed;
+}
+
+/* 더보기 버튼 래퍼: 중앙 정렬 */
+.more-wrap {
+  display: flex;
+  justify-content: center;
+  margin: 40px 0px 0px 0px;
+  /* 위/아래 여백은 필요에 따라 조정 */
+}
+
+/* 카드 2개 + 간격(200 + 80 + 200 = 480) 기준, 좁은 화면에선 자동 축소 */
+.btn-more {
+  width: min(480px, 88vw);
+  height: 52px;
+  border-radius: 10px;
+  border: none;
+  /* background: #f25c05; */
+  color: #f25c05;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: filter .15s ease, transform .05s ease;
+}
+
+.btn-more:hover {
+  filter: brightness(.97);
+}
+
+/* 
+.btn-more:active {
+  transform: translateY(1px);
+} */
+
+.btn-more:disabled {
+  background: #e0e0e0;
+  color: #9a9a9a;
+  box-shadow: none;
   cursor: not-allowed;
 }
 
