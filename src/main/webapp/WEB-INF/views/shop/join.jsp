@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="../../../assets/css/reset.css">
     <link rel="stylesheet" href="../../../assets/css/Global.css">
 	<link rel="stylesheet" href="../../../assets/css/join.css">
-
+	<title>회원가입</title>
 </head>
 <body class="family">
 	<header class="controller">
