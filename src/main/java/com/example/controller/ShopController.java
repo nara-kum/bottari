@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class ShopController {
  
 
-	
+//올라가
 	
 	
 	//상세등록폼
