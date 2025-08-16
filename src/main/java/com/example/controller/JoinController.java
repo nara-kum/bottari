@@ -11,7 +11,6 @@ public class JoinController {
 	public String Join(){
 		System.out.println("JoinController");
 		
-		
 		return "shop/join";	
 	}
 }
