@@ -7,7 +7,7 @@
 	<meta charset="utf-8">
 	<link rel="stylesheet" href="../../../assets/css/reset.css">
     <link rel="stylesheet" href="../../../assets/css/Global.css">
-    <link rel="stylesheet" href="../../../assets/css/shopform.css">
+    <link rel="stylesheet" href="../../../assets/css/shop/shopform.css">
 </head>
 
 <body class="family">
