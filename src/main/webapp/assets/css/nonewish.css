@@ -9,6 +9,30 @@
   margin-top: 25px;
 }
 
+.left-main .box-open-empty img{
+  width: 100px;
+  height: 80px;
+  padding: 150px 0px 10px 277px;
+}
+
+.left-main .none-wish{
+  margin-left: 270px;
+}
+
+.left-main .text-wish {
+  font-size: 12px;
+}
+
+.left-main button {
+  background-color: #EF5124;   /* 배경색 */
+  color: white;   /* 글자색 */
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin-top: 10px;
+  margin-bottom: 150px;
+  margin-left: 3px;  
+}
+
 .right-main {
   width: 500px;
   text-align: start;
@@ -135,33 +159,18 @@
 }
 
 .btn-funding1 {
-  background-color: #EF5124;
-  /* 배경색 */
-  color: white;
-  /* 글자색 */
+  background-color: #EF5124;  /* 배경색 */
+  color: white;  /* 글자색 */
   border: 1px solid #ddd;
   border-radius: 5px;
-  font-size: 13px;
-  /* 글자 크기 줄임 */
-  padding: 6px 12px;
-  /* 내부 여백 축소 */
-  margin-left: auto;
-  /* 오른쪽 정렬 */
-  margin-top: 170px;
-  /* 여백 줄임 */
-  margin-bottom: 30px;
-  display: block;
-  /* margin 적용을 위해 block 처리 */
+  font-size: 13px;  /* 글자 크기 줄임 */
+  padding: 6px 12px;  /* 내부 여백 축소 */
+  margin-left: auto;  /* 오른쪽 정렬 */
+  margin-top: 340px;  /* 여백 줄임 */
+  margin-bottom: 30px;  
+  display: block;  /* margin 적용을 위해 block 처리 */
   cursor: pointer;
   justify-content: end;
-}
-
-.sale-price{
-  padding-left: 80px;
-}
-
-.sale-price .text-sale{
-  font-weight: bold;
 }
 
 .right-product-box {
