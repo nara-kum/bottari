@@ -1,25 +1,47 @@
 package com.example.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+
+import com.example.service.ShopService;
+
+
+
 
 @Controller
 public class ShopController {
  
 
-//올라가
+	@Autowired
+	private ShopService shopService;
 	
 	
-	//상세등록폼
+	
+	//상품등록폼
 	@RequestMapping(value="/shopform", method= {RequestMethod.GET, RequestMethod.POST})
-	public String insert() {	
-		System.out.println("ShopController.insert");
+	public String shopform() {	
+		System.out.println("ShopController.shopform");  //ㅇㅋ
 		
 		return "shop/shopform";	
 	}
 	
+
 	
+	//상품등록
+	@RequestMapping(value="/register", method= {RequestMethod.GET, RequestMethod.POST})
+	public String insert() {
+	
+		System.out.println("ShopController.insert"); //ㅇㅋ
+		shopService.exeProductadd();
+		
+		return "";
+	}
+	
+	
+	/*
 	//상세페이지
 	@RequestMapping(value="/productPage", method= {RequestMethod.GET, RequestMethod.POST})
 	public String selectOne() {	
@@ -46,6 +68,6 @@ public class ShopController {
 		return "shop/shoppingMall";	
 	}
 	
-	
+	*/
 	
 }

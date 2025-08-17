@@ -15,16 +15,16 @@
 	<header class="controller">
 		<div id="sec-header" class="sector">
 			<div class="left-side">
-				<a href=""><img class="header-logo" src="../../../assets/icon/Logo_colored.svg"></a>
+				<a href=""><img class="header-logo" src="../../asset/Logo_colored.svg"></a>
 				<h1 class="header-menu"><a href="">캘린더</a></h1>
 				<h1 class="header-menu"><a href="">펀딩</a></h1>
 				<h1 class="header-menu"><a href="">초대장</a></h1>
 				<h1 class="header-menu"><a href="">구매내역</a></h1>
 			</div>
 			<div class="right-side">
-				<a href=""><img class="header-icon header-shopping-cart" src="../../../assets/icon/icon-shopping-cart.svg"></a>
+				<a href=""><img class="header-icon header-shopping-cart" src="../../asset/icon-shopping-cart.svg"></a>
 				<h1 class="header-usermenu">사용자이름</h1>
-				<a href=""><img class="header-icon" src="../../../assets/icon/icon-caret-down.svg"></a>
+				<a href=""><img class="header-icon" src="../../asset/icon-caret-down.svg"></a>
 			</div>
 		</div>
 	</header>
@@ -39,80 +39,98 @@
 
 				<!-- 카테고리 -->
 				<main class="container">
-				<section class="section">
-					<label>카테고리</label>
-					<div class="category-wrapper">
-						<div class="category-select">결혼</div>
-						<div class="category-box">
-							<span class="selected">결혼</span>
-							<span>생일</span>
-							<span>돌잔치</span>
-							<span>이벤트</span>
-							<span>축하</span>
-							<span>감사</span>
+					<section class="section">
+						<label>카테고리</label>
+						<div class="category-wrapper">
+							<div class="category-box">
+								<span class="selected">결혼</span>
+								<span>생일</span>
+								<span>돌잔치</span>
+								<span>이벤트</span>
+								<span>축하</span>
+								<span>감사</span>
+							</div>
+						</div>
+					</section>
+
+					<!-- 상품명/브랜드 -->
+					<section class="section">
+						<label>상품명</label>
+						<input type="text" placeholder="상품명을 입력하세요">
+
+						<label>판매가</label>
+						<input type="text" placeholder="예: 29,900">
+
+						<label>브랜드명</label>
+						<input type="text" placeholder="예: 보따리">
+					</section>
+
+					<!-- 옵션 -->
+					<section class="section">
+						<label>옵션 설정
+							<a href=""><img class="add-logo" src="../../asset/icon-add.svg"></a>
+						</label>
+
+						<div class="option-row">
+							<!-- <select>
+							<option>옵션을 선택해주세요.</option>
+							<option>컬러</option>
+							<option>사이즈</option>
+							<option>맛</option>
+							<option>케이크호수</option>
+						</select> -->
+							<input type="text" placeholder="옵션타이틀 입력 (예: 컬러)">
+							<input type="text" placeholder="옵션 입력 (예: 하늘)">
+							<a href=""><img class="add-logo2" src="../../asset/icon-add.svg"></a>
+						</div>
+					</section>
+
+					<!-- 상품 이미지 -->
+					<section class="section">
+						<label>상품 이미지</label>
+						<div class="image-preview">
+							<img src="../../../photo/장바구니박명수.JPG" alt="샘플 이미지">
+							<div>삭제</div>
+						</div>
+					</section>
+
+					<!-- 상세 설명 -->
+					<section class="section">
+						<label>상세 설명</label>
+						<div class="description-box">
+							<div class="upload-check">✔ 사진을 등록하세요.</div>
+							<button class="upload-btn">등록하기</button>
+						</div>
+					</section>
+
+					<!-- 배송 -->
+
+					<div class="input-group">
+						<label for="shipping-cost">배송비</label>
+						<input type="text" id="shipping-cost" placeholder="배송비 입력">
+					</div>
+
+					<div class="input-group">
+						<label for="zipcode">우편번호</label>
+						<div class="zipcode-group">
+							<input type="text" id="zipcode" class="zipcode-input" placeholder="우편번호">
+							<button class="zipcode-btn">우편번호 찾기</button>
 						</div>
 					</div>
-				</section>
 
-				<!-- 상품명/브랜드 -->
-				<section class="section">
-					<label>상품명</label>
-					<input type="text" placeholder="상품명을 입력하세요">
-
-					<label>판매가</label>
-					<input type="text" placeholder="예: 29,900">
-
-					<label>브랜드명</label>
-					<input type="text" placeholder="예: 보따리">
-				</section>
-
-				<!-- 옵션 -->
-				<section class="section">
-					<label>옵션 설정</label>
-					<div class="option-row">
-						<input type="text" placeholder="옵션명 입력 (예: 컬러)">
-						<select>
-							<option>하늘</option>
-							<option>보라</option>
-							<option>연두</option>
-						</select>
+					<div class="input-group">
+						<label for="address">출고지 주소</label>
+						<input type="text" id="address" placeholder="출고지 주소">
+						<input type="text" id="detail-address" placeholder="상세 주소">
 					</div>
-				</section>
 
-				<!-- 상품 이미지 -->
-				<section class="section">
-					<label>상품 이미지</label>
-					<div class="image-preview">
-						<img src="../../../photo/장바구니박명수.JPG" alt="샘플 이미지">
-						<div>삭제</div>
+
+
+					<!-- 버튼 -->
+					<div class="button-row">
+						<button class="cancel-btn">취소</button>
+						<button class="submit-btn">등록</button>
 					</div>
-				</section>
-
-				<!-- 상세 설명 -->
-				<section class="section">
-					<label>상세 설명</label>
-					<div class="description-box">
-						<div class="upload-check">✔ 작성할 내용을 입력하세요.</div>
-						<button class="upload-btn">등록하기</button>
-					</div>
-				</section>
-
-				<!-- 배송 -->
-				<section class="section">
-					<label>배송 설정</label>
-					<div class="delivery-box">
-						<button class="delivery-type active">배송</button>
-						<button class="delivery-type">배송없음</button>
-					</div>
-					<input type="text" placeholder="배송비 입력">
-					<input type="text" placeholder="출고지 주소">
-				</section>
-
-				<!-- 버튼 -->
-				<div class="button-row">
-					<button class="cancel-btn">취소</button>
-					<button class="submit-btn">최종등록</button>
-				</div>
 				</main>
 			</div>
 		</div>
