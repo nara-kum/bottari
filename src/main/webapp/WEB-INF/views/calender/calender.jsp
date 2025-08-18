@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html lang="ko">
 
@@ -10,26 +10,26 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reset-css@4.0.1/reset.min.css" />
     
     <!-- global.css호출 -->
-    <link rel="stylesheet" href="../../../assets/css/Global.css"> <!-- 본인 파일의 경로에 맞게 수정해야함 -->
+    <link rel="stylesheet" href="/assets/css/Global.css"> <!-- 본인 파일의 경로에 맞게 수정해야함 -->
     
     <!-- sweetalert cdn 호출 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!-- full_calender 호출 -->
-    <link href='../../../assets/css/calender/full_calender/main.css' rel='stylesheet' />
-    <script src='../../../assets/js/full_calender/main.js'></script>
+    <link href='/assets/css/calender/main.css' rel='stylesheet' />
+    <script src='/assets/js/main.js'></script>
     
     <!-- local css 호출-->
-    <link rel="stylesheet" href="../../../assets/css/calender/calender_stylesheet.css">
-    <link rel="stylesheet" href="../../../assets/css/calender/all_in_one.css"> <!-- 본인 파일의 경로에 맞게 수정해야함 -->
-    <link rel="stylesheet" href="../../../assets/css/calender/moduler.css">
+    <link rel="stylesheet" href="/assets/css/calender/calender_stylesheet.css">
+    <link rel="stylesheet" href="/assets/css/calender/all_in_one.css"> <!-- 본인 파일의 경로에 맞게 수정해야함 -->
+    <link rel="stylesheet" href="/assets/css/calender/moduler.css">
 </head>
 
 <body class="family">
     <header class="controller">
         <div id="sec-header" class="sector">
             <div class="left-side">
-                <a href=""><img class="header-logo" src="../../asset/Logo_colored.svg"></a>
+                <a href=""><img class="header-logo" src="/asset/icon/Logo_colored.svg"></a>
                 <h1 class="header-menu"><a href="">캘린더</a></h1>
                 <h1 class="header-menu"><a href="">펀딩</a></h1>
                 <h1 class="header-menu"><a href="">초대장</a></h1>
@@ -38,7 +38,7 @@
             <div class="right-side">
                 <a href=""><img class="header-icon header-shopping-cart" src="../../asset/icon-shopping-cart.svg"></a>
                 <h1 class="header-usermenu">사용자이름</h1>
-                <a href=""><img class="header-icon" src="../../asset/icon-caret-down.svg"></a>
+                <a href=""><img class="header-icon" src="/asset/icon/icon-caret-down.svg"></a>
             </div>
         </div>
     </header>
@@ -231,15 +231,15 @@
                     dateInfoDiv.innerHTML = `<div class="between-flex-box">
                                                 <div class="header-sub">${dateStr}</div>
                                                 <div class="row-flex-box">
-                                                    <img id="create-event-btn" class="popup-icon" src="../../asset/icon-add.svg">
-                                                    <img id="edit-event-btn" class="popup-icon" src="../../asset/icon-menu-dots.svg">
+                                                    <img id="create-event-btn" class="popup-icon" src="/asset/icon/icon-add.svg">
+                                                    <img id="edit-event-btn" class="popup-icon" src="/asset/icon/icon-menu-dots.svg">
                                                 </div>
                                             </div>`;
                 } else {
                     dateInfoDiv.innerHTML = `<div class="between-flex-box">
                                                 <div class="header-sub">${dateStr}</div>
                                                 <div class="row-flex-box">
-                                                    <img id="create-event-btn" class="popup-icon" src="../../asset/icon-add.svg">
+                                                    <img id="create-event-btn" class="popup-icon" src="/asset/icon/icon-add.svg">
                                                 </div>
                                             </div>`;
                 }
@@ -314,19 +314,19 @@
                     html: `
             <div id="event-add-popup">
                 <div class="cancel">
-                    <button id="event-cancel-btn" class="btn-cancel"><img class="popup-icon" src="../../asset/icon-cross.svg"></button>
+                    <button id="event-cancel-btn" class="btn-cancel"><img class="popup-icon" src="/asset/icon/icon-cross.svg"></button>
                 </div>
                 <div class="event-name">
                     <div class="event-icon-box">
-                        <img class="popup-icon" src="../../asset/icon-interrogation.svg">
-                        <img class="popup-icon" src="../../asset/icon-caret-down.svg">
+                        <img class="popup-icon" src="/asset/icon/asset/icon-interrogation.svg">
+                        <img class="popup-icon" src="/asset/icon/asset/icon-caret-down.svg">
                     </div>
                     <div class="event-name-box">
                         <input name="eventName" class="input-name" placeholder="일정 제목">
                     </div>
                 </div>              
                 <div class="event-comment">
-                    <img class="popup-icon" src="../../asset/icon-comment.svg">
+                    <img class="popup-icon" src="/asset/icon/asset/icon-comment.svg">
                     <textarea class="input-comment" placeholder="메모 입력"></textarea>
                 </div>
                 <button id="event-save-btn" class="btn-save" type="button">저장</button>
@@ -382,19 +382,19 @@
                     html: `
             <div id="event-edit-popup">
                 <div class="cancel">
-                    <button name="event-cancel-btn" class="btn-cancel"><img class="popup-icon" src="../../asset/icon-cross.svg"></button>
+                    <button name="event-cancel-btn" class="btn-cancel"><img class="popup-icon" src="/asset/icon/icon-cross.svg"></button>
                 </div>
                 <div class="event-name">
                     <div class="event-icon-box">
-                        <img class="popup-icon" src="../../asset/icon-interrogation.svg">
-                        <img class="popup-icon" src="../../asset/icon-caret-down.svg">
+                        <img class="popup-icon" src="/asset/icon/icon-interrogation.svg">
+                        <img class="popup-icon" src="/asset/icon/icon-caret-down.svg">
                     </div>
                     <div class="event-name-box">
                         <input name="eventName" class="input-name" placeholder="일정 제목" value="${event.title}">
                     </div>
                 </div>              
                 <div class="event-comment">
-                    <img class="popup-icon" src="../../asset/icon-comment.svg">
+                    <img class="popup-icon" src="/asset/icon/icon-comment.svg">
                     <textarea class="input-comment" placeholder="메모 입력">${event.extendedProps && event.extendedProps.explanation ? event.extendedProps.explanation : ''}</textarea>
                 </div>
                 <button name="event-save-btn" class="btn-save" type="button">저장</button>
