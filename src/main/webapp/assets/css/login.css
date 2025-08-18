@@ -1,0 +1,83 @@
+@charset "UTF-8";
+/* 기본 레이아웃 */
+body {
+  margin: 0;
+  font-family: 'Inert';
+  background: #fff;
+  color: #000000;
+}
+
+
+.nav-menu a {
+  margin: 0 12px;
+  text-decoration: none;
+  color: #000000;
+  font-weight: 500;
+}
+
+.auth-links a {
+  margin-left: 15px;
+  text-decoration: none;
+  color: #000000;
+  font-size: 14px;
+}
+
+/* 로그인 */
+.login-wrapper {
+  max-width: 1280px;
+  margin: 60px auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-box {
+  width: 400px;
+  border: 1px solid #eee;
+  padding: 30px;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.login-logo {
+  height: 40px;
+  margin-bottom: 30px;
+}
+
+.input-group {
+  margin-bottom: 15px;
+}
+
+.input-group input {
+  width: 94%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.extra-options {
+  text-align: left;
+  margin-bottom: 20px;
+  font-size: 14px;
+  color: #666;
+}
+
+.login-btn {
+  width: 100%;
+  padding: 12px;
+  background-color: #ff5a1f;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-bottom: 20px;
+  font-size: 15px;
+}
+
+.help-links {
+  font-size: 13px;
+  color: #555;
+}
+

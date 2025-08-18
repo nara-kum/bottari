@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
-public class MyfundingController {
+public class FundingController {
 
 	@RequestMapping(value="/myfunding", method= {RequestMethod.GET, RequestMethod.POST})
 	public String myfunding(){

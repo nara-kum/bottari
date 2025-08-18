@@ -5,12 +5,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
-public class JoinController {
+public class UserController {
 	
 	@RequestMapping(value="/join", method= {RequestMethod.GET, RequestMethod.POST})
 	public String Join(){
-		System.out.println("JoinController");
+		System.out.println("UserController.Join()");
 		
-		return "shop/join";	
+		return "user/join";	
+	}
+	
+	@RequestMapping(value="/login", method= {RequestMethod.GET, RequestMethod.POST})
+	public String Login(){
+		System.out.println("UserController.Login()");
+		
+		return "user/login";	
 	}
 }
