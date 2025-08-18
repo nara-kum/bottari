@@ -2,15 +2,13 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="product">
 
-	 <!-- 상품 등록 (학원에서 테이블명 수정하기)-->
+ <!-- 상품 등록 -->
     <insert id="insert" parameterType="com.example.vo.ProductVO">
-    
     	<![CDATA[
 	        insert into product
 	        values (#{product_no}, #{category_no}, #{title}, #{price}, #{brand}, #{itemimg},
-	         		#{shipping_yn}, #{shipping_cost}, #{zipCode}, #{address}, #{detail_address})
+	         		#{shipping_yn}, #{shipping_cost}, #{zipcode}, #{address}, #{detail_address})
          ]]>
-         
     </insert>
 
 

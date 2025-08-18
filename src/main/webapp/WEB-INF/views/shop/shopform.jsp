@@ -50,6 +50,8 @@
 								<span>축하</span>
 								<span>감사</span>
 							</div>
+							<!-- 숨겨진 필드로 선택된 카테고리 값 전송 -->
+							<input type="hidden" name="category_no" id="category_no" value="1">
 						</div>
 					</section>
 
@@ -166,6 +168,20 @@
 			</div>
 		</div>
 	</footer>
+	
+	<script>
+		// 카테고리 선택 JavaScript
+		document.querySelectorAll('.category-box span').forEach(span => {
+			span.addEventListener('click', function() {
+				// 기존 선택 제거
+				document.querySelectorAll('.category-box span').forEach(s => s.classList.remove('selected'));
+				// 현재 선택 추가
+				this.classList.add('selected');
+				// 숨겨진 input에 값 설정
+				document.getElementById('category_no').value = this.getAttribute('data-value');
+			});
+		});
+	</script>
 </body>
 
 </html>
