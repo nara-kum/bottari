@@ -15,12 +15,29 @@ body {
 	box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
 }
 
-.content {
+.controller {
 	max-width: 1280px;
 	margin: 0 auto;
-	padding-top: 30px;
+	width: 100%;
+	padding: 0 20px;
+	box-sizing: border-box;
 }
 
+/* 콘텐츠 섹션 중앙 정렬 */
+.sec-content-main {
+	max-width: 1280px;
+	margin: 0 auto;
+	padding: 0 20px;
+	display: flex;
+	justify-content: center;
+}
+
+/* 폼 전체 래퍼 */
+form {
+	width: 100%;
+	display: flex;
+	justify-content: center;
+}
 
 .section-header {
 	display: flex;
