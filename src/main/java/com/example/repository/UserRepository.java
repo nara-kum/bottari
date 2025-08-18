@@ -21,7 +21,6 @@ public class UserRepository {
 		int count = sqlSession.insert("user.insertUser",userVO);
 		
 		return count;
-		
 	}
 	
 	//로그인
@@ -35,7 +34,15 @@ public class UserRepository {
 		System.out.println(authUser);
 		
 		return authUser;
+	}
+	
+	//아이디사용유무체크(회원가입)
+	public UserVO userSelectById(String id) {
+		System.out.println("UserRepository.userSelectById");
+		System.out.println(id);
 		
+		UserVO userVO = sqlSession.selectOne("user.selectOneById",id);
+		return userVO;
 	}
 
 }

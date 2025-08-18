@@ -1,15 +1,19 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+
 <!DOCTYPE html>
 <html lang="ko">
 
 <head>
 	<meta charset="UTF-8">
-    <link rel="stylesheet" href="../../../assets/css/reset.css">
-    <link rel="stylesheet" href="../../../assets/css/Global.css">
-	<link rel="stylesheet" href="../../../assets/css/join.css">
 	<title>회원가입</title>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/reset.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/Global.css">
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/join.css">
+	
+	<!-- js -->
+	<script src="${pageContext.request.contextPath}/assets/js/jquery/jquery-3.7.1.js"></script>    	
+	
 </head>
 <body class="family">
 	<header class="controller">
@@ -65,8 +69,8 @@
 						<div class="form-group with-button">
 							<label>아이디</label>
 							<div class="input-row">
-								<input type="text" placeholder="아이디 입력(6~20자)" name="id" value="">
-								<button type="button">중복확인</button>
+								<input type="text" placeholder="아이디 입력(6~20자)" name="id" id="input-id" value="">
+								<button type="button" onclick="checkDuplicateId()">중복확인</button>
 							</div>
 						</div>
 
@@ -138,7 +142,7 @@
 									<option>11월</option>
 									<option>12월</option>
 								</select>
-<select>
+								<select>
 									<option>일</option>
 									<option>1일</option>
 									<option>2일</option>
@@ -217,7 +221,7 @@
 	</footer>
 	
 	<script>
-	
+
 	</script>
 </body>
 
