@@ -150,17 +150,60 @@
                 navLinks: false,
                 
                 editable: true,
+                
+            	 // 이벤트 렌더링 커스터마이징
+                eventContent: function (arg) {
+                    const icon = arg.event.extendedProps.icon;
+                    let iconSrc = '';
+
+                    // 아이콘 타입에 따른 이미지 경로 설정
+                    switch (icon) {
+                        case 'birthday':
+                            iconSrc = '../../../assets/icon/icon-cake-birthday.svg';
+                            break;
+                        case 'wedding':
+                            iconSrc = '../../../assets/icon/icon-rings-wedding.svg';
+                            break;
+                        case 'thanks':
+                            iconSrc = '../../../assets/icon/icon-hand-holding-heart.svg';
+                            break;
+                        case 'baby':
+                            iconSrc = '../../../assets/icon/icon-child-head.svg';
+                            break;
+                        case 'event':
+                            iconSrc = '../../../assets/icon/icon-glass-cheers.svg';
+                            break;
+                        case 'celebrate':
+                            iconSrc = '../../../assets/icon/icon-party-horn.svg';
+                            break;
+                        default:
+                            iconSrc = '../../../assets/icon/icon-interrogation.svg';
+                    }
+
+                 	// 커스텀 HTML 반환
+                    return {
+                        html: '<div class="custom-event">' +
+                              '<img src="' + iconSrc + '" class="event-icon" />' +
+                              '<span class="event-title">' + arg.event.title + '</span>' +
+                              '</div>'
+                    };
+                },
+                
                 dateClick: function (info) {
-					console.log('debug: detected click date');
+                    console.log('debug: detected click date');
                     document.getElementById('event-info').style.display = 'none';
                     document.getElementById('event-info').innerHTML = '';
                     setClickedDate(info.dateStr);
 
                     const events = calendar.getEvents().filter(ev => ev.startStr.startsWith(info.dateStr));
-                    showDateInfo(info.dateStr, events.length > 0); // ← 항상 날짜 출력 함수 호출
-					
+                    showDateInfo(info.dateStr, events.length > 0);
+                    
                     if (events.length > 0) {
-                        showEventInfo(events[0], info.dateStr);
+                        // 수정: events[0] 대신 events[0].title과 events[0].start 전달
+                        const firstEvent = events[0];
+    					const comment = firstEvent.extendedProps && firstEvent.extendedProps.comment ? firstEvent.extendedProps.comment : '';
+                        showEventInfo(events[0].title, events[0].start, comment);
+                        selectedEventId = events[0].id; // 첫 번째 이벤트 ID 저장
                     } else {
                         showNoEventInfo(info.dateStr);
                     }
@@ -173,7 +216,7 @@
 
                     const clickedCell = document.querySelector('.fc-daygrid-day[data-date="'+info.dateStr+'"]');
                     if (clickedCell) {
-						console.log('debug: detected changed color');
+                        console.log('debug: detected changed color');
                         clickedCell.style.backgroundColor = '#EF5327';
                         const dayNumber = clickedCell.querySelector('.fc-daygrid-day-number');
                         if (dayNumber) {
@@ -181,13 +224,15 @@
                         }
                     }
                 },
+                
                 eventClick: function (arg) {
 					console.log('debug: detected click event');
 
 					let title = arg.event.title;
 					let day = arg.event.start;
+					let comment = arg.event.extendedProps && arg.event.extendedProps.comment ? arg.event.extendedProps.comment : '';
 					
-                    showEventInfo(title, day);
+                    showEventInfo(title, day, comment);
                 },
                 dayMaxEvents: true,
                 
@@ -196,40 +241,58 @@
                     {
                         id: '1',
                         title: '임시 이벤트',
-                        start: '2025-08-15'
+                        start: '2025-08-15',
+                       	extendedProps: {
+                       		icon: 'birthday',
+                       		comment: '임시이벤트입니다'
+                       	}
                     },
 
                     {
                         id: '2',
                         title: '회의',
-                        start: '2025-08-15'
+                        start: '2025-08-15',
+                        extendedProps: {
+                           	icon: 'wedding',
+                           	comment: '임시회의이벤트입니다'
+                           }
                     },
 
                     {
                         id: '4',
                         title: '프로젝트 마감',
-                        start: '2025-08-18'
+                        start: '2025-08-18',
+                        extendedProps: {
+                           	icon: 'thanks',
+                           	comment: '임시프로젝트마감이벤트입니다'
+                           }
                     },
 
                     {
                         id: '3',
                         title: '미팅',
-                        start: '2025-08-20'
+                        start: '2025-08-20',
+                        extendedProps: {
+                           	icon: 'baby',
+                           	comment: '임시미팅이벤트입니다'
+                          }
                     }
                 ]
             });
 
             calendar.render();
 
-            // 오늘 날짜에 이벤트가 있으면 우측에 출력
-            const todayStr = new Date().toISOString().slice(0, 10); // YYYY-MM-DD 형식
-            setClickedDate(todayStr); // 오늘 날짜를 클릭된 날짜로 설정
+         	// 오늘 날짜에 이벤트가 있으면 우측에 출력
+            const todayStr = new Date().toISOString().slice(0, 10);
+            setClickedDate(todayStr);
 
             const todayEvents = calendar.getEvents().filter(ev => ev.startStr.startsWith(todayStr));
             if (todayEvents.length > 0) {
-				console.log('debuge: there is event here')
-                showDateInfo(todayStr, true);   // 이벤트 있음
-                showEventInfo(todayEvents[0], todayStr);
+            	const firstEvent = todayEvents[0];
+                const comment = firstEvent.extendedProps && firstEvent.extendedProps.comment ? firstEvent.extendedProps.comment : '';
+                showEventInfo(firstEvent.title, firstEvent.start, comment);
+                selectedEventId = firstEvent.id; // 첫 번째 이벤트 ID 저장
+                
                 setTimeout(() => {
                     document.querySelectorAll('.fc-daygrid-day').forEach(cell => {
                         cell.style.backgroundColor = '';
@@ -245,7 +308,7 @@
                     }
                 }, 10);
             } else {
-                showDateInfo(todayStr, false);  // 이벤트 없음
+                showDateInfo(todayStr, false);
                 showNoEventInfo(todayStr);
             }
 
@@ -296,7 +359,7 @@
             }
 
             //이벤트가 있을 때
-            function showEventInfo(title, day) {
+            function showEventInfo(title, day, comment) {
 				console.log('debug: detect event');
                 const eventInfoDiv = document.getElementById('event-info');
                 
@@ -306,7 +369,7 @@
                 htmlStr += '		<img class="middle-icon" src="../../../assets/icon/icon-cake-birthday.svg">'
                 htmlStr += '		<div class="column-flex-box event-detail">'
                 htmlStr += '			<div class="text-16 bold">'+title+'</div>'
-                htmlStr += '			<div class="text-14">내 생일이다. 친구들과 함께 생일 파티를 즐길 것이다</div>'
+                htmlStr += '			<div class="text-14">'+ (comment || '코멘트가 없습니다')  +'</div>'
                 htmlStr += '		</div>'
                 htmlStr += '	</div>'
                 htmlStr += '</div>'
@@ -329,29 +392,27 @@
                 htmlStr += ''
                 
                 eventInfoDiv.innerHTML = htmlStr;
-                
                 eventInfoDiv.style.display = 'block';
             }
 
             // 이벤트가 없을 때
             function showNoEventInfo(dateStr) {
-				const eventInfoDiv = document.getElementById('event-info');
-                eventInfoDiv.innerHTML = `
-                	<div class="no-event">
-                    <img class="middle-icon" src="../../../assets/icon/icon-calendar-exclamation.svg" />
-                    <div class="text-18">등록된 기념일이 없어요</div>
-                    <button class="btn-basic btn-orange size-normal create-event-btn">기념일 등록하기</button>
-                </div>
-                `;
-                eventInfoDiv.style.display = 'block';
-                selectedEventId = null;
-                
-             	// "기념일 등록하기" 버튼 클릭 시 일정 추가 팝업 호출
-                document.querySelector('#event-info .create-event-btn').onclick = function () {
-					console.log('기념일 등록하기');
-                    openScheduleModal(dateStr);
-                };
-            }
+			    const eventInfoDiv = document.getElementById('event-info');
+			    eventInfoDiv.innerHTML = '<div class="no-event">' +
+			                           '<img class="middle-icon" src="../../../assets/icon/icon-calendar-exclamation.svg" />' +
+			                           '<div class="text-18">등록된 기념일이 없어요</div>' +
+			                           '<button class="btn-basic btn-orange size-normal create-event-btn">기념일 등록하기</button>' +
+			                           '</div>';
+			    eventInfoDiv.style.display = 'block';
+			    selectedEventId = null;
+			    
+			    // "기념일 등록하기" 버튼 클릭 시 일정 추가 팝업 호출
+			    document.querySelector('#event-info .create-event-btn').onclick = function () {
+			        console.log('기념일 등록하기');
+			        openScheduleModal(dateStr);
+			    };
+			}
+            
             // --- 전역 함수로 분리 끝 ---
 
             // 삭제 함수 (구현 필요)
@@ -382,46 +443,63 @@
                 }
             }
 
-            // 일정 추가 팝업 함수(구현 필요)
+         	// 1. 일정 추가 팝업 - 문법 오류 수정
             function openScheduleModal(dateStr) {
-
                 Swal.fire({
-					html: `
-				            <div id="event-add-popup">
-				                <div class="cancel">
-				                    <button id="event-cancel-btn" class="btn-cancel"><img class="popup-icon" src="../../../assets/icon/icon-cross.svg"></button>
-				                </div>
-				                <div class="event-name">
-				                    <div class="event-icon-box">
-				                        <img class="popup-icon" src="../../../assets/icon/assets/icon-interrogation.svg">
-				                        <img class="popup-icon" src="../../../assets/icon/assets/icon-caret-down.svg">
-				                    </div>
-				                    <div class="event-name-box">
-				                        <input name="eventName" class="input-name" placeholder="일정 제목">
-				                    </div>
-				                </div>              
-				                <div class="event-comment">
-				                    <img class="popup-icon" src="../../../assets/icon/assets/icon-comment.svg">
-				                    <textarea class="input-comment" placeholder="메모 입력"></textarea>
-				                </div>
-				                <button id="event-save-btn" class="btn-save" type="button">저장</button>
-				            </div>
-				        	`,
+                    html: '<div id="event-add-popup">' +
+                          '<div class="cancel">' +
+                          '<button id="event-cancel-btn" class="btn-cancel"><img class="popup-icon" src="../../../assets/icon/icon-cross.svg"></button>' +
+                          '</div>' +
+                          '<div class="event-name">' +
+                          '<div class="event-icon-box">' +
+                          '<img class="popup-icon" src="../../../assets/icon/icon-interrogation.svg">' +
+                          '<img class="popup-icon" src="../../../assets/icon/icon-caret-down.svg">' +
+                          '</div>' +
+                          '<div class="event-name-box">' +
+                          '<input name="eventName" class="input-name" placeholder="일정 제목">' +
+                          '</div>' +
+                          '</div>' +
+                          '<div class="event-comment">' +
+                          '<img class="popup-icon" src="../../../assets/icon/icon-comment.svg">' +
+                          '<textarea class="input-comment" placeholder="메모 입력"></textarea>' +
+                          '</div>' +
+                          '<button id="event-save-btn" class="btn-save" type="button">저장</button>' +
+                          '</div>',
                     showCancelButton: false,
                     showConfirmButton: false,
-
                     showClass: {
                         popup: ''
                     },
                     hideClass: {
                         popup: ''
                     },
-
                     didOpen: () => {
+                    	
+                    	// 아이콘 드롭다운 관련 함수들을 전역으로 설정
+                        window.toggleIconDropdown = function () {
+                            const dropdown = document.getElementById('icon-dropdown');
+                            dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+                        };
+
+                        window.selectIcon = function (value, imageSrc) {
+                            document.getElementById('selected-icon-img').src = imageSrc;
+                            document.getElementById('selected-icon-value').value = value;
+                            document.getElementById('icon-dropdown').style.display = 'none';
+                        };
+
+                        // 드롭다운 외부 클릭시 닫기
+                        document.addEventListener('click', function (event) {
+                            const iconSelector = document.querySelector('.icon-selector');
+                            const dropdown = document.getElementById('icon-dropdown');
+                            if (iconSelector && !iconSelector.contains(event.target)) {
+                                dropdown.style.display = 'none';
+                            }
+                        });
+                        
                         // 저장 버튼 클릭 이벤트
                         document.querySelector('.btn-save').addEventListener('click', () => {
                             const title = document.querySelector("input[name='eventName']").value;
-                            const explanation = document.querySelector(".input-comment").value;
+                            const comment = document.querySelector(".input-comment").value;
                             if (title && title.trim()) {
                                 try {
                                     const newEvent = calendar.addEvent({
@@ -429,7 +507,7 @@
                                         start: dateStr,
                                         allDay: true,
                                         extendedProps: {
-                                            explanation: explanation
+                                            comment: comment  // explanation과 icon 제거하고 comment만 남김
                                         }
                                     });
                                     console.log('이벤트 생성 성공:', newEvent);
@@ -450,43 +528,43 @@
                 });
             }
 
-            // 일정 수정 팝업 함수(구현 필요)
+         	// 2. 일정 수정 팝업 - 템플릿 리터럴을 문자열 연결로 변경
             function openEditScheduleModal(event) {
-                // event: FullCalendar의 이벤트 객체
+                const existingComment = (event.extendedProps && event.extendedProps.comment) ? event.extendedProps.comment : '';
+                const existingIcon = (event.extendedProps && event.extendedProps.icon) ? event.extendedProps.icon : '';
+                
                 Swal.fire({
-                    html: `
-            <div id="event-edit-popup">
-                <div class="cancel">
-                    <button name="event-cancel-btn" class="btn-cancel"><img class="popup-icon" src="../../../assets/icon/icon-cross.svg"></button>
-                </div>
-                <div class="event-name">
-                    <div class="event-icon-box">
-                        <img class="popup-icon" src="../../../assets/icon/icon-interrogation.svg">
-                        <img class="popup-icon" src="../../../assets/icon/icon-caret-down.svg">
-                    </div>
-                    <div class="event-name-box">
-                        <input name="eventName" class="input-name" placeholder="일정 제목" value='"'+event.title+'"'>
-                    </div>
-                </div>              
-                <div class="event-comment">
-                    <img class="popup-icon" src="../../../assets/icon/icon-comment.svg">
-                    <textarea class="input-comment" placeholder="메모 입력">event.extendedProps && event.extendedProps.explanation ? event.extendedProps.explanation : ''</textarea>
-                </div>
-                <button name="event-save-btn" class="btn-save" type="button">저장</button>
-            </div>
-        `,
+                    html:	'<div id="event-add-popup">' +
+		                    '<div class="cancel">' +
+		                    '<button id="event-cancel-btn" class="btn-cancel"><img class="popup-icon" src="../../../assets/icon/icon-cross.svg"></button>' +
+		                    '</div>' +
+		                    '<div class="event-name">' +
+		                    '<div class="event-icon-box">' +
+		                    '<img class="popup-icon" src="../../../assets/icon/icon-interrogation.svg">' +
+		                    '<img class="popup-icon" src="../../../assets/icon/icon-caret-down.svg">' +
+		                    '</div>' +
+		                    '<div class="event-name-box">' +
+		                    '<input name="eventName" class="input-name" placeholder="일정 제목" value="' + event.title +'">' +
+		                    '</div>' +
+		                    '</div>' +
+		                    '<div class="event-comment">' +
+		                    '<img class="popup-icon" src="' + icon + '">' +
+		                    '<textarea class="input-comment" placeholder="메모 입력">' +existingComment + '</textarea>' +
+		                    '</div>' +
+		                    '<button id="event-edit-btn" class="btn-save" type="button">수정</button>' +
+		                    '</div>',
                     showCancelButton: false,
                     showConfirmButton: false,
                     didOpen: () => {
                         // 저장 버튼 클릭 이벤트
                         document.querySelector('.btn-save').addEventListener('click', () => {
                             const title = document.querySelector("input[name='eventName']").value;
-                            const explanation = document.querySelector(".input-comment").value;
+                            const comment = document.querySelector(".input-comment").value;
 
                             if (title && title.trim()) {
                                 try {
                                     event.setProp('title', title);
-                                    event.setExtendedProp('explanation', explanation);
+                                    event.setExtendedProp('comment', comment);
                                     console.log('이벤트 수정 성공:', event);
                                 } catch (error) {
                                     console.error('이벤트 수정 실패:', error);
