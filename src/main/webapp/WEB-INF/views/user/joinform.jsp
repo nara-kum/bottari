@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html lang="ko">
 
@@ -22,9 +23,32 @@
 			</div>
 			<div class="right-side">
 				<a href=""><img class="header-icon header-shopping-cart" src="../../../assets/icon/icon-shopping-cart.svg"></a>
-				<h1 class="header-usermenu">사용자이름</h1>
-				<a href=""><img class="header-icon" src="../../../assets/icon/icon-caret-down.svg"></a>
-			</div>
+				<!-- 세션에 값이 있을때 -->
+				<c:if test="${sessionScope.authUser!=null}">
+					<h1>
+						<a class="header-usermenu"
+							href="${pageContext.request.contextPath}/login">${sessionScope.authUser.name}</a>
+					</h1>
+					<a href=""><img class="header-icon"
+						src="../../../assets/icon/icon-caret-down.svg"></a>
+					<h1>
+						<a class="header-usermenu"
+							href="${pageContext.request.contextPath}/logout">로그아웃</a>
+					</h1>
+				</c:if>
+				<!-- 세션에 값이 없을때 -->
+				<c:if test="${sessionScope.authUser==null}">
+					<h1>
+						<a class="header-usermenu"
+							href="${pageContext.request.contextPath}/loginForm">로그인</a>
+					</h1>
+					<a href=""><img class="header-icon"
+						src="../../../assets/icon/icon-caret-down.svg"></a>
+					<h1>
+						<a class="header-usermenu"
+							href="${pageContext.request.contextPath}/joinForm">회원가입</a>
+					</h1>
+				</c:if>
 		</div>
 	</header>
 
@@ -37,39 +61,34 @@
 				<main class="signup-container">
 					<p class="subtitle">회원이 되어 다양한 혜택을 경험해 보세요!</p>
 
-					<form class="signup-form">
+					<form class="signup-form" action="${pageContext.request.contextPath}/join" method="get">
 						<div class="form-group with-button">
 							<label>아이디</label>
 							<div class="input-row">
-								<input type="text" placeholder="아이디 입력(6~20자)" />
+								<input type="text" placeholder="아이디 입력(6~20자)" name="id" value="">
 								<button type="button">중복확인</button>
 							</div>
 						</div>
 
 						<div class="form-group">
 							<label>비밀번호</label>
-							<input type="password" placeholder="비밀번호 입력 (문자, 숫자, 특수문자 포함 8~20자)" />
-						</div>
-
-						<div class="form-group">
-							<label>비밀번호 확인</label>
-							<input type="password" placeholder="비밀번호 재입력" />
+							<input type="password" placeholder="비밀번호 입력 (문자, 숫자, 특수문자 포함 8~20자)" name="password" value="">
 						</div>
 
 						<div class="form-group">
 							<label>이름</label>
-							<input type="text" placeholder="이름을 입력해주세요" />
+							<input type="text" placeholder="이름을 입력해주세요" name="name" value="">
 						</div>
 
 						<div class="form-group">
 							<label>전화번호</label>
-							<input type="tel" placeholder="휴대폰 번호 입력('-' 제외 11자리 입력)" />
+							<input type="tel" placeholder="휴대폰 번호 입력('-' 제외 11자리 입력)" name="phone" value="">
 						</div>
 
 						<div class="form-group email-group">
 							<label>이메일 주소</label>
 							<div class="email-inputs">
-								<input type="text" placeholder="이메일 주소" />
+								<input type="text" placeholder="이메일 주소" name="email" value="">
 								<span>@</span>
 								<select>
 									<option>naver.com</option>
