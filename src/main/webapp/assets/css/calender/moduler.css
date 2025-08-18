@@ -1,0 +1,168 @@
+@charset "UTF-8";
+
+/* Moduler css Document */
+
+/* List Module css Document */
+
+.list-basic {
+    background-color: #f9f9f9;
+    margin: 0 auto;
+    padding: 0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.list-1280 {
+    width: 1240px;
+    height: 100px;
+    padding: 20px 20px;
+}
+
+.list-1200 {
+    width: 1160px;
+    height: 100px;
+    padding: 20px 20px;
+}
+
+.list-360 {
+    width: 340px;
+    height: 60px;
+    padding: 10px 10px;
+}
+
+/* List image css Document */
+
+.list-img-100 {
+    display: block;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    width: 100px;
+    height: 100px;
+}
+
+.list-img-50 {
+    display: block;
+    border-radius: 4px;
+    width: 50px;
+    height: 50px;
+}
+
+/* List icon css Document */
+
+.popup-icon {
+    width: 20px;
+    height: 20px;
+}
+
+.button-icon {
+    width: 25px;
+    height: 25px;
+}
+
+.middle-icon {
+    width: 50px;
+    height: 50px;
+}
+
+/* Button Module css Document */
+.btn-basic {
+    appearance: none;
+    background-color: none;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.btn-orange {
+    background-color: #ef5327;
+    color: #ffffff;
+}
+
+.btn-gray {
+    background-color: #9f9f9f;
+    color: #ffffff;
+}
+
+.size-small {
+    padding: 5px 10px;
+}
+
+.size-normal {
+    padding: 10px 20px;
+}
+
+.size-large {
+    padding: 15px 30px;
+}
+
+/* Text Module css Document */
+.text-18 {
+    font-size: 18px;
+}
+
+.text-16 {
+    font-size: 16px;
+}
+
+.text-14 {
+    font-size: 14px;
+}
+
+.text-12 {
+    font-size: 12px;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.regular {
+    font-weight: normal;
+}
+
+.text-align-left {
+    text-align: left;
+}
+
+.text-align-right {
+    text-align: right;
+}
+
+/* Normal Preset css Document */
+.show-detail {
+    font-size: 12px;
+    color: #7d7d7d;
+}
+
+.row-flex-box {
+    display: flex;
+}
+
+.between-flex-box {
+    display: flex;
+    justify-content: space-between;
+}
+
+.column-flex-box {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Align Preset css Document */
+
+.align-center {
+    align-items: center;
+    justify-self: center;
+}
+
+.row-align {
+    align-items: center;
+    margin: 0px auto;
+}
+
+.column-align {
+    justify-content: center;
+    margin: auto 0px;
+}
