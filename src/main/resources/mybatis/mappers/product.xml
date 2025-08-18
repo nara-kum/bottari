@@ -6,12 +6,9 @@
     <insert id="insert" parameterType="com.example.vo.ProductVO">
     
     	<![CDATA[
-	        INSERT INTO product
-	        (product_no, category_no, title, price, brand, itemimg,
-	         shipping, shipping_cost, zipcode, address, detail_adress)
-	        VALUES
-	        (#{productNo}, #{categoryNo}, #{title}, #{price}, #{brand}, #{itemimg},
-	         #{shipping}, #{shippingCost}, #{zipcode}, #{address}, #{detailAdress})
+	        insert into product
+	        values (#{product_no}, #{category_no}, #{title}, #{price}, #{brand}, #{itemimg},
+	         		#{shipping_yn}, #{shipping_cost}, #{zipcode}, #{address}, #{detail_adress})
          ]]>
          
     </insert>
