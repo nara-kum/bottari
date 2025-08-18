@@ -8,7 +8,7 @@
     	<![CDATA[
 	        insert into product
 	        values (#{product_no}, #{category_no}, #{title}, #{price}, #{brand}, #{itemimg},
-	         		#{shipping_yn}, #{shipping_cost}, #{zipcode}, #{address}, #{detail_adress})
+	         		#{shipping_yn}, #{shipping_cost}, #{zipCode}, #{address}, #{detail_address})
          ]]>
          
     </insert>

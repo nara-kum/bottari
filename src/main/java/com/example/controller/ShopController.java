@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.example.service.ShopService;
+import com.example.vo.ProductVO;
 
 
 
@@ -32,13 +33,14 @@ public class ShopController {
 	
 	//상품등록
 	@RequestMapping(value="/register", method= {RequestMethod.GET, RequestMethod.POST})
-	public String insert() {
+	public String insert(@ModelAttribute ProductVO productVO) {
 	
 		System.out.println("ShopController.insert"); //ㅇㅋ
-		shopService.exeProductadd();
+		shopService.exeProductadd(productVO);
 		
 		return "";
 	}
+
 	
 	
 	/*

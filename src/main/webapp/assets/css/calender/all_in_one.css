@@ -1,0 +1,22 @@
+@charset "utf-8";
+/* All-in-one CSS for calendar application */
+
+.left-main {
+    width: 820px !important;
+}
+
+.right-main {
+    width: 460px !important;
+}
+
+.between-flex-box {
+    width: 1280px;
+}
+
+.between-flex-box .between-flex-box {
+    width: 460px;
+}
+
+.between-flex-box .row-flex-box {
+    gap: 10px;
+}

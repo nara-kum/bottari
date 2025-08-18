@@ -1,0 +1,350 @@
+@charset "utf-8";
+
+/* Global.css 수정 */
+
+.sec-sub-title {
+    display: flex;
+    justify-content: space-between;
+}
+
+/*************************/
+/* calender_no_event css */
+/*************************/
+
+.left-main {
+    width: 894px !important;
+    border-right: 1px solid #eee;
+}
+
+.dummy-calender {
+    width: 800px;
+    height: 600px;
+}
+
+.right-main {
+    width: 385px !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.no-event {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.icon-calender {
+    width: 50px;
+    height: 50px;
+    margin-bottom: 10px;
+}
+
+.explain-text {
+    font-size: 20px;
+    font-family: 'inter';
+    margin: 0px auto 5px auto;
+}
+
+.btn-add-event {
+    background: none;
+    background-color: #ef5327;
+    border-radius: 4px;
+    border: 1px solid;
+    border-color: #ddd;
+    color: #ffffff;
+    text-align: center;
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 0;
+    appearance: none;
+    /* 브라우저 기본 스타일 제거 */
+    line-height: normal;
+    white-space: nowrap;
+    padding: 10px;
+    margin: 5px auto;
+}
+
+/**************************************/
+/******* calender_add_event css *******/
+/**************************************/
+
+#event-add-popup {
+    width: 480px;
+    height: 365px;
+    border: 1px solid #eee;
+    border-radius: 4px;
+    background-color: white;
+
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#event-add-popup .event-name {
+    width: 385px;
+    display: flex;
+    gap: 10px;
+    margin: 24px 0px 15px 30px;
+}
+
+.event-icon-box {
+    display: flex;
+    align-items: center;
+}
+
+.popup-icon {
+    width: 24px;
+    height: 24px;
+}
+
+.cancel {
+    margin: 10px 10px;
+    display: flex;
+    justify-content: end;
+
+}
+
+.event-name-box {
+    width: 338px;
+    height: 35px;
+    border-bottom: 2px solid #929292;
+    align-items: center;
+}
+
+.repeat-option {
+    display: flex;
+    gap: 35px;
+    margin: 10px 0px 10px 30px;
+    align-items: center;
+}
+
+.input-name {
+    width: 338px;
+    border: none;
+    font-size: 24px;
+    font-weight: bold;
+    padding: 1px 0px;
+}
+
+.select-option {
+    width: 142px;
+    height: 37px;
+    border: 1px solid #eee;
+    border-radius: 4px;
+}
+
+.event-comment {
+    display: flex;
+    align-items: top;
+    margin: 10px 0px 10px 30px;
+    gap: 35px;
+}
+
+.input-comment {
+    resize: none;
+    appearance: none;
+    /* 브라우저 기본 스타일 제거 */
+    width: 338px;
+    height: 121px;
+}
+
+.btn-cancel {
+    appearance: none;
+    /* 브라우저 기본 스타일 제거 */
+    border: none;
+    background: none;
+}
+
+.btn-save {
+    display: flex;
+    appearance: none;
+    /* 브라우저 기본 스타일 제거 */
+    background-color: #ef5327;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    color: white;
+    font-weight: 600px;
+    text-align: center;
+    padding: 10px 15px;
+    margin-left: auto;
+    margin-right: 45px;
+}
+
+/******************************/
+/* event list (yes event) css */
+/******************************/
+
+.date-and-btn-edit {
+    width: 370px;
+    height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0px 10px;
+}
+
+.event-detail-area {
+    width: 360px;
+    height: auto;
+    padding: 0px 10px 20px 10px;
+    margin-top: 20px;
+    border-bottom: 1px solid #eee;
+}
+
+.column-flex-box.event-detail {
+    margin: 5px 0px 0px 5px;
+    gap: 10px;
+}
+
+.selected-date {
+    font-size: 18px;
+    font-weight: bold;
+    margin: 10px 10px;
+}
+
+.selected-event {
+    display: flex;
+    margin: 10px 0px;
+}
+
+.selected-event .event-icon {
+    width: 50px;
+    height: 50px;
+    margin-right: 10px;
+    margin-left: 10px;
+}
+
+.event-title-detail .event-title {
+    font-size: 15px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.event-title-detail .event-explain {
+    font-size: 14px;
+}
+
+.celebrate-title {
+    font-size: 15px;
+    font-weight: bold;
+    border-bottom: 1px solid #eee;
+    margin-top: 10px;
+    padding-bottom: 10px;
+}
+
+.celebrate-card-area {
+    width: 360px;
+    height: auto;
+    margin-top: 20px !important;
+    padding: 0px 10px 20px 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.celebrate-card-img {
+    width: 318px;
+    height: 179px;
+    display: block;
+    border-radius: 4px;
+    margin: 20px auto;
+}
+
+.celebrate-guestcard {
+    font-size: 14px;
+    text-align: center;
+}
+
+.show-detail {
+    font-size: 12px;
+    text-align: right;
+    color: #7d7d7d;
+}
+
+.funding-area {
+    width: 360px;
+    height: auto;
+    margin-top: 20px;
+    padding: 0px 10px 20px 10px;
+    gap: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.funding-detail {
+    gap: 5px;
+}
+
+.funding-title {
+    margin-top: 10px;
+    padding-bottom: 10px;
+    font-size: 15px;
+    font-weight: bold;
+    border-bottom: 1px solid #eee;
+}
+
+.funding-list {
+    border-radius: 4px;
+    background-color: #f9f9f9;
+    display: flex;
+    border: 1px solid #eee;
+}
+
+.funding-list .list-img {
+    width: 50px;
+    height: 50px;
+    margin: 10px;
+    border-radius: 4px;
+}
+
+.goods-detail-box {
+    padding: 10px 0px;
+}
+
+.goods-detail-box .brand,
+.goods-detail-box .goods-title {
+    font-size: 12px;
+    align-items: center;
+    margin-top: 3px;
+}
+
+.goods-detail-box .goods-price {
+    font-size: 16px;
+    font-weight: bold;
+    margin-top: 5px;
+}
+
+.ad-banner {
+    width: 380px;
+    height: 150px;
+    border-bottom: 1px solid #eee;
+}
+
+.ad-banner img {
+    width: 360px;
+    height: 130px;
+    border-radius: 4px;
+    padding: 10px 10px;
+}
+
+.history-gift {
+    width: 380px;
+    height: 205px;
+}
+
+/*****************************/
+/* event list (no event) css */
+/*****************************/
+
+.no-detail {
+    margin-top: 30px;
+    width: 380px;
+    height: 185px;
+    border-bottom: 1px solid #eee;
+}
+
+.disable {
+    border: none;
+}
