@@ -56,13 +56,13 @@
 					<!-- 상품명/브랜드 -->
 					<section class="section">
 						<label>상품명</label>
-						<input type="text" placeholder="상품명을 입력하세요">
+						<input type="text" placeholder="상품명을 입력하세요" value=${ProductVO.title}>
 
 						<label>판매가</label>
-						<input type="text" placeholder="예: 29,900">
+						<input type="text" placeholder="예: 29,900" value=${ProductVO.price}>
 
 						<label>브랜드명</label>
-						<input type="text" placeholder="예: 보따리">
+						<input type="text" placeholder="예: 보따리" value=${ProductVO.brand}>
 					</section>
 
 					<!-- 옵션 -->
@@ -79,8 +79,8 @@
 							<option>맛</option>
 							<option>케이크호수</option>
 						</select> -->
-							<input type="text" placeholder="옵션타이틀 입력 (예: 컬러)">
-							<input type="text" placeholder="옵션 입력 (예: 하늘)">
+							<input type="text" placeholder="옵션타이틀 입력 (예: 컬러)" value=${ProductOptionVO.option_name}>
+							<input type="text" placeholder="옵션 입력 (예: 하늘)" value=${ProductOption.detialOption_name}>
 							<a href=""><img class="add-logo2" src="../../../assets/icon-add.svg"></a>
 						</div>
 					</section>
@@ -107,7 +107,7 @@
 
 					<div class="input-group">
 						<label for="shipping-cost">배송비</label>
-						<input type="text" id="shipping-cost" placeholder="배송비 입력">
+						<input type="text" id="shipping-cost" placeholder="배송비 입력" value=${ProductVO.shipping_cost}>
 					</div>
 
 					<div class="input-group">
@@ -129,7 +129,7 @@
 					<!-- 버튼 -->
 					<div class="button-row">
 						<button class="cancel-btn">취소</button>
-						<button class="submit-btn">등록</button>
+						<button class="submit-btn" type="submit">등록</button>
 					</div>
 				</main>
 			</div>

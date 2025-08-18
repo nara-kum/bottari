@@ -4,17 +4,17 @@ public class ProductVO {
 
 	
 	//필드
-	private int productNo;           // 상품번호 (자동증가로 변경해야됨)
-    private int categoryNo;          // 카테고리번호
-    private String name;             // 상품명
+	private int product_no;           // 상품번호 (자동증가로 변경해야됨)
+    private int category_no;          // 카테고리번호
+    private String title;             // 상품명
     private int price;               // 가격
     private String brand;            // 브랜드
-    private String itemimage;        // 이미지경로
-    private int shippingYN;          // 배송여부
-    private int shippingCost;        // 배송비
-    private int zipCode;             // 우편번호
+    private String itemimg;        // 이미지경로
+    private int shipping_yn;          // 배송여부
+    private int shipping_cost;        // 배송비
+    private int zipcode;             // 우편번호
     private String address;          // 주소
-    private String detailAddress;    // 상세주소
+    private String detail_address;    // 상세주소
     
     
     
@@ -22,104 +22,169 @@ public class ProductVO {
     public ProductVO() {
 		super();
 	}
-    
-    
-	public ProductVO(int productNo, int categoryNo, String name, int price, String brand, String itemimage,
-			int shippingYN, int shippingCost, int zipCode, String address, String detailAddress) {
+
+
+
+	public ProductVO(int product_no, int category_no, String title, int price, String brand, String itemimg,
+			int shipping_yn, int shipping_cost, int zipcode, String address, String detail_address) {
 		super();
-		this.productNo = productNo;
-		this.categoryNo = categoryNo;
-		this.name = name;
+		this.product_no = product_no;
+		this.category_no = category_no;
+		this.title = title;
 		this.price = price;
 		this.brand = brand;
-		this.itemimage = itemimage;
-		this.shippingYN = shippingYN;
-		this.shippingCost = shippingCost;
-		this.zipCode = zipCode;
+		this.itemimg = itemimg;
+		this.shipping_yn = shipping_yn;
+		this.shipping_cost = shipping_cost;
+		this.zipcode = zipcode;
 		this.address = address;
-		this.detailAddress = detailAddress;
+		this.detail_address = detail_address;
 	}
 
-	
 
-    //메소드gs
-	public int getProductNo() {
-		return productNo;
+	//메소드gs
+	public int getProduct_no() {
+		return product_no;
 	}
-	public void setProductNo(int productNo) {
-		this.productNo = productNo;
+
+
+
+	public void setProduct_no(int product_no) {
+		this.product_no = product_no;
 	}
-	public int getCategoryNo() {
-		return categoryNo;
+
+
+
+	public int getCategory_no() {
+		return category_no;
 	}
-	public void setCategoryNo(int categoryNo) {
-		this.categoryNo = categoryNo;
+
+
+
+	public void setCategory_no(int category_no) {
+		this.category_no = category_no;
 	}
-	public String getName() {
-		return name;
+
+
+
+	public String getTitle() {
+		return title;
 	}
-	public void setName(String name) {
-		this.name = name;
+
+
+
+	public void setTitle(String title) {
+		this.title = title;
 	}
+
+
+
 	public int getPrice() {
 		return price;
 	}
+
+
+
 	public void setPrice(int price) {
 		this.price = price;
 	}
+
+
+
 	public String getBrand() {
 		return brand;
 	}
+
+
+
 	public void setBrand(String brand) {
 		this.brand = brand;
 	}
-	public String getItemimage() {
-		return itemimage;
+
+
+
+	public String getItemimg() {
+		return itemimg;
 	}
-	public void setItemimage(String itemimage) {
-		this.itemimage = itemimage;
+
+
+
+	public void setItemimg(String itemimg) {
+		this.itemimg = itemimg;
 	}
-	public int getShippingYN() {
-		return shippingYN;
+
+
+
+	public int getShipping_yn() {
+		return shipping_yn;
 	}
-	public void setShippingYN(int shippingYN) {
-		this.shippingYN = shippingYN;
+
+
+
+	public void setShipping_yn(int shipping_yn) {
+		this.shipping_yn = shipping_yn;
 	}
-	public int getShippingCost() {
-		return shippingCost;
+
+
+
+	public int getShipping_cost() {
+		return shipping_cost;
 	}
-	public void setShippingCost(int shippingCost) {
-		this.shippingCost = shippingCost;
+
+
+
+	public void setShipping_cost(int shipping_cost) {
+		this.shipping_cost = shipping_cost;
 	}
-	public int getZipCode() {
-		return zipCode;
+
+
+
+	public int getZipcode() {
+		return zipcode;
 	}
-	public void setZipCode(int zipCode) {
-		this.zipCode = zipCode;
+
+
+
+	public void setZipcode(int zipcode) {
+		this.zipcode = zipcode;
 	}
+
+
+
 	public String getAddress() {
 		return address;
 	}
+
+
+
 	public void setAddress(String address) {
 		this.address = address;
 	}
-	public String getDetailAddress() {
-		return detailAddress;
-	}
-	public void setDetailAddress(String detailAddress) {
-		this.detailAddress = detailAddress;
+
+
+
+	public String getDetail_address() {
+		return detail_address;
 	}
 
-	
+
+
+	public void setDetail_address(String detail_address) {
+		this.detail_address = detail_address;
+	}
+
+
 
 	//메소드일반
 	@Override
 	public String toString() {
-		return "ProductVO [productNo=" + productNo + ", categoryNo=" + categoryNo + ", name=" + name + ", price="
-				+ price + ", brand=" + brand + ", itemimage=" + itemimage + ", shippingYN=" + shippingYN
-				+ ", shippingCost=" + shippingCost + ", zipCode=" + zipCode + ", address=" + address
-				+ ", detailAddress=" + detailAddress + "]";
+		return "ProductVO [product_no=" + product_no + ", category_no=" + category_no + ", title=" + title + ", price="
+				+ price + ", brand=" + brand + ", itemimg=" + itemimg + ", shipping_yn=" + shipping_yn
+				+ ", shipping_cost=" + shipping_cost + ", zipcode=" + zipcode + ", address=" + address
+				+ ", detail_address=" + detail_address + "]";
 	}
-    	
+    
+	
+	
 	
 }
