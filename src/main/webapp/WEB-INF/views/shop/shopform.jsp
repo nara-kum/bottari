@@ -1,14 +1,13 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
 <!DOCTYPE html>
 <html lang="ko">
 
 <head>
-<meta charset="utf-8">
-<link rel="stylesheet" href="../../../assets/css/reset.css">
-<link rel="stylesheet" href="../../../assets/css/Global.css">
-<link rel="stylesheet" href="../../../assets/css/shop/shopform.css">
+	<meta charset="utf-8">
+	<link rel="stylesheet" href="../../../assets/css/reset.css">
+	<link rel="stylesheet" href="../../../assets/css/Global.css">
+	<link rel="stylesheet" href="../../../assets/css/shop/shopform.css">
 </head>
 
 <body class="family">
@@ -44,7 +43,6 @@
 	<div id="sec-content" class="sector">
 		<div class="sec-sub-title">
 			<h2 class="header-sub">상품등록</h2>
-			<!-- 여기부터 코딩 시작!! -->
 		</div>
 		<div class="sec-content-main">
 
@@ -83,25 +81,39 @@
 
 					<!-- 옵션 -->
 					<section class="section">
-						<label>옵션 설정 
-							<a href=""><img class="add-logo" src="../../../assets/icon-add.svg"></a>
-						</label>
+						<div class="option-header">
+							<label>옵션 설정</label>
+							<button type="button" class="add-option-group" onclick="addOptionGroup()">
+								<img class="add-logo" src="../../../assets/icon-add.svg" alt="옵션 그룹 추가">
+							</button>
+						</div>
 
-						<div class="option-row">
-							<input type="text" name="option_name" placeholder="옵션타이틀 입력 (예: 컬러)"> 
-							<input type="text" name="detailOption_name" placeholder="옵션 입력 (예: 하늘)"> 
-							<a href=""><img class="add-logo2" src="../../../assets/icon-add.svg"></a>
+						<div id="optionContainer">
+							<div class="option-group">
+								<div class="option-row">
+									<input type="text" name="option_name[]" placeholder="옵션타이틀 입력 (예: 컬러)"> 
+									<input type="text" name="detailOption_name[]" placeholder="옵션 입력 (예: 하늘)"> 
+									<button type="button" class="add-detail-option" onclick="addDetailOption(this)">
+										<img class="add-logo2" src="../../../assets/icon-add.svg" alt="옵션 추가">
+									</button>
+								</div>
+							</div>
 						</div>
 					</section>
 
-					<!-- 상품 이미지 (미리보기 복원) -->
+					<!-- 상품 이미지 -->
 					<section class="section">
 						<label>상품 이미지</label> 
-						<input type="file" name="imageFile" id="imageFile" accept="image/*" style="margin-bottom: 10px;">
+						<input type="file" name="imageFile" id="imageFile" accept="image/*" style="display: none;">
 						<input type="hidden" name="itemimg" id="itemimg">
 						<div class="image-preview">
-							<img id="previewImg" src="../../../photo/장바구니박명수.JPG" alt="샘플 이미지">
-							<div onclick="document.getElementById('imageFile').click();" style="cursor: pointer;">이미지 선택</div>
+							<div class="image-container">
+								<img id="previewImg" src="" alt="미리보기 이미지" style="display: none;">
+								<div class="no-image" id="noImageText">이미지가 선택되지 않았습니다</div>
+							</div>
+							<button type="button" class="image-select-btn" onclick="document.getElementById('imageFile').click();">
+								이미지 선택
+							</button>
 						</div>
 					</section>
 
@@ -109,8 +121,13 @@
 					<section class="section">
 						<label>상세 설명</label>
 						<div class="description-box">
-							<div class="upload-check">✔ 사진을 등록하세요.</div>
-							<button class="upload-btn" type="button">등록하기</button>
+							<input type="file" name="detailImages[]" id="detailImages" accept="image/*" multiple style="display: none;">
+							<div class="detail-images-preview" id="detailImagesPreview">
+								<div class="no-detail-images">상세 설명 이미지를 등록하세요.</div>
+							</div>
+							<button class="upload-btn" type="button" onclick="document.getElementById('detailImages').click();">
+								등록하기
+							</button>
 						</div>
 					</section>
 
@@ -118,11 +135,11 @@
 					<section class="section">
 						<label>배송여부</label>
 						<div class="delivery-box">
-							<div class="delivery-type active" data-shipping="Y">배송</div>
-							<div class="delivery-type" data-shipping="N">배송없음</div>
+							<div class="delivery-type active" data-shipping="1">배송</div>
+							<div class="delivery-type" data-shipping="0">배송없음</div>
 						</div>
 						<!-- 배송여부 히든 필드 -->
-						<input type="hidden" name="shipping_yn" id="shippingYn" value="Y">
+						<input type="hidden" name="shipping_yn" id="shippingYn" value="1">
 					</section>
 
 					<div class="input-group">
@@ -188,14 +205,11 @@
 	</footer>
 
 	<script>
-		// 카테고리 선택 JavaScript (수정됨)
+		// 카테고리 선택 JavaScript
 		document.querySelectorAll('.category-box span').forEach(span => {
 			span.addEventListener('click', function() {
-				// 기존 선택 제거
 				document.querySelectorAll('.category-box span').forEach(s => s.classList.remove('selected'));
-				// 현재 선택 추가
 				this.classList.add('selected');
-				// 숨겨진 input에 카테고리 번호 설정 (data-category로 수정)
 				document.getElementById('categoryNo').value = this.getAttribute('data-category');
 			});
 		});
@@ -203,31 +217,104 @@
 		// 배송여부 선택 JavaScript
 		document.querySelectorAll('.delivery-type').forEach(deliveryType => {
 			deliveryType.addEventListener('click', function() {
-				// 기존 선택 제거
 				document.querySelectorAll('.delivery-type').forEach(dt => dt.classList.remove('active'));
-				// 현재 선택 추가
 				this.classList.add('active');
-				// 숨겨진 input에 배송여부 설정 (Y/N)
 				document.getElementById('shippingYn').value = this.getAttribute('data-shipping');
 			});
 		});
 
-		// 이미지 파일 선택 JavaScript
+		// 상품 이미지 파일 선택 JavaScript
 		document.getElementById('imageFile').addEventListener('change', function(event) {
 			const file = event.target.files[0];
 			if (file) {
 				const reader = new FileReader();
 				reader.onload = function(e) {
 					const previewImg = document.getElementById('previewImg');
+					const noImageText = document.getElementById('noImageText');
+					
 					previewImg.src = e.target.result;
-					previewImg.style.display = 'block'; // 미리보기 이미지 표시
+					previewImg.style.display = 'block';
+					noImageText.style.display = 'none';
 				};
 				reader.readAsDataURL(file);
 				
-				// 파일명을 itemimg 히든 필드에 설정
 				document.getElementById('itemimg').value = file.name;
 			}
 		});
+
+		// 상세 설명 이미지 파일 선택 JavaScript
+		document.getElementById('detailImages').addEventListener('change', function(event) {
+			const files = event.target.files;
+			const previewContainer = document.getElementById('detailImagesPreview');
+			
+			if (files.length > 0) {
+				previewContainer.innerHTML = '';
+				
+				Array.from(files).forEach((file, index) => {
+					const reader = new FileReader();
+					reader.onload = function(e) {
+						const imageDiv = document.createElement('div');
+						imageDiv.className = 'detail-image-item';
+						imageDiv.innerHTML = `
+							<img src="${e.target.result}" alt="상세 이미지 ${index + 1}">
+							<span class="image-name">${file.name}</span>
+						`;
+						previewContainer.appendChild(imageDiv);
+					};
+					reader.readAsDataURL(file);
+				});
+			}
+		});
+
+		// 옵션 그룹 추가 함수
+		function addOptionGroup() {
+			const container = document.getElementById('optionContainer');
+			const newGroup = document.createElement('div');
+			newGroup.className = 'option-group';
+			newGroup.innerHTML = `
+				<div class="option-row">
+					<input type="text" name="option_name[]" placeholder="옵션타이틀 입력 (예: 사이즈)"> 
+					<input type="text" name="detailOption_name[]" placeholder="옵션 입력 (예: L)"> 
+					<button type="button" class="add-detail-option" onclick="addDetailOption(this)">
+						<img class="add-logo2" src="../../../assets/icon-add.svg" alt="옵션 추가">
+					</button>
+					<button type="button" class="remove-option-group" onclick="removeOptionGroup(this)">
+						<img class="remove-logo" src="../../../assets/icon-remove.svg" alt="옵션 그룹 제거">
+					</button>
+				</div>
+			`;
+			container.appendChild(newGroup);
+		}
+
+		// 세부 옵션 추가 함수
+		function addDetailOption(button) {
+			const optionGroup = button.closest('.option-group');
+			const newRow = document.createElement('div');
+			newRow.className = 'option-row detail-only';
+			newRow.innerHTML = `
+				<input type="text" placeholder="옵션타이틀은 위와 동일"> 
+				<input type="text" name="detailOption_name[]" placeholder="옵션 입력 (예: M)"> 
+				<button type="button" class="add-detail-option" onclick="addDetailOption(this)">
+					<img class="add-logo2" src="../../../assets/icon-add.svg" alt="옵션 추가">
+				</button>
+				<button type="button" class="remove-detail-option" onclick="removeDetailOption(this)">
+					<img class="remove-logo2" src="../../../assets/icon-remove.svg" alt="옵션 제거">
+				</button>
+			`;
+			optionGroup.appendChild(newRow);
+		}
+
+		// 옵션 그룹 제거 함수
+		function removeOptionGroup(button) {
+			const optionGroup = button.closest('.option-group');
+			optionGroup.remove();
+		}
+
+		// 세부 옵션 제거 함수
+		function removeDetailOption(button) {
+			const optionRow = button.closest('.option-row');
+			optionRow.remove();
+		}
 	</script>
 </body>
 

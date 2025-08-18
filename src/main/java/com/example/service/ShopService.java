@@ -15,13 +15,24 @@ public class ShopService {
 	private ShopRepository shopRepository;
 	
 	
-
+	//상품등록
 	public int exeProductadd(ProductVO productVO) {
 		System.out.println("ShopService.exeProductadd"); // ㅇㅋ
 
 		int count = shopRepository.ProductInsert(productVO);
 		return count;
 
+	}
+	
+	
+	//상세페이지
+	public void exeProductSelect() {
+		
+		System.out.println("ShopService.exeProductSelect"); //ㅇㅋ
+		
+		shopRepository.ProductSelect();
+		
+		
 	}
 	
 

@@ -12,15 +12,20 @@ public class ShopRepository {
 	@Autowired
 	private SqlSession sqlSession;
 	
-	
+	//상품등록
 	public int ProductInsert(ProductVO productVO) {
 		System.out.println("ShopRepository.ProductInsert"); //ㅇㅋ
 		
 		int count = sqlSession.insert("product.insert", productVO);
-		System.out.println(productVO);
 		
 		return count;
 		
 	}
 	
+	
+	public void ProductSelect() {
+		
+		System.out.println("ShopRepository.ProductSelect");//ㅇㅋ
+		
+	}
 }

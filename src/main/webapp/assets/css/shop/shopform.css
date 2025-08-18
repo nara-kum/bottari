@@ -51,7 +51,6 @@ form {
 	padding-bottom: 10px;
 }
 
-
 .section {
 	margin-bottom: 30px;
 }
@@ -72,22 +71,17 @@ select {
 	font-size: 14px;
 }
 
-
 .category-wrapper {
 	display: flex;
 	align-items: center;
 	gap: 12px;
-	/* 사이 간격 */
 	margin-top: 8px;
-	/* 라벨 아래 간격 */
 }
-
 
 .category-select {
 	font-weight: bold;
 	font-size: 20px;
 }
-
 
 .category-box span {
 	display: inline-block;
@@ -104,22 +98,205 @@ select {
 	color: white;
 }
 
+/* 옵션 설정 관련 스타일 */
+.option-header {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	margin-bottom: 15px;
+}
+
+.add-option-group {
+	background: none;
+	border: none;
+	cursor: pointer;
+	padding: 2px;
+}
 
 .add-logo {
 	width: 16px;
 	height: 16px;
 }
 
-
 .add-logo2 {
 	width: 16px;
 	height: 16px;
-	margin: 12px 0px 0px 5px;
 }
 
+.remove-logo,
+.remove-logo2 {
+	width: 16px;
+	height: 16px;
+}
 
-/**/
+.option-group {
+	margin-bottom: 15px;
+	padding: 15px;
+	border: 1px solid #e0e0e0;
+	border-radius: 6px;
+	background: #fafafa;
+	width: calc(100% - 30px);
+	box-sizing: border-box;
+}
 
+.option-row {
+	display: flex;
+	gap: 10px;
+	align-items: center;
+	margin-bottom: 10px;
+}
+
+.option-row:last-child {
+	margin-bottom: 0;
+}
+
+.option-row input {
+	flex: 1;
+	margin-bottom: 0;
+}
+
+.option-row input:first-child {
+	flex: 0 0 200px;
+}
+
+.option-row.detail-only input:first-child {
+	background-color: #f5f5f5;
+	color: #999;
+	cursor: not-allowed;
+}
+
+.add-detail-option,
+.remove-detail-option,
+.remove-option-group {
+	background: none;
+	border: none;
+	cursor: pointer;
+	padding: 5px;
+	border-radius: 3px;
+}
+
+.add-detail-option:hover,
+.remove-detail-option:hover,
+.remove-option-group:hover {
+	background-color: #e0e0e0;
+}
+
+/* 이미지 관련 스타일 */
+.image-preview {
+	display: flex;
+	align-items: center;
+	gap: 15px;
+	padding: 15px;
+	border: 1px solid #ddd;
+	border-radius: 6px;
+	background: #fafafa;
+}
+
+.image-container {
+	width: 120px;
+	height: 120px;
+	border: 2px dashed #ddd;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	position: relative;
+	border-radius: 6px;
+	background: white;
+}
+
+.image-container img {
+	max-width: 100%;
+	max-height: 100%;
+	object-fit: contain;
+	border-radius: 4px;
+}
+
+.no-image {
+	color: #999;
+	font-size: 12px;
+	text-align: center;
+	padding: 10px;
+}
+
+.image-select-btn {
+	padding: 10px 20px;
+	background-color: #c9a37e;
+	color: white;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
+	font-size: 14px;
+}
+
+.image-select-btn:hover {
+	background-color: #856b51;
+}
+
+/* 상세 설명 관련 스타일 */
+.description-box {
+	background: #f3f3f3;
+	padding: 20px;
+	border-radius: 6px;
+	text-align: center;
+	position: relative;
+	min-height: 120px;
+}
+
+.detail-images-preview {
+	margin-bottom: 20px;
+	min-height: 80px;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+	justify-content: center;
+	align-items: center;
+}
+
+.no-detail-images {
+	color: #6e6e6e;
+	font-style: italic;
+}
+
+.detail-image-item {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 5px;
+	padding: 10px;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	background: white;
+	max-width: 150px;
+}
+
+.detail-image-item img {
+	width: 80px;
+	height: 80px;
+	object-fit: cover;
+	border-radius: 4px;
+}
+
+.image-name {
+	font-size: 11px;
+	color: #666;
+	text-align: center;
+	word-break: break-all;
+}
+
+.upload-btn {
+	padding: 10px 20px;
+	background-color: #c9a37e;
+	color: white;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
+}
+
+.upload-btn:hover {
+	background-color: #856b51;
+}
+
+/* 기존 스타일들 */
 .form-section {
 	background: white;
 	padding: 30px;
@@ -146,13 +323,11 @@ input[type="text"] {
 	font-size: 14px;
 	width: 100%;
 	box-sizing: border-box;
+	height: 44px;
 }
-
-
 
 .zipcode-input {
 	flex: 0 0 120px;
-	/* 고정 너비 120px */
 }
 
 .zipcode-btn {
@@ -171,69 +346,11 @@ input[type="text"] {
 	background-color: #856b51;
 }
 
-
 label {
 	display: block;
 	margin-bottom: 5px;
 	font-weight: bold;
 	color: #333;
-}
-
-
-/**/
-
-
-.option-row {
-	display: flex;
-	gap: 10px;
-}
-
-.option-row input,
-.option-row select {
-	flex: 1;
-}
-
-.image-preview {
-	display: flex;
-	align-items: center;
-	gap: 10px;
-}
-
-.image-preview img {
-	width: 100px;
-	height: auto;
-	border: 1px solid #ccc;
-}
-
-.image-preview div {
-	padding: 10px 20px;
-	background-color: #c9a37e;
-	color: white;
-	border: none;
-	border-radius: 4px;
-	cursor: pointer;
-}
-
-.description-box {
-	background: #f3f3f3;
-	padding: 20px;
-	border-radius: 6px;
-	text-align: center;
-	position: relative;
-}
-
-.upload-check {
-	color: #6e6e6e;
-	margin-bottom: 20px;
-}
-
-.upload-btn {
-	padding: 10px 20px;
-	background-color: #c9a37e;
-	color: white;
-	border: none;
-	border-radius: 4px;
-	cursor: pointer;
 }
 
 .delivery-box {
@@ -279,4 +396,12 @@ label {
 .submit-btn {
 	background-color: #c9a37e;
 	color: white;
+}
+
+.cancel-btn:hover {
+	background-color: #bbb;
+}
+
+.submit-btn:hover {
+	background-color: #856b51;
 }

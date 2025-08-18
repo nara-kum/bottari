@@ -32,35 +32,38 @@ public class ShopController {
 
 	
 	//상품등록
-		@RequestMapping(value="/register", method=RequestMethod.POST)
-		public String insert(@ModelAttribute ProductVO productVO) {
+	@RequestMapping(value = "/register", method = RequestMethod.POST)
+	public String insert(@ModelAttribute ProductVO productVO) {
+
+		System.out.println("ShopController.insert"); //ㅇㅋ
 		
-			System.out.println("ShopController.insert");
-			System.out.println("받은 데이터: " + productVO);
-			
-			int result = shopService.exeProductadd(productVO);
-			
-			if(result > 0) {
-				System.out.println("상품 등록 성공!");
-				return "redirect:/shopform"; // 성공 시 폼으로 리다이렉트
-			} else {
-				System.out.println("상품 등록 실패!");
-				return "shop/shopform"; // 실패 시 다시 폼 페이지
-			}
+		System.out.println("받은 데이터: " + productVO);
+
+		int result = shopService.exeProductadd(productVO);
+
+		if (result > 0) {
+			System.out.println("상품 등록 성공!");
+			return "redirect:/bottarimall"; // 성공 시 쇼핑몰로 리다이렉트
+		} else {
+			System.out.println("상품 등록 실패!");
+			return "shop/shopform"; // 실패 시 다시 폼 페이지
 		}
+	}
 
 	
 	
-	/*
+	
 	//상세페이지
 	@RequestMapping(value="/productPage", method= {RequestMethod.GET, RequestMethod.POST})
 	public String selectOne() {	
-		System.out.println("ShopController.selectOne");
+		System.out.println("ShopController.selectOne");//ㅇㅋ
 		
+		shopService.exeProductSelect();
 		return "shop/productPage";
 	
 	}
 	
+	/*
 	//상세페이지_펀딩
 	@RequestMapping(value="/productPage2", method= {RequestMethod.GET, RequestMethod.POST})
 	public String selectOne2() {	
