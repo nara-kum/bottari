@@ -15,16 +15,16 @@
 	<header class="controller">
 		<div id="sec-header" class="sector">
 			<div class="left-side">
-				<a href=""><img class="header-logo" src="../../asset/Logo_colored.svg"></a>
+				<a href=""><img class="header-logo" src="../../../assets/icon/Logo_colored.svg"></a>
 				<h1 class="header-menu"><a href="">캘린더</a></h1>
 				<h1 class="header-menu"><a href="">펀딩</a></h1>
 				<h1 class="header-menu"><a href="">초대장</a></h1>
 				<h1 class="header-menu"><a href="">구매내역</a></h1>
 			</div>
 			<div class="right-side">
-				<a href=""><img class="header-icon header-shopping-cart" src="../../asset/icon-shopping-cart.svg"></a>
+				<a href=""><img class="header-icon header-shopping-cart" src="../../../assets/icon/icon-shopping-cart.svg"></a>
 				<h1 class="header-usermenu">사용자이름</h1>
-				<a href=""><img class="header-icon" src="../../asset/icon-caret-down.svg"></a>
+				<a href=""><img class="header-icon" src="../../../assets/icon/icon-caret-down.svg"></a>
 			</div>
 		</div>
 	</header>
@@ -68,7 +68,7 @@
 					<!-- 옵션 -->
 					<section class="section">
 						<label>옵션 설정
-							<a href=""><img class="add-logo" src="../../asset/icon-add.svg"></a>
+							<a href=""><img class="add-logo" src="../../../assets/icon-add.svg"></a>
 						</label>
 
 						<div class="option-row">
@@ -81,7 +81,7 @@
 						</select> -->
 							<input type="text" placeholder="옵션타이틀 입력 (예: 컬러)">
 							<input type="text" placeholder="옵션 입력 (예: 하늘)">
-							<a href=""><img class="add-logo2" src="../../asset/icon-add.svg"></a>
+							<a href=""><img class="add-logo2" src="../../../assets/icon-add.svg"></a>
 						</div>
 					</section>
 
