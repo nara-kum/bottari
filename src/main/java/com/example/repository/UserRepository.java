@@ -36,6 +36,7 @@ public class UserRepository {
 		return authUser;
 	}
 	
+
 	//아이디사용유무체크(회원가입)
 	public UserVO userSelectById(String id) {
 		System.out.println("UserRepository.userSelectById()");
@@ -44,5 +45,5 @@ public class UserRepository {
 		UserVO userVO = sqlSession.selectOne("user.selectOneById",id);
 		return userVO;
 	}
-
+	
 }

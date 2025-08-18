@@ -45,7 +45,6 @@ public class UserController {
 			System.out.println(e);
 			return "redirect:/loginForm";
 		}
-
 	}
 	
 	//로그인폼

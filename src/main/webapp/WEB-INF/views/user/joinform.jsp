@@ -6,27 +6,28 @@
 
 <head>
 	<meta charset="UTF-8">
-	<title>joinForm</title>
+	<title>회원가입</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/reset.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/Global.css">
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/join.css">
-	
-	<!-- js -->
-	<script src="${pageContext.request.contextPath}/assets/js/jquery/jquery-3.7.1.js"></script>    	
+
+	<!--js-->
+	<script src="${pageContext.request.contextPath}/assets/js/jquery/jquery-3.7.1.js">
+	</script>
 	
 </head>
 <body class="family">
 	<header class="controller">
 		<div id="sec-header" class="sector">
 			<div class="left-side">
-				<a href=""><img class="header-logo" src="../../../assets/icon/Logo_colored.svg"></a>
+				<a href=""><img class="header-logo" src="${pageContext.request.contextPath}/assets/icon/Logo_colored.svg"></a>
 				<h1 class="header-menu"><a href="">캘린더</a></h1>
 				<h1 class="header-menu"><a href="">펀딩</a></h1>
 				<h1 class="header-menu"><a href="">초대장</a></h1>
 				<h1 class="header-menu"><a href="">구매내역</a></h1>
 			</div>
 			<div class="right-side">
-				<a href=""><img class="header-icon header-shopping-cart" src="../../../assets/icon/icon-shopping-cart.svg"></a>
+				<a href=""><img class="header-icon header-shopping-cart" src="${pageContext.request.contextPath}/assets/icon/icon-shopping-cart.svg"></a>
 				<!-- 세션에 값이 있을때 -->
 				<c:if test="${sessionScope.authUser!=null}">
 					<h1>
@@ -34,7 +35,7 @@
 							href="${pageContext.request.contextPath}/login">${sessionScope.authUser.name}</a>
 					</h1>
 					<a href=""><img class="header-icon"
-						src="../../../assets/icon/icon-caret-down.svg"></a>
+						src="${pageContext.request.contextPath}/assets/icon/icon-caret-down.svg"></a>
 					<h1>
 						<a class="header-usermenu"
 							href="${pageContext.request.contextPath}/logout">로그아웃</a>
@@ -47,7 +48,7 @@
 							href="${pageContext.request.contextPath}/loginForm">로그인</a>
 					</h1>
 					<a href=""><img class="header-icon"
-						src="../../../assets/icon/icon-caret-down.svg"></a>
+						src="${pageContext.request.contextPath}/assets/icon/icon-caret-down.svg"></a>
 					<h1>
 						<a class="header-usermenu"
 							href="${pageContext.request.contextPath}/joinForm">회원가입</a>
@@ -70,7 +71,7 @@
 							<label>아이디</label>
 							<div class="input-row">
 								<input type="text" placeholder="아이디 입력(6~20자)" name="id" id="input-id" value="">
-								<button type="button" onclick="checkDuplicateId()">중복확인</button>
+								<button type="button" value="중복 확인" onclick="return idCheck()">중복확인</button>
 							</div>
 						</div>
 
@@ -221,8 +222,18 @@
 	</footer>
 	
 	<script>
+	$(document).ready(function(){
+		console.log('돔트리 완료');
 
+	
+
+
+		});			
+
+	});
+	
 	</script>
 </body>
+
 
 </html>
