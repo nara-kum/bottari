@@ -36,7 +36,7 @@ public class UserService {
 		System.out.println("UserService.exeIdcheck()");
 		
 		UserVO userVO =userRepository.userSelectById(id);
-		System.out.println("service");
+		
 		System.out.println(userVO);
 	
 		if(userVO == null) {

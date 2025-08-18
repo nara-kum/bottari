@@ -26,7 +26,6 @@ public class UserController {
 		return "user/joinform";	
 	}
 	
-	
 	//회원가입
 	@RequestMapping(value="/join", method= {RequestMethod.GET, RequestMethod.POST})
 	public String join(@ModelAttribute UserVO userVO){

@@ -16,7 +16,8 @@
 		
 		<![CDATA[
 			select 	name,
-			        email
+			        email,
+			        phone
 			from users
 			where id = #{id}
 			and password = #{password}
