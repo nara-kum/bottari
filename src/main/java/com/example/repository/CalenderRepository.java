@@ -18,6 +18,8 @@ public class CalenderRepository {
 	//method g/s
 	
 	//method normal
+	
+	//캘린더 리스트
 	public List<CalenderVO> calenderAddList() {
 		System.out.println("CalenderRepository.addList()");
 		
@@ -25,4 +27,27 @@ public class CalenderRepository {
 		
 		return calenderList;
 	}
+	
+	//캘린더 이벤트 추가
+	public int calenderInsert(CalenderVO calendervo) {
+		System.out.println("CalenderRepository.calenderInsert()");
+//		System.out.println("CalenderRepository.calendervo" + calendervo);
+		
+		int count = sqlsession.insert("calender.insert",calendervo);
+		
+		return count;
+	}
+	
+	//캘린더 이벤트 수정
+	public int calenderUpdate(CalenderVO calendervo) {
+		System.out.println("CalenderRepository.calenderUpdate()");
+		
+		System.out.println("CalenderRepository.calndervo:" + calendervo);
+		
+		int count = sqlsession.update("calender.update",calendervo);
+		
+		return count;
+	}
+	
+	//캘린더 이벤트 삭제
 }
