@@ -1,0 +1,242 @@
+@charset "UTF-8";
+
+body {
+	font-family: 'Pretendard', sans-serif;
+	background-color: #ffffff;
+	color: #000000;
+}
+
+.controller {
+	max-width: 1280px;
+	margin: 0 auto;
+	width: 100%;
+	padding: 0 20px;
+	box-sizing: border-box;
+}
+
+/* 콘텐츠 섹션 중앙 정렬 */
+.sec-content-main {
+	max-width: 1280px;
+	margin: 0 auto;
+	padding: 0 20px;
+	display: flex;
+	justify-content: center;
+}
+
+/* 성공 페이지 메인 컨테이너 */
+.success-container {
+	max-width: 600px;
+	margin: 60px auto;
+	padding: 60px 40px;
+	background: rgb(246, 245, 241);
+	border-radius: 12px;
+	box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+	text-align: center;
+}
+
+/* 성공 아이콘 */
+.success-icon {
+	margin-bottom: 30px;
+	display: flex;
+	justify-content: center;
+}
+
+.success-icon svg {
+	animation: scaleIn 0.6s ease-out;
+}
+
+@keyframes scaleIn {
+	0% {
+		transform: scale(0);
+	}
+	60% {
+		transform: scale(1.1);
+	}
+	100% {
+		transform: scale(1);
+	}
+}
+
+/* 성공 메시지 */
+.success-message {
+	margin-bottom: 40px;
+}
+
+.success-message h1 {
+	font-size: 28px;
+	font-weight: bold;
+	color: #333;
+	margin-bottom: 15px;
+	line-height: 1.4;
+}
+
+.success-message p {
+	font-size: 16px;
+	color: #666;
+	margin-bottom: 8px;
+	line-height: 1.5;
+}
+
+.success-message .sub-message {
+	font-size: 14px;
+	color: #999;
+	margin-top: 15px;
+}
+
+/* 상품 정보 */
+.product-info {
+	background: white;
+	padding: 25px;
+	border-radius: 8px;
+	margin-bottom: 40px;
+	border: 1px solid #e0e0e0;
+}
+
+.info-item {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 8px 0;
+}
+
+.info-item:not(:last-child) {
+	border-bottom: 1px solid #f0f0f0;
+	margin-bottom: 8px;
+	padding-bottom: 12px;
+}
+
+.info-label {
+	font-weight: bold;
+	color: #555;
+	font-size: 14px;
+}
+
+.info-value {
+	color: #333;
+	font-size: 14px;
+	font-weight: 500;
+}
+
+/* 액션 버튼들 */
+.action-buttons {
+	display: flex;
+	gap: 15px;
+	justify-content: center;
+	margin-bottom: 30px;
+	flex-wrap: wrap;
+}
+
+.btn {
+	padding: 14px 28px;
+	font-size: 16px;
+	border: none;
+	border-radius: 6px;
+	cursor: pointer;
+	font-weight: 500;
+	transition: all 0.3s ease;
+	min-width: 160px;
+	text-decoration: none;
+	display: inline-block;
+	text-align: center;
+}
+
+.primary-btn {
+	background-color: #c9a37e;
+	color: white;
+}
+
+.primary-btn:hover {
+	background-color: #856b51;
+	box-shadow: 0 4px 12px rgba(201, 163, 126, 0.3);
+}
+
+.secondary-btn {
+	background-color: #c9a37e;
+	color: white;
+}
+
+.secondary-btn:hover {
+	background-color: #856b51;
+	box-shadow: 0 4px 12px rgba(201, 163, 126, 0.3);
+}
+
+/* 추가 링크들 */
+.additional-links {
+	margin-top: 20px;
+	padding-top: 20px;
+	border-top: 1px solid #e0e0e0;
+}
+
+.link {
+	color: #666;
+	text-decoration: none;
+	font-size: 14px;
+	transition: color 0.3s ease;
+}
+
+.link:hover {
+	color: #c9a37e;
+	text-decoration: underline;
+}
+
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+	.success-container {
+		margin: 30px auto;
+		padding: 40px 30px;
+		max-width: 90%;
+	}
+	
+	.success-message h1 {
+		font-size: 24px;
+	}
+	
+	.action-buttons {
+		flex-direction: column;
+		align-items: center;
+	}
+	
+	.btn {
+		width: 100%;
+		max-width: 280px;
+	}
+	
+	.additional-links {
+		flex-direction: column;
+		gap: 10px;
+	}
+	
+	.separator {
+		display: none;
+	}
+}
+
+@media (max-width: 480px) {
+	.success-container {
+		padding: 30px 20px;
+	}
+	
+	.success-message h1 {
+		font-size: 22px;
+	}
+	
+	.success-message p {
+		font-size: 15px;
+	}
+	
+	.product-info {
+		padding: 20px;
+	}
+	
+	.info-item {
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 5px;
+	}
+	
+	.info-value {
+		color: #c9a37e;
+		font-weight: 600;
+	}
+}
