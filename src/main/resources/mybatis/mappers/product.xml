@@ -14,7 +14,7 @@
 
 	
 	
-	<select id="selectOne" parameterType="com.example.vo.ProductVO">
+	<select id="selectOne" parameterType="com.example.vo.ProductTotalVO">
 		
 		<![CDATA[
 		SELECT  p.product_no,
