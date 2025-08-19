@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.service.ShopService;
 import com.example.vo.ProductVO;
-
-import ch.qos.logback.core.model.Model;
-
 import com.example.vo.ProductTotalVO;
+
+import org.springframework.ui.Model;
+
 
 
 
@@ -38,7 +38,7 @@ public class ShopController {
 
 	
 	//상품등록
-	@RequestMapping(value = "/success", method = RequestMethod.POST)
+	@RequestMapping(value = "/register", method = RequestMethod.POST)
 	public String insert(@ModelAttribute ProductVO productVO) {
 
 		System.out.println("ShopController.insert"); //ㅇㅋ
@@ -61,7 +61,7 @@ public class ShopController {
 	
 	//상세페이지
     @RequestMapping(value="/productPage", method= {RequestMethod.GET, RequestMethod.POST})
-    public String productDetail(@RequestParam("productNo") int productNo, Model model) {    
+    public String productDetail(@RequestParam(required = false) Integer productNo, Model model) {    
         System.out.println("ShopController.productDetail");
         System.out.println("상품번호: " + productNo);
         

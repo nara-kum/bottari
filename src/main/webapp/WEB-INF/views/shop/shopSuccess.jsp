@@ -84,7 +84,7 @@
 					<button class="btn secondary-btn" onclick="location.href='shopform.jsp'">
 						다른 상품 올리기
 					</button>
-					<button class="btn primary-btn" onclick="location.href='myProducts.jsp'">
+					<button class="btn primary-btn" onclick="location.href='productPage.jsp'">
 						상품 확인하러 가기
 					</button>
 				</div>

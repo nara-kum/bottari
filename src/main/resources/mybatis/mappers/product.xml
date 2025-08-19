@@ -38,8 +38,8 @@
 	                di.turn
 	        FROM product p
 	        LEFT JOIN category c ON p.category_no = c.category_no
-	        LEFT JOIN product_option o ON p.product_no = o.product_no
-	        LEFT JOIN detail_option do ON o.detailOPtion_no = do.detailOPtion_no
+	        LEFT JOIN option o ON p.product_no = o.product_no
+	        LEFT JOIN detailOption do ON o.detailOPtion_no = do.detailOPtion_no
 	        LEFT JOIN detailed_image di ON p.product_no = di.product_no
 	        WHERE p.product_no = #{product_no}
 	        ORDER BY di.turn, o.option_no
