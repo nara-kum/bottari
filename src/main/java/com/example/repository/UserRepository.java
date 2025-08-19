@@ -44,6 +44,6 @@ public class UserRepository {
 		
 		UserVO userVO = sqlSession.selectOne("user.selectOneById",id);
 		return userVO;
-	}
-	
+	}	
+
 }

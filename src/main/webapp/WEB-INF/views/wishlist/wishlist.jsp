@@ -5,10 +5,9 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="../../../../assets/css/reset.css">
-    <link rel="stylesheet" href="../../../../assets/css/Global.css">
-    <link rel="stylesheet" href="../../../../assets/css/wishlist.css">
-    <title>wishlist</title>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/reset.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/Global.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/wishlist.css">
 </head>
 
 <body class="family">
@@ -16,7 +15,7 @@
         <div id="sec-header" class="sector">
             <div class="left-side">
                 <a href="">
-                    <img class="header-logo" src="../../../assets/icon/Logo_colored.svg">
+                    <img class="header-logo" src="${pageContext.request.contextPath}/assets/icon/Logo_colored.svg">
                 </a>
                 <h1 class="header-menu"><a href="">캘린더</a></h1>
                 <h1 class="header-menu"><a href="">펀딩</a></h1>
@@ -25,12 +24,12 @@
             </div>
             <div class="right-side">
                 <a href="">
-                    <img class="header-icon header-shopping-cart" src="../../../assets/icon/icon-shopping-cart.svg">
+                    <img class="header-icon header-shopping-cart" src="${pageContext.request.contextPath}/assets/icon/icon-shopping-cart.svg">
                 </a>
 
                 <h1 class="header-usermenu">사용자이름</h1>
                 <a href="">
-                    <img class="header-icon" src="../../../assets/icon/icon-caret-down.svg">
+                    <img class="header-icon" src="${pageContext.request.contextPath}/assets/icon/icon-caret-down.svg">
                 </a>
             </div>
         </div>
@@ -54,7 +53,7 @@
                     <div class="a-product">
                         <div class="image-row">
                             <input id="chk-1" type="checkbox" class="product-checkbox">
-                            <img class="product-image" src="../../../assets/images/eki.jpg" /> <!--상품이미지-->
+                            <img class="product-image" src="${pageContext.request.contextPath}/assets/images/eki.jpg" /> <!--상품이미지-->
 
                             <!-- 텍스트 가로 정렬 영역 -->
                             <div class="product-info">
@@ -65,9 +64,9 @@
 
                                 <div class="image-row">
                                     <div class="shopping-cart">
-                                        <img src="../../../assets/icon/icon-shopping-cart.svg" /> <!--장바구니-->
+                                        <img src="${pageContext.request.contextPath}/assets/icon/icon-shopping-cart.svg" /> <!--장바구니-->
                                     </div>
-                                    <img src="../../../assets/images/heart.jpg" /> <!-- 하트(찜) -->
+                                    <img src="${pageContext.request.contextPath}/assets/images/heart.jpg" /> <!-- 하트(찜) -->
                                 </div>
                             </div> <!-- "product-info" 끝나는 지점    -->
                         </div> <!--  image-row 끝나는 지점    -->
@@ -77,7 +76,7 @@
                     <div class="a-product">
                         <div class="image-row">
                             <input id="chk-1" type="checkbox" class="product-checkbox">
-                            <img class="product-image" src="../../../assets/images/mood-light.jpg" /> <!--상품이미지-->
+                            <img class="product-image" src="${pageContext.request.contextPath}/assets/images/mood-light.jpg" /> <!--상품이미지-->
 
                             <!-- 텍스트 가로 정렬 영역 -->
                             <div class="product-info">
@@ -88,9 +87,9 @@
 
                                 <div class="image-row">
                                     <div class="shopping-cart">
-                                        <img src="../../../assets/icon/icon-shopping-cart.svg" /> <!--장바구니-->
+                                        <img src="${pageContext.request.contextPath}/assets/icon/icon-shopping-cart.svg" /> <!--장바구니-->
                                     </div>
-                                    <img src="../../../assets/images/heart.jpg" /> <!--하트(찜)-->
+                                    <img src="${pageContext.request.contextPath}/assets/images/heart.jpg" /> <!--하트(찜)-->
                                 </div>
                             </div> <!-- "product-info" 끝나는 지점    -->
                         </div> <!--  image-row 끝나는 지점    -->
@@ -100,7 +99,7 @@
                     <div class="a-product">
                         <div class="image-row">
                             <input id="chk-1" type="checkbox" class="product-checkbox">
-                            <img class="product-image" src="../../../assets/images/cup.jpg" /> <!--상품이미지-->
+                            <img class="product-image" src="${pageContext.request.contextPath}/assets/images/cup.jpg" /> <!--상품이미지-->
 
                             <!-- 텍스트 가로 정렬 영역 -->
                             <div class="product-info">
@@ -111,9 +110,9 @@
 
                                 <div class="image-row">
                                     <div class="shopping-cart">
-                                        <img src="../../../assets/icon/icon-shopping-cart.svg" /> <!--장바구니-->
+                                        <img src="${pageContext.request.contextPath}/assets/icon/icon-shopping-cart.svg" /> <!--장바구니-->
                                     </div>
-                                    <img src="../../../assets/images/heart.jpg" /> <!--하트(찜)-->
+                                    <img src="${pageContext.request.contextPath}/assets/images/heart.jpg" /> <!--하트(찜)-->
                                     
                                 </div>
                             </div> <!-- "product-info" 끝나는 지점    -->
@@ -124,7 +123,7 @@
                     <div class="a-product">
                         <div class="image-row">
                             <input id="chk-1" type="checkbox" class="product-checkbox">
-                            <img class="product-image" src="../../../assets/images/flower.jpg" /> <!--상품이미지-->
+                            <img class="product-image" src="${pageContext.request.contextPath}/assets/images/flower.jpg" /> <!--상품이미지-->
 
                             <!-- 텍스트 가로 정렬 영역 -->
                             <div class="product-info">
@@ -134,9 +133,9 @@
 
                                 <div class="image-row">
                                     <div class="shopping-cart">
-                                        <img src="../../../assets/icon/icon-shopping-cart.svg" /> <!--장바구니-->
+                                        <img src="${pageContext.request.contextPath}/assets/icon/icon-shopping-cart.svg" /> <!--장바구니-->
                                     </div>
-                                    <img src="../../../assets/images/heart.jpg" /> <!--하트(찜)-->
+                                    <img src="${pageContext.request.contextPath}/assets/images/heart.jpg" /> <!--하트(찜)-->
                                 </div>
                             </div> <!-- "product-info" 끝나는 지점    -->
                         </div> <!--  image-row 끝나는 지점    -->
@@ -146,7 +145,7 @@
                     <div class="a-product">
                         <div class="image-row">
                             <input id="chk-1" type="checkbox" class="product-checkbox">
-                            <img class="product-image" src="../../../assets/images/cow.jpg" /> <!--상품이미지-->
+                            <img class="product-image" src="${pageContext.request.contextPath}/assets/images/cow.jpg" /> <!--상품이미지-->
 
                             <!-- 텍스트 가로 정렬 영역 -->
                             <div class="product-info">
@@ -156,9 +155,9 @@
 
                                 <div class="image-row">
                                     <div class="shopping-cart">
-                                        <img src="../../../assets/icon/icon-shopping-cart.svg" /> <!--장바구니-->
+                                        <img src="${pageContext.request.contextPath}/assets/icon/icon-shopping-cart.svg" /> <!--장바구니-->
                                     </div>
-                                    <img src="../../../assets/images/heart.jpg" /> <!--하트(찜)-->
+                                    <img src="${pageContext.request.contextPath}/assets/images/heart.jpg" /> <!--하트(찜)-->
                                 </div>
                             </div> <!-- "product-info" 끝나는 지점    -->
                         </div> <!--  image-row 끝나는 지점    -->
@@ -182,7 +181,7 @@
                         <!-- 1번 상품 5%, 전액 -->
                         <div class="right-product-box">
                             <div class="right-image">
-                                <img src="../../../assets/images/eki.jpg" />
+                                <img src="${pageContext.request.contextPath}/assets/images/eki.jpg" />
                                 <div class="product-info">
                                     <div class="form-group2">
                                         <div class="right-choice-product">"신생아 오가닉 선물" [임신/출산축하] "뱀띠 아기선물"</div>
@@ -204,7 +203,7 @@
                         <!-- 2번 상품 5%, 전액 -->
                         <div class="right-product-box">
                             <div class="right-image">
-                                <img src="../../../assets/images/mood-light.jpg" />
+                                <img src="${pageContext.request.contextPath}/assets/images/mood-light.jpg" />
                                 <div class="product-info">
                                     <div class="form-group2">
                                         <div class="right-choice-product">&#34;결혼선물 집들이선물&#34; [레이문] 주문제작 드로잉 무드등...</div>
@@ -227,7 +226,7 @@
                         <!-- 3번 상품 5%, 전액 -->
                         <div class="right-product-box">
                             <div class="right-image">
-                                <img src="../../../assets/images/cup.jpg" />
+                                <img src="${pageContext.request.contextPath}/assets/images/cup.jpg" />
                                 <div class="product-info">
                                     <div class="form-group2">
                                         <div class="right-choice-product">&#34;봄날의 우리&#34; [선물포장+엽서증정] 머그컵 세트...</div>
@@ -250,7 +249,7 @@
                         <!-- 4번 상품 5%, 전액 -->
                         <div class="right-product-box">
                             <div class="right-image">
-                                <img src="../../../assets/images/flower.jpg" />
+                                <img src="${pageContext.request.contextPath}/assets/images/flower.jpg" />
                                 <div class="product-info">
                                     <div class="form-group2">
                                         <div class="right-choice-product">[어버이날 스승의날] &#34;감사합니다 카네이션꽃...</div>
@@ -273,7 +272,7 @@
                         <!-- 5번 상품 5%, 전액 -->
                         <div class="right-product-box">
                             <div class="right-image">
-                                <img src="../../../assets/images/cow.jpg" />
+                                <img src="${pageContext.request.contextPath}/assets/images/cow.jpg" />
                                 <div class="product-info">
                                     <div class="form-group2">
                                         <div class="right-choice-product">한우맘 1++등급 한우 패밀리 프리미엄 1.4kg(채끝)</div>

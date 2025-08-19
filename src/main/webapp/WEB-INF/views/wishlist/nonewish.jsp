@@ -5,9 +5,9 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="../../../../assets/css/reset.css">
-    <link rel="stylesheet" href="../../../../assets/css/Global.css">
-    <link rel="stylesheet" href="../../../../assets/css/nonewish.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/reset.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/Global.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/nonewish.css">
 </head>
 
 <body class="family">
@@ -15,7 +15,7 @@
         <div id="sec-header" class="sector">
             <div class="left-side">
                 <a href="">
-                    <img class="header-logo" src="../../../assets/icon/Logo_colored.svg">
+                    <img class="header-logo" src="${pageContext.request.contextPath}/assets/icon/Logo_colored.svg">
                 </a>
                 <h1 class="header-menu"><a href="">캘린더</a></h1>
                 <h1 class="header-menu"><a href="">펀딩</a></h1>
@@ -24,12 +24,12 @@
             </div>
             <div class="right-side">
                 <a href="">
-                    <img class="header-icon header-shopping-cart" src="../../../assets/icon/icon-shopping-cart.svg">
+                    <img class="header-icon header-shopping-cart" src="${pageContext.request.contextPath}/assets/icon/icon-shopping-cart.svg">
                 </a>
 
                 <h1 class="header-usermenu">사용자이름</h1>
                 <a href="">
-                    <img class="header-icon" src="../../../assets/icon/icon-caret-down.svg" alt="아래화살표아이콘">
+                    <img class="header-icon" src="${pageContext.request.contextPath}/assets/icon/icon-caret-down.svg" alt="아래화살표아이콘">
                 </a>
             </div>
         </div>
@@ -51,7 +51,7 @@
 
                     <h2 class="top-text">위시리스트</h2>
                     <div class="box-open-empty">
-                        <img src="../../../assets/images/icon-box-open-empty.jpg" alt="비어있는 위시리스트">
+                        <img src="${pageContext.request.contextPath}/assets/images/icon-box-open-empty.jpg" alt="비어있는 위시리스트">
                     </div>
 
                     <div class="none-wish">

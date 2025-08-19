@@ -45,14 +45,10 @@
 				<c:if test="${sessionScope.authUser==null}">
 					<h1>
 						<a class="header-usermenu"
-							href="${pageContext.request.contextPath}/loginForm">로그인</a>
+							href="${pageContext.request.contextPath}/loginForm">사용자이름</a>
 					</h1>
 					<a href=""><img class="header-icon"
 						src="${pageContext.request.contextPath}/assets/icon/icon-caret-down.svg"></a>
-					<h1>
-						<a class="header-usermenu"
-							href="${pageContext.request.contextPath}/joinForm">회원가입</a>
-					</h1>
 				</c:if>
 		</div>
 	</header>
@@ -71,7 +67,7 @@
 							<label>아이디</label>
 							<div class="input-row">
 								<input type="text" placeholder="아이디 입력(6~20자)" name="id" id="input-id" value="">
-								<button type="button" value="중복 확인" onclick="return idCheck()">중복확인</button>
+								<button type="button" value="중복 확인">중복확인</button>
 							</div>
 						</div>
 
@@ -224,12 +220,8 @@
 	<script>
 	$(document).ready(function(){
 		console.log('돔트리 완료');
-
+		
 	
-
-
-		});			
-
 	});
 	
 	</script>

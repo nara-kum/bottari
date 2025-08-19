@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wishlist">
+	<resultMap id="resultMapWishlistVO" type="com.example.vo.WishlistVO">
+	    <result column="wishlist_no" property="wishlist_no" />  
+	    <result column="user_no" property="user_no" />
+	    <result column="product_no" property="product_no" />
+	    <result column="date" property="date" />
+	    <result column="ea" property="ea" />
+	</resultMap>
+
+	<!-- 전체데이터 가져오기 -->
+	<select id="selectList" resultType="WishlistVO">
+		<![CDATA[
+			select  wishlist_no,
+					user_no,
+			        product_no,
+			        date,
+			        ea
+			from wishlist
+			order by wishlist_no desc
+		]]>
+	</select>	
+
+	<!-- 1명 데이터 가져오기 -->
+	<select id="selectOne" parameterType="int" resultType="com.example.vo.WishlistVO">
+		select 	wishlist_no as wishlistNo,
+				user_no as userNo,
+		        product_no as productNo,
+		        date,
+		        ea
+		from wishlist
+		where wishlist_no = #{wishlistNo}  
+ 	</select>
+
+ 	<!-- 1명저장하기 -->
+	<insert id="insert" parameterType="WishlistVO">
+		<![CDATA[
+			insert into wishlist
+			values(#{wishlist_no}, #{user_no}, #{product_no}, #{date}, #{ea})
+		]]>
+	</insert>	
+	
+	<!-- 1명 저장하기  Map -->
+	<insert id="insert2" parameterType="com.example.vo.WishlistVO 아니고 map을 받아야된다">
+		<![CDATA[
+			insert into wishlist
+			values(#{wishlist_no}, #{user_no},  #{product_no}, #{date}, #{ea})
+		]]>
+	</insert>   
+
+</mapper>
