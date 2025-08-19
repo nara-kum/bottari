@@ -272,6 +272,18 @@
                 
                 //임시 이벤트들
                 events: [
+                	<c:forEach items="${requestScope.cList}" var="calendervo" varStatus="status">
+                    {
+                        id: '${calendervo.event_no}',
+                        title: '${calendervo.event_name}',
+                        start: '${calendervo.event_date}', 
+                        extendedProps: {
+                            icon: 'birthday',
+                            comment: '${calendervo.event_memo}'
+                        }
+                    },<c:if test="${!status.last}">,</c:if>
+                    </c:forEach>
+                	
                     {
                         id: '1',
                         title: '임시 이벤트',

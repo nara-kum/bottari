@@ -1,6 +1,10 @@
 @charset "utf-8";
 
 /* 전체 설정 */
+html {
+  overflow-y: scroll;  /* 스크롤이 필요 없을 때도 항상 세로 스크롤바를 차지 */
+}
+
 body {
     font-family: 'inter';
 }
