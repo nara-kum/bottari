@@ -21,6 +21,196 @@
     gap: 10px;
 }
 
+.align-right {
+	gap: 5px;
+	margin-right: 45px;
+}
+
+/* 일정 등록폼 css */
+
+.btn-listbox {
+    width: 49px;
+    height: 24px;
+    padding-top: 8px;
+    padding-right: 10px;
+    display: flex;
+}
+
+.box-icon {
+    width: 24px;
+    height: 24px;
+}
+
+.schedule-name {
+    padding: 10px 0px;
+    display: flex;
+}
+
+.repeat-option {
+    padding: 10px 0px;
+    display: flex;
+}
+
+.explanation-group {
+    padding: 10px 0px;
+    display: flex;
+}
+
+.custom-schedule-name {
+    font-size: 17px;
+    border: 0px;
+    padding-left: 10px;
+    appearance: none;       /* 브라우저 기본 스타일 제거 */
+    width: 308px !important;
+    height: 38px !important;
+    font-weight: bold;
+    position: relative;
+}
+
+.textbox {
+    width: 341px !important;
+    appearance: none;       /* 브라우저 기본 스타일 제거 */
+    border-bottom: 2px solid;
+    padding-bottom: 5px;
+}
+
+.custom-select {
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #888;
+  border-radius: 5px;
+  background-color: #ffffff;
+  appearance: none;       /* 브라우저 기본 스타일 제거 */
+  width: 132px;
+  height: 37px;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url('../../asset/icon-caret-down.svg');  /* 커스텀 화살표 아이콘 */
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 16px;
+}
+
+.explanation-textarea {
+    resize: none;   
+    font-size: 14px;
+    border: 1px solid #929292;
+    border-radius: 5px;
+    background-color: #ffffff;
+    appearance: none;       /* 브라우저 기본 스타일 제거 */
+    width: 335px;
+    height: 121px;
+    background-color: #ffffff;
+    border-radius: 4px;    
+    overflow: hidden;
+    position: relative;
+}
+
+.explanation-icon {
+    padding-bottom: 102px;
+    padding-right: 36px;
+    padding-left: 16px;
+}
+
+.repeat-icon {
+    padding-right: 36px;
+    padding-left: 16px;
+}
+
+.cross-container {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.icon-cross {
+    display: flex;
+}
+
+.btn-save {
+    width: 90px;
+    height: 30px;
+    border: 1px solid #FF9B7E;
+    border-radius: 10px;
+    background-color: #EF5327;
+    color: white;
+    margin: auto auto;
+}
+
+/* 아이콘 선택기 스타일 */
+.schedule-name {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.icon-selector {
+    position: relative;
+    flex-shrink: 0;
+}
+
+.selected-icon {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 8px;
+    border-radius: 8px;
+    background: white;
+    cursor: pointer;
+    width: 50px;
+    height: 38px;
+    justify-content: center;
+}
+
+.selected-icon:hover {
+    border-color: #007bff;
+}
+
+.selected-icon img:first-child {
+    width: 24px;
+    height: 24px;
+}
+
+.dropdown-arrow {
+    width: 10px;
+    height: 10px;
+}
+
+.icon-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: white;
+    border: 2px solid #ddd;
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1000;
+    width: 200px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+}
+
+.icon-option {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    border: 1px solid #f0f0f0;
+}
+
+.icon-option:hover {
+    background-color: #f8f9fa;
+}
+
+.icon-option img {
+    width: 24px;
+    height: 24px;
+}
+
 /* 캘린더 이벤트 커스텀 스타일 */
 .custom-event {
     display: flex;
@@ -42,4 +232,29 @@
     overflow: hidden;
     text-overflow: ellipsis;
     flex: 1;
+}
+
+/* 이벤트 관련 모든 요소에 포인터 커서 적용 */
+.fc-event,
+.fc-event *,
+.fc-daygrid-event,
+.fc-daygrid-event *,
+.custom-event,
+.custom-event * {
+    cursor: pointer !important;
+    user-select: none !important; /* 텍스트 선택 방지 */
+}
+
+/* 이벤트 호버 시에도 포인터 커서 유지 */
+.fc-event:hover,
+.fc-event:hover * {
+    cursor: pointer !important;
+}
+
+/* 드래그 방지 (이미지 등) */
+.fc-event img,
+.event-icon {
+    -webkit-user-drag: none !important;
+    user-drag: none !important;
+    cursor: pointer !important;
 }

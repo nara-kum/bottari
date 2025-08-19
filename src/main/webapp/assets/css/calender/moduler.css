@@ -157,6 +157,11 @@
     justify-self: center;
 }
 
+.align-right {
+    align-items: flex-end;
+    justify-self: flex-end;
+}
+
 .row-align {
     align-items: center;
     margin: 0px auto;

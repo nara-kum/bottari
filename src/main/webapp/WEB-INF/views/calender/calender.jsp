@@ -149,7 +149,7 @@
                 // 클릭시 창 변경 제한
                 navLinks: false,
                 
-                editable: true,
+                editable: false,
                 
             	 // 이벤트 렌더링 커스터마이징
                 eventContent: function (arg) {
@@ -202,7 +202,8 @@
                         // 수정: events[0] 대신 events[0].title과 events[0].start 전달
                         const firstEvent = events[0];
     					const comment = firstEvent.extendedProps && firstEvent.extendedProps.comment ? firstEvent.extendedProps.comment : '';
-                        showEventInfo(events[0].title, events[0].start, comment);
+    					const icon = firstEvent.extendedProps && firstEvent.extendedProps.icon ? firstEvent.extendedProps.icon : '';
+                        showEventInfo(firstEvent.id, firstEvent.title, firstEvent.start, comment, icon);
                         selectedEventId = events[0].id; // 첫 번째 이벤트 ID 저장
                     } else {
                         showNoEventInfo(info.dateStr);
@@ -226,14 +227,47 @@
                 },
                 
                 eventClick: function (arg) {
-					console.log('debug: detected click event');
-
-					let title = arg.event.title;
-					let day = arg.event.start;
-					let comment = arg.event.extendedProps && arg.event.extendedProps.comment ? arg.event.extendedProps.comment : '';
+                    console.log('debug: detected click event');
 					
-                    showEventInfo(title, day, comment);
+                    let eventId = arg.event.id;
+                    let title = arg.event.title;
+                    let day = arg.event.start;
+                    let comment = arg.event.extendedProps && arg.event.extendedProps.comment ? arg.event.extendedProps.comment : '';
+                    let icon = arg.event.extendedProps && arg.event.extendedProps.icon ? arg.event.extendedProps.icon : '';
+                    
+                    // 이벤트가 있는 날짜 정보 가져오기
+                    const eventDateStr = arg.event.startStr;
+                    
+                    // 클릭된 날짜 설정
+                    setClickedDate(eventDateStr);
+                    
+                    // 선택된 이벤트 ID 설정
+                    selectedEventId = arg.event.id;
+                    
+                    // 날짜 정보 표시 (이벤트가 있으므로 true)
+                    showDateInfo(eventDateStr, true);
+                    
+                    // 이벤트 정보 표시
+                    showEventInfo(eventId, title, day, comment, icon);
+                    
+                    // 모든 날짜 칸의 색상 초기화
+                    document.querySelectorAll('.fc-daygrid-day').forEach(cell => {
+                        cell.style.backgroundColor = '';
+                        cell.querySelector('.fc-daygrid-day-number').style.color = '';
+                    });
+
+                    // 클릭된 이벤트가 있는 날짜 칸의 색상 변경
+                    const clickedCell = document.querySelector('.fc-daygrid-day[data-date="' + eventDateStr + '"]');
+                    if (clickedCell) {
+                        console.log('debug: detected changed color for event date');
+                        clickedCell.style.backgroundColor = '#EF5327';
+                        const dayNumber = clickedCell.querySelector('.fc-daygrid-day-number');
+                        if (dayNumber) {
+                            dayNumber.style.color = '#fff';
+                        }
+                    }
                 },
+                
                 dayMaxEvents: true,
                 
                 //임시 이벤트들
@@ -290,7 +324,8 @@
             if (todayEvents.length > 0) {
             	const firstEvent = todayEvents[0];
                 const comment = firstEvent.extendedProps && firstEvent.extendedProps.comment ? firstEvent.extendedProps.comment : '';
-                showEventInfo(firstEvent.title, firstEvent.start, comment);
+                const icon = firstEvent.extendedProps && firstEvent.extendedProps.icon ? firstEvent.extendedProps.icon : '';
+                showEventInfo(firstEvent.id, firstEvent.title, firstEvent.start, comment, icon);
                 selectedEventId = firstEvent.id; // 첫 번째 이벤트 ID 저장
                 
                 setTimeout(() => {
@@ -359,14 +394,40 @@
             }
 
             //이벤트가 있을 때
-            function showEventInfo(title, day, comment) {
+            function showEventInfo(eventId, title, day, comment, icon) {
 				console.log('debug: detect event');
+				console.log('debug request event id=' + eventId)
                 const eventInfoDiv = document.getElementById('event-info');
+				
+				// 아이콘 경로 설정
+                let iconSrc = '';
+                switch (icon) {
+                    case 'birthday':
+                        iconSrc = '../../../assets/icon/icon-cake-birthday.svg';
+                        break;
+                    case 'wedding':
+                        iconSrc = '../../../assets/icon/icon-rings-wedding.svg';
+                        break;
+                    case 'thanks':
+                        iconSrc = '../../../assets/icon/icon-hand-holding-heart.svg';
+                        break;
+                    case 'baby':
+                        iconSrc = '../../../assets/icon/icon-child-head.svg';
+                        break;
+                    case 'event':
+                        iconSrc = '../../../assets/icon/icon-glass-cheers.svg';
+                        break;
+                    case 'celebrate':
+                        iconSrc = '../../../assets/icon/icon-party-horn.svg';
+                        break;
+                    default:
+                        iconSrc = '../../../assets/icon/icon-comment.svg'; // 기본 아이콘
+                }
                 
                 let htmlStr = '';
                 htmlStr += '<div class="event-detail-area">';
                 htmlStr += '	<div class="row-flex-box">'
-                htmlStr += '		<img class="middle-icon" src="../../../assets/icon/icon-cake-birthday.svg">'
+                htmlStr += '		<img class="middle-icon" src="' + iconSrc + '">'
                 htmlStr += '		<div class="column-flex-box event-detail">'
                 htmlStr += '			<div class="text-16 bold">'+title+'</div>'
                 htmlStr += '			<div class="text-14">'+ (comment || '코멘트가 없습니다')  +'</div>'
@@ -417,7 +478,6 @@
 
             // 삭제 함수 (구현 필요)
             function deleteSelectedEvent() {
-				console.log
                 if (!selectedEventId) return;
                 const event = calendar.getEventById(selectedEventId);
                 if (event) {
@@ -431,6 +491,12 @@
                         customClass: {
                             confirmButton: "btn btn-primary",
                             cancelButton: "btn btn-active-light"
+                        },
+                        showClass: {
+                            popup: ''
+                        },
+                        hideClass: {
+                            popup: ''
                         }
                     }).then(function (result) {
                         if (result.value) {
@@ -443,30 +509,58 @@
                 }
             }
 
-         	// 1. 일정 추가 팝업 - 문법 오류 수정
+         // 1. 일정 추가 팝업 - 완전 수정된 버전
             function openScheduleModal(dateStr) {
                 Swal.fire({
                     html: '<div id="event-add-popup">' +
-                          '<div class="cancel">' +
-                          '<button id="event-cancel-btn" class="btn-cancel"><img class="popup-icon" src="../../../assets/icon/icon-cross.svg"></button>' +
-                          '</div>' +
-                          '<div class="event-name">' +
-                          '<div class="event-icon-box">' +
-                          '<img class="popup-icon" src="../../../assets/icon/icon-interrogation.svg">' +
-                          '<img class="popup-icon" src="../../../assets/icon/icon-caret-down.svg">' +
-                          '</div>' +
-                          '<div class="event-name-box">' +
-                          '<input name="eventName" class="input-name" placeholder="일정 제목">' +
-                          '</div>' +
-                          '</div>' +
-                          '<div class="event-comment">' +
-                          '<img class="popup-icon" src="../../../assets/icon/icon-comment.svg">' +
-                          '<textarea class="input-comment" placeholder="메모 입력"></textarea>' +
-                          '</div>' +
-                          '<button id="event-save-btn" class="btn-save" type="button">저장</button>' +
+                          '  <div class="cancel">' +
+                          '    <button id="event-cancel-btn" class="btn-cancel"><img class="popup-icon" src="../../../assets/icon/icon-cross.svg"></button>' +
+                          '  </div>' +
+                          '  <div class="event-name">' +
+                          '    <div class="event-icon-box">' +
+                          '      <div class="icon-selector">' +
+                          '        <div class="selected-icon" onclick="toggleIconDropdown()">' +
+                          '          <img src="../../../assets/icon/icon-cake-birthday.svg" id="selected-icon-img">' +
+                          '          <img class="dropdown-arrow" src="../../../assets/icon/icon-caret-down.svg">' +
+                          '        </div>' +
+                          '        <div class="icon-dropdown" id="icon-dropdown" style="display: none;">' +
+                          '          <div class="icon-option" data-value="birthday" onclick="selectIcon(\'birthday\', \'../../../assets/icon/icon-cake-birthday.svg\')">' +
+                          '            <img src="../../../assets/icon/icon-cake-birthday.svg">' +
+                          '          </div>' +
+                          '          <div class="icon-option" data-value="wedding" onclick="selectIcon(\'wedding\', \'../../../assets/icon/icon-rings-wedding.svg\')">' +
+                          '            <img src="../../../assets/icon/icon-rings-wedding.svg">' +
+                          '          </div>' +
+                          '          <div class="icon-option" data-value="thanks" onclick="selectIcon(\'thanks\', \'../../../assets/icon/icon-hand-holding-heart.svg\')">' +
+                          '            <img src="../../../assets/icon/icon-hand-holding-heart.svg">' +
+                          '          </div>' +
+                          '          <div class="icon-option" data-value="baby" onclick="selectIcon(\'baby\', \'../../../assets/icon/icon-child-head.svg\')">' +
+                          '            <img src="../../../assets/icon/icon-child-head.svg">' +
+                          '          </div>' +
+                          '          <div class="icon-option" data-value="event" onclick="selectIcon(\'event\', \'../../../assets/icon/icon-glass-cheers.svg\')">' +
+                          '            <img src="../../../assets/icon/icon-glass-cheers.svg">' +
+                          '          </div>' +
+                          '          <div class="icon-option" data-value="celebrate" onclick="selectIcon(\'celebrate\', \'../../../assets/icon/icon-party-horn.svg\')">' +
+                          '            <img src="../../../assets/icon/icon-party-horn.svg">' +
+                          '          </div>' +
+                          '        </div>' +
+                          '      </div>' +
+                          '      <input type="hidden" id="selected-icon-value" value="birthday">' +
+                          '    </div>' +
+                          '    <div class="event-name-box">' +
+                          '      <input name="eventName" class="input-name" placeholder="일정 제목" type="text">' +
+                          '    </div>' +
+                          '  </div>' +
+                          '  <div class="event-comment">' +
+                          '    <img class="popup-icon" src="../../../assets/icon/icon-comment.svg">' +
+                          '    <textarea class="input-comment" placeholder="메모 입력"></textarea>' +
+                          '  </div>' +
+                          '  <button id="event-save-btn" class="btn-basic btn-orange size-normal" type="button">저장</button>' +
                           '</div>',
                     showCancelButton: false,
                     showConfirmButton: false,
+                    customClass: {
+                        popup: 'swal2-no-padding'  // 패딩 제거를 위한 클래스
+                    },
                     showClass: {
                         popup: ''
                     },
@@ -474,56 +568,100 @@
                         popup: ''
                     },
                     didOpen: () => {
-                    	
-                    	// 아이콘 드롭다운 관련 함수들을 전역으로 설정
+                        // CSS 스타일 추가
+                        const style = document.createElement('style');
+                        style.textContent = `
+                            .swal2-no-padding .swal2-html-container {
+                                padding: 0 !important;
+                                margin: 0 !important;
+                            }
+                            .swal2-popup {
+                                padding: 0 !important;
+                                width: 480px !important;
+                                height: 365px !important;
+                            }
+                        `;
+                        document.head.appendChild(style);
+
+                        // 아이콘 드롭다운 관련 함수들을 전역으로 설정
                         window.toggleIconDropdown = function () {
                             const dropdown = document.getElementById('icon-dropdown');
-                            dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+                            if (dropdown) {
+                                dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+                            }
                         };
 
                         window.selectIcon = function (value, imageSrc) {
-                            document.getElementById('selected-icon-img').src = imageSrc;
-                            document.getElementById('selected-icon-value').value = value;
-                            document.getElementById('icon-dropdown').style.display = 'none';
+                            const iconImg = document.getElementById('selected-icon-img');
+                            const iconValue = document.getElementById('selected-icon-value');
+                            const dropdown = document.getElementById('icon-dropdown');
+                            
+                            if (iconImg) iconImg.src = imageSrc;
+                            if (iconValue) iconValue.value = value;
+                            if (dropdown) dropdown.style.display = 'none';
                         };
 
                         // 드롭다운 외부 클릭시 닫기
-                        document.addEventListener('click', function (event) {
+                        document.addEventListener('click', function handleOutsideClick(event) {
                             const iconSelector = document.querySelector('.icon-selector');
                             const dropdown = document.getElementById('icon-dropdown');
-                            if (iconSelector && !iconSelector.contains(event.target)) {
+                            if (iconSelector && dropdown && !iconSelector.contains(event.target)) {
                                 dropdown.style.display = 'none';
                             }
                         });
                         
                         // 저장 버튼 클릭 이벤트
-                        document.querySelector('.btn-save').addEventListener('click', () => {
-                            const title = document.querySelector("input[name='eventName']").value;
-                            const comment = document.querySelector(".input-comment").value;
-                            if (title && title.trim()) {
-                                try {
-                                    const newEvent = calendar.addEvent({
-                                        title: title,
-                                        start: dateStr,
-                                        allDay: true,
-                                        extendedProps: {
-                                            comment: comment  // explanation과 icon 제거하고 comment만 남김
-                                        }
-                                    });
-                                    console.log('이벤트 생성 성공:', newEvent);
-                                } catch (error) {
-                                    console.error('이벤트 생성 실패:', error);
+                        const saveBtn = document.getElementById('event-save-btn');  // ID로 찾기
+                        if (saveBtn) {
+                            saveBtn.addEventListener('click', () => {
+                                const titleInput = document.querySelector("input[name='eventName']");
+                                const commentInput = document.querySelector(".input-comment");
+                                const selectedIconInput = document.getElementById('selected-icon-value');
+                                
+                                const title = titleInput ? titleInput.value : '';
+                                const comment = commentInput ? commentInput.value : '';
+                                const selectedIcon = selectedIconInput ? selectedIconInput.value : 'birthday';
+                                
+                                if (title && title.trim()) {
+                                    try {
+                                        const newEvent = calendar.addEvent({
+                                            title: title,
+                                            start: dateStr,
+                                            allDay: true,
+                                            extendedProps: {
+                                                comment: comment,
+                                                icon: selectedIcon
+                                            }
+                                        });
+                                        console.log('이벤트 생성 성공:', newEvent);
+                                        Swal.close();
+                                        
+                                        // 이벤트 생성 후 우측 패널 업데이트
+                                        showDateInfo(dateStr, true);
+                                        showEventInfo(newEvent.id, newEvent.title, newEvent.start, comment, selectedIcon);
+                                        selectedEventId = newEvent.id;
+                                        
+                                    } catch (error) {
+                                        console.error('이벤트 생성 실패:', error);
+                                    }
+                                } else {
+                                    alert('일정 제목을 입력해주세요.');
                                 }
-                            } else {
-                                console.log('제목이 비어있습니다');
-                            }
-                            Swal.close();
-                        });
+                            });
+                        }
 
                         // 닫기 버튼 클릭 이벤트
-                        document.querySelector('.btn-cancel').addEventListener('click', () => {
-                            Swal.close();
-                        });
+                        const cancelBtn = document.getElementById('event-cancel-btn');  // ID로 찾기
+                        if (cancelBtn) {
+                            cancelBtn.addEventListener('click', () => {
+                                Swal.close();
+                            });
+                        }
+                    },
+                    willClose: () => {
+                        // 팝업 닫힐 때 전역 함수들 정리
+                        if (window.toggleIconDropdown) delete window.toggleIconDropdown;
+                        if (window.selectIcon) delete window.selectIcon;
                     }
                 });
             }
@@ -533,31 +671,65 @@
                 const existingComment = (event.extendedProps && event.extendedProps.comment) ? event.extendedProps.comment : '';
                 const existingIcon = (event.extendedProps && event.extendedProps.icon) ? event.extendedProps.icon : '';
                 
+             // 아이콘 경로 설정
+                let iconSrc = '';
+                switch (existingIcon) {
+                    case 'birthday':
+                        iconSrc = '../../../assets/icon/icon-cake-birthday.svg';
+                        break;
+                    case 'wedding':
+                        iconSrc = '../../../assets/icon/icon-rings-wedding.svg';
+                        break;
+                    case 'thanks':
+                        iconSrc = '../../../assets/icon/icon-hand-holding-heart.svg';
+                        break;
+                    case 'baby':
+                        iconSrc = '../../../assets/icon/icon-child-head.svg';
+                        break;
+                    case 'event':
+                        iconSrc = '../../../assets/icon/icon-glass-cheers.svg';
+                        break;
+                    case 'celebrate':
+                        iconSrc = '../../../assets/icon/icon-party-horn.svg';
+                        break;
+                    default:
+                        iconSrc = '../../../assets/icon/icon-comment.svg'; // 기본 아이콘
+                }
+                
                 Swal.fire({
                     html:	'<div id="event-add-popup">' +
-		                    '<div class="cancel">' +
-		                    '<button id="event-cancel-btn" class="btn-cancel"><img class="popup-icon" src="../../../assets/icon/icon-cross.svg"></button>' +
-		                    '</div>' +
-		                    '<div class="event-name">' +
-		                    '<div class="event-icon-box">' +
-		                    '<img class="popup-icon" src="../../../assets/icon/icon-interrogation.svg">' +
-		                    '<img class="popup-icon" src="../../../assets/icon/icon-caret-down.svg">' +
-		                    '</div>' +
-		                    '<div class="event-name-box">' +
-		                    '<input name="eventName" class="input-name" placeholder="일정 제목" value="' + event.title +'">' +
-		                    '</div>' +
-		                    '</div>' +
-		                    '<div class="event-comment">' +
-		                    '<img class="popup-icon" src="' + icon + '">' +
-		                    '<textarea class="input-comment" placeholder="메모 입력">' +existingComment + '</textarea>' +
-		                    '</div>' +
-		                    '<button id="event-edit-btn" class="btn-save" type="button">수정</button>' +
+		                    '	<div class="cancel">' +
+		                    '		<button id="event-cancel-btn" class="btn-cancel"><img class="popup-icon" src="../../../assets/icon/icon-cross.svg"></button>' +
+		                    '	</div>' +
+		                    '	<div class="event-name">' +
+		                    '		<div class="event-icon-box">' +
+		                    '			<img class="popup-icon" src="../../../assets/icon/icon-interrogation.svg">' +
+		                    '			<img class="popup-icon" src="../../../assets/icon/icon-caret-down.svg">' +
+		                    '		</div>' +
+		                    '		<div class="event-name-box">' +
+		                    '			<input name="eventName" class="input-name" placeholder="일정 제목" value="' + event.title +'">' +
+		                    '		</div>' +
+		                    '	</div>' +
+		                    '	<div class="event-comment">' +
+		                    '		<img class="popup-icon" src="' + iconSrc + '">' +
+		                    '		<textarea class="input-comment" placeholder="메모 입력">' +existingComment + '</textarea>' +
+		                    '	</div>' +
+		                    '	<div class="row-flex-box align-right">' +
+		                    '		<button id="event-delete-btn" class="btn-basic btn-gray size-normal" type="button">삭제</button>' +
+		                    '		<button id="event-edit-btn" class="btn-basic btn-orange size-normal" type="button">수정</button>' +
+		                    '	</div>' +
 		                    '</div>',
                     showCancelButton: false,
                     showConfirmButton: false,
+                    showClass: {
+                        popup: ''
+                    },
+                    hideClass: {
+                        popup: ''
+                    },
                     didOpen: () => {
-                        // 저장 버튼 클릭 이벤트
-                        document.querySelector('.btn-save').addEventListener('click', () => {
+                        // 수정 버튼 클릭 이벤트
+                        document.getElementById('event-edit-btn').addEventListener('click', () => {
                             const title = document.querySelector("input[name='eventName']").value;
                             const comment = document.querySelector(".input-comment").value;
 
@@ -576,9 +748,12 @@
                         });
 
                         // 닫기 버튼 클릭 이벤트
-                        document.querySelector('.btn-cancel').addEventListener('click', () => {
+                        document.getElementById('event-cancel-btn').addEventListener('click', () => {
                             Swal.close();
                         });
+                        document.getElementById('event-delete-btn').onclick = function () {
+                        	deleteSelectedEvent();
+                        };
                     }
                 });
             }
