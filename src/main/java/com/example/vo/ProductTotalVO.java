@@ -19,9 +19,9 @@ public class ProductTotalVO {
     
    //상품옵션
 	private int option_no;
-	private int detailOPtion_no;
+	private int detailOption_no;
 	private String option_name;
-	private String detailOPtion_name;
+	private String detailOption_name;
     
 	//상세이미지
 	private int detailedImage_no;
@@ -37,7 +37,7 @@ public class ProductTotalVO {
 
 	public ProductTotalVO(int product_no, int category_no, String category_title, String title, int price, String brand,
 			String itemimg, int shipping_yn, int shipping_cost, int zipcode, String address, String detail_address,
-			int option_no, int detailOPtion_no, String option_name, String detailOPtion_name, int detailedImage_no,
+			int option_no, int detailOption_no, String option_name, String detailOption_name, int detailedImage_no,
 			String image_URL, int turn) {
 		super();
 		this.product_no = product_no;
@@ -53,9 +53,9 @@ public class ProductTotalVO {
 		this.address = address;
 		this.detail_address = detail_address;
 		this.option_no = option_no;
-		this.detailOPtion_no = detailOPtion_no;
+		this.detailOption_no = detailOption_no;
 		this.option_name = option_name;
-		this.detailOPtion_name = detailOPtion_name;
+		this.detailOption_name = detailOption_name;
 		this.detailedImage_no = detailedImage_no;
 		this.image_URL = image_URL;
 		this.turn = turn;
@@ -194,13 +194,13 @@ public class ProductTotalVO {
 	}
 
 
-	public int getDetailOPtion_no() {
-		return detailOPtion_no;
+	public int getDetailOption_no() {
+		return detailOption_no;
 	}
 
 
-	public void setDetailOPtion_no(int detailOPtion_no) {
-		this.detailOPtion_no = detailOPtion_no;
+	public void setDetailOPtion_no(int detailOption_no) {
+		this.detailOption_no = detailOption_no;
 	}
 
 
@@ -214,13 +214,13 @@ public class ProductTotalVO {
 	}
 
 
-	public String getDetailOPtion_name() {
-		return detailOPtion_name;
+	public String getDetailOption_name() {
+		return detailOption_name;
 	}
 
 
 	public void setDetailOPtion_name(String detailOPtion_name) {
-		this.detailOPtion_name = detailOPtion_name;
+		this.detailOption_name = detailOption_name;
 	}
 
 
@@ -261,8 +261,8 @@ public class ProductTotalVO {
 				+ category_title + ", title=" + title + ", price=" + price + ", brand=" + brand + ", itemimg=" + itemimg
 				+ ", shipping_yn=" + shipping_yn + ", shipping_cost=" + shipping_cost + ", zipcode=" + zipcode
 				+ ", address=" + address + ", detail_address=" + detail_address + ", option_no=" + option_no
-				+ ", detailOPtion_no=" + detailOPtion_no + ", option_name=" + option_name + ", detailOPtion_name="
-				+ detailOPtion_name + ", detailedImage_no=" + detailedImage_no + ", image_URL=" + image_URL + ", turn="
+				+ ", detailOption_no=" + detailOption_no + ", option_name=" + option_name + ", detailOption_name="
+				+ detailOption_name + ", detailedImage_no=" + detailedImage_no + ", image_URL=" + image_URL + ", turn="
 				+ turn + "]";
 	}
 	
