@@ -1,4 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <!DOCTYPE html>
 <html lang="ko">
 
@@ -31,7 +33,6 @@
 		<div id="sec-content" class="sector">
 			<div class="sec-sub-title">
 				<h2 class="header-sub">상품페이지</h2>
-				<!-- 여기부터 코딩 시작!! -->
 			</div>
 			<div class="sec-content-main">
 
@@ -41,22 +42,50 @@
 					<div class="product-section">
 						<!-- 상품 이미지 -->
 						<div class="product-images">	 
-							<img class="main-image" src="../../../photo/하겐다즈.JPG">
+							<c:choose>
+								<c:when test="${not empty product.itemimg}">
+									<img class="main-image" src="${product.itemimg}" alt="${product.title}">
+								</c:when>
+								<c:otherwise>
+									<img class="main-image" src="../../../photo/default.jpg" alt="기본 이미지">
+								</c:otherwise>
+							</c:choose>
+							
+							<!-- 상세 이미지들 표시 -->
+							<div class="detail-images">
+								<c:forEach items="${productList}" var="item">
+									<c:if test="${not empty item.image_URL}">
+										<img src="${item.image_URL}" alt="상세이미지 ${item.turn}" class="detail-image">
+									</c:if>
+								</c:forEach>
+							</div>
 						</div>
 
 						<!-- 상품 정보 -->
 						<div class="product-info">
-							<h1 class="product-title">[단독]하겐다즈 프리미엄 수제 아이스크림 케이크 리얼블랙 (바닐라+벨지안 초코)</h1>
-							<div class="product-price">32,900원</div>
-							<div class="brand-name">하겐다즈(하이브)</div>
+							<h1 class="product-title">${product.title}</h1>
+							<div class="product-price">
+								<fmt:formatNumber value="${product.price}" pattern="#,###"/>원
+							</div>
+							<div class="brand-name">${product.brand}</div>
+							<div class="category-name">카테고리: ${product.category_title}</div>
 
 							<div class="product-options">
-								<div class="option-label">상품옵션</div>
+								<div class="option-label">배송정보</div>
 								<div class="delivery-info">
-									<span class="icon">🚚</span> 택배비 무료
+									<span class="icon">🚚</span> 
+									<c:choose>
+										<c:when test="${product.shipping_cost == 0}">
+											택배비 무료
+										</c:when>
+										<c:otherwise>
+											배송비 <fmt:formatNumber value="${product.shipping_cost}" pattern="#,###"/>원
+										</c:otherwise>
+									</c:choose>
 								</div>
 								<div class="delivery-info">
-									<span class="icon">❄️</span> 도서산간 배달 불가
+									<span class="icon">📍</span> 
+									배송지: ${product.address} ${product.detail_address} (${product.zipcode})
 								</div>
 							</div>
 
@@ -69,30 +98,53 @@
 						<!-- 주문 영역 -->
 						<div class="order-section">
 							<div class="order-title">상품 선택</div>
-							<select class="option-select">
-								<option>맛선택</option>
-								<option>바닐라</option>
-								<option>벨지안초콘</option>
-							</select>
+							
+							<!-- 옵션이 있는 경우 -->
+							<c:if test="${not empty productList}">
+								<c:set var="hasOptions" value="false"/>
+								<c:forEach items="${productList}" var="item">
+									<c:if test="${not empty item.option_name}">
+										<c:set var="hasOptions" value="true"/>
+									</c:if>
+								</c:forEach>
+								
+								<c:if test="${hasOptions}">
+									<select class="option-select" id="productOption">
+										<option value="">옵션을 선택하세요</option>
+										<c:forEach items="${productList}" var="item">
+											<c:if test="${not empty item.option_name}">
+												<option value="${item.option_no}">
+													${item.option_name}
+													<c:if test="${not empty item.detailOPtion_name}">
+														- ${item.detailOPtion_name}
+													</c:if>
+												</option>
+											</c:if>
+										</c:forEach>
+									</select>
+								</c:if>
+							</c:if>
+							
 							<div style="font-size: 12px; color: #999; margin-bottom: 15px;">
-								(선택한 맛 표시)
+								선택한 옵션이 표시됩니다
 							</div>
 
 							<div class="quantity-control">
-								<button class="quantity-btn">-</button>
-								<input type="number" value="1" class="quantity-input" min="1">
-								<button class="quantity-btn">+</button>
+								<button class="quantity-btn" onclick="decreaseQuantity()">-</button>
+								<input type="number" value="1" class="quantity-input" min="1" id="quantity">
+								<button class="quantity-btn" onclick="increaseQuantity()">+</button>
 							</div>
 
-				
-							<div class="total-order"
+							<div class="total-order" id="selectedProduct" 
 								style="background: white; padding: 10px; border-radius: 4px; margin-bottom: 15px; font-size: 12px; color: #666;">
-								[단독]하겐다즈 프리미엄 수제 아이스크림 케이크 <br>리얼블랙 (바닐라+벨지안 초코)
+								${product.title}
 								<br>
-								바닐라 x 1
+								수량: <span id="displayQuantity">1</span>개
 							</div>
 
-							<div class="total-price">총 결제 금액 : 32,900원</div>
+							<div class="total-price" id="totalPrice">
+								총 결제 금액 : <fmt:formatNumber value="${product.price}" pattern="#,###"/>원
+							</div>
 
 							<button class="cart-btn">장바구니 담기</button>
 
@@ -108,26 +160,26 @@
 						<div class="section-title">이런 구성은 어떠세요?</div>
 						<div class="product-grid">
 							<div class="product-card">
-								<div
-									style="width: 100%; height: 100px; background: #8B4513; border-radius: 6px; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; color: white;">
-									🍫</div>
-								<div class="product-card-title">하겐다즈 (하이브) 프리미엄 초콜릿 초콜 초콜 + 쪽 초콜릿초...</div>
+								<div style="width: 100%; height: 100px; background: #8B4513; border-radius: 6px; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; color: white;">
+									🍫
+								</div>
+								<div class="product-card-title">추천 상품 1</div>
 								<div class="product-card-price">65,900원</div>
 							</div>
 
 							<div class="product-card">
-								<div
-									style="width: 100%; height: 100px; background: #DDA0DD; border-radius: 6px; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; color: white;">
-									🍰</div>
-								<div class="product-card-title">하겐다즈 (하이브) 프리미엄 초콜 바닐 초콜 하이브코코아...</div>
+								<div style="width: 100%; height: 100px; background: #DDA0DD; border-radius: 6px; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; color: white;">
+									🍰
+								</div>
+								<div class="product-card-title">추천 상품 2</div>
 								<div class="product-card-price">39,900원</div>
 							</div>
 
 							<div class="product-card">
-								<div
-									style="width: 100%; height: 100px; background: #8B4513; border-radius: 6px; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; color: white;">
-									🍫</div>
-								<div class="product-card-title">하겐다즈 (하이브) 프리미엄 초콜릿 초콜 초콜 + 쪽 초콜릿초...</div>
+								<div style="width: 100%; height: 100px; background: #8B4513; border-radius: 6px; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; color: white;">
+									🍫
+								</div>
+								<div class="product-card-title">추천 상품 3</div>
 								<div class="product-card-price">65,900원</div>
 							</div>
 						</div>
@@ -135,33 +187,14 @@
 
 					<!-- 상품 설명 -->
 					<div class="product-description">
-						<div class="haagen-logo-large">Hagen-Dazs</div>
+						<div class="haagen-logo-large">${product.brand}</div>
 						<div class="description-text">
-							<p>상세 설명 사진 부분 입니다.</p>
-							<p>상세 설명 사진 부분 입니다.</p>
-							<p>상세 설명 사진 부분 입니다.</p>
-							<p>상세 설명 사진 부분 입니다.</p>
-							<p>상세 설명 사진 부분 입니다.</p>
-							<p>상세 설명 사진 부분 입니다.</p>
-
-							<p>상세 설명 사진 부분 입니다.</p>
-							<p>상세 설명 사진 부분 입니다.</p>
-							<p>상세 설명 사진 부분 입니다.</p>
-							<p>상세 설명 사진 부분 입니다.</p>
-							<p>상세 설명 사진 부분 입니다.</p>
-							<p>상세 설명 사진 부분 입니다.</p>
-							<p>상세 설명 사진 부분 입니다.</p>
-							<p>상세 설명 사진 부분 입니다.</p>
-							<p>상세 설명 사진 부분 입니다.</p>
-							<p>상세 설명 사진 부분 입니다.</p>
-							<p>상세 설명 사진 부분 입니다.</p>
-							<p>상세 설명 사진 부분 입니다.</p>
-							<p>상세 설명 사진 부분 입니다.</p>
-							<p>상세 설명 사진 부분 입니다.</p>
-							<p>상세 설명 사진 부분 입니다.</p>
-							<p>상세 설명 사진 부분 입니다.</p>
-							<p>상세 설명 사진 부분 입니다.</p>
-							<p>상세 설명 사진 부분 입니다.</p>
+							<p>${product.title} 상품 상세 설명입니다.</p>
+							<p>브랜드: ${product.brand}</p>
+							<p>카테고리: ${product.category_title}</p>
+							<c:if test="${product.shipping_yn == 1}">
+								<p>배송 가능 상품입니다.</p>
+							</c:if>
 						</div>
 					</div>
 				</div>
@@ -169,6 +202,7 @@
 			</div>
 		</div>
 	</content>
+	
 	<footer class="controller">
 		<div id="sec-footer" class="sector">
 			<div class="footer-links">
@@ -199,6 +233,39 @@
 			</div>
 		</div>
 	</footer>
+
+	<script>
+		// 수량 조절 함수
+		function increaseQuantity() {
+			const quantityInput = document.getElementById('quantity');
+			const currentValue = parseInt(quantityInput.value);
+			quantityInput.value = currentValue + 1;
+			updateTotalPrice();
+		}
+
+		function decreaseQuantity() {
+			const quantityInput = document.getElementById('quantity');
+			const currentValue = parseInt(quantityInput.value);
+			if (currentValue > 1) {
+				quantityInput.value = currentValue - 1;
+				updateTotalPrice();
+			}
+		}
+
+		// 총 가격 업데이트
+		function updateTotalPrice() {
+			const quantity = document.getElementById('quantity').value;
+			const basePrice = ${product.price};
+			const totalPrice = basePrice * quantity;
+			
+			document.getElementById('displayQuantity').textContent = quantity;
+			document.getElementById('totalPrice').innerHTML = 
+				'총 결제 금액 : ' + totalPrice.toLocaleString() + '원';
+		}
+
+		// 수량 입력 필드 변경 이벤트
+		document.getElementById('quantity').addEventListener('input', updateTotalPrice);
+	</script>
 </body>
 
 </html>

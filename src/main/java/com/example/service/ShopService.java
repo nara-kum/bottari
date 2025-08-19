@@ -1,10 +1,13 @@
 package com.example.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.repository.ShopRepository;
 import com.example.vo.ProductVO;
+import com.example.vo.ProductTotalVO;
 
 
 @Service
@@ -25,15 +28,13 @@ public class ShopService {
 	}
 	
 	
-	//상세페이지
-	public void exeProductSelect() {
-		
-		System.out.println("ShopService.exeProductSelect"); //ㅇㅋ
-		
-		shopRepository.ProductSelect();
-		
-		
-	}
+	   // 상품 상세페이지
+    public List<ProductTotalVO> exeProductDetail(int productNo) {
+        System.out.println("ShopService.exeProductDetail");
+        
+        List<ProductTotalVO> productList = shopRepository.ProductSelectOne(productNo);
+        return productList;
+    }
 	
 
 }

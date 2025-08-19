@@ -1,10 +1,13 @@
 package com.example.repository;
 
+import java.util.List;
+
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.example.vo.ProductVO;
+import com.example.vo.ProductTotalVO;
 
 @Repository
 public class ShopRepository {
@@ -23,9 +26,11 @@ public class ShopRepository {
 	}
 	
 	
-	public void ProductSelect() {
-		
-		System.out.println("ShopRepository.ProductSelect");//ㅇㅋ
-		
-	}
+    // 상품 상세 조회
+    public List<ProductTotalVO> ProductSelectOne(int productNo) {
+        System.out.println("ShopRepository.ProductSelectOne");
+        
+        List<ProductTotalVO> productList = sqlSession.selectList("product.selectOne", productNo);
+        return productList;
+    }
 }
