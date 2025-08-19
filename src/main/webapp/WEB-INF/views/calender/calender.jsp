@@ -333,6 +333,10 @@
             setClickedDate(todayStr);
 
             const todayEvents = calendar.getEvents().filter(ev => ev.startStr.startsWith(todayStr));
+            
+            // 날짜 정보 항상 표시
+            showDateInfo(todayStr, todayEvents.length > 0);
+            
             if (todayEvents.length > 0) {
             	const firstEvent = todayEvents[0];
                 const comment = firstEvent.extendedProps && firstEvent.extendedProps.comment ? firstEvent.extendedProps.comment : '';
@@ -355,7 +359,6 @@
                     }
                 }, 10);
             } else {
-                showDateInfo(todayStr, false);
                 showNoEventInfo(todayStr);
             }
 
@@ -521,7 +524,7 @@
                 }
             }
 
-         // 1. 일정 추가 팝업 - 완전 수정된 버전
+         	// 1. 일정 추가 팝업 - 완전 수정된 버전
             function openScheduleModal(dateStr) {
                 Swal.fire({
                     html: '<div id="event-add-popup">' +
@@ -635,6 +638,8 @@
                                 const selectedIcon = selectedIconInput ? selectedIconInput.value : 'birthday';
                                 
                                 if (title && title.trim()) {
+
+                                	//화면에 이벤트를 축가하는 문장
                                     try {
                                         const newEvent = calendar.addEvent({
                                             title: title,
@@ -647,6 +652,28 @@
                                         });
                                         console.log('이벤트 생성 성공:', newEvent);
                                         Swal.close();
+                                        
+                                        // 2) 서버 DB에 저장 (fetch 추가)
+                                     	// 저장 버튼 클릭 내부에서 실행
+                                        const formData = new URLSearchParams();
+                                        formData.append("user_no", 1);        // TODO: 로그인 사용자 번호
+                                        formData.append("event_date", dateStr);
+                                        formData.append("event_name", title);
+                                        formData.append("event_memo", comment);
+                                        formData.append("icon_no", 1);        // TODO: selectedIcon 매핑
+
+                                        fetch("/insert", {
+                                            method: "POST",
+                                            headers: {
+                                                "Content-Type": "application/x-www-form-urlencoded"
+                                            },
+                                            body: formData.toString()
+                                        })
+                                        .then(res => res.text()) // 컨트롤러에서 return이 String이니까 text()로 받음
+                                        .then(result => {
+                                            console.log("DB 저장 성공:", result);
+                                        })
+                                        .catch(err => console.error("DB 저장 실패:", err));
                                         
                                         // 이벤트 생성 후 우측 패널 업데이트
                                         showDateInfo(dateStr, true);
@@ -757,7 +784,42 @@
                                 console.log('제목이 비어있습니다');
                             }
                             Swal.close();
+                            
+                         	// 2) 서버 DB에 저장 (fetch 추가)
+                         	// 저장 버튼 클릭 내부에서 실행
+                            const formData = new URLSearchParams();
+                        	formData.append("event_no", selectedEventId);
+                            formData.append("user_no", 1);        // TODO: 로그인 사용자 번호
+                            formData.append("event_name", title);
+                            formData.append("event_memo", comment);
+                            formData.append("icon_no", 1);        // TODO: selectedIcon 매핑
+
+                            fetch("/update", {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/x-www-form-urlencoded"
+                                },
+                                body: formData.toString()
+                            })
+                            .then(res => res.text()) // 컨트롤러에서 return이 String이니까 text()로 받음
+                            .then(result => {
+                                console.log("DB 저장 성공:", result);
+                            })
+                            .catch(err => console.error("DB 저장 실패:", err));
+                            
+                         	// 이벤트 수정 후 우측 패널 업데이트
+                            showDateInfo(event.startStr, true);   // 등록된 일정의 날짜 문자열
+                            showEventInfo(
+                                event.id,
+                                event.title,
+                                event.start,
+                                comment,
+                                existingIcon   // 수정 모달에서 불러온 기존 아이콘 값
+                            );
+                            selectedEventId = event.id;
                         });
+                        
+                        
 
                         // 닫기 버튼 클릭 이벤트
                         document.getElementById('event-cancel-btn').addEventListener('click', () => {

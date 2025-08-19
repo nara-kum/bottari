@@ -7,17 +7,17 @@ public class CalenderVO {
 	private String event_date;
 	private String event_name;
 	private String event_memo;
-	private String icon_id;
+	private int icon_no;
 	//editor
 	public CalenderVO(int event_no, int user_no, String event_date, String event_name, String event_memo,
-			String icon_id) {
+			int icon_no) {
 		super();
 		this.event_no = event_no;
 		this.user_no = user_no;
 		this.event_date = event_date;
 		this.event_name = event_name;
 		this.event_memo = event_memo;
-		this.icon_id = icon_id;
+		this.icon_no = icon_no;
 	}
 	public CalenderVO() {
 		super();
@@ -53,16 +53,16 @@ public class CalenderVO {
 	public void setEvent_memo(String event_memo) {
 		this.event_memo = event_memo;
 	}
-	public String getIcon_id() {
-		return icon_id;
+	public int getIcon_no() {
+		return icon_no;
 	}
-	public void setIcon_id(String icon_id) {
-		this.icon_id = icon_id;
+	public void setIcon_no(int icon_no) {
+		this.icon_no = icon_no;
 	}
 	//method normal
 	@Override
 	public String toString() {
 		return "CalenderVO [event_no=" + event_no + ", user_no=" + user_no + ", event_date=" + event_date
-				+ ", event_name=" + event_name + ", event_memo=" + event_memo + ", icon_id=" + icon_id + "]";
+				+ ", event_name=" + event_name + ", event_memo=" + event_memo + ", icon_no=" + icon_no + "]";
 	}
 }

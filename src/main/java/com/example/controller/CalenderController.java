@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -38,11 +39,29 @@ public class CalenderController {
 	
 	//이벤트 등록
 	@RequestMapping(value="/insert", method= {RequestMethod.GET, RequestMethod.POST})
-	public String eventInsert() {
+	public int eventInsert(@ModelAttribute CalenderVO calendervo) {
 		System.out.println("CalenderController.eventInsert()");
 		
+//		System.out.println("CalenderController.calendervo:" + calendervo);
 		
+		int count = calenderservice.exeInsertCalender(calendervo);
 		
-		return "";
+		return count;
 	}
+	
+	//이벤트 수정
+	@RequestMapping(value="/update", method= {RequestMethod.GET, RequestMethod.POST})
+	public int eventUpdate(@ModelAttribute CalenderVO calendervo) {
+		System.out.println("CalenderController.eventUpdate()");
+		
+		System.out.println("CalenderController.calendervo" + calendervo);
+		
+		int count = calenderservice.exeUpdateCalender(calendervo);
+		
+		return count;
+	}
+	
+	
+	
+	//이벤트 삭제
 }

@@ -18,6 +18,8 @@ public class CalenderService {
 	//method g/s
 	
 	//method normal
+	
+	//캘린더 리스트
 	public List<CalenderVO> exeCalenderList() {
 		System.out.println("CalenderService.exeCalenderList()");
 		
@@ -25,4 +27,27 @@ public class CalenderService {
 		
 		return calenderList;
 	}
+	
+	//캘린더 이벤트 등록
+	public int exeInsertCalender(CalenderVO calendervo) {
+		System.out.println("CalenderService.exeCalenderInsert()");
+//		System.out.println("CalenderService.calendervo:" + calendervo);
+		
+		int count = calenderrepository.calenderInsert(calendervo);
+		
+		return count;
+	}
+	
+	//캘린더 이벤트 수정
+	public int exeUpdateCalender(CalenderVO calendervo) {
+		System.out.println("CalenderService.exeUpdateCalender()");
+		System.out.println("CalenderService.calendervo:" + calendervo);
+		
+		int count = calenderrepository.calenderUpdate(calendervo);
+		
+		return count;
+	}
+	
+	//캘린더 이벤트 삭제
+	
 }
