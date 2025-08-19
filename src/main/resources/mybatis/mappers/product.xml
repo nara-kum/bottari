@@ -17,25 +17,25 @@
 	<select id="selectOne" parameterType="com.example.vo.ProductVO">
 		
 		<![CDATA[
-		SELECT   p.product_no,
-					p.title,
-					p.price,
-					p.brand,
-					p.itemimg,
-					p.shipping_yn,
-					p.shipping_cost,
-					p.zipcode,
-					p.address,
-					p.detail_adress,
-					c.category_no,
-					c.category_title,
-					di.detailedimage_no,
-					di.image_URL,
-					di.turn,
-					o.option_no,
-					o.name,
-					do.detailoption_no,
-					do.name
+		SELECT  p.product_no,
+				p.title,
+				p.price,
+				p.brand,
+				p.itemimg,
+				p.shipping_yn,
+				p.shipping_cost,
+				p.zipcode,
+				p.address,
+				p.detail_adress,
+				c.category_no,
+				c.category_title,
+				di.detailedimage_no,
+				di.image_URL,
+				di.turn,
+				o.option_no,
+				o.name,
+				do.detailoption_no,
+				do.name
 		FROM product p
 		LEFT JOIN category c ON p.category_no = c.category_no
 		LEFT JOIN detailed_image di ON p.product_no = di.product_no
