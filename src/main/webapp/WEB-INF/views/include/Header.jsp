@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -14,41 +14,30 @@
 <title>Insert title here</title>
 </head>
 <header class="controller">
-		<div id="sec-header" class="sector">
-			<div class="left-side">
-				<a href=""><img class="header-logo"
-					src="../../../assets/icon/Logo_colored.svg"></a>
-				<h1 class="header-menu">
-					<a href="">캘린더</a>
-				</h1>
-				<h1 class="header-menu">
-					<a href="">펀딩</a>
-				</h1>
-				<h1 class="header-menu">
-					<a href="">초대장</a>
-				</h1>
-				<h1 class="header-menu">
-					<a href="">구매내역</a>
-				</h1>
-			</div>
-			<div class="right-side">
-				<a href=""><img class="header-icon header-shopping-cart"
-					src="../../../assets/icon/icon-shopping-cart.svg"></a>
-				<!-- 세션에 값이 있을때 -->
-				<c:if test="${sessionScope.authUser!=null}">
-					<h1>
-						<a class="header-usermenu"
-							href="${pageContext.request.contextPath}/loginform">${sessionScope.authUser.name}</a>
-					</h1>
-					<a href=""><img class="header-icon"
-						src="../../../assets/icon/icon-caret-down.svg"></a>
-					<h1>
-						<a class="header-usermenu"
-							href="${pageContext.request.contextPath}/logout">로그아웃</a>
-					</h1>
-				</c:if>
-				<!-- 세션에 값이 없을때 -->
-				<c:if test="${sessionScope.authUser==null}">
+	<div id="sec-header" class="sector">
+		<div class="left-side">
+			<a href=""><img class="header-logo"
+				src="../../../assets/icon/Logo_colored.svg"></a>
+			<h1 class="header-menu">
+				<a href="">캘린더</a>
+			</h1>
+			<h1 class="header-menu">
+				<a href="">펀딩</a>
+			</h1>
+			<h1 class="header-menu">
+				<a href="">초대장</a>
+			</h1>
+			<h1 class="header-menu">
+				<a href="">구매내역</a>
+			</h1>
+		</div>
+		<div class="right-side">
+			<a href=""><img class="header-icon header-shopping-cart"
+				src="../../../assets/icon/icon-shopping-cart.svg"></a>
+			<!-- 세션에 값이 있을때 -->
+
+			<c:choose>
+				<c:when test="${sessionScope.authUser == null}">
 					<h1>
 						<a class="header-usermenu"
 							href="${pageContext.request.contextPath}/loginForm">로그인</a>
@@ -59,8 +48,21 @@
 						<a class="header-usermenu"
 							href="${pageContext.request.contextPath}/joinForm">회원가입</a>
 					</h1>
-				</c:if>
-			</div>
+				</c:when>
+				<c:otherwise>
+					<h1>
+						<a class="header-usermenu"
+							href="${pageContext.request.contextPath}/loginform">${sessionScope.authUser.name}</a>
+					</h1>
+					<a href=""><img class="header-icon"
+						src="../../../assets/icon/icon-caret-down.svg"></a>
+					<h1>
+						<a class="header-usermenu"
+							href="${pageContext.request.contextPath}/logout">로그아웃</a>
+					</h1>
+				</c:otherwise>
+			</c:choose>
 		</div>
-	</header>
+	</div>
+</header>
 </html>

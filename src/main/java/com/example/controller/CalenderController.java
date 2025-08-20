@@ -34,7 +34,9 @@ public class CalenderController {
 	    System.out.println("CalenderController.calenderList()");
 
 	    UserVO authuser = (UserVO) session.getAttribute("authuser");
-
+	    
+	    System.out.println("authuser in session: " + session.getAttribute("authuser"));
+	    
 	    if (authuser == null) {
 	        // 로그인 안된 상태 → 로그인 페이지로 리다이렉트
 	        return "redirect:/loginForm";
