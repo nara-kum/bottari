@@ -10,7 +10,7 @@
 					DATE_FORMAT(event_date, '%Y-%m-%d') AS event_date,
 					event_name,
 					event_memo,
-					icon_no	as icon_id
+					icon_id
 			from calender
 		]]>
 	</select>
