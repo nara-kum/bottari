@@ -49,10 +49,11 @@
 					<a href=""><img class="header-icon"
 						src="${pageContext.request.contextPath}/assets/icon/icon-caret-down.svg"></a>
 				</c:if>
+			</div>
 		</div>
 	</header>
 
-	<content class="controller">
+	<content class ="controller">
 		<div id="sec-content" class="sector">
 			<div class="sec-sub-title">
 				<h2 class="header-sub">회원가입</h2>

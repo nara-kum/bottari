@@ -49,8 +49,17 @@
 		]]>		
 	</update>	
     
+	<!-- 아이디 중복 체크 -->
+	<select id="userSelectById" parameterType="com.example.vo.UserVO" resultType="com.example.vo.UserVO" >
+		
+		<![CDATA[
+	    		select * from users 
+	    		where id = #{id}
+	    ]]>
+	</select>
+	
 	<!-- 아이디사용유무체크(회원가입) -->
-	<select id="selectOneById" parameterType="string" resultType="com.javaex.vo.UserVO">
+	<!-- <select id="selectOneById" parameterType="string" resultType="com.javaex.vo.UserVO">
 		<![CDATA[
 			select 	user_no,
 					id,
@@ -59,20 +68,7 @@
 			from users
 			where id=#{id}
 		]]>
-	</select>    
-    
-    
-    
-    
-    
-	<!-- 아이디 중복 체크 -->
-	<!-- <select id="userSelectById" parameterType="com.example.vo.UserVO" resultType="com.example.vo.UserVO" >
-		
-		<![CDATA[
-	    		select * from users 
-	    		where id = #{id}
-	    ]]>
-	</select> -->
+	</select>     -->	
 	
 	<!-- 로그인 -->
     <!-- <select id="selectIdPw" parameterType="com.example.vo.UserVO" resultType="com.example.vo.UserVO">

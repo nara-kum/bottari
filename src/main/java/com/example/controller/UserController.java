@@ -1,6 +1,7 @@
 package com.example.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -28,10 +29,23 @@ public class UserController {
 	
 	//회원가입
 	@RequestMapping(value="/join", method= {RequestMethod.GET, RequestMethod.POST})
-	public String join(){
-		System.out.println("UserController.Join()");
-		
-		return "user/join";	
+	public String join(@ModelAttribute UserVO userVO) {
+		System.out.println("UserController.join()");
+
+		try {
+			userService.exeJoin(userVO);
+			return "user/joinok";
+
+		} catch (DuplicateKeyException e) {
+			System.out.println(e);
+			System.out.println("중복아이디");
+			return "redirect:/joinform";
+
+		} catch (Exception e) {
+			System.out.println(e);
+			return "redirect:/joinform";
+		}
+
 	}
 
 	

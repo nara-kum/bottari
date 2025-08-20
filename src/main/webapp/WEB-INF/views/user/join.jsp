@@ -9,6 +9,10 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/reset.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/Global.css">
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/join.css">
+	
+	<!--js-->
+	<script src="${pageContext.request.contextPath}/assets/js/jquery/jquery-3.7.1.js">
+	</script>	
 </head>
 <body class="family">
 	<header class="controller">
@@ -22,8 +26,28 @@
 			</div>
 			<div class="right-side">
 				<a href=""><img class="header-icon header-shopping-cart" src="${pageContext.request.contextPath}/assets/icon/icon-shopping-cart.svg"></a>
-				<h1 class="header-usermenu">사용자이름</h1>
-				<a href=""><img class="header-icon" src="${pageContext.request.contextPath}/assets/icon/icon-caret-down.svg"></a>
+				<!-- 세션에 값이 있을때 -->
+				<c:if test="${sessionScope.authUser!=null}">
+					<h1>
+						<a class="header-usermenu"
+							href="${pageContext.request.contextPath}/login">${sessionScope.authUser.name}</a>
+					</h1>
+					<a href=""><img class="header-icon"
+						src="${pageContext.request.contextPath}/assets/icon/icon-caret-down.svg"></a>
+					<h1>
+						<a class="header-usermenu"
+							href="${pageContext.request.contextPath}/logout">로그아웃</a>
+					</h1>
+				</c:if>
+				<!-- 세션에 값이 없을때 -->
+				<c:if test="${sessionScope.authUser==null}">
+					<h1>
+						<a class="header-usermenu"
+							href="${pageContext.request.contextPath}/loginForm">사용자이름</a>
+					</h1>
+					<a href=""><img class="header-icon"
+						src="${pageContext.request.contextPath}/assets/icon/icon-caret-down.svg"></a>
+				</c:if>
 			</div>
 		</div>
 	</header>
@@ -38,13 +62,14 @@
 				<main class="signup-container">
 					<p class="subtitle">회원이 되어 다양한 혜택을 경험해 보세요!</p>
 
-					<form class="signup-form">
+					<form class="signup-form" action="${pageContext.request.contextPath}/join" method="get">
 						<div class="form-group with-button">
 							<label>아이디</label>
 							<div class="input-row">
-								<input type="text" placeholder="아이디 입력(6~20자)" />
-								<button type="button">중복확인</button>
+								<input type="text" placeholder="아이디 입력(6~20자)" name="id" id="input-id" value="">
+								<button type="button" value="중복 확인" id="duplicate-check">중복확인</button>
 							</div>
+							<p id="id-check-message"></p> <!-- 메시지 표시 영역 추가 -->
 						</div>
 
 						<div class="form-group">
@@ -199,6 +224,35 @@
 	</footer>
 	
 	<script>
+		function checkDuplicateID(id) {
+		    const existingIDs = ['0603skfk', 'ahreum', 'sujin', 'nerunaru'];
+		    return existingIDs.includes(id.trim());
+		}
+		
+		document.addEventListener('DOMContentLoaded', function () {
+		    const existingIDs = ['0603skfk', 'ahreum', 'sujin', 'nerunaru']; // 이미 등록된 ID
+		    const input = document.getElementById('input-id');
+		    const button = document.getElementById('duplicate-check');
+		    const message = document.getElementById('id-check-message');
+
+		    button.addEventListener('click', function () {
+		        const enteredID = input.value.trim();
+
+		        if (enteredID === '') {
+		            message.textContent = '아이디를 입력해주세요.';
+		            message.style.color = 'red';
+		            return;
+		        }
+
+		        if (existingIDs.includes(enteredID)) {
+		            message.textContent = '중복 아이디입니다';
+		            message.style.color = 'red';
+		        } else {
+		            message.textContent = '사용 가능한 아이디입니다';
+		            message.style.color = 'green';
+		        }
+		    });
+		});
 	
 	</script>
 </body>
