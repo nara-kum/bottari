@@ -67,8 +67,9 @@
 							<label>아이디</label>
 							<div class="input-row">
 								<input type="text" placeholder="아이디 입력(6~20자)" name="id" id="input-id" value="">
-								<button type="button" value="중복 확인">중복확인</button>
+								<button type="button" value="중복 확인" id="duplicate-check">중복확인</button>
 							</div>
+							<p id="id-check-message"></p> <!-- 메시지 표시 영역 추가 -->
 						</div>
 
 						<div class="form-group">
@@ -218,11 +219,35 @@
 	</footer>
 	
 	<script>
-	$(document).ready(function(){
-		console.log('돔트리 완료');
+		function checkDuplicateID(id) {
+		    const existingIDs = ['0603skfk', 'ahreum', 'sujin', 'nerunaru'];
+		    return existingIDs.includes(id.trim());
+		}
 		
-	
-	});
+		document.addEventListener('DOMContentLoaded', function () {
+		    const existingIDs = ['0603skfk', 'ahreum', 'sujin', 'nerunaru']; // 이미 등록된 ID
+		    const input = document.getElementById('input-id');
+		    const button = document.getElementById('duplicate-check');
+		    const message = document.getElementById('id-check-message');
+
+		    button.addEventListener('click', function () {
+		        const enteredID = input.value.trim();
+
+		        if (enteredID === '') {
+		            message.textContent = '아이디를 입력해주세요.';
+		            message.style.color = 'red';
+		            return;
+		        }
+
+		        if (existingIDs.includes(enteredID)) {
+		            message.textContent = '중복 아이디입니다';
+		            message.style.color = 'red';
+		        } else {
+		            message.textContent = '사용 가능한 아이디입니다';
+		            message.style.color = 'green';
+		        }
+		    });
+		});
 	
 	</script>
 </body>

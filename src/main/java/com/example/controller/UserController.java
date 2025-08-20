@@ -34,7 +34,7 @@ public class UserController {
 		
 		try {
 			userService.exeJoin(userVO);
-			return "user/joinok";
+			return "redirect:/user/joinok";
 			
 		}catch(DuplicateKeyException e) {
 			System.out.println(e);
