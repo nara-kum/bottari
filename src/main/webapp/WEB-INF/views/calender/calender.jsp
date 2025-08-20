@@ -32,45 +32,101 @@
 
 <body class="family">
 
-	<!--------------------- Header호출 -------------------->
-	<c:import url="/WEB-INF/include/Header.jsp"></c:import>
-	<!-- ---------------------------------------------- -->
-	
+	<!------------------------ Header호출 ----------------------->
+	<c:import url="/WEB-INF/views/include/Header.jsp"></c:import>
+	<!-- ---------------------------------------------------- -->
+
 	<section class="controller">
-	<div id="sec-content" class="sector">
-		<div class="sec-sub-title">
-			<!-- 여기부터 코딩 시작!! -->
-			<div class="between-flex-box">
-				<h2 class="header-sub">캘린더</h2>
-				<div id="date-info" class="header-sub"></div>
+		<div id="sec-content" class="sector">
+			<div class="sec-sub-title">
+				<!-- 여기부터 코딩 시작!! -->
+				<div class="between-flex-box">
+					<h2 class="header-sub">캘린더</h2>
+					<div id="date-info" class="header-sub"></div>
+				</div>
 			</div>
-		</div>
-		<c:choose>
-			<c:when test="${sessionScope.user_no == null}">
-				<script>
+			<c:choose>
+				<c:when test="${sessionScope.authUser.userNo == null}">
+					<script>
 					alert("로그인이 필요합니다.");
 	            	window.location.href = "/loginForm";  // 로그인 페이지 경로 맞게 수정하세요
 				</script>
-			</c:when>
-			<c:otherwise>			
-				<div class="sec-content-main">
-					<div class="left-main content-height">
-						<div id='calendar'></div>
+				</c:when>
+				<c:otherwise>
+					<div class="sec-content-main">
+						<div class="left-main content-height">
+							<div id='calendar'></div>
+						</div>
+						<div class="right-main content-height">
+							<div id="event-info"></div>
+							<c:choose>
+								<c:when test="${RequestParam.event_id == null}">
+
+								</c:when>
+								<c:otherwise>
+									<c:choose>
+										<c:when test="${invitationList == null}">
+											<div
+												class="column-flex-box celebrate-card-area row-align no-event">
+												<img class="middle-icon"
+													src="../../../assets/icon/icon-cross.svg" />
+												<div class="text-18">초대장이 없어요</div>
+												<button class="btn-basic btn-orange size-normal">초대장
+													만들기</button>
+											</div>
+										</c:when>
+										<c:otherwise>
+											<div class="celebrate-card-area">
+												<div class="text-16 bold">내가 만든 초대장</div>
+												<img class="celebrate-card-img"
+													src="../../asset/35d848a665f27f3c75f0e8234f7f69ce.jpg">
+												<div class="show-detail">
+													<a href="">자세히보기></a>
+												</div>
+											</div>
+										</c:otherwise>
+										<c:choose>
+											<c:when test="${productList == null}">
+												<div class="column-flex-box celebrate-card-area row-align no-event">
+													<img class="middle-icon" src="../../asset/icon-cross.svg" />
+													<div class="text-18">펀딩 리스트가 비었어요</div>
+													<button class="btn-basic btn-orange size-normal">펀딩 관리하기</button>
+												</div>
+											</c:when>
+											<c:otherwise>
+												<div class="funding-area column-flex-box">
+							                        <div class="text-16 bold">진행중인 펀딩</div>
+							                        <c:forEach items="${requestScope.productList}" var="productList">
+								                        <a href="">
+								                            <div class="list-basic list-360 row-flex-box">
+								                                <img class="list-img-50 column-align" src="${productList.itemimg}">
+								                                <div class="column-flex-box column-align funding-detail">
+								                                    <div class="text-12">${productList.brand}</div>
+								                                    <div class="text-12">${productList.title}</div>
+								                                    <div class="text-16 bold">${productList.price}원</div>
+								                                </div>
+								                            </div>
+								                        </a>
+							                        </c:forEach>
+							                        <div class="show-detail"><a href="">전체보기></a></div>
+							                    </div>
+											</c:otherwise>
+										</c:choose>
+									</c:choose>
+								</c:otherwise>
+							</c:choose>
+						</div>
 					</div>
-					<div class="right-main content-height">
-						<div id="event-info"></div>
-					</div>
-				</div>
-			</c:otherwise>
-		</c:choose>
+				</c:otherwise>
+			</c:choose>
 
 
 
-	</div>
+		</div>
 	</section>
-	<!--------------------- Footer호출 -------------------->
-	<c:import url="/WEB-INF/include/Footer.jsp"></c:import>
-	<!-- ---------------------------------------------- -->
+	<!------------------------ Footer호출 ----------------------->
+	<c:import url="/WEB-INF/views/include/Footer.jsp"></c:import>
+	<!-- ---------------------------------------------------- -->
 
 
 	<script>
@@ -172,6 +228,23 @@
     					const icon = firstEvent.extendedProps && firstEvent.extendedProps.icon ? firstEvent.extendedProps.icon : '';
                         showEventInfo(firstEvent.id, firstEvent.title, firstEvent.start, comment, icon);
                         selectedEventId = events[0].id; // 첫 번째 이벤트 ID 저장
+                        
+                        const formData = new URLSearchParams();
+                        formData.append("event_id", event_id);
+
+                        fetch("/response", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/x-www-form-urlencoded"
+                            },
+                            body: formData.toString()
+                        })
+                        .then(res => res.text()) // 컨트롤러에서 return이 String이니까 text()로 받음
+                        .then(result => {
+                            console.log("DB 저장 성공:", result);
+                        })
+                        .catch(err => console.error("DB 저장 실패:", err));
+                        
                     } else {
                         showNoEventInfo(info.dateStr);
                     }
@@ -241,12 +314,12 @@
                 events: [
                 	<c:forEach items="${requestScope.cList}" var="calendervo" varStatus="status">
                     {
-                        id: '${calendervo.event_no}',
-                        title: '${calendervo.event_name}',
-                        start: '${calendervo.event_date}', 
+                        id: '<c:out value="${calendervo.event_no}" />',
+                        title: '<c:out value="${calendervo.event_name}" />',
+                        start: '<c:out value="${calendervo.event_date}" />', 
                         extendedProps: {
-                            icon: '${calendervo.icon_id}',
-                            comment: '${calendervo.event_memo}'
+                            icon: '<c:out value="${calendervo.icon_id}" />',
+                            comment: '<c:out value="${calendervo.event_memo}" />'
                         }
                     }
                     <c:if test="${!status.last}">,</c:if>
@@ -377,22 +450,6 @@
                 htmlStr += '		</div>'
                 htmlStr += '	</div>'
                 htmlStr += '</div>'
-                htmlStr += '<div class="column-flex-box celebrate-card-area row-align no-event">'
-                htmlStr += '	<img class="middle-icon" src="../../../assets/icon/icon-cross.svg" />'
-                htmlStr += '	<div class="text-18">초대장이 없어요</div>'
-                htmlStr += '	<button class="btn-basic btn-orange size-normal ">초대장 만들기</button>'
-                htmlStr += '</div>'
-                htmlStr += '<div class="column-flex-box celebrate-card-area row-align no-event">'
-                htmlStr += '	<img class="middle-icon" src="../../../assets/icon/icon-cross.svg" />'
-                htmlStr += '	<div class="text-18">펀딩 리스트가 비었어요</div>'
-                htmlStr += '	<button class="btn-basic btn-orange size-normal">펀딩 관리하기</button>'
-                htmlStr += '</div>'
-                htmlStr += '<div class="ad-banner">'
-                htmlStr += '	<a href="">'
-                htmlStr += '		<img src="">'
-                htmlStr += '	</a>'
-                htmlStr += '</div>'
-                htmlStr += '<div class="history-gift disable"></div>'
                 htmlStr += ''
                 
                 eventInfoDiv.innerHTML = htmlStr;
@@ -584,7 +641,7 @@
                                         // 2) 서버 DB에 저장 (fetch 추가)
                                      	// 저장 버튼 클릭 내부에서 실행
                                         const formData = new URLSearchParams();
-                                        formData.append("user_no", ${sessionScope.user_no});        // TODO: 로그인 사용자 번호
+                                        formData.append("user_no", "${sessionScope.authUser.userNo}");        // TODO: 로그인 사용자 번호
                                         formData.append("event_date", dateStr);
                                         formData.append("event_name", title);
                                         formData.append("event_memo", comment);
