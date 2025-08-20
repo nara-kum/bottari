@@ -2,72 +2,61 @@ package com.example.vo;
 
 public class WishlistVO {
 
-	//필드
+	// 필드
+	private int userNo;
 	private int wishlistNo;
-	private	int user_no;
-	private int product_no;
-	private String date;
-    private int ea;
+	private String brand;
+	private String title;
+	private int price;
 
-    //생성자
-	public WishlistVO() {}
-
-	public WishlistVO(int wishlistNo, int user_no, int product_no, String date, int ea) {
+	// 생성자
+	public WishlistVO() {
 		super();
-		this.wishlistNo = wishlistNo;
-		this.user_no = user_no;
-		this.product_no = product_no;
-		this.date = date;
-		this.ea = ea;
 	}
-	
-    //메소드gs
+	public WishlistVO(int userNo, int wishlistNo, String brand, String title, int price) {
+		super();
+		this.userNo = userNo;
+		this.wishlistNo = wishlistNo;
+		this.brand = brand;
+		this.title = title;
+		this.price = price;
+	}
+	// 메소드gs
+	public int getUserNo() {
+		return userNo;
+	}
+	public void setUserNo(int userNo) {
+		this.userNo = userNo;
+	}
 	public int getWishlistNo() {
 		return wishlistNo;
 	}
-
 	public void setWishlistNo(int wishlistNo) {
 		this.wishlistNo = wishlistNo;
 	}
-
-	public int getUser_no() {
-		return user_no;
+	public String getBrand() {
+		return brand;
 	}
-
-	public void setUser_no(int user_no) {
-		this.user_no = user_no;
+	public void setBrand(String brand) {
+		this.brand = brand;
 	}
-
-	public int getProduct_no() {
-		return product_no;
+	public String getTitle() {
+		return title;
 	}
-
-	public void setProduct_no(int product_no) {
-		this.product_no = product_no;
+	public void setTitle(String title) {
+		this.title = title;
 	}
-
-	public String getDate() {
-		return date;
+	public int getPrice() {
+		return price;
 	}
-
-	public void setDate(String date) {
-		this.date = date;
+	public void setPrice(int price) {
+		this.price = price;
 	}
-
-	public int getEa() {
-		return ea;
-	}
-
-	public void setEa(int ea) {
-		this.ea = ea;
-	}
-
-	//메소드-일반
+	// 메소드-일반
 	@Override
 	public String toString() {
-		return "WishlitVO [wishlistNo=" + wishlistNo + ", user_no=" + user_no + ", product_no=" + product_no + ", date="
-				+ date + ", ea=" + ea + "]";
+		return "WishlistVO [userNo=" + userNo + ", wishlistNo=" + wishlistNo + ", brand=" + brand + ", title=" + title
+				+ ", price=" + price + "]";
 	}
-
-
+	
 }
