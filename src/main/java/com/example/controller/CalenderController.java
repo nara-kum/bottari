@@ -34,6 +34,8 @@ public class CalenderController {
 		
 		model.addAttribute("cList", calenderList);
 		
+		System.out.println(calenderList);
+		
 		return "/calender/calender";
 	}
 	

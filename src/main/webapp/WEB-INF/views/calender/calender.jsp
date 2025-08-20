@@ -32,7 +32,56 @@
 
 <body class="family">
 
-	
+	<header class="controller">
+		<div id="sec-header" class="sector">
+			<div class="left-side">
+				<a href=""><img class="header-logo"
+					src="../../../assets/icon/Logo_colored.svg"></a>
+				<h1 class="header-menu">
+					<a href="">캘린더</a>
+				</h1>
+				<h1 class="header-menu">
+					<a href="">펀딩</a>
+				</h1>
+				<h1 class="header-menu">
+					<a href="">초대장</a>
+				</h1>
+				<h1 class="header-menu">
+					<a href="">구매내역</a>
+				</h1>
+			</div>
+			<div class="right-side">
+				<a href=""><img class="header-icon header-shopping-cart"
+					src="../../../assets/icon/icon-shopping-cart.svg"></a>
+				<!-- 세션에 값이 있을때 -->
+				<c:if test="${sessionScope.authUser!=null}">
+					<h1>
+						<a class="header-usermenu"
+							href="${pageContext.request.contextPath}/loginform">${sessionScope.authUser.name}</a>
+					</h1>
+					<a href=""><img class="header-icon"
+						src="../../../assets/icon/icon-caret-down.svg"></a>
+					<h1>
+						<a class="header-usermenu"
+							href="${pageContext.request.contextPath}/logout">로그아웃</a>
+					</h1>
+				</c:if>
+				<!-- 세션에 값이 없을때 -->
+				<c:if test="${sessionScope.authUser==null}">
+					<h1>
+						<a class="header-usermenu"
+							href="${pageContext.request.contextPath}/loginForm">로그인</a>
+					</h1>
+					<a href=""><img class="header-icon"
+						src="../../../assets/icon/icon-caret-down.svg"></a>
+					<h1>
+						<a class="header-usermenu"
+							href="${pageContext.request.contextPath}/joinForm">회원가입</a>
+					</h1>
+				</c:if>
+			</div>
+		</div>
+	</header>
 	
 	<section class="controller">
 	<div id="sec-content" class="sector">
@@ -257,48 +306,9 @@
                             icon: '${calendervo.icon_id}',
                             comment: '${calendervo.event_memo}'
                         }
-                    },<c:if test="${!status.last}">,</c:if>
-                    </c:forEach>
-                	
-                    {
-                        id: '1',
-                        title: '임시 이벤트',
-                        start: '2025-08-15',
-                       	extendedProps: {
-                       		icon: 'birthday',
-                       		comment: '임시이벤트입니다'
-                       	}
-                    },
-
-                    {
-                        id: '2',
-                        title: '회의',
-                        start: '2025-08-15',
-                        extendedProps: {
-                           	icon: 'wedding',
-                           	comment: '임시회의이벤트입니다'
-                           }
-                    },
-
-                    {
-                        id: '4',
-                        title: '프로젝트 마감',
-                        start: '2025-08-18',
-                        extendedProps: {
-                           	icon: 'thanks',
-                           	comment: '임시프로젝트마감이벤트입니다'
-                           }
-                    },
-
-                    {
-                        id: '3',
-                        title: '미팅',
-                        start: '2025-08-20',
-                        extendedProps: {
-                           	icon: 'baby',
-                           	comment: '임시미팅이벤트입니다'
-                          }
                     }
+                    <c:if test="${!status.last}">,</c:if>
+                    </c:forEach>
                 ]
             });
 
@@ -636,7 +646,7 @@
                                         formData.append("event_date", dateStr);
                                         formData.append("event_name", title);
                                         formData.append("event_memo", comment);
-                                        formData.append("icon_no", 1);        // TODO: selectedIcon 매핑
+                                        formData.append("icon_id", selectedIcon);        // TODO: selectedIcon 매핑
 
                                         fetch("/insert", {
                                             method: "POST",
@@ -768,7 +778,7 @@
                             formData.append("user_no", 1);        // TODO: 로그인 사용자 번호
                             formData.append("event_name", title);
                             formData.append("event_memo", comment);
-                            formData.append("icon_no", 1);        // TODO: selectedIcon 매핑
+                            formData.append("icon_id", selectedIcon);        // TODO: selectedIcon 매핑
 
                             fetch("/update", {
                                 method: "POST",
