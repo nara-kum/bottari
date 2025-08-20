@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.example.vo.ProductVO;
-import com.example.vo.ProductTotalVO;
+
 
 @Repository
 public class ShopRepository {
@@ -16,21 +16,21 @@ public class ShopRepository {
 	private SqlSession sqlSession;
 	
 	//상품등록
-	public int ProductInsert(ProductVO productVO) {
-		System.out.println("ShopRepository.ProductInsert"); //ㅇㅋ
+		public int ProductInsert(ProductVO productVO) {
+			System.out.println("ShopRepository.ProductInsert"); //ㅇㅋ
+			
+			int count = sqlSession.insert("product.insert", productVO);
+			
+			return count;
+			
+		}
 		
-		int count = sqlSession.insert("product.insert", productVO);
 		
-		return count;
-		
-	}
-	
-	
-    // 상품 상세 조회
-    public List<ProductTotalVO> ProductSelectOne(int productNo) {
-        System.out.println("ShopRepository.ProductSelectOne");
-        
-        List<ProductTotalVO> productList = sqlSession.selectList("product.selectOne", productNo);
-        return productList;
-    }
+	    // 상품 상세 조회
+	    public List<ProductVO> ProductSelectOne(int productNo) {
+	        System.out.println("ShopRepository.ProductSelectOne");
+	        
+	        List<ProductVO> productList = sqlSession.selectList("product.selectOne", productNo);
+	        return productList;
+	    }
 }

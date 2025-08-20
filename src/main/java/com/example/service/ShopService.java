@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.repository.ShopRepository;
 import com.example.vo.ProductVO;
-import com.example.vo.ProductTotalVO;
+
 
 
 @Service
@@ -29,12 +29,10 @@ public class ShopService {
 	
 	
 	   // 상품 상세페이지
-    public List<ProductTotalVO> exeProductDetail(int productNo) {
+    public List<ProductVO> exeProductDetail(int productNo) {
         System.out.println("ShopService.exeProductDetail");
         
-        List<ProductTotalVO> productList = shopRepository.ProductSelectOne(productNo);
+        List<ProductVO> productList = shopRepository.ProductSelectOne(productNo);
         return productList;
     }
-	
-
 }

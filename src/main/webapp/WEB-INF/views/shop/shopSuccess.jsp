@@ -9,6 +9,8 @@
 	<link rel="stylesheet" href="../../../assets/css/reset.css">
 	<link rel="stylesheet" href="../../../assets/css/Global.css">
 	<link rel="stylesheet" href="../../../assets/css/shop/shopSuccess.css">
+	
+	<script src="${pageContext.request.contextPath}/assets/js/jquery/jquery-3.7.1.js"></script>
 </head>
 
 <body class="family">
@@ -62,7 +64,7 @@
 				<div class="product-info">
 					<div class="info-item">
 						<span class="info-label">등록된 상품명:</span>
-						<span class="info-value">${productTitle != null ? productTitle : "상품명"}</span>
+						<span class="info-value">${productTitle != null ? productTitle : "${productTotalVO.title}"}</span>
 					</div>
 					<div class="info-item">
 						<span class="info-label">등록 일시:</span>
@@ -81,12 +83,13 @@
 				</div>
 
 				<div class="action-buttons">
-					<button class="btn secondary-btn" onclick="location.href='shopform.jsp'">
-						다른 상품 올리기
-					</button>
-					<button class="btn primary-btn" onclick="location.href='productPage.jsp'">
-						상품 확인하러 가기
-					</button>
+					<a class="btn secondary-btn"
+						href="${pageContext.request.contextPath}/shopform"> 다른 상품 올리기
+					</a> 
+					<a class="btn primary-btn"
+						href="${pageContext.request.contextPath}/productPage?productNo=${productVO.product_no}">
+						상품 확인하러 가기 
+					</a>
 				</div>
 
 				<div class="additional-links">
@@ -97,7 +100,7 @@
 	</div>
 	</content>
 
-	<!-- 푸터에서 controller 클래스 제거 (전체 너비로) -->
+
 	<footer>
 		<div id="sec-footer" class="sector">
 			<div class="footer-links">

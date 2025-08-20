@@ -47,18 +47,14 @@
 									<img class="main-image" src="${product.itemimg}" alt="${product.title}">
 								</c:when>
 								<c:otherwise>
-									<img class="main-image" src="../../../photo/default.jpg" alt="기본 이미지">
+									<img class="main-image" src="${product.itemimg}" alt="${product.title}">
 								</c:otherwise>
 							</c:choose>
 							
-							<!-- 상세 이미지들 표시 -->
-							<div class="detail-images">
-								<c:forEach items="${productList}" var="item">
-									<c:if test="${not empty item.image_URL}">
-										<img src="${item.image_URL}" alt="상세이미지 ${item.turn}" class="detail-image">
-									</c:if>
-								</c:forEach>
-							</div>
+							<!-- 상세 이미지들 표시 
+					
+							-->
+						
 						</div>
 
 						<!-- 상품 정보 -->
@@ -68,7 +64,8 @@
 								<fmt:formatNumber value="${product.price}" pattern="#,###"/>원
 							</div>
 							<div class="brand-name">${product.brand}</div>
-							<div class="category-name">카테고리: ${product.category_title}</div>
+							<!-- 카테고리 타이틀자리1 -->
+							 
 
 							<div class="product-options">
 								<div class="option-label">배송정보</div>
@@ -99,32 +96,10 @@
 						<div class="order-section">
 							<div class="order-title">상품 선택</div>
 							
-							<!-- 옵션이 있는 경우 -->
-							<c:if test="${not empty productList}">
-								<c:set var="hasOptions" value="false"/>
-								<c:forEach items="${productList}" var="item">
-									<c:if test="${not empty item.option_name}">
-										<c:set var="hasOptions" value="true"/>
-									</c:if>
-								</c:forEach>
-								
-								<c:if test="${hasOptions}">
-									<select class="option-select" id="productOption">
-										<option value="">옵션을 선택하세요</option>
-										<c:forEach items="${productList}" var="item">
-											<c:if test="${not empty item.option_name}">
-												<option value="${item.option_no}">
-													${item.option_name}
-													<c:if test="${not empty item.detailOPtion_name}">
-														- ${item.detailOPtion_name}
-													</c:if>
-												</option>
-											</c:if>
-										</c:forEach>
-									</select>
-								</c:if>
-							</c:if>
+							<!-- 옵션이 있는 경우
 							
+							-->
+				
 							<div style="font-size: 12px; color: #999; margin-bottom: 15px;">
 								선택한 옵션이 표시됩니다
 							</div>
@@ -191,7 +166,7 @@
 						<div class="description-text">
 							<p>${product.title} 상품 상세 설명입니다.</p>
 							<p>브랜드: ${product.brand}</p>
-							<p>카테고리: ${product.category_title}</p>
+							<!-- 카테고리 타이틀 자리 2  -->
 							<c:if test="${product.shipping_yn == 1}">
 								<p>배송 가능 상품입니다.</p>
 							</c:if>

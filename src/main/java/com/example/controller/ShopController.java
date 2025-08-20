@@ -16,8 +16,6 @@ import com.example.vo.ProductTotalVO;
 import org.springframework.ui.Model;
 
 
-
-
 @Controller
 public class ShopController {
  
@@ -36,7 +34,7 @@ public class ShopController {
 	}
 	
 
-	
+
 	//상품등록
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
 	public String insert(@ModelAttribute ProductVO productVO) {
@@ -65,12 +63,12 @@ public class ShopController {
         System.out.println("ShopController.productDetail");
         System.out.println("상품번호: " + productNo);
         
-        List<ProductTotalVO> productList = shopService.exeProductDetail(productNo);
+        List<ProductVO> productList = shopService.exeProductDetail(productNo);
         	
         if (productList != null && !productList.isEmpty()) {
             // 첫 번째 상품 정보 (기본 정보)
-            ProductTotalVO productTotalVO = productList.get(0);
-            model.addAttribute("product", productTotalVO);
+        	ProductVO productVO = productList.get(0);
+            model.addAttribute("product", productVO);
             
             // 전체 리스트 (옵션, 이미지 포함)
             model.addAttribute("productList", productList);
