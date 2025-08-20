@@ -3,9 +3,9 @@
 <mapper namespace="product">
 
 
-    <!-- 상품 전체 정보 등록 (ProductTotalVO 사용) -->
+ 
  	<!-- 상품 등록 -->
-    <insert id="insert" parameterType="com.example.vo.ProductVO">
+    <insert id="insert" parameterType="com.example.vo.ProductVO" >
     	<![CDATA[
 	        insert into product
 	        values (null, #{category_no}, #{title}, #{price}, #{brand}, #{itemimg},
@@ -48,7 +48,8 @@
 		            price,
 		            brand,
 		            itemimg
-			from product; 
+			from product
+			where product_no = #{product_no}
 	    ]]>
 	</select>
 

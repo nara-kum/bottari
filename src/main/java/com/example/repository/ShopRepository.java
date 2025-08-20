@@ -16,14 +16,19 @@ public class ShopRepository {
 	private SqlSession sqlSession;
 	
 	//상품등록
-		public int ProductInsert(ProductVO productVO) {
-			System.out.println("ShopRepository.ProductInsert"); //ㅇㅋ
-			
-			int count = sqlSession.insert("product.insert", productVO);
-			
-			return count;
-			
+	public int ProductInsert(ProductVO productVO) {
+		System.out.println("ShopRepository.ProductInsert");
+		
+		// 상품 등록 후 생성된 product_no를 productVO에 설정
+		int count = sqlSession.insert("product.insert", productVO);
+		
+		if (count > 0) {
+			// 등록된 상품의 번호 반환
+			return productVO.getProduct_no();
 		}
+		
+		return 0;
+	}
 		
 		
 	    // 상품 상세 조회
