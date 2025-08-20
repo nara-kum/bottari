@@ -16,10 +16,10 @@
 <header class="controller">
 	<div id="sec-header" class="sector">
 		<div class="left-side">
-			<a href=""><img class="header-logo"
+			<a href="/shoppingMall"><img class="header-logo"
 				src="../../../assets/icon/Logo_colored.svg"></a>
 			<h1 class="header-menu">
-				<a href="">캘린더</a>
+				<a href="/calender">캘린더</a>
 			</h1>
 			<h1 class="header-menu">
 				<a href="">펀딩</a>
@@ -28,7 +28,7 @@
 				<a href="">초대장</a>
 			</h1>
 			<h1 class="header-menu">
-				<a href="">구매내역</a>
+				<a href="/history">구매내역</a>
 			</h1>
 		</div>
 		<div class="right-side">
