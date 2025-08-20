@@ -6,12 +6,12 @@
 	<select id="selectList" resultType="com.example.vo.CalenderVO">
 		<![CDATA[
 			select	event_no,
-					user_no,
 					DATE_FORMAT(event_date, '%Y-%m-%d') AS event_date,
 					event_name,
 					event_memo,
 					icon_id
 			from calender
+			where user_no = #{user_no}
 		]]>
 	</select>
 	

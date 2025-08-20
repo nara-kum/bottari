@@ -20,10 +20,10 @@ public class CalenderService {
 	//method normal
 	
 	//캘린더 리스트
-	public List<CalenderVO> exeCalenderList() {
+	public List<CalenderVO> exeCalenderList(int user_no) {
 		System.out.println("CalenderService.exeCalenderList()");
 		
-		List<CalenderVO> calenderList = calenderrepository.calenderAddList();
+		List<CalenderVO> calenderList = calenderrepository.calenderAddList(user_no);
 		
 		return calenderList;
 	}

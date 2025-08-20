@@ -32,56 +32,8 @@
 
 <body class="family">
 
-	<header class="controller">
-		<div id="sec-header" class="sector">
-			<div class="left-side">
-				<a href=""><img class="header-logo"
-					src="../../../assets/icon/Logo_colored.svg"></a>
-				<h1 class="header-menu">
-					<a href="">캘린더</a>
-				</h1>
-				<h1 class="header-menu">
-					<a href="">펀딩</a>
-				</h1>
-				<h1 class="header-menu">
-					<a href="">초대장</a>
-				</h1>
-				<h1 class="header-menu">
-					<a href="">구매내역</a>
-				</h1>
-			</div>
-			<div class="right-side">
-				<a href=""><img class="header-icon header-shopping-cart"
-					src="../../../assets/icon/icon-shopping-cart.svg"></a>
-				<!-- 세션에 값이 있을때 -->
-				<c:if test="${sessionScope.authUser!=null}">
-					<h1>
-						<a class="header-usermenu"
-							href="${pageContext.request.contextPath}/loginform">${sessionScope.authUser.name}</a>
-					</h1>
-					<a href=""><img class="header-icon"
-						src="../../../assets/icon/icon-caret-down.svg"></a>
-					<h1>
-						<a class="header-usermenu"
-							href="${pageContext.request.contextPath}/logout">로그아웃</a>
-					</h1>
-				</c:if>
-				<!-- 세션에 값이 없을때 -->
-				<c:if test="${sessionScope.authUser==null}">
-					<h1>
-						<a class="header-usermenu"
-							href="${pageContext.request.contextPath}/loginForm">로그인</a>
-					</h1>
-					<a href=""><img class="header-icon"
-						src="../../../assets/icon/icon-caret-down.svg"></a>
-					<h1>
-						<a class="header-usermenu"
-							href="${pageContext.request.contextPath}/joinForm">회원가입</a>
-					</h1>
-				</c:if>
-			</div>
-		</div>
-	</header>
+	<!-- Header호출 -->
+	<c:import url="/WEB-INF/include/Header.jsp"></c:import>
 	
 	<section class="controller">
 	<div id="sec-content" class="sector">
@@ -92,14 +44,24 @@
 				<div id="date-info" class="header-sub"></div>
 			</div>
 		</div>
-		<div class="sec-content-main">
-			<div class="left-main content-height">
-				<div id='calendar'></div>
-			</div>
-			<div class="right-main content-height">
-				<div id="event-info"></div>
-			</div>
-		</div>
+		<c:choose>
+			<c:when test="${sessionScope.user_no == null}">
+				<script>
+					alert("로그인이 필요합니다.");
+	            	window.location.href = "/loginForm";  // 로그인 페이지 경로 맞게 수정하세요
+				</script>
+			</c:when>
+			<c:otherwise>			
+				<div class="sec-content-main">
+					<div class="left-main content-height">
+						<div id='calendar'></div>
+					</div>
+					<div class="right-main content-height">
+						<div id="event-info"></div>
+					</div>
+				</div>
+			</c:otherwise>
+		</c:choose>
 
 
 
@@ -642,7 +604,7 @@
                                         // 2) 서버 DB에 저장 (fetch 추가)
                                      	// 저장 버튼 클릭 내부에서 실행
                                         const formData = new URLSearchParams();
-                                        formData.append("user_no", 1);        // TODO: 로그인 사용자 번호
+                                        formData.append("user_no", ${sessionScope.user_no});        // TODO: 로그인 사용자 번호
                                         formData.append("event_date", dateStr);
                                         formData.append("event_name", title);
                                         formData.append("event_memo", comment);
