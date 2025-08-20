@@ -48,9 +48,9 @@
 			<c:choose>
 				<c:when test="${sessionScope.authUser.userNo == null}">
 					<script>
-					alert("로그인이 필요합니다.");
-	            	window.location.href = "/loginForm";  // 로그인 페이지 경로 맞게 수정하세요
-				</script>
+						alert("로그인이 필요합니다.");
+	            		window.location.href = "/loginForm";  // 로그인 페이지 경로 맞게 수정하세요
+					</script>
 				</c:when>
 				<c:otherwise>
 					<div class="sec-content-main">
@@ -60,8 +60,8 @@
 						<div class="right-main content-height">
 							<div id="event-info"></div>
 							<c:choose>
-								<c:when test="${RequestParam.event_id == null}">
-
+								<c:when test="${param.event_id == null}">
+									<div style="display: none;"></div>
 								</c:when>
 								<c:otherwise>
 									<c:choose>
@@ -85,33 +85,39 @@
 												</div>
 											</div>
 										</c:otherwise>
-										<c:choose>
-											<c:when test="${productList == null}">
-												<div class="column-flex-box celebrate-card-area row-align no-event">
-													<img class="middle-icon" src="../../asset/icon-cross.svg" />
-													<div class="text-18">펀딩 리스트가 비었어요</div>
-													<button class="btn-basic btn-orange size-normal">펀딩 관리하기</button>
+									</c:choose>
+									<c:choose>
+										<c:when test="${productList == null}">
+											<div
+												class="column-flex-box celebrate-card-area row-align no-event">
+												<img class="middle-icon" src="../../asset/icon-cross.svg" />
+												<div class="text-18">펀딩 리스트가 비었어요</div>
+												<button class="btn-basic btn-orange size-normal">펀딩
+													관리하기</button>
+											</div>
+										</c:when>
+										<c:otherwise>
+											<div class="funding-area column-flex-box">
+												<div class="text-16 bold">진행중인 펀딩</div>
+												<c:forEach items="${requestScope.productList}"
+													var="productList">
+													<a href="">
+														<div class="list-basic list-360 row-flex-box">
+															<img class="list-img-50 column-align"
+																src="${productList.itemimg}">
+															<div class="column-flex-box column-align funding-detail">
+																<div class="text-12">${productList.brand}</div>
+																<div class="text-12">${productList.title}</div>
+																<div class="text-16 bold">${productList.price}원</div>
+															</div>
+														</div>
+													</a>
+												</c:forEach>
+												<div class="show-detail">
+													<a href="">전체보기></a>
 												</div>
-											</c:when>
-											<c:otherwise>
-												<div class="funding-area column-flex-box">
-							                        <div class="text-16 bold">진행중인 펀딩</div>
-							                        <c:forEach items="${requestScope.productList}" var="productList">
-								                        <a href="">
-								                            <div class="list-basic list-360 row-flex-box">
-								                                <img class="list-img-50 column-align" src="${productList.itemimg}">
-								                                <div class="column-flex-box column-align funding-detail">
-								                                    <div class="text-12">${productList.brand}</div>
-								                                    <div class="text-12">${productList.title}</div>
-								                                    <div class="text-16 bold">${productList.price}원</div>
-								                                </div>
-								                            </div>
-								                        </a>
-							                        </c:forEach>
-							                        <div class="show-detail"><a href="">전체보기></a></div>
-							                    </div>
-											</c:otherwise>
-										</c:choose>
+											</div>
+										</c:otherwise>
 									</c:choose>
 								</c:otherwise>
 							</c:choose>
@@ -230,7 +236,7 @@
                         selectedEventId = events[0].id; // 첫 번째 이벤트 ID 저장
                         
                         const formData = new URLSearchParams();
-                        formData.append("event_id", event_id);
+                        formData.append("event_id", firstEvent);
 
                         fetch("/response", {
                             method: "POST",

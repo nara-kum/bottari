@@ -15,7 +15,7 @@
 		]]>
 	</select>
 	<!-- 캘린더 초대장 리스트 -->
-	<select id="getInvitationList">
+	<select id="getInvitationList" resultType="com.example.vo.InvitationVO">
 			<![CDATA[
 			select	event_no,
 					photo_url
@@ -25,7 +25,7 @@
 	</select>
 	
 	<!-- 캘린더 펀딩 리스트 -->
-	<select id="getProductList">
+	<select id="getProductList" resultType="com.example.vo.ProductVO">
 		<![CDATA[
 			select	p.product_no,
 				    p.title,
@@ -40,7 +40,7 @@
 	
 	
 	<!-- 캘린더 이벤트 추가 -->
-	<insert id="insert" >
+	<insert id="insert">
 		<![CDATA[
 			insert into calender
 			values(null, #{user_no}, #{event_date}, #{event_name}, #{event_memo}, #{icon_id})
