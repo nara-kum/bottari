@@ -21,16 +21,6 @@ public class UserService {
 		return count;
 	}
 	
-	//로그인
-	public UserVO exeLogin(UserVO userVO) {
-		System.out.println("UserService.exeLogin()");
-		
-		UserVO authUser = userRepository.selectUser(userVO);
-		
-		return authUser;
-	}
-		
-	
 	//--아이디사용유무체크(회원가입)
 	public boolean exeIdcheck(String id) {
 		System.out.println("UserService.exeIdcheck()");
@@ -48,5 +38,34 @@ public class UserService {
 		}
 	
 	}
+	
+	//회원정보 수정폼(1명정보)
+	public UserVO exeEditData(int no) {
+		System.out.println("UserService.exeEditData()");
+		
+		UserVO userVO = userRepository.userSelectByNo(no);
+		
+		return userVO;
+
+	}
+	
+	//회원정보 수정
+	public int exeEdit(UserVO userVO) {
+		System.out.println("UserService.exeEdit()");
+		
+		int count = userRepository.userUpdate(userVO);
+
+		return count;
+
+	}		
+	
+	//로그인
+	public UserVO exeLogin(UserVO userVO) {
+		System.out.println("UserService.exeLogin()");
+		
+		UserVO authUser = userRepository.selectUser(userVO);
+		
+		return authUser;
+	}	
 
 }

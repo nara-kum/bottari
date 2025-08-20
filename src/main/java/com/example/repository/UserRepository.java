@@ -22,6 +22,34 @@ public class UserRepository {
 		
 		return count;
 	}
+
+	//아이디사용유무체크(회원가입)
+	public UserVO userSelectById(String id) {
+		System.out.println("UserRepository.userSelectById()");
+		System.out.println(id);
+		
+		UserVO userVO = sqlSession.selectOne("user.selectOneById",id);
+		return userVO;
+	}		
+	
+	//회원정보 수정폼(1명데이터)
+	public UserVO userSelectByNo(int no) {
+		System.out.println("UserRepository.userSelectByNo()");
+		
+		UserVO userVO = sqlSession.selectOne("user.selectByNo",no);
+		
+		return userVO;
+		
+	}
+	
+	//회원정보 수정
+	public int userUpdate(UserVO userVO) {
+		System.out.println("UserRepository.userUpdate()");
+
+		int count = sqlSession.update("user.update",userVO);
+		
+		return count;
+	}	
 	
 	//로그인
 	public UserVO selectUser(UserVO userVO) {
@@ -35,15 +63,5 @@ public class UserRepository {
 		
 		return authUser;
 	}
-	
-
-	//아이디사용유무체크(회원가입)
-	public UserVO userSelectById(String id) {
-		System.out.println("UserRepository.userSelectById()");
-		System.out.println(id);
-		
-		UserVO userVO = sqlSession.selectOne("user.selectOneById",id);
-		return userVO;
-	}	
 
 }
