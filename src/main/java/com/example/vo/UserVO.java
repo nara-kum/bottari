@@ -25,7 +25,7 @@ public class UserVO {
 		this.email = email;
 		this.phone = phone;
 		this.birth = birth;
-		JoinDate = joinDate;
+		this.JoinDate = joinDate;
 	}
 	
 	//메소드-sg
@@ -75,7 +75,7 @@ public class UserVO {
 		return JoinDate;
 	}
 	public void setJoinDate(String joinDate) {
-		JoinDate = joinDate;
+		this.JoinDate = joinDate;
 	}
 	
 	//메소드 일반

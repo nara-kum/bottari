@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="invitation">
+	
+	<!-- 초대장 등록-->
+	<insert id="insertInvi" parameterType="com.example.vo.InvitationVO">
+		<![CDATA[
+			insert into invitaion 
+			values (null
+					,#{categoryNo}
+					,#{userNo}
+					,#{eventNo}
+					,#{themeNo}
+					,#{photoUrl}
+					,#{celebrateDate}
+					,#{celebrateTime}
+					,#{greeting}
+					,#{place}
+					,#{address1}
+					,#{address2}
+					,#{groomName}
+					,#{groomContect}
+					,#{groomFatherName}
+					,#{groomFatherContect}
+					,#{groomMotherName}
+					,#{groomMotherContect}
+					,#{brideName}
+					,#{brideContect}
+					,#{brideFatherName}
+					,#{brideFatherContect}
+					,#{brideMotherName}
+					,#{brideMotherContect}
+					,#{babyName}
+					,#{babyFatherName}
+					,#{babyFatherContect}
+					,#{babyMotherName}
+					,#{babyMotherContect}
+					,now())
+		]]>
+	</insert>
+	
+</mapper>

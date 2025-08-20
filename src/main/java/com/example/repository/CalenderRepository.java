@@ -20,10 +20,10 @@ public class CalenderRepository {
 	//method normal
 	
 	//캘린더 리스트
-	public List<CalenderVO> calenderAddList() {
+	public List<CalenderVO> calenderAddList(int user_no) {
 		System.out.println("CalenderRepository.addList()");
 		
-		List<CalenderVO> calenderList = sqlsession.selectList("calender.selectList");
+		List<CalenderVO> calenderList = sqlsession.selectList("calender.selectList", user_no);
 		
 		return calenderList;
 	}
