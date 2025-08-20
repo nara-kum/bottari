@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
     
 <!DOCTYPE html>
 <html lang="ko">
@@ -8,32 +9,14 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/reset.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/Global.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/wishlist.css">
+	<script src="${pageContext.request.contextPath}/assets/js/jquery/jquery-3.7.1.js"></script>
 </head>
 
 <body class="family">
-    <header class="controller">
-        <div id="sec-header" class="sector">
-            <div class="left-side">
-                <a href="">
-                    <img class="header-logo" src="${pageContext.request.contextPath}/assets/icon/Logo_colored.svg">
-                </a>
-                <h1 class="header-menu"><a href="">캘린더</a></h1>
-                <h1 class="header-menu"><a href="">펀딩</a></h1>
-                <h1 class="header-menu"><a href="">초대장</a></h1>
-                <h1 class="header-menu"><a href="">구매내역</a></h1>
-            </div>
-            <div class="right-side">
-                <a href="">
-                    <img class="header-icon header-shopping-cart" src="${pageContext.request.contextPath}/assets/icon/icon-shopping-cart.svg">
-                </a>
 
-                <h1 class="header-usermenu">사용자이름</h1>
-                <a href="">
-                    <img class="header-icon" src="${pageContext.request.contextPath}/assets/icon/icon-caret-down.svg">
-                </a>
-            </div>
-        </div>
-    </header>
+	<!-- Header호출 -->
+	<c:import url="/WEB-INF/views/include/Header.jsp"></c:import>
+    <!-- Header호출 -->
 
     <content class="controller">
         <div id="sec-content" class="sector">
@@ -50,6 +33,8 @@
                 <div class="left-main content-height">
 
                     <h2 class="top-text">위시리스트</h2>
+                    
+                    <c:forEach items="${requestScope.wishVO}" var="wishVO">
                     <div class="a-product">
                         <div class="image-row">
                             <input id="chk-1" type="checkbox" class="product-checkbox">
@@ -57,10 +42,9 @@
 
                             <!-- 텍스트 가로 정렬 영역 -->
                             <div class="product-info">
-                                <div class="buy">이키</div><!--판매처-->
-                                <div class="product-name">&#34;신생아 오가닉 선물&#34; [임신/출산축하] &#34;뱀띠 아기선물&#34; 유기농 7종 맞춤선물세트
-                                </div>
-                                <div class="price">38,900원</div> <!--가격-->
+                                <div class="buy">${wishVO.brand}</div><!--판매처-->
+                                <div class="product-name">${wishVO.title}</div>
+                                <div class="price">${wishVO.price} 원</div> <!--가격-->
 
                                 <div class="image-row">
                                     <div class="shopping-cart">
@@ -71,18 +55,20 @@
                             </div> <!-- "product-info" 끝나는 지점    -->
                         </div> <!--  image-row 끝나는 지점    -->
                     </div>
+                    </c:forEach>
 
                 </div> <!-- <div class="left-main content-height"> -->
 
                 <div class="right-main content-height">
                     <h2 class="top-text">선택한 펀딩</h2>
+                    
                     <div class="funding-controls">
                         <select id="funding-table">
                             <option value="">-- 기념일 선택 --</option>
                             <option value="a">7월 11일 어머니 환갑잔치</option>
                         </select>
 
-                        <!-- 1번 상품 5%, 전액 -->
+                        <!-- 1번 상품 5%, 전액 
                         <div class="right-product-box">
                             <div class="right-image">
                                 <img src="${pageContext.request.contextPath}/assets/images/eki.jpg" />
@@ -97,13 +83,13 @@
                                             <span for="rdo-o">5%</span>
                                             <input type="radio" name="range1" value="">
                                         </div>
-                                            <span class="text-sale">1,945원</span> <!-- 원가에서 5% 가격 -->
+                                            <span class="text-sale">1,945원</span>
                                     </div>
                                 </div>
 
                             </div>
                         </div>
-
+                        -->
                     </div>
 
                     <a href=""><button class="btn-funding1" type="submit">펀딩시작하기</button></a>
@@ -145,6 +131,15 @@
             </div>
         </div>
     </footer>    
-        
+
+<script>
+	$(document).ready(function(){
+	    console.log('돔');
+	    
+	
+	})
+
+
+</script>
 </body>
 </html>
