@@ -162,10 +162,7 @@
 
 					<!-- 상품 설명 -->
 					<div class="product-description">
-						<div class="haagen-logo-large">${product.brand}</div>
-						<div class="description-text">
-							<p>${product.title} 상품 상세 설명입니다.</p>
-							<p>브랜드: ${product.brand}</p>
+						<img class="detailproduct" src="${product.itemimg}" alt="${product.title}">
 							<!-- 카테고리 타이틀 자리 2  -->
 							<c:if test="${product.shipping_yn == 1}">
 								<p>배송 가능 상품입니다.</p>

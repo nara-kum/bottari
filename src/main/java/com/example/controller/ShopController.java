@@ -1,6 +1,9 @@
 package com.example.controller;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -8,6 +11,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.service.ShopService;
 import com.example.vo.ProductVO;
@@ -82,6 +86,35 @@ public class ShopController {
     }
 
 	
+    
+    
+    // 이미지 파일 저장 메소드
+    private String saveImageFile(MultipartFile file, String folder) throws IOException {
+        // 업로드 폴더 설정
+        String uploadDir = System.getProperty("user.dir") + "/src/main/webapp/assets/uploads/" + folder + "/";
+        
+        // 폴더가 없으면 생성
+        File dir = new File(uploadDir);
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+        
+        // 파일명 생성 (중복 방지를 위해 UUID 사용)
+        String originalFileName = file.getOriginalFilename();
+        String extension = originalFileName.substring(originalFileName.lastIndexOf("."));
+        String savedFileName = UUID.randomUUID().toString() + extension;
+        
+        // 파일 저장
+        File savedFile = new File(uploadDir + savedFileName);
+        file.transferTo(savedFile);
+        
+        System.out.println("파일 저장 완료: " + savedFile.getAbsolutePath());
+        
+        return savedFileName;
+    }
+    
+    
+    
 	
 	
   //상세페이지
