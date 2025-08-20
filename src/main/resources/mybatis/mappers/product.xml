@@ -5,13 +5,15 @@
 
  
  	<!-- 상품 등록 -->
-    <insert id="insert" parameterType="com.example.vo.ProductVO" >
-    	<![CDATA[
-	        insert into product
-	        values (null, #{category_no}, #{title}, #{price}, #{brand}, #{itemimg},
-	         		#{shipping_yn}, #{shipping_cost}, #{zipcode}, #{address}, #{detail_address})
-         ]]>
-    </insert>
+<insert id="insert" parameterType="com.example.vo.ProductVO"
+	useGeneratedKeys="true" keyProperty="product_no">
+    <![CDATA[
+        insert into product (category_no, title, price, brand, itemimg, 
+                           shipping_yn, shipping_cost, zipcode, address, detail_address)
+        values (#{category_no}, #{title}, #{price}, #{brand}, #{itemimg},
+                #{shipping_yn}, #{shipping_cost}, #{zipcode}, #{address}, #{detail_address})
+    ]]>
+</insert>
 
     <!-- 옵션 정보 저장 
     <insert id="insertOption" parameterType="com.example.vo.ProductTotalVO">
@@ -40,18 +42,26 @@
    -->
 
 
-	<select id="selectOne" parameterType="int" resultType="com.example.vo.ProductVO">
-	    <![CDATA[
-	        select	product_no,
-					category_no,
-		            title,
-		            price,
-		            brand,
-		            itemimg
-			from product
-			where product_no = #{product_no}
-	    ]]>
-	</select>
+	
+    <!-- 상품 상세 조회 -->
+    <select id="selectOne" parameterType="int" resultType="com.example.vo.ProductVO">
+        <![CDATA[
+            select  product_no,
+                    category_no,
+                    title,
+                    price,
+                    brand,
+                    itemimg,
+                    shipping_yn,
+                    shipping_cost,
+                    zipcode,
+                    address,
+                    detail_address
+            from product
+            where product_no = #{product_no}
+        ]]>
+    </select>
+	
 
 	
 	

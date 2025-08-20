@@ -38,47 +38,79 @@ public class ShopController {
 
 
 	//상품등록
-	@RequestMapping(value = "/register", method = RequestMethod.POST)
-	public String insert(@ModelAttribute ProductVO productVO) {
+    @RequestMapping(value = "/register", method = RequestMethod.POST)
+    public String insert(@ModelAttribute ProductVO productVO, Model model) {
 
-		System.out.println("ShopController.insert"); //ㅇㅋ
-		
-		System.out.println("받은 데이터: " + productVO);
+        System.out.println("ShopController.insert");
+        System.out.println("받은 데이터: " + productVO);
+        
+        // 필수 필드 검증
+        if (productVO.getTitle() == null || productVO.getTitle().trim().isEmpty()) {
+            System.out.println("상품명이 비어있습니다!");
+            return "shop/shopform";
+        }
+        
+        if (productVO.getPrice() <= 0) {
+            System.out.println("가격이 올바르지 않습니다!");
+            return "shop/shopform";
+        }
+        
+        // 기본값 설정
+        if (productVO.getBrand() == null) {
+            productVO.setBrand("");
+        }
+        if (productVO.getItemimg() == null) {
+            productVO.setItemimg("");
+        }
+        if (productVO.getAddress() == null) {
+            productVO.setAddress("");
+        }
+        if (productVO.getDetail_address() == null) {
+            productVO.setDetail_address("");
+        }
 
-		int result = shopService.exeProductadd(productVO);
+        int result = shopService.exeProductadd(productVO);
 
-		if (result > 0) {
-			System.out.println("상품 등록 성공!");
-			return "shop/shopSuccess"; // 성공 시 등록완료 페이지
-		} else {
-			System.out.println("상품 등록 실패!");
-			return "shop/shopform"; // 실패 시 다시 폼 페이지
-		}
-	}
+        if (result > 0) {
+            System.out.println("상품 등록 성공! 생성된 상품번호: " + productVO.getProduct_no());
+            model.addAttribute("productVO", productVO);
+            return "shop/shopSuccess";
+        } else {
+            System.out.println("상품 등록 실패!");
+            return "shop/shopform";
+        }
+    }
 
 	
 	
 	
-	//상세페이지
+  //상세페이지
     @RequestMapping(value="/productPage", method= {RequestMethod.GET, RequestMethod.POST})
     public String productDetail(@RequestParam(required = false) Integer productNo, Model model) {    
         System.out.println("ShopController.productDetail");
         System.out.println("상품번호: " + productNo);
         
+        if (productNo == null) {
+            System.out.println("상품번호가 없습니다!");
+            return "shop/shoppingMall";
+        }
+        
         List<ProductVO> productList = shopService.exeProductDetail(productNo);
-        	
+            
         if (productList != null && !productList.isEmpty()) {
             // 첫 번째 상품 정보 (기본 정보)
-        	ProductVO productVO = productList.get(0);
+            ProductVO productVO = productList.get(0);
             model.addAttribute("product", productVO);
             
             // 전체 리스트 (옵션, 이미지 포함)
             model.addAttribute("productList", productList);
+        } else {
+            System.out.println("상품 정보를 찾을 수 없습니다!");
+            return "shop/shoppingMall";
         }
         
         return "shop/productPage";
     }
-	
 	
 	//상세페이지_펀딩
 	@RequestMapping(value="/productPage2", method= {RequestMethod.GET, RequestMethod.POST})
