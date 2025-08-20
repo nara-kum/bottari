@@ -69,5 +69,12 @@ public class CalenderService {
 	}
 
 	// 캘린더 이벤트 삭제
+	public int exeDeleteCalender(CalenderVO calendervo) {
+		System.out.println("CalenderService.exeDeleteCalender()");
+		
+		int count = calenderrepository.calenderDelete(calendervo);
+		
+		return count;
+	}
 
 }

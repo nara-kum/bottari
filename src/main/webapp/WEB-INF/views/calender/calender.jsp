@@ -138,6 +138,7 @@
 	<script>
         // 전역에서 클릭된 날짜를 저장하는 변수
         let lastClickedDate = null;
+        let selectedEventId = null;
 
         // 클릭된 날짜를 설정하는 전역 함수
         function setClickedDate(dateStr) {
@@ -154,7 +155,6 @@
 			console.log('돔트리 완료');
 		
             let lastClickTime = 0;
-            let selectedEventId = null; // 삭제할 이벤트 추적용
 
             var calendarEl = document.getElementById('calendar');
             var calendar = new FullCalendar.Calendar(calendarEl, {
@@ -236,7 +236,7 @@
                         selectedEventId = events[0].id; // 첫 번째 이벤트 ID 저장
                         
                         const formData = new URLSearchParams();
-                        formData.append("event_id", firstEvent);
+                        formData.append("event_id", firstEvent.id);
 
                         fetch("/response", {
                             method: "POST",
@@ -292,6 +292,23 @@
                     
                     // 날짜 정보 표시 (이벤트가 있으므로 true)
                     showDateInfo(eventDateStr, true);
+                    
+                    //이벤트의 id를 controller로 전송
+                    const formData = new URLSearchParams();
+                        formData.append("event_id", eventId);
+
+                        fetch("/response", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/x-www-form-urlencoded"
+                            },
+                            body: formData.toString()
+                        })
+                        .then(res => res.text()) // 컨트롤러에서 return이 String이니까 text()로 받음
+                        .then(result => {
+                            console.log("DB 저장 성공:", result);
+                        })
+                        .catch(err => console.error("DB 저장 실패:", err));
                     
                     // 이벤트 정보 표시
                     showEventInfo(eventId, title, day, comment, icon);
@@ -506,6 +523,22 @@
                         }
                     }).then(function (result) {
                         if (result.value) {
+                        	// 서버에서 삭제 처리
+                            const formData = new URLSearchParams();
+                            formData.append("event_no", selectedEventId);
+
+                            fetch("/delete", {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/x-www-form-urlencoded"
+                                },
+                                body: formData.toString()
+                            })
+                            .then(res => res.text())
+                            .then(result => {
+                                console.log("DB 삭제 성공:", result);
+                                // 성공적으로 삭제된 경우에만 화면에서 제거
+                        	
                             event.remove();
                             document.getElementById('event-info').style.display = 'none';
                             document.getElementById('event-info').innerHTML = '';
@@ -783,7 +816,7 @@
                             formData.append("user_no", 1);        // TODO: 로그인 사용자 번호
                             formData.append("event_name", title);
                             formData.append("event_memo", comment);
-                            formData.append("icon_id", selectedIcon);        // TODO: selectedIcon 매핑
+                            formData.append("icon_id", existingIcon);        // TODO: selectedIcon 매핑
 
                             fetch("/update", {
                                 method: "POST",

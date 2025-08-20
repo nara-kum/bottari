@@ -70,4 +70,11 @@ public class CalenderRepository {
 	}
 
 	// 캘린더 이벤트 삭제
+	public int calenderDelete(CalenderVO calendervo) {
+		System.out.println("CalenderRepository.calenderDelte()");
+		
+		int count = sqlsession.delete("calender.delete", calendervo);
+		
+		return count;
+	}
 }

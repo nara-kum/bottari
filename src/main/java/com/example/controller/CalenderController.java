@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -104,7 +103,13 @@ public class CalenderController {
 		return count;
 	}
 	
-	
-	
 	//이벤트 삭제
+	@RequestMapping(value="/delte", method= {RequestMethod.GET, RequestMethod.POST})
+	public int eventDelete(@ModelAttribute CalenderVO calendervo) {
+		System.out.println("CalenderController.eventDelete()");
+		
+		int count = calenderservice.exeDeleteCalender(calendervo);
+		
+		return 0;
+	}
 }
