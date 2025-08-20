@@ -278,7 +278,7 @@
                         title: '${calendervo.event_name}',
                         start: '${calendervo.event_date}', 
                         extendedProps: {
-                            icon: 'birthday',
+                            icon: '${calendervo.icon_id}',
                             comment: '${calendervo.event_memo}'
                         }
                     },<c:if test="${!status.last}">,</c:if>

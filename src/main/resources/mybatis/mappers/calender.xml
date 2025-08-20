@@ -11,23 +11,23 @@
 					event_name,
 					event_memo,
 					icon_no	as icon_id
-			from Calender
+			from calender
 		]]>
 	</select>
 	
 	<insert id="insert" >
 		<![CDATA[
-			insert into Calender
-			values(null, #{user_no}, #{event_date}, #{event_name}, #{event_memo}, #{icon_no})
+			insert into calender
+			values(null, #{user_no}, #{event_date}, #{event_name}, #{event_memo}, #{icon_id})
 		]]>
 	</insert>
 
 	<update id="update">
 		<![CDATA[
-			update Calender
+			update calender
 			set event_name = #{event_name},
 				event_memo = #{event_memo},
-				icon_no = #{icon_no}
+				icon_no = #{icon_id}
 			where event_no = #{event_no}
 		]]>
 	</update>
