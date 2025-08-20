@@ -72,97 +72,6 @@
                         </div> <!--  image-row 끝나는 지점    -->
                     </div>
 
-                    <!--2 번째 상품이미지, 판매처, 상품명, 가격, 장바구니, 하트(찜) -->
-                    <div class="a-product">
-                        <div class="image-row">
-                            <input id="chk-1" type="checkbox" class="product-checkbox">
-                            <img class="product-image" src="${pageContext.request.contextPath}/assets/images/mood-light.jpg" /> <!--상품이미지-->
-
-                            <!-- 텍스트 가로 정렬 영역 -->
-                            <div class="product-info">
-                                <div class="buy">레이문</div> <!--판매처-->
-                                <div class="product-name">&#34;결혼선물 집들이선물&#34; [레이문] 주문제작 드로잉 무드등 L사이즈(인물테두리컷팅) ...
-                                </div>
-                                <div class="price">39,800원</div> <!--가격-->
-
-                                <div class="image-row">
-                                    <div class="shopping-cart">
-                                        <img src="${pageContext.request.contextPath}/assets/icon/icon-shopping-cart.svg" /> <!--장바구니-->
-                                    </div>
-                                    <img src="${pageContext.request.contextPath}/assets/images/heart.jpg" /> <!--하트(찜)-->
-                                </div>
-                            </div> <!-- "product-info" 끝나는 지점    -->
-                        </div> <!--  image-row 끝나는 지점    -->
-                    </div>
-
-                    <!--3 번째 상품이미지, 판매처, 상품명, 가격, 장바구니, 하트(찜) -->
-                    <div class="a-product">
-                        <div class="image-row">
-                            <input id="chk-1" type="checkbox" class="product-checkbox">
-                            <img class="product-image" src="${pageContext.request.contextPath}/assets/images/cup.jpg" /> <!--상품이미지-->
-
-                            <!-- 텍스트 가로 정렬 영역 -->
-                            <div class="product-info">
-                                <div class="buy">헤이루미(키친)</div> <!--판매처-->
-                                <div class="product-name">&#34;봄날의 우리&#34; [선물포장+엽서증정] Our Marriage 웨딩 머그컵 2P 세트 / 신혼부부
-                                </div>
-                                <div class="price">20,900원</div> <!--가격-->
-
-                                <div class="image-row">
-                                    <div class="shopping-cart">
-                                        <img src="${pageContext.request.contextPath}/assets/icon/icon-shopping-cart.svg" /> <!--장바구니-->
-                                    </div>
-                                    <img src="${pageContext.request.contextPath}/assets/images/heart.jpg" /> <!--하트(찜)-->
-                                    
-                                </div>
-                            </div> <!-- "product-info" 끝나는 지점    -->
-                        </div> <!--  image-row 끝나는 지점    -->
-                    </div>
-
-                    <!--4 번째 상품이미지, 판매처, 상품명, 가격, 장바구니, 하트(찜) -->
-                    <div class="a-product">
-                        <div class="image-row">
-                            <input id="chk-1" type="checkbox" class="product-checkbox">
-                            <img class="product-image" src="${pageContext.request.contextPath}/assets/images/flower.jpg" /> <!--상품이미지-->
-
-                            <!-- 텍스트 가로 정렬 영역 -->
-                            <div class="product-info">
-                                <div class="buy">댕이네꽃밭</div> <!--판매처-->
-                                <div class="product-name">[어버이날 스승의날] &#34;감사합니다사랑합니다&#34; [당일배송] 카네이션꽃다발+고급 하트...</div>
-                                <div class="price">22,900원</div> <!--가격-->
-
-                                <div class="image-row">
-                                    <div class="shopping-cart">
-                                        <img src="${pageContext.request.contextPath}/assets/icon/icon-shopping-cart.svg" /> <!--장바구니-->
-                                    </div>
-                                    <img src="${pageContext.request.contextPath}/assets/images/heart.jpg" /> <!--하트(찜)-->
-                                </div>
-                            </div> <!-- "product-info" 끝나는 지점    -->
-                        </div> <!--  image-row 끝나는 지점    -->
-                    </div>
-
-                    <!--5 번째 상품이미지, 판매처, 상품명, 가격, 장바구니, 하트(찜) -->
-                    <div class="a-product">
-                        <div class="image-row">
-                            <input id="chk-1" type="checkbox" class="product-checkbox">
-                            <img class="product-image" src="${pageContext.request.contextPath}/assets/images/cow.jpg" /> <!--상품이미지-->
-
-                            <!-- 텍스트 가로 정렬 영역 -->
-                            <div class="product-info">
-                                <div class="buy">한우맘</div> <!--판매처-->
-                                <div class="product-name">한우맘 1++등급 한우 패밀리 프리미엄 홈마카세 1.4kg(등심+살치+갈비+안심+채끝)...</div>
-                                <div class="price">249,000원</div> <!--가격-->
-
-                                <div class="image-row">
-                                    <div class="shopping-cart">
-                                        <img src="${pageContext.request.contextPath}/assets/icon/icon-shopping-cart.svg" /> <!--장바구니-->
-                                    </div>
-                                    <img src="${pageContext.request.contextPath}/assets/images/heart.jpg" /> <!--하트(찜)-->
-                                </div>
-                            </div> <!-- "product-info" 끝나는 지점    -->
-                        </div> <!--  image-row 끝나는 지점    -->
-                    </div> <!--  o-product -->
-
                 </div> <!-- <div class="left-main content-height"> -->
 
                 <div class="right-main content-height">
@@ -171,11 +80,6 @@
                         <select id="funding-table">
                             <option value="">-- 기념일 선택 --</option>
                             <option value="a">7월 11일 어머니 환갑잔치</option>
-                            <option value="b">7월 16일 ○○○생일</option>
-                            <option value="c">7월 27일 내 생일</option>
-                            <option value="d">8월 4일 결혼 기념일</option>
-                            <option value="e">8월 8일 돌잔치</option>
-                            <option value="f">9월 5일 쫑파티</option>
                         </select>
 
                         <!-- 1번 상품 5%, 전액 -->
@@ -192,100 +96,8 @@
                                         <div class="sale-price">
                                             <span for="rdo-o">5%</span>
                                             <input type="radio" name="range1" value="">
+                                        </div>
                                             <span class="text-sale">1,945원</span> <!-- 원가에서 5% 가격 -->
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-
-                        <!-- 2번 상품 5%, 전액 -->
-                        <div class="right-product-box">
-                            <div class="right-image">
-                                <img src="${pageContext.request.contextPath}/assets/images/mood-light.jpg" />
-                                <div class="product-info">
-                                    <div class="form-group2">
-                                        <div class="right-choice-product">&#34;결혼선물 집들이선물&#34; [레이문] 주문제작 드로잉 무드등...</div>
-                                    </div>
-                                    <div class="form-group">
-                                        <span for="rdo-o">전액</span>
-                                        <input type="radio" name="range1" value="">
-                                        <div class="sale-price">
-                                            <span for="rdo-o">5%</span>
-                                            <input type="radio" name="range1" value="">
-                                            <span class="text-sale">1,990원</span> <!-- 원가에서 5% 가격 -->
-                                        </div>
-
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-
-                        <!-- 3번 상품 5%, 전액 -->
-                        <div class="right-product-box">
-                            <div class="right-image">
-                                <img src="${pageContext.request.contextPath}/assets/images/cup.jpg" />
-                                <div class="product-info">
-                                    <div class="form-group2">
-                                        <div class="right-choice-product">&#34;봄날의 우리&#34; [선물포장+엽서증정] 머그컵 세트...</div>
-                                    </div>
-                                    <div class="form-group">
-                                        <span for="rdo-o">전액</span>
-                                        <input type="radio" name="range1" value="">
-                                        <div class="sale-price">
-                                            <span for="rdo-o">5%</span>
-                                            <input type="radio" name="range1" value="">
-                                            <span class="text-sale">1,045원</span> <!-- 원가에서 5% 가격 -->
-                                        </div>
-
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-
-                        <!-- 4번 상품 5%, 전액 -->
-                        <div class="right-product-box">
-                            <div class="right-image">
-                                <img src="${pageContext.request.contextPath}/assets/images/flower.jpg" />
-                                <div class="product-info">
-                                    <div class="form-group2">
-                                        <div class="right-choice-product">[어버이날 스승의날] &#34;감사합니다 카네이션꽃...</div>
-                                    </div>
-                                    <div class="form-group">
-                                        <span for="rdo-o">전액</span>
-                                        <input type="radio" name="range1" value="">
-                                        <div class="sale-price">
-                                            <span for="rdo-o">5%</span>
-                                            <input type="radio" name="range1" value="">
-                                            <span class="text-sale">1,045원</span> <!-- 원가에서 5% 가격 -->
-                                        </div>
-
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-
-                        <!-- 5번 상품 5%, 전액 -->
-                        <div class="right-product-box">
-                            <div class="right-image">
-                                <img src="${pageContext.request.contextPath}/assets/images/cow.jpg" />
-                                <div class="product-info">
-                                    <div class="form-group2">
-                                        <div class="right-choice-product">한우맘 1++등급 한우 패밀리 프리미엄 1.4kg(채끝)</div>
-                                    </div>
-                                    <div class="form-group">
-                                        <span for="rdo-o">전액</span>
-                                        <input type="radio" name="range1" value="">
-                                        <div class="sale-price">
-                                            <span for="rdo-o">5%</span>
-                                            <input type="radio" name="range1" value="">
-                                            <span class="text-sale">12,450원</span> <!-- 원가에서 5% 가격 -->
-                                        </div>
-
                                     </div>
                                 </div>
 

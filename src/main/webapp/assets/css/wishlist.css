@@ -157,10 +157,16 @@
 }
 
 .sale-price{
-  padding-left: 80px;
+  padding-left: 30px;
 }
 
 .sale-price .text-sale{
+  padding-left: 80px;
+  font-weight: bold;
+}
+
+.form-group .text-sale{
+  padding-left: 80px;
   font-weight: bold;
 }
 
