@@ -6,6 +6,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.example.vo.CalenderVO;
 import com.example.vo.WishlistVO;
 
 @Repository
@@ -15,13 +16,23 @@ public class WishlistRepository {
 	private SqlSession sqlSession;	
 	
 	//위시리스트
-	public List<WishlistVO> selectList(){
+	public List<WishlistVO> selectWishList(int no){
 		System.out.println("WishRepository.selectList()");
 		
-		List<WishlistVO> wishVO = sqlSession.selectList("wishlist.selectList");
-		System.out.println(wishVO);
+		List<WishlistVO> wList = sqlSession.selectList("wishlist.selectList",no);
+		System.out.println(wList);
 		
-		return wishVO;
+		return wList;
+	}
+	
+	//기념일리스트
+	public List<CalenderVO> selectEventList(int no){
+		System.out.println("WishRepository.selectList()");
+		
+		List<CalenderVO> eList = sqlSession.selectList("wishlist.selectEventList",no);
+		System.out.println(eList);
+		
+		return eList;
 	}
 	
 }

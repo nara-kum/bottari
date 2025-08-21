@@ -14,7 +14,6 @@ public class WishlistController {
 		
 		return "wishlist/wishlist";	
 	}
-	
 
 	//비어있는 위시리스트 보는 화면
 	@RequestMapping(value="wishlist/", method= {RequestMethod.GET, RequestMethod.POST})
