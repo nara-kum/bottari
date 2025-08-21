@@ -75,7 +75,7 @@ public class UserController {
 		//세션에 로그인 확인용 값을 넣어준다.
 		session.setAttribute("authUser", authUser);
 		
-		return "redirect:/loginAfter";	
+		return "redirect:/loginForm";	
 	}
 	
 	//로그아웃

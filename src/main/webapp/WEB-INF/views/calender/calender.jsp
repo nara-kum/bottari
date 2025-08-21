@@ -499,54 +499,63 @@
             
             // --- 전역 함수로 분리 끝 ---
 
-            // 삭제 함수 (구현 필요)
-            function deleteSelectedEvent() {
-                if (!selectedEventId) return;
-                const event = calendar.getEventById(selectedEventId);
-                if (event) {
-                    Swal.fire({
-                        text: "이 이벤트를 삭제하시겠습니까?",
-                        icon: "warning",
-                        showCancelButton: true,
-                        buttonsStyling: false,
-                        confirmButtonText: "네, 삭제합니다!",
-                        cancelButtonText: "아니오",
-                        customClass: {
-                            confirmButton: "btn btn-primary",
-                            cancelButton: "btn btn-active-light"
-                        },
-                        showClass: {
-                            popup: ''
-                        },
-                        hideClass: {
-                            popup: ''
-                        }
-                    }).then(function (result) {
-                        if (result.value) {
-                        	// 서버에서 삭제 처리
-                            const formData = new URLSearchParams();
-                            formData.append("event_no", selectedEventId);
-
-                            fetch("/delete", {
-                                method: "POST",
-                                headers: {
-                                    "Content-Type": "application/x-www-form-urlencoded"
-                                },
-                                body: formData.toString()
-                            })
-                            .then(res => res.text())
-                            .then(result => {
-                                console.log("DB 삭제 성공:", result);
-                                // 성공적으로 삭제된 경우에만 화면에서 제거
-                        	
-                            event.remove();
-                            document.getElementById('event-info').style.display = 'none';
-                            document.getElementById('event-info').innerHTML = '';
-                            selectedEventId = null;
-                        }
-                    });
-                }
-            }
+            // 삭제 함수
+			function deleteSelectedEvent() {
+			    if (!selectedEventId) return;
+			
+			    const event = calendar.getEventById(selectedEventId);
+			
+			    if (event) {
+			        Swal.fire({
+			            text: "이 이벤트를 삭제하시겠습니까?",
+			            icon: "warning",
+			            showCancelButton: true,
+			            buttonsStyling: false,
+			            confirmButtonText: "네, 삭제합니다!",
+			            cancelButtonText: "아니오",
+			            customClass: {
+			                confirmButton: "btn btn-primary",
+			                cancelButton: "btn btn-active-light"
+			            },
+			            showClass: {
+			                popup: ''
+			            },
+			            hideClass: {
+			                popup: ''
+			            }
+			        }).then(function (result) {
+			            if (result.value) {
+			                // 서버에서 삭제 처리
+			                const formData = new URLSearchParams();
+			                formData.append("event_no", selectedEventId);
+			
+			                fetch("/delete", {
+			                    method: "POST",
+			                    headers: {
+			                        "Content-Type": "application/x-www-form-urlencoded"
+			                    },
+			                    body: formData.toString()
+			                })
+			                .then(res => res.text())
+			                .then(result => {
+			                    console.log("DB 삭제 성공:", result);
+			
+			                    // 성공적으로 삭제된 경우에만 화면에서 제거
+			                    if (event) {
+			                        event.remove();
+			                        document.getElementById('event-info').style.display = 'none';
+			                        document.getElementById('event-info').innerHTML = '';
+			                        selectedEventId = null;
+			                    }
+			                })
+			                .catch(err => {
+			                    console.error("DB 삭제 실패:", err);
+			                    Swal.fire("삭제 실패", "서버 오류가 발생했습니다.", "error");
+			                });
+			            }
+			        });
+			    }
+			}
 
          	// 1. 일정 추가 팝업 - 완전 수정된 버전
             function openScheduleModal(dateStr) {
