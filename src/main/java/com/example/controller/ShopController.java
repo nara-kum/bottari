@@ -31,6 +31,22 @@ public class ShopController {
 	
 	
 	
+	//쇼핑몰리스트
+	@RequestMapping(value="/bottarimall", method= {RequestMethod.GET, RequestMethod.POST})
+	public String list(ProductVO productVO, Model model) {	
+		System.out.println("ShopController.list");
+		
+
+		List<ProductVO> productList = shopService.exeProductList(productVO);
+		model.addAttribute("productList", productList);
+		
+	
+		return "shop/shoppingMall";	
+	}
+	
+	
+	
+	
 	//상품등록폼
 	@RequestMapping(value="/shopform", method= {RequestMethod.GET, RequestMethod.POST})
 	public String shopform() {	
@@ -148,20 +164,11 @@ public class ShopController {
 	//상세페이지_펀딩
 	@RequestMapping(value="/productPage2", method= {RequestMethod.GET, RequestMethod.POST})
 	public String selectOne2() {	
-		System.out.println("ShopController.selectOne");
+		System.out.println("ShopController.selectOne");//ㅇㅋ
 		
 		return "shop/productPage_funding";
 	}
 	
-	
-	//쇼핑몰리스트
-	@RequestMapping(value="/bottarimall", method= {RequestMethod.GET, RequestMethod.POST})
-	public String list() {	
-		System.out.println("ShopController.list");
-		
-		return "shop/shoppingMall";	
-	}
-	
-	
+
 	
 }

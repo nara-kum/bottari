@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html lang="ko">
 
@@ -66,55 +67,29 @@
 			<input name="search" class="rectangle-2" type="text" placeholder="검색어를 입력하세요"> <img class="icon-search" src="../../../asses/icon-search.svg">
 		</div>
 	</div>
+	
 	<div class="sec-content-main">
-		<!-- 상품 목록 -->
-		<div class="goods-wrap">
-			<div class="goods-img">
-				<img class="product-image" src="../../../photo/상품사진1.JPG">
+		<!-- 상품 목록 반복영역 -->
+		<c:forEach var="productVO" items="${productList}">
+			<div class="goods-wrap">
+				<div class="goods-img">
+					<img class="product-image" src="../../../photo/상품사진1.JPG">
+				</div>
+				<div class="brand-name">맥(MAC)</div>
+				<div class="goods-title">"단하루 루비우 증정" [단독/각인] 맥 BEST 립밤 (=미니립)</div>
+				<div class="pay-wrap">
+					<div class="payment">38,000</div>
+					<div class="won">원</div>
+				</div>
 			</div>
-			<div class="brand-name">맥(MAC)</div>
-			<div class="goods-title">"단하루 루비우 증정" [단독/각인] 맥 BEST 립밤 (=미니립)</div>
-			<div class="pay-wrap">
-				<div class="payment">38,000</div>
-				<div class="won">원</div>
-			</div>
-		</div>
-		<div class="goods-wrap">
-			<div class="goods-img">
-				<img class="product-image" src="../../../photo/상품사진1.JPG">
-			</div>
-			<div class="brand-name">맥(MAC)</div>
-			<div class="goods-title">"단하루 루비우 증정" [단독/각인] 맥 BEST 립밤 (=미니립)</div>
-			<div class="pay-wrap">
-				<div class="payment">38,000</div>
-				<div class="won">원</div>
-			</div>
-		</div>
-		<div class="goods-wrap">
-			<div class="goods-img">
-				<img class="product-image" src="../../../photo/상품사진1.JPG">
-			</div>
-			<div class="brand-name">맥(MAC)</div>
-			<div class="goods-title">"단하루 루비우 증정" [단독/각인] 맥 BEST 립밤 (=미니립)</div>
-			<div class="pay-wrap">
-				<div class="payment">38,000</div>
-				<div class="won">원</div>
-			</div>
-		</div>
-		<div class="goods-wrap">
-			<div class="goods-img">
-				<img class="product-image" src="../../../photo/상품사진1.JPG">
-			</div>
-			<div class="brand-name">맥(MAC)</div>
-			<div class="goods-title">"단하루 루비우 증정" [단독/각인] 맥 BEST 립밤 (=미니립)</div>
-			<div class="pay-wrap">
-				<div class="payment">38,000</div>
-				<div class="won">원</div>
-			</div>
-		</div>
+		</c:forEach>
+		
+		
+		
+
 	</div>
 	</content>
-	<footer class="controller">
+	<footer class="controller">c
 		<div id="sec-footer" class="sector">
 			<div class="footer-links">
 				<a href="#terms">이용약관</a> | <a href="#privacy">개인정보처리방침</a> | <a href="#exchange">교환/반품 안내</a> | <a href="#faq">자주 묻는 질문</a> | <a href="#contact">1:1 문의</a>

@@ -3,48 +3,53 @@
 <mapper namespace="product">
 
 
- 
- 	<!-- 상품 등록 -->
-<insert id="insert" parameterType="com.example.vo.ProductVO"
-	useGeneratedKeys="true" keyProperty="product_no">
+
+	<!-- 쇼핑몰상품리스트 -->
+	<select id="selectList" resultType="com.example.vo.ProductVO">
+	<![CDATA[
+	
+		select	product_no,
+				category_no,
+	            title,
+	            price,
+	            brand,
+	            itemimg
+		from product
+	
+	]]>
+	</select>
+
+
+
+
+
+	<!-- 상품 등록 -->
+	<insert id="insert" parameterType="com.example.vo.ProductVO"
+		useGeneratedKeys="true" keyProperty="product_no">
     <![CDATA[
         insert into product (category_no, title, price, brand, itemimg, 
                            shipping_yn, shipping_cost, zipcode, address, detail_address)
         values (#{category_no}, #{title}, #{price}, #{brand}, #{itemimg},
                 #{shipping_yn}, #{shipping_cost}, #{zipcode}, #{address}, #{detail_address})
     ]]>
-</insert>
+	</insert>
 
-    <!-- 옵션 정보 저장 
-    <insert id="insertOption" parameterType="com.example.vo.ProductTotalVO">
-        <![CDATA[
-            insert into `option` (product_no, name, detailOption_no)
-            values (#{product_no}, #{name}, #{detailOption_no})
-        ]]>
-    </insert>
-	-->
+	<!-- 옵션 정보 저장 <insert id="insertOption" parameterType="com.example.vo.ProductTotalVO"> 
+		<![CDATA[ insert into `option` (product_no, name, detailOption_no) values 
+		(#{product_no}, #{name}, #{detailOption_no}) ]]> </insert> -->
 
-    <!-- 상세 옵션 저장 
-    <insert id="insertDetailOption" parameterType="com.example.vo.ProductTotalVO" useGeneratedKeys="true" keyProperty="detailOption_no">
-        <![CDATA[
-            insert into detailOption (name)
-            values (#{name})
-        ]]>
-    </insert>
-	-->
-    <!-- 상세 이미지 저장 
-    <insert id="insertDetailImage" parameterType="com.example.vo.ProductTotalVO">
-        <![CDATA[
-            insert into detailed_image (product_no, image_URL, turn)
-            values (#{product_no}, #{image_URL}, #{turn})
-        ]]>
-    </insert>
-   -->
+	<!-- 상세 옵션 저장 <insert id="insertDetailOption" parameterType="com.example.vo.ProductTotalVO" 
+		useGeneratedKeys="true" keyProperty="detailOption_no"> <![CDATA[ insert into 
+		detailOption (name) values (#{name}) ]]> </insert> -->
+	<!-- 상세 이미지 저장 <insert id="insertDetailImage" parameterType="com.example.vo.ProductTotalVO"> 
+		<![CDATA[ insert into detailed_image (product_no, image_URL, turn) values 
+		(#{product_no}, #{image_URL}, #{turn}) ]]> </insert> -->
 
 
-	
-    <!-- 상품 상세 조회 -->
-    <select id="selectOne" parameterType="int" resultType="com.example.vo.ProductVO">
+
+	<!-- 상품 상세 조회 -->
+	<select id="selectOne" parameterType="int"
+		resultType="com.example.vo.ProductVO">
         <![CDATA[
             select  product_no,
                     category_no,
@@ -60,44 +65,21 @@
             from product
             where product_no = #{product_no}
         ]]>
-    </select>
-	
-
-	
-	
- <!-- 상품 상세 조회 - ProductTotalVO 사용
-	<select id="selectOne" parameterType="int" resultType="com.example.vo.ProductTotalVO">
-	    <![CDATA[
-	        SELECT  p.product_no,
-			        p.category_no,
-			        c.category_title,
-			        p.title,
-			        p.price,
-			        p.brand,
-			        p.itemimg,
-			        p.shipping_yn,
-			        p.shipping_cost,
-			        p.zipcode,
-			        p.address,
-			        p.detail_address,
-			        o.option_no,
-			        o.detailOption_no,
-			        o.option_name,
-			        do.detailOption_name, 
-			        di.detailedImage_no,
-			        di.image_URL,
-			        di.turn
-			FROM product p
-			LEFT JOIN category c ON p.category_no = c.category_no
-			LEFT JOIN `option` o ON p.product_no = o.product_no
-			LEFT JOIN detailOption do ON o.detailOption_no = do.detailOption_no
-			LEFT JOIN detailed_image di ON p.product_no = di.product_no
-			WHERE p.product_no = #{product_no}
-			ORDER BY di.turn, o.option_no
-	    ]]>
 	</select>
 
- -->
+
+
+
+	<!-- 상품 상세 조회 - ProductTotalVO 사용 <select id="selectOne" parameterType="int" 
+		resultType="com.example.vo.ProductTotalVO"> <![CDATA[ SELECT p.product_no, 
+		p.category_no, c.category_title, p.title, p.price, p.brand, p.itemimg, p.shipping_yn, 
+		p.shipping_cost, p.zipcode, p.address, p.detail_address, o.option_no, o.detailOption_no, 
+		o.option_name, do.detailOption_name, di.detailedImage_no, di.image_URL, di.turn 
+		FROM product p LEFT JOIN category c ON p.category_no = c.category_no LEFT 
+		JOIN `option` o ON p.product_no = o.product_no LEFT JOIN detailOption do 
+		ON o.detailOption_no = do.detailOption_no LEFT JOIN detailed_image di ON 
+		p.product_no = di.product_no WHERE p.product_no = #{product_no} ORDER BY 
+		di.turn, o.option_no ]]> </select> -->
 
 
 </mapper>

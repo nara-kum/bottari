@@ -15,6 +15,22 @@ public class ShopRepository {
 	@Autowired
 	private SqlSession sqlSession;
 	
+	
+	
+	//쇼핑몰리스트
+	public List<ProductVO> selectList(ProductVO productVO) {
+		System.out.println("ShopRepository.selectList");//ㅇㅋ
+		
+		 List<ProductVO> productList = sqlSession.selectList("product.selectList");
+		System.out.println("나는 되돌아오는 레파지토리");
+		 
+		 return productList;
+		
+	} 
+	
+	
+	
+	
 	 //상품등록
     public int ProductInsert(ProductVO productVO) {
         System.out.println("ShopRepository.ProductInsert");

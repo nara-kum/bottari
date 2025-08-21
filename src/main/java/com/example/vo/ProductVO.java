@@ -24,6 +24,19 @@ public class ProductVO {
 	}
 
 
+    
+   
+	public ProductVO(int product_no, int category_no, String title, int price, String brand, String itemimg) {
+		super();
+		this.product_no = product_no;
+		this.category_no = category_no;
+		this.title = title;
+		this.price = price;
+		this.brand = brand;
+		this.itemimg = itemimg;
+	}
+
+
 
 	public ProductVO(int product_no, int category_no, String title, int price, String brand, String itemimg,
 			int shipping_yn, int shipping_cost, int zipcode, String address, String detail_address) {
