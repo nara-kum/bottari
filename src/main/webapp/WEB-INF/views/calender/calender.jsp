@@ -238,22 +238,37 @@
                         const formData = new URLSearchParams();
                         formData.append("event_id", firstEvent.id);
 
-                        fetch("/response", {
+                        fetch("/api/calender/event-details", {
                             method: "POST",
                             headers: {
                                 "Content-Type": "application/x-www-form-urlencoded"
                             },
                             body: formData.toString()
                         })
-                        .then(res => res.text()) // 컨트롤러에서 return이 String이니까 text()로 받음
-                        .then(result => {
-                            console.log("DB 저장 성공:", result);
+                        .then(res => {
+                            if (!res.ok) {
+                                throw new Error('Network response was not ok');
+                            }
+                            return res.json();
                         })
-                        .catch(err => console.error("DB 저장 실패:", err));
-                        
+                        .then(data => {
+                            console.log("서버 응답 성공:", data);
+                            
+                            if (data.success) {
+                                console.log("초대장 목록:", data.invitationList);
+                                console.log("펀딩 목록:", data.fundingList);
+                                updateEventDetailsUI(data.invitationList, data.fundingList);
+                            } else {
+                                console.error("서버 에러:", data.error);
+                            }
+                        })
+                        .catch(err => {
+                            console.error("요청 실패:", err);
+                        });
                     } else {
                         showNoEventInfo(info.dateStr);
                     }
+                    
                     lastClickTime = new Date().getTime();
 
                     document.querySelectorAll('.fc-daygrid-day').forEach(cell => {
@@ -297,18 +312,33 @@
                     const formData = new URLSearchParams();
                         formData.append("event_id", eventId);
 
-                        fetch("/response", {
+                        fetch("/api/calender/event-details", {
                             method: "POST",
                             headers: {
                                 "Content-Type": "application/x-www-form-urlencoded"
                             },
                             body: formData.toString()
                         })
-                        .then(res => res.text()) // 컨트롤러에서 return이 String이니까 text()로 받음
-                        .then(result => {
-                            console.log("DB 저장 성공:", result);
+                        .then(res => {
+                            if (!res.ok) {
+                                throw new Error('Network response was not ok');
+                            }
+                            return res.json();
                         })
-                        .catch(err => console.error("DB 저장 실패:", err));
+                        .then(data => {
+                            console.log("서버 응답 성공:", data);
+                            
+                            if (data.success) {
+                                console.log("초대장 목록:", data.invitationList);
+                                console.log("펀딩 목록:", data.fundingList);
+                                updateEventDetailsUI(data.invitationList, data.fundingList);
+                            } else {
+                                console.error("서버 에러:", data.error);
+                            }
+                        })
+                        .catch(err => {
+                            console.error("요청 실패:", err);
+                        });
                     
                     // 이벤트 정보 표시
                     showEventInfo(eventId, title, day, comment, icon);
@@ -499,64 +529,6 @@
             
             // --- 전역 함수로 분리 끝 ---
 
-            // 삭제 함수
-			function deleteSelectedEvent() {
-			    if (!selectedEventId) return;
-			
-			    const event = calendar.getEventById(selectedEventId);
-			
-			    if (event) {
-			        Swal.fire({
-			            text: "이 이벤트를 삭제하시겠습니까?",
-			            icon: "warning",
-			            showCancelButton: true,
-			            buttonsStyling: false,
-			            confirmButtonText: "네, 삭제합니다!",
-			            cancelButtonText: "아니오",
-			            customClass: {
-			                confirmButton: "btn btn-primary",
-			                cancelButton: "btn btn-active-light"
-			            },
-			            showClass: {
-			                popup: ''
-			            },
-			            hideClass: {
-			                popup: ''
-			            }
-			        }).then(function (result) {
-			            if (result.value) {
-			                // 서버에서 삭제 처리
-			                const formData = new URLSearchParams();
-			                formData.append("event_no", selectedEventId);
-			
-			                fetch("/delete", {
-			                    method: "POST",
-			                    headers: {
-			                        "Content-Type": "application/x-www-form-urlencoded"
-			                    },
-			                    body: formData.toString()
-			                })
-			                .then(res => res.text())
-			                .then(result => {
-			                    console.log("DB 삭제 성공:", result);
-			
-			                    // 성공적으로 삭제된 경우에만 화면에서 제거
-			                    if (event) {
-			                        event.remove();
-			                        document.getElementById('event-info').style.display = 'none';
-			                        document.getElementById('event-info').innerHTML = '';
-			                        selectedEventId = null;
-			                    }
-			                })
-			                .catch(err => {
-			                    console.error("DB 삭제 실패:", err);
-			                    Swal.fire("삭제 실패", "서버 오류가 발생했습니다.", "error");
-			                });
-			            }
-			        });
-			    }
-			}
-
          	// 1. 일정 추가 팝업 - 완전 수정된 버전
             function openScheduleModal(dateStr) {
                 Swal.fire({
@@ -672,6 +644,43 @@
                                 
                                 if (title && title.trim()) {
 
+                                	// 서버 DB에 저장 (fetch 추가)
+                                 	// 저장 버튼 클릭 내부에서 실행
+                                    const formData = new URLSearchParams();
+								    formData.append("event_date", eventData.date);
+								    formData.append("event_name", eventData.title);
+								    formData.append("event_memo", eventData.comment);
+								    formData.append("icon_id", eventData.icon);
+								
+								    fetch("/api/calender/event/insert", {
+								        method: "POST",
+								        headers: {
+								            "Content-Type": "application/x-www-form-urlencoded"
+								        },
+								        body: formData.toString()
+								    })
+								    .then(res => {
+								        if (!res.ok) {
+								            throw new Error(`HTTP error! status: ${res.status}`);
+								        }
+								        return res.json();
+								    })
+								    .then(data => {
+								        console.log("이벤트 등록 결과:", data);
+								        
+								        if (data.success) {
+								            console.log("이벤트 등록 성공:", data.message);
+								            // 성공 처리 로직
+								        } else {
+								            console.error("이벤트 등록 실패:", data.error);
+								            alert("이벤트 등록에 실패했습니다: " + data.error);
+								        }
+								    })
+								    .catch(err => {
+								        console.error("이벤트 등록 요청 실패:", err);
+								        alert("서버 연결에 실패했습니다.");
+								    });
+
                                 	//화면에 이벤트를 축가하는 문장
                                     try {
                                         const newEvent = calendar.addEvent({
@@ -685,28 +694,6 @@
                                         });
                                         console.log('이벤트 생성 성공:', newEvent);
                                         Swal.close();
-                                        
-                                        // 2) 서버 DB에 저장 (fetch 추가)
-                                     	// 저장 버튼 클릭 내부에서 실행
-                                        const formData = new URLSearchParams();
-                                        formData.append("user_no", "${sessionScope.authUser.userNo}");        // TODO: 로그인 사용자 번호
-                                        formData.append("event_date", dateStr);
-                                        formData.append("event_name", title);
-                                        formData.append("event_memo", comment);
-                                        formData.append("icon_id", selectedIcon);        // TODO: selectedIcon 매핑
-
-                                        fetch("/insert", {
-                                            method: "POST",
-                                            headers: {
-                                                "Content-Type": "application/x-www-form-urlencoded"
-                                            },
-                                            body: formData.toString()
-                                        })
-                                        .then(res => res.text()) // 컨트롤러에서 return이 String이니까 text()로 받음
-                                        .then(result => {
-                                            console.log("DB 저장 성공:", result);
-                                        })
-                                        .catch(err => console.error("DB 저장 실패:", err));
                                         
                                         // 이벤트 생성 후 우측 패널 업데이트
                                         showDateInfo(dateStr, true);
@@ -806,6 +793,43 @@
                             const comment = document.querySelector(".input-comment").value;
 
                             if (title && title.trim()) {
+                            	// 서버 DB에 저장 (fetch 추가)
+                             	// 저장 버튼 클릭 내부에서 실행
+                                const formData = new URLSearchParams();
+                            	formData.append("event_no", selectedEventId);
+                                formData.append("event_name", title);
+                                formData.append("event_memo", comment);
+                                formData.append("icon_id", existingIcon);
+
+                                fetch("/api/calender/event/update", {
+                                    method: "POST",
+                                    headers: {
+                                        "Content-Type": "application/x-www-form-urlencoded"
+                                    },
+                                    body: formData.toString()
+                                })
+                                .then(res => {
+    						        if (!res.ok) {
+    						            throw new Error(`HTTP error! status: ${res.status}`);
+    						        }
+    						        return res.json();
+    						    })
+    						    .then(data => {
+    						        console.log("이벤트 수정 결과:", data);
+    						        
+    						        if (data.success) {
+    						            console.log("이벤트 수정 성공:", data.message);
+    						            // 성공 처리 로직
+    						        } else {
+    						            console.error("이벤트 수정 실패:", data.error);
+    						            alert("이벤트 수정에 실패했습니다: " + data.error);
+    						        }
+    						    })
+    						    .catch(err => {
+    						        console.error("이벤트 수정 요청 실패:", err);
+    						        alert("서버 연결에 실패했습니다.");
+    						    });
+                            	
                                 try {
                                     event.setProp('title', title);
                                     event.setExtendedProp('comment', comment);
@@ -816,44 +840,8 @@
                             } else {
                                 console.log('제목이 비어있습니다');
                             }
-                            Swal.close();
-                            
-                         	// 2) 서버 DB에 저장 (fetch 추가)
-                         	// 저장 버튼 클릭 내부에서 실행
-                            const formData = new URLSearchParams();
-                        	formData.append("event_no", selectedEventId);
-                            formData.append("user_no", 1);        // TODO: 로그인 사용자 번호
-                            formData.append("event_name", title);
-                            formData.append("event_memo", comment);
-                            formData.append("icon_id", existingIcon);        // TODO: selectedIcon 매핑
-
-                            fetch("/update", {
-                                method: "POST",
-                                headers: {
-                                    "Content-Type": "application/x-www-form-urlencoded"
-                                },
-                                body: formData.toString()
-                            })
-                            .then(res => res.text()) // 컨트롤러에서 return이 String이니까 text()로 받음
-                            .then(result => {
-                                console.log("DB 저장 성공:", result);
-                            })
-                            .catch(err => console.error("DB 저장 실패:", err));
-                            
-                         	// 이벤트 수정 후 우측 패널 업데이트
-                            showDateInfo(event.startStr, true);   // 등록된 일정의 날짜 문자열
-                            showEventInfo(
-                                event.id,
-                                event.title,
-                                event.start,
-                                comment,
-                                existingIcon   // 수정 모달에서 불러온 기존 아이콘 값
-                            );
-                            selectedEventId = event.id;
-                        });
+                            Swal.close();            
                         
-                        
-
                         // 닫기 버튼 클릭 이벤트
                         document.getElementById('event-cancel-btn').addEventListener('click', () => {
                             Swal.close();
@@ -864,6 +852,85 @@
                     }
                 });
             }
+         	
+         	// 삭제 함수
+			function deleteSelectedEvent() {
+			    if (!selectedEventId) return;
+			
+			    const event = calendar.getEventById(selectedEventId);
+			
+			    if (event) {
+			        Swal.fire({
+			            text: "이 이벤트를 삭제하시겠습니까?",
+			            icon: "warning",
+			            showCancelButton: true,
+			            buttonsStyling: false,
+			            confirmButtonText: "네, 삭제합니다!",
+			            cancelButtonText: "아니오",
+			            customClass: {
+			                confirmButton: "btn btn-primary",
+			                cancelButton: "btn btn-active-light"
+			            },
+			            showClass: {
+			                popup: ''
+			            },
+			            hideClass: {
+			                popup: ''
+			            }
+			        }).then(function (result) {
+			            if (result.value) {
+			                // 서버에서 삭제 처리
+			                const formData = new URLSearchParams();
+			                formData.append("event_no", selectedEventId);
+			
+			                const formData = new URLSearchParams();
+			                formData.append("event_no", eventNo);
+
+			                fetch("/api/calendar/events/delete", {
+			                    method: "POST",
+			                    headers: {
+			                        "Content-Type": "application/x-www-form-urlencoded"
+			                    },
+			                    body: formData.toString()
+			                })
+			                .then(res => {
+			                    if (!res.ok) {
+			                        throw new Error(`HTTP error! status: ${res.status}`);
+			                    }
+			                    return res.json();
+			                })
+			                .then(data => {
+			                    console.log("이벤트 삭제 결과:", data);
+			                    
+			                    if (data.success) {
+			                        console.log("이벤트 삭제 성공:", data.message);
+			                        // 성공 처리 로직 (캘린더에서 이벤트 제거 등)
+			                    } else {
+			                        console.error("이벤트 삭제 실패:", data.error);
+			                        alert("이벤트 삭제에 실패했습니다: " + data.error);
+			                    }
+			                })
+			                .catch(err => {
+			                    console.error("이벤트 삭제 요청 실패:", err);
+			                    alert("서버 연결에 실패했습니다.");
+			                });
+			
+			                    // 성공적으로 삭제된 경우에만 화면에서 제거
+			                    if (event) {
+			                        event.remove();
+			                        document.getElementById('event-info').style.display = 'none';
+			                        document.getElementById('event-info').innerHTML = '';
+			                        selectedEventId = null;
+			                    }
+			                })
+			                .catch(err => {
+			                    console.error("DB 삭제 실패:", err);
+			                    Swal.fire("삭제 실패", "서버 오류가 발생했습니다.", "error");
+			                });
+			            }
+			        });
+			    }
+			}
         });
     </script>
 </body>

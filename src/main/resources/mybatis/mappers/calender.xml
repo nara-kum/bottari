@@ -60,7 +60,7 @@
 	<delete id="delete">
 		<![CDATA[
 			delete from calender
-			where event_no = #{event_id}
+			where event_no = #{event_no}
 		]]>
 	</delete>
 	
