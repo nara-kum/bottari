@@ -5,6 +5,7 @@
 <html lang="ko">
 
 <head>
+    <title>Calendar - v7</title> <!-- 버전 표시 -->
 <meta charset="utf-8">
 <!-- CDN(외부 사이트 프리셋) 리셋 css 대용-->
 <link rel="stylesheet"
@@ -89,17 +90,9 @@
 			console.log('debug:return lastClickedDate');
             return lastClickedDate;
         }
-        
-     	// 안전한 오늘 날짜 문자열 생성 함수
-        function getTodayString() {
-            const today = new Date();
-            const year = today.getFullYear();
-            const month = (today.getMonth() + 1).toString().padStart(2, '0');
-            const day = today.getDate().toString().padStart(2, '0');
-            return year + '-' + month + '-' + day;
-        }
 
         document.addEventListener('DOMContentLoaded', function () {
+    const eventDetailDiv = document.getElementById('event-details-info'); // v6: 이벤트 상세 div 참조 추가
 			console.log('돔트리 완료');
 		
             let lastClickTime = 0;
@@ -192,14 +185,27 @@
                                 "Content-Type": "application/x-www-form-urlencoded"
                             },
                             body: formData.toString()
-                        })
+}) // [수정 전: 잘못 닫힌 fetch 옵션 객체]
                         .then(res => {
                             if (!res.ok) {
                                 throw new Error('Network response was not ok');
                             }
                             return res.json();
-                        })
-                        .then(data => {
+}) // [수정 전: 잘못 닫힌 fetch 옵션 객체]
+.then(data => {
+    // [v7] 이벤트 데이터 없으면 상세 패널 숨김
+    if (!data || (typeof data === 'object' && Object.keys(data).length === 0)) {
+        eventDetailDiv.innerHTML = '';
+        eventDetailDiv.style.display = 'none';
+        return;
+    }
+    // [수정됨 v3] 이벤트 없으면 바로 종료 (출력 안함)
+    if (!data || (!data.invitation && (!data.fundingList || data.fundingList.length === 0))) {
+        eventDetailDiv.innerHTML = "";
+        eventDetailDiv.style.display = "none";
+        return;
+    }
+    showEventDetails(data);
                             console.log("서버 응답 성공:", data);
                             
                             if (data.success) {
@@ -209,7 +215,7 @@
                             } else {
                                 console.error("서버 에러:", data.error);
                             }
-                        })
+}) // [수정 전: 잘못 닫힌 fetch 옵션 객체]
                         .catch(err => {
                             console.error("요청 실패:", err);
                         });
@@ -257,7 +263,7 @@
                     showDateInfo(eventDateStr, true);
                     
                     //이벤트의 id를 controller로 전송
-                    	const formData = new URLSearchParams();
+                    const formData = new URLSearchParams();
                         formData.append("event_id", eventId);
 
                         fetch("/api/calender/event-details", {
@@ -266,14 +272,27 @@
                                 "Content-Type": "application/x-www-form-urlencoded"
                             },
                             body: formData.toString()
-                        })
+}) // [수정 전: 잘못 닫힌 fetch 옵션 객체]
                         .then(res => {
                             if (!res.ok) {
                                 throw new Error('Network response was not ok');
                             }
                             return res.json();
-                        })
-                        .then(data => {
+}) // [수정 전: 잘못 닫힌 fetch 옵션 객체]
+.then(data => {
+    // [v7] 이벤트 데이터 없으면 상세 패널 숨김
+    if (!data || (typeof data === 'object' && Object.keys(data).length === 0)) {
+        eventDetailDiv.innerHTML = '';
+        eventDetailDiv.style.display = 'none';
+        return;
+    }
+    // [수정됨 v3] 이벤트 없으면 바로 종료 (출력 안함)
+    if (!data || (!data.invitation && (!data.fundingList || data.fundingList.length === 0))) {
+        eventDetailDiv.innerHTML = "";
+        eventDetailDiv.style.display = "none";
+        return;
+    }
+    showEventDetails(data);
                             console.log("서버 응답 성공:", data);
                             
                             if (data.success) {
@@ -283,7 +302,7 @@
                             } else {
                                 console.error("서버 에러:", data.error);
                             }
-                        })
+}) // [수정 전: 잘못 닫힌 fetch 옵션 객체]
                         .catch(err => {
                             console.error("요청 실패:", err);
                         });
@@ -331,6 +350,7 @@
             calendar.render();
 
          	// 오늘 날짜에 이벤트가 있으면 우측에 출력
+            const todayStr = new Date().toISOString().slice(0, 10);
             setClickedDate(todayStr);
 
             const todayEvents = calendar.getEvents().filter(ev => ev.startStr.startsWith(todayStr));
@@ -459,8 +479,6 @@
             // 이벤트가 없을 때
             function showNoEventInfo(dateStr) {
 			    const eventInfoDiv = document.getElementById('event-info');
-			    const eventDetailsDiv = document.getElementById('event-details-info');
-			    
 			    eventInfoDiv.innerHTML = '<div class="no-event">' +
 			                           '<img class="middle-icon" src="../../../assets/icon/icon-calendar-exclamation.svg" />' +
 			                           '<div class="text-18">등록된 기념일이 없어요</div>' +
@@ -468,7 +486,6 @@
 			                           '</div>';
 			    eventInfoDiv.style.display = 'block';
 			    selectedEventId = null;
-			    eventDetailsDiv.style.display = 'none';
 			    
 			    // "기념일 등록하기" 버튼 클릭 시 일정 추가 팝업 호출
 			    document.querySelector('#event-info .create-event-btn').onclick = function () {
@@ -513,7 +530,7 @@
 		    if (!data.fundingList || data.fundingList.length === 0) {
 		        html += ''
 		          + '<div class="column-flex-box celebrate-card-area row-align no-event">'
-		          + '  <img class="middle-icon" src="../../../assets/icon/icon-cross.svg" />'
+		          + '  <img class="middle-icon" src="../../asset/icon-cross.svg" />'
 		          + '  <div class="text-18">펀딩 리스트가 비었어요</div>'
 		          + '  <button class="btn-basic btn-orange size-normal">펀딩 관리하기</button>'
 		          + '</div>';
@@ -665,10 +682,10 @@
                                 	// 서버 DB에 저장 (fetch 추가)
                                  	// 저장 버튼 클릭 내부에서 실행
                                     const formData = new URLSearchParams();
-								    formData.append("event_date", dateStr);  // 수정: eventData.date → dateStr
-								    formData.append("event_name", title);    // 수정: eventData.title → title
-								    formData.append("event_memo", comment);  // 수정: eventData.comment → comment
-								    formData.append("icon_id", selectedIcon); // 수정: eventData.icon → selectedIcon
+								    formData.append("event_date", eventData.date);
+								    formData.append("event_name", eventData.title);
+								    formData.append("event_memo", eventData.comment);
+								    formData.append("icon_id", eventData.icon);
 								
 								    fetch("/api/calender/event/insert", {
 								        method: "POST",
@@ -676,52 +693,51 @@
 								            "Content-Type": "application/x-www-form-urlencoded"
 								        },
 								        body: formData.toString()
-								    })
+}) // [수정 전: 잘못 닫힌 fetch 옵션 객체]
 								    .then(res => {
 								        if (!res.ok) {
 								            throw new Error(`HTTP error! status: ${res.status}`);
 								        }
 								        return res.json();
-								    })
+}) // [수정 전: 잘못 닫힌 fetch 옵션 객체]
 								    .then(data => {
 								        console.log("이벤트 등록 결과:", data);
 								        
 								        if (data.success) {
 								            console.log("이벤트 등록 성공:", data.message);
-								            // 성공 처리 로직 - 화면에 이벤트를 추가하는 문장
-								            const id = data.eve
-								            
-								            try {
-								                const newEvent = calendar.addEvent({
-													id: data.event_no.toString(),
-								                    title: title,
-								                    start: dateStr,
-								                    allDay: true,
-								                    extendedProps: {
-								                        comment: comment,
-								                        icon: selectedIcon
-								                    }
-								                });
-								                console.log('이벤트 생성 성공:', newEvent);
-								                Swal.close();
-								                
-								                // 이벤트 생성 후 우측 패널 업데이트
-								                showDateInfo(dateStr, true);
-								                showEventInfo(newEvent.id, newEvent.title, newEvent.start, comment, selectedIcon);
-								                selectedEventId = newEvent.id;
-								                
-								            } catch (error) {
-								                console.error('이벤트 생성 실패:', error);
-								            }
+								            // 성공 처리 로직
 								        } else {
 								            console.error("이벤트 등록 실패:", data.error);
-								            Swal.fire("등록 실패", "이벤트 등록에 실패했습니다: " + data.error, "error");
+								            alert("이벤트 등록에 실패했습니다: " + data.error);
 								        }
-								    })
+}) // [수정 전: 잘못 닫힌 fetch 옵션 객체]
 								    .catch(err => {
 								        console.error("이벤트 등록 요청 실패:", err);
-								        Swal.fire("연결 실패", "서버 연결에 실패했습니다.", "error");
+								        alert("서버 연결에 실패했습니다.");
 								    });
+
+                                	//화면에 이벤트를 축가하는 문장
+                                    try {
+                                        const newEvent = calendar.addEvent({
+                                            title: title,
+                                            start: dateStr,
+                                            allDay: true,
+                                            extendedProps: {
+                                                comment: comment,
+                                                icon: selectedIcon
+                                            }
+                                        });
+                                        console.log('이벤트 생성 성공:', newEvent);
+                                        Swal.close();
+                                        
+                                        // 이벤트 생성 후 우측 패널 업데이트
+                                        showDateInfo(dateStr, true);
+                                        showEventInfo(newEvent.id, newEvent.title, newEvent.start, comment, selectedIcon);
+                                        selectedEventId = newEvent.id;
+                                        
+                                    } catch (error) {
+                                        console.error('이벤트 생성 실패:', error);
+                                    }
                                 } else {
                                     alert('일정 제목을 입력해주세요.');
                                 }
@@ -744,7 +760,7 @@
                 });
             }
 
-         // 2. 일정 수정 팝업 - 수정된 버전
+         // 2. 일정 수정 팝업 - 괄호 오류 수정 버전
             function openEditScheduleModal(event) {
                 const existingComment = (event.extendedProps && event.extendedProps.comment) ? event.extendedProps.comment : '';
                 const existingIcon = (event.extendedProps && event.extendedProps.icon) ? event.extendedProps.icon : '';
@@ -771,7 +787,7 @@
                         iconSrc = '../../../assets/icon/icon-party-horn.svg';
                         break;
                     default:
-                        iconSrc = '../../../assets/icon/icon-comment.svg';
+                        iconSrc = '../../../assets/icon/icon-comment.svg'; // 기본 아이콘
                 }
                 
                 Swal.fire({
@@ -781,40 +797,15 @@
                           '  </div>' +
                           '  <div class="event-name">' +
                           '    <div class="event-icon-box">' +
-                          '      <div class="icon-selector">' +
-                          '        <div class="selected-icon" onclick="toggleIconDropdown()">' +
-                          '          <img src="' + iconSrc + '" id="selected-icon-img">' +
-                          '          <img class="dropdown-arrow" src="../../../assets/icon/icon-caret-down.svg">' +
-                          '        </div>' +
-                          '        <div class="icon-dropdown" id="icon-dropdown" style="display: none;">' +
-                          '          <div class="icon-option" data-value="birthday" onclick="selectIcon(\'birthday\', \'../../../assets/icon/icon-cake-birthday.svg\')">' +
-                          '            <img src="../../../assets/icon/icon-cake-birthday.svg">' +
-                          '          </div>' +
-                          '          <div class="icon-option" data-value="wedding" onclick="selectIcon(\'wedding\', \'../../../assets/icon/icon-rings-wedding.svg\')">' +
-                          '            <img src="../../../assets/icon/icon-rings-wedding.svg">' +
-                          '          </div>' +
-                          '          <div class="icon-option" data-value="thanks" onclick="selectIcon(\'thanks\', \'../../../assets/icon/icon-hand-holding-heart.svg\')">' +
-                          '            <img src="../../../assets/icon/icon-hand-holding-heart.svg">' +
-                          '          </div>' +
-                          '          <div class="icon-option" data-value="baby" onclick="selectIcon(\'baby\', \'../../../assets/icon/icon-child-head.svg\')">' +
-                          '            <img src="../../../assets/icon/icon-child-head.svg">' +
-                          '          </div>' +
-                          '          <div class="icon-option" data-value="event" onclick="selectIcon(\'event\', \'../../../assets/icon/icon-glass-cheers.svg\')">' +
-                          '            <img src="../../../assets/icon/icon-glass-cheers.svg">' +
-                          '          </div>' +
-                          '          <div class="icon-option" data-value="celebrate" onclick="selectIcon(\'celebrate\', \'../../../assets/icon/icon-party-horn.svg\')">' +
-                          '            <img src="../../../assets/icon/icon-party-horn.svg">' +
-                          '          </div>' +
-                          '        </div>' +
-                          '      </div>' +
-                          '      <input type="hidden" id="selected-icon-value" value="' + existingIcon + '">' +
+                          '      <img class="popup-icon" src="../../../assets/icon/icon-interrogation.svg">' +
+                          '      <img class="popup-icon" src="../../../assets/icon/icon-caret-down.svg">' +
                           '    </div>' +
                           '    <div class="event-name-box">' +
                           '      <input name="eventName" class="input-name" placeholder="일정 제목" value="' + event.title +'">' +
                           '    </div>' +
                           '  </div>' +
                           '  <div class="event-comment">' +
-                          '    <img class="popup-icon" src="../../../assets/icon/icon-comment.svg">' +
+                          '    <img class="popup-icon" src="' + iconSrc + '">' +
                           '    <textarea class="input-comment" placeholder="메모 입력">' + existingComment + '</textarea>' +
                           '  </div>' +
                           '  <div class="row-flex-box align-right">' +
@@ -849,29 +840,10 @@
                         `;
                         document.head.appendChild(style);
 
-                        // 아이콘 드롭다운 관련 함수들을 전역으로 설정
-                        window.toggleIconDropdown = function () {
-                            const dropdown = document.getElementById('icon-dropdown');
-                            if (dropdown) {
-                                dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
-                            }
-                        };
-
-                        window.selectIcon = function (value, imageSrc) {
-                            const iconImg = document.getElementById('selected-icon-img');
-                            const iconValue = document.getElementById('selected-icon-value');
-                            const dropdown = document.getElementById('icon-dropdown');
-                            
-                            if (iconImg) iconImg.src = imageSrc;
-                            if (iconValue) iconValue.value = value;
-                            if (dropdown) dropdown.style.display = 'none';
-                        };
-
                         // 수정 버튼 클릭 이벤트
                         document.getElementById('event-edit-btn').addEventListener('click', () => {
                             const title = document.querySelector("input[name='eventName']").value;
                             const comment = document.querySelector(".input-comment").value;
-                            const selectedIcon = document.getElementById('selected-icon-value').value;
 
                             if (title && title.trim()) {
                                 // 서버 DB에 수정 요청
@@ -879,7 +851,7 @@
                                 formData.append("event_no", selectedEventId);
                                 formData.append("event_name", title);
                                 formData.append("event_memo", comment);
-                                formData.append("icon_id", selectedIcon);
+                                formData.append("icon_id", existingIcon);
 
                                 fetch("/api/calender/event/update", {
                                     method: "POST",
@@ -887,13 +859,13 @@
                                         "Content-Type": "application/x-www-form-urlencoded"
                                     },
                                     body: formData.toString()
-                                })
+}) // [수정 전: 잘못 닫힌 fetch 옵션 객체]
                                 .then(res => {
                                     if (!res.ok) {
                                         throw new Error(`HTTP error! status: ${res.status}`);
                                     }
                                     return res.json();
-                                })
+}) // [수정 전: 잘못 닫힌 fetch 옵션 객체]
                                 .then(data => {
                                     console.log("이벤트 수정 결과:", data);
                                     
@@ -903,28 +875,27 @@
                                         try {
                                             event.setProp('title', title);
                                             event.setExtendedProp('comment', comment);
-                                            event.setExtendedProp('icon', selectedIcon);
                                             console.log('이벤트 수정 성공:', event);
                                             
                                             // 우측 패널도 업데이트
-                                            showEventInfo(selectedEventId, title, event.start, comment, selectedIcon);
-                                            Swal.close();
+                                            showEventInfo(selectedEventId, title, event.start, comment, existingIcon);
                                         } catch (error) {
                                             console.error('이벤트 수정 실패:', error);
                                         }
                                     } else {
                                         console.error("이벤트 수정 실패:", data.error);
-                                        Swal.fire("수정 실패", "이벤트 수정에 실패했습니다: " + data.error, "error");
+                                        alert("이벤트 수정에 실패했습니다: " + data.error);
                                     }
-                                })
+}) // [수정 전: 잘못 닫힌 fetch 옵션 객체]
                                 .catch(err => {
                                     console.error("이벤트 수정 요청 실패:", err);
-                                    Swal.fire("연결 실패", "서버 연결에 실패했습니다.", "error");
+                                    alert("서버 연결에 실패했습니다.");
                                 });
                             } else {
                                 alert('일정 제목을 입력해주세요.');
                             }
-                        });
+                            Swal.close();            
+                        }); // 수정 버튼 이벤트 리스너 종료
 
                         // 닫기 버튼 클릭 이벤트
                         document.getElementById('event-cancel-btn').addEventListener('click', () => {
@@ -935,14 +906,9 @@
                         document.getElementById('event-delete-btn').addEventListener('click', () => {
                             deleteSelectedEvent();
                         });
-                    },
-                    willClose: () => {
-                        // 팝업 닫힐 때 전역 함수들 정리
-                        if (window.toggleIconDropdown) delete window.toggleIconDropdown;
-                        if (window.selectIcon) delete window.selectIcon;
-                    }
-                });
-            }
+                    } // didOpen 함수 종료
+                }); // Swal.fire 종료
+            } // openEditScheduleModal 함수 종료
          	
             function deleteSelectedEvent() {
                 if (!selectedEventId) return;
@@ -971,41 +937,37 @@
                         if (result.value) {
                             // 서버에서 삭제 처리
                             const formData = new URLSearchParams();
-                            formData.append("event_no", selectedEventId);  // 수정: eventNo → selectedEventId
+                            formData.append("event_no", eventNo);
 
-                            fetch("/api/calender/event/delete", {  // 수정: URL 통일
+                            fetch("/api/calendar/events/delete", {
                                 method: "POST",
                                 headers: {
                                     "Content-Type": "application/x-www-form-urlencoded"
                                 },
                                 body: formData.toString()
-                            })
+}) // [수정 전: 잘못 닫힌 fetch 옵션 객체]
                             .then(res => {
                                 if (!res.ok) {
                                     throw new Error(`HTTP error! status: ${res.status}`);
                                 }
                                 return res.json();
-                            })
+}) // [수정 전: 잘못 닫힌 fetch 옵션 객체]
                             .then(data => {
                                 console.log("이벤트 삭제 결과:", data);
 
                                 if (data.success) {
                                     console.log("이벤트 삭제 성공:", data.message);
 
-                                    // 성공적으로 삭제된 경우에만 화면에서 제거
+                                    // ✅ 성공적으로 삭제된 경우에만 화면에서 제거
                                     event.remove();
                                     document.getElementById('event-info').style.display = 'none';
                                     document.getElementById('event-info').innerHTML = '';
                                     selectedEventId = null;
-                                    
-                                    // 현재 날짜의 이벤트가 없음을 표시
-                                    showNoEventInfo(lastClickedDate);
-                                    Swal.fire("삭제 완료", "이벤트가 삭제되었습니다.", "success");
                                 } else {
                                     console.error("이벤트 삭제 실패:", data.error);
-                                    Swal.fire("삭제 실패", "이벤트 삭제에 실패했습니다: " + data.error, "error");
+                                    alert("이벤트 삭제에 실패했습니다: " + data.error);
                                 }
-                            })
+}) // [수정 전: 잘못 닫힌 fetch 옵션 객체]
                             .catch(err => {
                                 console.error("이벤트 삭제 요청 실패:", err);
                                 Swal.fire("삭제 실패", "서버 오류가 발생했습니다.", "error");

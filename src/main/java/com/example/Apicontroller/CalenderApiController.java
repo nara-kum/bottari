@@ -34,7 +34,7 @@ public class CalenderApiController {
 	// 이벤트 연결 펀딩 리스트, 초대장 호출
 	@RequestMapping(value = "/event-details", method = { RequestMethod.GET, RequestMethod.POST })
 	public ResponseEntity<Map<String, Object>> getEventDetails(@RequestParam("event_id") int event_id) {
-		System.out.println("CalenderController.getEventDetails()");
+		System.out.println("CalenderApiController.getEventDetails()");
 
 		Map<String, Object> result = new HashMap<>();
 
@@ -67,7 +67,7 @@ public class CalenderApiController {
 
 	// 캘린더 이벤트 등록
 	@RequestMapping(value = "/event/insert", method = { RequestMethod.GET, RequestMethod.POST })
-	public ResponseEntity<Map<String, Object>> createEvent(CalenderVO calenderVO, HttpSession session) {
+	public ResponseEntity<Map<String, Object>> createEvent(CalenderVO calendervo, HttpSession session) {
 		System.out.println("CalendarRestController.createEvent()");
 
 		Map<String, Object> result = new HashMap<>();
@@ -81,14 +81,19 @@ public class CalenderApiController {
 				return ResponseEntity.status(401).body(result);
 			}
 
-			calenderVO.setUser_no(authUser.getUserNo());
-			System.out.println("등록할 이벤트: " + calenderVO);
+			calendervo.setUser_no(authUser.getUserNo());
+			System.out.println("등록할 이벤트: " + calendervo);
 
-			int count = calenderservice.exeInsertCalender(calenderVO);
+			int count = calenderservice.exeInsertCalender(calendervo);
 
 			if (count > 0) {
+				int generatedEventNo = calendervo.getEvent_no();
+				System.out.println("저장된 이벤트의 아이디:" + generatedEventNo);
+
 				result.put("success", true);
 				result.put("message", "이벤트가 성공적으로 등록되었습니다.");
+				result.put("event_no", generatedEventNo);
+				
 			} else {
 				result.put("success", false);
 				result.put("error", "이벤트 등록에 실패했습니다.");
