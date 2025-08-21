@@ -78,6 +78,7 @@
 		document.addEventListener('DOMContentLoaded', function(){
 			console.log('DOMContentLoaded Completed');
 			
+			let lastClickedDate = null;
 			let selectedEventId = null;
 			
 			var calendarEl = document.getElementById('calendar');
@@ -131,7 +132,7 @@
 					console.log("clickedDate.dateStr" + clickedDate.dateStr);
 					
 					//setClickedDate 함수에 클릭된 날짜의 문자열 전송
-					//setClickedDate(clickedDate.dateStr);
+					setClickedDate(clickedDate.dateStr);
 					
 					// 변수 events에 clickedDate.dateStr로 시작하는 이벤트들만 필터링하여 담기
 					const events = calendar.getEvents().filter(ev => ev.startStr.startsWith(clickedDate.dateStr));
@@ -286,6 +287,12 @@
             // /////////////////////////////////////////////////// //
             // ////////////////////함수 영역//////////////////////// //
             // /////////////////////////////////////////////////// //
+            
+            // 클릭된 날짜를 기본 선택 날짜로 설정하기 위한 함수
+            function setClickedDate(dateStr) {
+            	console.log('현재 날짜: ' + dateStr);
+            	lastClickedDate = dateStr;
+            }
             
             // 날짜 출력 함수 (dateStr == 선택된 날짜 문자열, hasEvent == 이벤트 유무 확인)
             function showDateInfo(dateStr, hasEvent) {
