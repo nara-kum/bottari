@@ -585,7 +585,7 @@
                           '      <input type="hidden" id="selected-icon-value" value="birthday">' +
                           '    </div>' +
                           '    <div class="event-name-box">' +
-                          '      <input name="eventName" class="input-name" placeholder="일정 제목" type="text">' +
+                          '      <input id="eventName" class="input-name" placeholder="일정 제목" type="text">' +
                           '    </div>' +
                           '  </div>' +
                           '  <div class="event-comment">' +

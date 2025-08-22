@@ -284,6 +284,56 @@
             calendar.render();
             // fullcalendar 영역 끝
             
+            // --------------------모달 영역-------------------- //
+            
+            // 이벤트 등록/추가 팝업 //
+            function openScheduleModal(dateStr)	{
+				console.log('===========================');
+				console.log('deteced openScheduleModal()');
+				// sweetAlert2 사용
+				Swal.fire({
+					// createEventModalHTML()함수를 호출하여 html입력 관리
+					html: createEventModalHTML(),
+					
+					// sweetAlert2에서 기본으로 제공되는 confirm, cancel 버튼 비활성화
+					showCancelButton: false,
+					showConfirmButton: false,
+					
+					//sweetAlert2의 기본 효과 제거
+					customClass: {
+						popup: 'swal2-no-padding'	//패딩 제거를 위한 클래스
+					},
+					showClass: {
+						popup: ''
+					},
+					hideClass: {
+						popup: ''
+					},
+					didOpen: () => {
+						// css 스타일 추가
+						addModalStyles();
+						//아이콘 드롭다운 관련 함수
+						setupIconDropdownHandlers();
+						// 이벤트 추가 리스너 함수
+						setupAddModalListeners(dateStr);
+					},
+					willClose: () => {
+						cleanupIconDropdownHandlers();
+					}
+				});
+            }
+            
+         // -----------------------------------------------------------------------------------------------------------------------
+         
+		/*
+         	// 이벤트 수정 팝업 //
+         	function openEditScheduleModal(eventData){
+         		console.log('==============================');
+				console.log('deteced openEditScheduleModal()');
+				// sweetAlert2 사용
+         	}
+		*/ 
+         
             // /////////////////////////////////////////////////// //
             // ////////////////////함수 영역//////////////////////// //
             // /////////////////////////////////////////////////// //
@@ -293,6 +343,8 @@
             	console.log('현재 날짜: ' + dateStr);
             	lastClickedDate = dateStr;
             }
+            
+            // -----------------------------------------------------------------------------------------------------------------------
             
             // 날짜 출력 함수 (dateStr == 선택된 날짜 문자열, hasEvent == 이벤트 유무 확인)
             function showDateInfo(dateStr, hasEvent) {
@@ -341,8 +393,9 @@
 					}
 				}
             }
+         	// -----------------------------------------------------------------------------------------------------------------------
             
-            //이벤트가 있을 때 이벤트 정보 출력하는 함수
+            // 이벤트가 있을 때 이벤트 정보 출력하는 함수 //
             function showEventInfo(event_id, title, day, comment, icon) {
 				console.log("detected showEventInfo()");
 				console.log("출력할 이벤트의 아이디:" + event_id);
@@ -353,18 +406,20 @@
 				
 				let htmlStr = '';
 				htmlStr += '<div class="event-detail-area">';
-                htmlStr += '	<div class="row-flex-box">'
-                htmlStr += '		<img class="middle-icon" src="' + iconSrc + '">'
-                htmlStr += '		<div class="column-flex-box event-detail">'
-                htmlStr += '			<div class="text-16 bold">'+title+'</div>'
-                htmlStr += '			<div class="text-14">'+ (comment || '코멘트가 없습니다')  +'</div>'
-                htmlStr += '		</div>'
-                htmlStr += '	</div>'
-                htmlStr += '</div>'
+                htmlStr += '	<div class="row-flex-box">';
+                htmlStr += '		<img class="middle-icon" src="' + iconSrc + '">';
+                htmlStr += '		<div class="column-flex-box event-detail">';
+                htmlStr += '			<div class="text-16 bold">'+title+'</div>';
+                htmlStr += '			<div class="text-14">'+ (comment || '코멘트가 없습니다')  +'</div>';
+                htmlStr += '		</div>';
+                htmlStr += '	</div>';
+                htmlStr += '</div>';
                 
                 eventInfoDiv.innerHTML = htmlStr;
                 eventInfoDiv.style.display = 'block';
             }
+         	
+         	// -----------------------------------------------------------------------------------------------------------------------
             
             // 이벤트가 없을 때 정보를 출력하는 함수
             function showNoEventInfo(dateStr) {
@@ -389,6 +444,8 @@
 					openScheduleModal(dateStr);
 				}
             }
+         	
+         	// -----------------------------------------------------------------------------------------------------------------------
             
             // 아이콘의 타입에 따른 이미지 경로를 설정하는 함수
             function switchIcon(icon) {
@@ -418,8 +475,10 @@
             	}
                 return iconSrc;
             }
+         	
+         // -----------------------------------------------------------------------------------------------------------------------
             
-            // 날짜칸의 색을 바꾸는 함수
+            // 날짜칸의 색을 바꾸는 함수 //
             function highlightDateCell(dateStr) {
             	
             	console.log("dateStr: " + dateStr);
@@ -440,6 +499,338 @@
                     }
                 }
             }
+         
+         // -----------------------------------------------------------------------------------------------------------------------
+         
+         
+         	// 이벤트 추가 모달 HTML 함수 //
+         	function createEventModalHTML() {
+				let htmlStr= '';
+				
+				htmlStr += '<div id="event-add-popup">';
+				htmlStr += '	<div class="cancel">';
+				htmlStr += '		<button id="event-cancel-btn" class="btn-cancel"><img class="popup-icon" src="../../../assets/icon/icon-cross.svg"></button>';
+				htmlStr += '	</div>';
+				htmlStr += '	<div class="event-name">';
+				htmlStr += '		<div class="event-icon-box">';
+				htmlStr += '			<div class="icon-selector">';
+				htmlStr += '				<div class="selected-icon" onclick="toggleIconDropdown()">';
+				htmlStr += '					<img src="../../../assets/icon/icon-cake-birthday.svg" id="selected-icon-img">';
+				htmlStr += '					<img class="dropdown-arrow" src="../../../assets/icon/icon-caret-down.svg">';
+				htmlStr += '				</div>';
+				htmlStr += '				<div class="icon-dropdown" id="icon-dropdown" style="display: none;">';
+				htmlStr += '          			' + createIconDropdownHTML();
+				htmlStr += '				</div>';
+				htmlStr += '			</div>';
+				htmlStr += '			<input type="hidden" id="selected-icon-value" value="birthday">';
+				htmlStr += '		</div>';
+				htmlStr += '		<div class="event-name-box">';
+				htmlStr += '			 <input id="eventName" class="input-name" placeholder="일정 제목" type="text">';
+				htmlStr += '		</div>';
+				htmlStr += '	</div>';
+				htmlStr += '	<div class="event-comment">';
+				htmlStr += '		<img class="popup-icon" src="../../../assets/icon/icon-comment.svg">';
+				htmlStr += '		<textarea id="eventComment" class="input-comment" placeholder="메모 입력"></textarea>';
+				htmlStr += '	</div>';
+				htmlStr += '	<button id="event-save-btn" class="btn-basic btn-orange size-normal" type="button">저장</button>';
+				htmlStr += '</div>';
+				
+				return htmlStr;
+         	}
+         
+         // -----------------------------------------------------------------------------------------------------------------------
+         
+         	// 아이콘 정보 관리 함수 //
+            function createIconDropdownHTML() {
+                // switchIcon 함수에서 사용하는 아이콘 타입들
+                const iconTypes = ['birthday', 'wedding', 'thanks', 'baby', 'event', 'celebrate'];
+
+                return iconTypes.map(iconType => {
+                    const iconSrc = switchIcon(iconType); // 기존 switchIcon 함수 활용!
+                    return `<div class="icon-option" data-value="${iconType}" onclick="selectIcon('${iconType}', '${iconSrc}')">
+                                <img src="${iconSrc}">
+                             </div>`;
+                }).join('');
+            }
+         
+         // -----------------------------------------------------------------------------------------------------------------------
+            
+            // 모달 스타일 관리 함수 //
+            function addModalStyles() {
+				// 중복 스타일 추가 방지
+				if(document.getElementById('modal-custom-styles')) return;
+				
+				const style = document.createElement('style');
+				style.id = 'modal-custom-styles';
+				style.textContent = `
+					.swal2-no-padding .swal2-html-container {
+                        padding: 0 !important;
+                        margin: 0 !important;
+                    }
+                    .swal2-popup {
+                        padding: 0 !important;
+                        width: 480px !important;
+                        height: 365px !important;
+                    }
+				`;
+				document.head.appendChild(style);
+            }
+         
+         // -----------------------------------------------------------------------------------------------------------------------
+
+         	// 아이콘 드롭다운 HTML 함수 //
+         	/*
+         	function createIconDropdownHTML() {
+				let html = '';
+				html += '<div class="icon-option" data-value="birthday" onclick="selectIcon(\'birthday\', \'../../../assets/icon/icon-cake-birthday.svg\')">';
+				html += '	<img src="../../../assets/icon/icon-cake-birthday.svg">';
+				html += '</div>';
+				html += '<div class="icon-option" data-value="wedding" onclick="selectIcon(\'wedding\', \'../../../assets/icon/icon-rings-wedding.svg\')">';
+				html += '	<img src="../../../assets/icon/icon-rings-wedding.svg">';
+				html += '</div>';
+				html += '<div class="icon-option" data-value="thanks" onclick="selectIcon(\'thanks\', \'../../../assets/icon/icon-hand-holding-heart.svg\')">';
+				html += '	<img src="../../../assets/icon/icon-hand-holding-heart.svg">';
+				html += '</div>';
+				html += '<div class="icon-option" data-value="baby" onclick="selectIcon(\'baby\', \'../../../assets/icon/icon-child-head.svg\')">';
+				html += '	<img src="../../../assets/icon/icon-child-head.svg">';
+				html += '</div>';
+				html += '<div class="icon-option" data-value="event" onclick="selectIcon(\'event\', \'../../../assets/icon/icon-glass-cheers.svg\')">';
+				html += '	<img src="../../../assets/icon/icon-glass-cheers.svg">';
+				html += '</div>';
+				html += '<div class="icon-option" data-value="celebrate" onclick="selectIcon(\'celebrate\', \'../../../assets/icon/icon-party-horn.svg\')">';
+				html += '	<img src="../../../assets/icon/icon-party-horn.svg">';
+				html += '</div>';
+				return html;
+         	}
+         	*/
+         
+         // -----------------------------------------------------------------------------------------------------------------------
+            
+            // 아이콘 드롭다운 관리 함수 //
+            function setupIconDropdownHandlers() {
+				//전역 함수 설정
+            	window.toggleIconDropdown = function () {
+                    const dropdown = document.getElementById('icon-dropdown');
+                    if (dropdown) {
+                        dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+                    }
+                };
+
+                window.selectIcon = function (value, imageSrc) {
+                    const iconImg = document.getElementById('selected-icon-img');
+                    const iconValue = document.getElementById('selected-icon-value');
+                    const dropdown = document.getElementById('icon-dropdown');
+                    
+                    if (iconImg) iconImg.src = imageSrc;
+                    if (iconValue) iconValue.value = value;
+                    if (dropdown) dropdown.style.display = 'none';
+                };
+                
+                //드롭다운 외부 클릭시 닫기
+                document.addEventListener('click', function handleOutsideClick(event) {
+                    const iconSelector = document.querySelector('.icon-selector');
+                    const dropdown = document.getElementById('icon-dropdown');
+                    if (iconSelector && dropdown && !iconSelector.contains(event.target)) {
+                        dropdown.style.display = 'none';
+                    }
+                });
+            }
+         
+         // -----------------------------------------------------------------------------------------------------------------------
+            
+            // 드롭다운 관리 함수 정리 함수 //
+            function cleanupIconDropdownHandlers() {
+			    if (window.toggleIconDropdown) delete window.toggleIconDropdown;
+			    if (window.selectIcon) delete window.selectIcon;
+			}
+         
+         // -----------------------------------------------------------------------------------------------------------------------
+            
+         	// 폼 데이터 수집 함수 //
+         	function getEventFormData() {
+				const titleInput = document.getElementById('eventName');
+				const commentInput = document.getElementById('eventComment');
+				const selectedIconInput = document.getElementById('selected-icon-value');
+				
+				return {
+			        title: titleInput ? titleInput.value.trim() : '',
+			        comment: commentInput ? commentInput.value.trim() : '',
+			        icon: selectedIconInput ? selectedIconInput.value : 'birthday'
+			    };
+         	}
+         
+         	// 일정 제목 확인 함수 //
+         	function validateEventForm(eventData) {
+         	    if (!eventData.title || eventData.title.trim() === '') {
+         	        alert('일정 제목을 입력해주세요.');
+         	        return false;
+         	    }
+         	    return true;
+         	}
+         
+         // -----------------------------------------------------------------------------------------------------------------------
+
+         	// 공통 이벤트 리스너 함수 //
+            function setupCommonListeners() {
+				//취소버튼
+				const cancelBtn = document.getElementById('event-cancel-btn');
+				if(cancelBtn) {
+					cancelBtn.addEventListener('click', () => {
+						console.log('deteced cancel button click');
+						Swal.close();
+					});
+				}
+				
+				//esc 버튼으로 닫기
+				document.addEventListener('keydown', function(e) {
+					if(e.key === 'Escape') {
+						Swal.close();
+					}
+				});
+            }
+         
+         // -----------------------------------------------------------------------------------------------------------------------
+            
+            // 이벤트 추가 전용 리스너 함수 //
+            function setupAddModalListeners(dateStr) {
+				console.log('이벤트 추가 모달 리스너 (선택된 날짜): ' + dateStr);
+				
+				// 저장 버튼 클릭시
+				const saveBtn = document.getElementById('event-save-btn');
+				if(saveBtn) {
+					saveBtn.addEventListener('click', () => {
+						console.log('detected save button click');
+						// 이벤트 저장 함수로 전송
+						handleEventSave(dateStr);
+					});
+				} else {
+					console.log('저장 버튼을 찾을 수 없음');
+				}
+				// 공통 리스너 함수도 호출
+				setupCommonListeners();
+            }
+         
+         // -----------------------------------------------------------------------------------------------------------------------
+            
+            // 이벤트 수정 전용 리스너 함수 //
+            function setupEditModalListeners(eventData) {
+				console.log('이벤트 수정 모달 리스너 (선택된 이벤트): ' + eventData);
+				
+				// 수정 버튼 클릭시
+				const updateBtn = document.getElementById('event-update-btn');
+				if(updateBtn) {
+					console.log('detected update button click');
+					updateBtn.addEventListener('click', () => {
+						// 이벤트 수정 함수로 전송
+						handleEventUpdate(eventData);					
+					});
+				}
+            	
+				// 삭제 버튼 클릭시
+				const deleteBtn = document.getElementById('event-delete-btn');
+				if(deleteBtn) {
+					console.log('detected delete button click');
+					deleteBtn.addEventListener('click', () => {
+						// 이벤트 삭제 함수로 전송
+						handleEventDelete(eventData);
+					});
+				}
+				
+				// 공통 리스너도 호출
+				setupCommonListeners()
+            }
+         
+         // -----------------------------------------------------------------------------------------------------------------------
+         
+         	// 이벤트 추가 전용 서버 통신 함수 //
+         	async function saveEventToServer(dateStr, eventData) {
+				const formData = new URLSearchParams();
+				formData.append("event_date", dateStr);
+				formData.append("event_name", eventData.title);
+				formData.append("event_memo", eventData.comment);
+				formData.append("icon_id", eventData.icon);
+				
+				try {
+					const response = await fetch("/api/calender/event/insert", {
+						method: "POST",
+						headers: {
+							"Content-Type": "application/x-www-form-urlencoded"
+						},
+						body: formData.toString()
+					});
+					
+					// 오류 처리
+					if(!response.ok) {
+						throw new Error('Http error! status:' + response.status);
+					}
+					
+					return await response.json();
+				} catch (error) {
+					console.log("서벙청 실패: ", error);
+					throw error;
+				}
+         	}
+         
+         // -----------------------------------------------------------------------------------------------------------------------
+         
+         	// 캘린더 업데이트 함수
+         	function addEventToCalendar(dateStr, eventData, serverResponse) {
+				try {
+					const newEvent = calendar.addEvent({
+						id: serverResponse.event_no.toString(),
+						title: eventData.title,
+						start: dateStr,
+						allDay: true,
+						extendedProps: {
+							comment: eventData.comment,
+							icon: eventData.icon
+						}
+					});
+					
+					console.log('이벤트 생성 성공: ', newEvent);
+					
+					// 출력되는 이벤트 UI 업데이트
+					// 날짜 문자열, 이벤트 유무
+					showDateInfo(dateStr, true);
+					showEventInfo(newEvent.id, newEvent.title, newEvent.start, newEvent.comment, newEvent.icon);
+					selectedEventId = newEvent.id;
+					
+					return newEvent;
+				} catch (error) {
+					console.log('캘린더 이벤트 생성 실패: ', error);
+					throw error;
+				}
+         	}
+         
+         // -----------------------------------------------------------------------------------------------------------------------
+         
+         	// 이벤트 추가 처리 함수 //
+         	async function handleEventSave(dateStr) {
+				const eventData = getEventFormData();
+				
+				if(!validateEventForm(eventData)) {
+					return;
+				}
+				
+				try {
+					const serverResponse = await saveEventToServer(dateStr, eventData);
+					
+					if(serverResponse.success) {
+						console.log("이벤트 서버 저장 완료: ", serverResponse.message);
+						addEventToCalendar(dateStr, eventData, serverResponse);
+						Swal.close();
+					} else {
+						console.error("이벤트 서버 저장 실패: ", serverResponse.error);
+						Swal.fire("등록 실패", "이벤트 등록에 실패했습니다: " + serverResponse.error , "error");
+					}
+				} catch (error) {
+					console.error("이벤트 저장 실패: ", error);
+					Swal.fire("연결 실패", "서버 연결에 실패했습니다.", "error");
+				}
+         	}
+         	
+            
+            
 		});
 	</script>
 </body>
