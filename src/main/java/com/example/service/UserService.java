@@ -16,7 +16,7 @@ public class UserService {
 	public int exeJoin(UserVO userVO) {
 		System.out.println("UserService.exeJoin()");
 		
-		int count = userRepository.insertUser(userVO);
+		int count = userRepository.insert(userVO);
 		
 		return count;
 	}
@@ -25,7 +25,7 @@ public class UserService {
 	public boolean exeIdcheck(String id) {
 		System.out.println("UserService.exeIdcheck()");
 		
-		UserVO userVO =userRepository.userSelectById(id);
+		UserVO userVO = userRepository.userSelectById(id);
 		
 		System.out.println(userVO);
 	
@@ -36,19 +36,22 @@ public class UserService {
 			//사용중인 아이디
 			return false;
 		}
-	
 	}
 	
-	//회원정보 수정폼(1명정보)
-	public UserVO exeEditData(int no) {
-		System.out.println("UserService.exeEditData()");
+	/*
+	///////////////////////////////////////  8/22부터 주말 수정하기 ////////////////////////////////////////////////////
+	//회원정보 수정폼
+	public UserVO exeEditForm(int no) {
+		System.out.println("UserService.exeEditForm()");
+		System.out.println(no);
 		
 		UserVO userVO = userRepository.userSelectByNo(no);
 		
 		return userVO;
-
 	}
+	*/
 	
+	/* 8/22부터 주말 수정하기
 	//회원정보 수정
 	public int exeEdit(UserVO userVO) {
 		System.out.println("UserService.exeEdit()");
@@ -56,8 +59,10 @@ public class UserService {
 		int count = userRepository.userUpdate(userVO);
 
 		return count;
-
 	}		
+	*/
+	// /////////////////////////////////////  8/22부터 주말 수정하기 ////////////////////////////////////////////////////	
+	
 	
 	//로그인
 	public UserVO exeLogin(UserVO userVO) {
