@@ -27,7 +27,7 @@
 	href="/assets/css/calender/calender_stylesheet.css">
 <link rel="stylesheet" href="/assets/css/calender/all_in_one.css">
 <!-- 본인 파일의 경로에 맞게 수정해야함 -->
-<link rel="stylesheet" href="/assets/css/calender/moduler.css">
+<link rel="stylesheet" href="/assets/css/moduler.css">
 
 <title>캘린더 ver.0.5.2</title>
 </head>
@@ -456,7 +456,7 @@
 				console.log('showNoEventInfo(): ' + dateStr);
 				
 				let htmlStr = '';
-				htmlStr += '<div class="no-event align-center">';
+				htmlStr += '<div class="no-event">';
 				htmlStr += '	<img class="middle-icon" src="../../../assets/icon/icon-calendar-exclamation.svg" />';
 				htmlStr += '	<div class="text-18">등록된 기념일이 없어요</div>';
 				htmlStr += '	<button class="btn-basic btn-orange size-normal create-event-btn">기념일 등록하기</button>';

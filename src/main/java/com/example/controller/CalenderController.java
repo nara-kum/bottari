@@ -47,6 +47,6 @@ public class CalenderController {
 
 		model.addAttribute("cList", calenderList);
 
-		return "/calender/calendar_control";
+		return "/calender/calendarMain";
 	}
 }

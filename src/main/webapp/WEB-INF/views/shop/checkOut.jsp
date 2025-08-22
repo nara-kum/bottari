@@ -1,0 +1,106 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="utf-8">
+    <!-- CDN(외부 사이트 프리셋) 리셋 css 대용-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reset-css@4.0.1/reset.min.css" />
+    <!-- 난 외부링크 못 믿겠다! 하시는 분은 CDN을 삭제 or 주석처리 후 아래의 css링크 주석 해제 후 사용할것 -->
+    <!-- <link rel="stylesheet" href="../Global_css/reset.css"> -->
+    <link rel="stylesheet" href="/assets/css/Global.css"> <!-- 본인 파일의 경로에 맞게 수정해야함 -->
+    <link rel="stylesheet" href="/assets/css/moduler.css"> <!-- 본인 파일의 경로에 맞게 수정해야함 -->
+    <link rel="stylesheet" href="/assets/css/shop/check_out.css">
+</head>
+
+<body class="family">
+    <!------------------------ Header호출 ----------------------->
+	<c:import url="/WEB-INF/views/include/Header.jsp"></c:import>
+	<!-- ---------------------------------------------------- -->
+    <section class="controller">
+        <div id="sec-content" class="sector">
+            <div class="sec-sub-title">
+                <!-- 여기부터 코딩 시작!! -->
+                <h2 class="header-sub">결제정보</h2>
+            </div>
+            <div class="sec-content-main">
+                <div class="left-main content-height">
+                    <div class="list-basic margin-10">
+                        <div class="row-flex-box detail-list">
+                            <img class="img list-img-100" src="">
+                            <div class="column-flex-box">
+                                <div class="text-14">람베르츠</div>
+                                <div class="text-14">"300년 전통" 독일 람베르츠 베스트 초콜릿 쿠키 컬렉션</div>
+                            </div>
+                        </div>
+                        <div class="between-flex-box detail-list">
+                            <div class="text-12">결제금액</div>
+                            <div class="text-14 bold">26,900원</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="right-main content-height">
+                    <div class="payment-method-box column-flex-box">
+                        <div class="text-18 bold">결제수단</div>
+                        <div class="list-basic between-flex-box">
+                            <div class="row-flex-box">
+                                <img class="button-icon" src="">
+                                <div class="text-14 column-align">신용/체크카드 결제</div>
+                            </div>
+                            <img class="button-icon" src="../../asset/icon-check.svg">
+                        </div>
+                        <div class="list-basic between-flex-box">
+                            <div class="row-flex-box">
+                                <img class="button-icon" src="">
+                                <div class="text-14 column-align">휴대폰 결제</div>
+                            </div>
+                            <img class="button-icon" src="../../asset/icon-check.svg">
+                        </div>
+                        <div class="list-basic between-flex-box">
+                            <div class="row-flex-box">
+                                <img class="button-icon" src="">
+                                <div class="text-14 column-align">무통장 입금</div>
+                            </div>
+                            <img class="button-icon" src="../../asset/icon-check.svg">
+                        </div>
+                    </div>
+                    <div class="payment-method-box column-flex-box">
+                        <div class="text-18 bold">현금영수증 신청</div>
+                        <div class="list-basic between-flex-box">
+                            <div class="row-flex-box">
+                                <img class="button-icon" src="">
+                                <div class="text-14 column-align">개인 소득공제(휴대폰)</div>
+                            </div>
+                            <div class="text-14 column-align">휴대폰번호</div>
+                        </div>
+                        <div class="text-12 row-align"> 현금 영수증은 무통장입금, 현금성 포인트와 같은 현금성 결제 수단을 이용한 거래에 한 해 결제가 완료된 시점의 최신
+                            정보를 기반으로 발행되요.</div>
+                    </div>
+                    <div class="payment-method-box">
+                        <div class="text-18 bold margin-10">결제정보</div>
+                        <div class="between-flex-box margin-10 row-align">
+                            <div class="text-14">총 상품금액(1개)</div>
+                            <div class="text-14">38,000원</div>
+                        </div>
+                        <div class="between-flex-box margin-10 row-align">
+                            <div class="text-14">할인금액</div>
+                            <div class="text-14">0원</div>
+                        </div>
+                    </div>
+                    <div class="text-16 margin-10">최종 결제금액</div>
+
+                    <button class="btn-basic btn-orange size-large text-16 right-align">38,000원 결제하기</button>
+                </div>
+            </div>
+
+
+        </div>
+    </section>
+    <!------------------------ Footer호출 ----------------------->
+	<c:import url="/WEB-INF/views/include/Footer.jsp"></c:import>
+	<!-- ---------------------------------------------------- -->
+</body>
+
+</html>
