@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.service.ShopService;
+import com.example.vo.DetailedImageVO;
 import com.example.vo.ProductVO;
 
 import jakarta.servlet.http.HttpSession;
@@ -67,23 +68,20 @@ public class ShopController {
     public String insert(@ModelAttribute ProductVO productVO) {
 
         System.out.println("ShopController.register");
-        
-        System.out.println("받은 데이터: " + productVO);
-        System.out.println("받은 파일: " + productVO.getProductImage().getOriginalFilename());
-
-        for(int i=0; i<productVO.getDetailImages().length; i++) {
-        	 System.out.println("상품상세이미지: " + productVO.getDetailImages()[i].getOriginalFilename());
-        }
-                
-        for(int i=0; i<productVO.getOptionItems().length; i++) {
-        	 System.out.println(productVO.getOptionItems()[i]);
-        }
-        
-        
-        
-        int result = shopService.exeProductadd(productVO);
+//        
+//       System.out.println("받은 데이터: " + productVO);
+//      System.out.println("받은 파일: " + productVO.getProductImage().getOriginalFilename());
+//
+//        for(int i=0; i<productVO.getDetailImages().length; i++) {
+//        	 System.out.println("상품상세이미지: " + productVO.getDetailImages()[i].getOriginalFilename());
+//        }
+//                
+//        for(int i=0; i<productVO.getOptionItems().length; i++) {
+//        	 System.out.println(productVO.getOptionItems()[i]);
+//        }
         
         
+        shopService.exeProductadd(productVO);
         
         
         
@@ -118,7 +116,6 @@ public class ShopController {
             productVO.setItemimg("/assets/images/default-product.jpg");
         }
         
-        //int result = shopService.exeProductadd(productVO);
 
         
         if (result > 0) {
@@ -134,6 +131,9 @@ public class ShopController {
         
         return "";
     }
+    
+    
+    
 
     /**
      * 업로드된 파일을 저장하고 웹 경로를 반환

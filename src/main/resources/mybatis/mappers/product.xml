@@ -7,7 +7,6 @@
 	<!-- 쇼핑몰상품리스트 -->
 	<select id="selectList" resultType="com.example.vo.ProductVO">
 	<![CDATA[
-	
 		select	product_no,
 				category_no,
 	            title,
@@ -15,7 +14,6 @@
 	            brand,
 	            itemimg
 		from product
-	
 	]]>
 	</select>
 
@@ -24,15 +22,60 @@
 
 
 	<!-- 상품 등록 -->
-	<insert id="insert" parameterType="com.example.vo.ProductVO"
-		useGeneratedKeys="true" keyProperty="product_no">
+	<insert id="insert" parameterType="com.example.vo.ProductVO">
     <![CDATA[
         insert into product (category_no, title, price, brand, itemimg, 
                            shipping_yn, shipping_cost, zipcode, address, detail_address)
         values (#{category_no}, #{title}, #{price}, #{brand}, #{itemimg},
                 #{shipping_yn}, #{shipping_cost}, #{zipcode}, #{address}, #{detail_address})
     ]]>
+    <selectKey keyProperty="product_no" resultType="int" order="AFTER">	
+	     <![CDATA[
+			select last_insert_id()
+         ]]>        
+	</selectKey>
+    
 	</insert>
+
+
+
+	<!-- 상세이미지 등록 -->
+	<insert id="detailImageInsert" parameterType="com.example.vo.DetailedImageVO">
+		<![CDATA[
+			insert into detail_image
+			values(null, #{product_no}, #{image_URL}, #{turn})
+		]]>
+	
+	</insert>
+
+
+	<!-- 옵션 등록 -->
+	<insert id="productOptionInsert" parameterType="com.example.vo.ProductOptionVO">
+		<![CDATA[
+			insert into product_option 
+			values(null, #{product_no}, #{option_name})
+		]]>
+		<selectKey keyProperty="option_no" resultType="int" order="AFTER">	
+	     <![CDATA[
+			select last_insert_id()
+         ]]>        
+		</selectKey>
+    
+	
+	
+	</insert>
+
+
+	<!-- 디테일 옵션 등록 -->
+	<insert id="detailOptionInsert" parameterType="com.example.vo.ProductOptionVO">
+		<![CDATA[
+			insert into option_detail
+			values(null, #{option_no}, #{detailOPtion_name})
+		]]>
+	
+	</insert>
+
+
 
 	<!-- 옵션 정보 저장 <insert id="insertOption" parameterType="com.example.vo.ProductTotalVO"> 
 		<![CDATA[ insert into `option` (product_no, name, detailOption_no) values 

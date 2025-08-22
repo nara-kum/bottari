@@ -6,6 +6,8 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.example.vo.DetailedImageVO;
+import com.example.vo.ProductOptionVO;
 import com.example.vo.ProductVO;
 
 
@@ -30,32 +32,50 @@ public class ShopRepository {
 	
 	
 	
-	
 	 //상품등록
-    public int ProductInsert(ProductVO productVO) {
+    public int productInsert(ProductVO productVO) {
         System.out.println("ShopRepository.ProductInsert");
-        System.out.println("등록할 상품 정보: " + productVO);
         
-        try {
-            // 상품 등록 실행
-            int count = sqlSession.insert("product.insert", productVO);
-            
-            if (count > 0) {
-                System.out.println("DB 등록 성공! 영향받은 행 수: " + count);
-                System.out.println("생성된 product_no: " + productVO.getProduct_no());
-                return count; // 성공시 1 반환
-            } else {
-                System.out.println("DB 등록 실패! 영향받은 행 수: " + count);
-                return 0;
-            }
-            
-        } catch (Exception e) {
-            System.out.println("DB 등록 중 예외 발생: " + e.getMessage());
-            e.printStackTrace();
-            return 0;
-        }
+        // 상품 등록 실행
+        int count = sqlSession.insert("product.insert", productVO);
+        
+        return count;
     }
         
+    
+    //상품상세이미지 등록
+    public int detailImageInsert(DetailedImageVO detailedImageVO) {
+    	System.out.println("ShopRepository.detailImageInsert");
+  
+    	int count = sqlSession.insert("product.detailImageInsert", detailedImageVO);
+    	return count;
+    }
+    
+    
+    
+    //옵션등록
+    public int productOptionInsert(ProductOptionVO productOptionVO) {
+    	System.out.println("ShopRepository.productOptionInsert");
+    	
+    	int count = sqlSession.insert("product.productOptionInsert", productOptionVO);
+    	return count;
+    	
+    	
+    }
+    
+    
+    //디테일옵션등록
+    public int detailOptionInsert(ProductOptionVO productOptionVO) {
+    	System.out.println("ShopRepository.detailOptionInsert");
+    	
+    	int count = sqlSession.insert("product.detailOptionInsert", productOptionVO);
+    	return count;
+    	
+    	
+    }
+    
+
+    
     // 상품 상세 조회
     public List<ProductVO> ProductSelectOne(int productNo) {
         System.out.println("ShopRepository.ProductSelectOne");

@@ -1,6 +1,6 @@
 package com.example.vo;
 
-public class DetialedImageVO {
+public class DetailedImageVO {
 
 	//필드
 	private int detailedImage_no;
@@ -11,12 +11,19 @@ public class DetialedImageVO {
 	
 	
 	//생성자
-	public DetialedImageVO() {
+	public DetailedImageVO() {
 		super();
 	}
 
 
-	public DetialedImageVO(int detailedImage_no, int product_no, String image_URL, int turn) {
+	public DetailedImageVO(int product_no, String image_URL, int turn) {
+		this.product_no = product_no;
+		this.image_URL = image_URL;
+		this.turn = turn;
+	}
+	
+
+	public DetailedImageVO(int detailedImage_no, int product_no, String image_URL, int turn) {
 		super();
 		this.detailedImage_no = detailedImage_no;
 		this.product_no = product_no;
