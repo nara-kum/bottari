@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.example.controller.UserController;
 import com.example.repository.ShopRepository;
 import com.example.vo.ProductVO;
 
@@ -12,18 +11,11 @@ import com.example.vo.ProductVO;
 @Service
 public class ShopService {
 
-    private final UserController userController;
-	
+
 	
 	@Autowired
 	private ShopRepository shopRepository;
 
-
-    ShopService(UserController userController) {
-        this.userController = userController;
-    }
-	
-	
 	
 	//쇼핑몰 리스트
     public List<ProductVO> exeProductList(ProductVO productVO) {

@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -15,9 +16,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.service.ShopService;
 import com.example.vo.ProductVO;
-import com.example.vo.ProductTotalVO;
 
-import org.springframework.ui.Model;
+import jakarta.servlet.http.HttpSession;
 
 
 
@@ -25,6 +25,9 @@ import org.springframework.ui.Model;
 @Controller
 public class ShopController {
  
+	// 파일 업로드 경로 설정
+	private static final String UPLOAD_PATH = "C:\\upload\\products\\"; // 실제 경로로 변경 필요
+	private static final String WEB_PATH = "/upload/products/"; // 웹에서 접근할 경로
 
 	@Autowired
 	private ShopService shopService;
@@ -33,16 +36,18 @@ public class ShopController {
 	
 	//쇼핑몰리스트
 	@RequestMapping(value="/bottarimall", method= {RequestMethod.GET, RequestMethod.POST})
-	public String list(ProductVO productVO, Model model) {	
+	public String list(ProductVO productVO,Model model) {	
 		System.out.println("ShopController.list");
+		
 		
 
 		List<ProductVO> productList = shopService.exeProductList(productVO);
 		model.addAttribute("productList", productList);
+
 		
-	
 		return "shop/shoppingMall";	
 	}
+	
 	
 	
 	
@@ -50,7 +55,7 @@ public class ShopController {
 	//상품등록폼
 	@RequestMapping(value="/shopform", method= {RequestMethod.GET, RequestMethod.POST})
 	public String shopform() {	
-		System.out.println("ShopController.shopform");  //ㅇㅋ
+		System.out.println("ShopController.shopform");
 		
 		return "shop/shopform";	
 	}
@@ -59,36 +64,45 @@ public class ShopController {
 
 	//상품등록
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public String insert(@ModelAttribute ProductVO productVO, Model model) {
+    public String insert(@ModelAttribute ProductVO productVO, 
+			    		 @RequestParam("file") MultipartFile file, 
+			             HttpSession session,
+			             Model model) {
 
         System.out.println("ShopController.insert");
+        
         System.out.println("받은 데이터: " + productVO);
         
         // 필수 필드 검증
         if (productVO.getTitle() == null || productVO.getTitle().trim().isEmpty()) {
             System.out.println("상품명이 비어있습니다!");
+            model.addAttribute("errorMessage", "상품명을 입력해주세요.");
             return "shop/shopform";
         }
         
         if (productVO.getPrice() <= 0) {
             System.out.println("가격이 올바르지 않습니다!");
+            model.addAttribute("errorMessage", "올바른 가격을 입력해주세요.");
             return "shop/shopform";
         }
         
-        // 기본값 설정
-        if (productVO.getBrand() == null) {
-            productVO.setBrand("");
+        // 파일 업로드 처리
+        if (!file.isEmpty()) {
+            try {
+                String savedImagePath = saveUploadedFile(file);
+                productVO.setItemimg(savedImagePath);
+                System.out.println("이미지 저장 완료: " + savedImagePath);
+            } catch (IOException e) {
+                System.out.println("파일 업로드 실패: " + e.getMessage());
+                model.addAttribute("errorMessage", "이미지 업로드에 실패했습니다.");
+                return "shop/shopform";
+            }
+        } else {
+            System.out.println("업로드된 파일이 없습니다.");
+            // 기본 이미지 설정 (선택사항)
+            productVO.setItemimg("/assets/images/default-product.jpg");
         }
-        if (productVO.getItemimg() == null) {
-            productVO.setItemimg("");
-        }
-        if (productVO.getAddress() == null) {
-            productVO.setAddress("");
-        }
-        if (productVO.getDetail_address() == null) {
-            productVO.setDetail_address("");
-        }
-
+        
         int result = shopService.exeProductadd(productVO);
 
         if (result > 0) {
@@ -97,40 +111,44 @@ public class ShopController {
             return "shop/shopSuccess";
         } else {
             System.out.println("상품 등록 실패!");
+            model.addAttribute("errorMessage", "상품 등록에 실패했습니다.");
             return "shop/shopform";
         }
     }
 
+    /**
+     * 업로드된 파일을 저장하고 웹 경로를 반환
+     */
+    private String saveUploadedFile(MultipartFile file) throws IOException {
+        // 업로드 디렉토리 생성
+        File uploadDir = new File(UPLOAD_PATH);
+        if (!uploadDir.exists()) {
+            uploadDir.mkdirs();
+        }
+        
+        // 원본 파일명
+        String originalFilename = file.getOriginalFilename();
+        
+        // 파일 확장자 추출
+        String extension = "";
+        if (originalFilename != null && originalFilename.contains(".")) {
+            extension = originalFilename.substring(originalFilename.lastIndexOf("."));
+        }
+        
+        // UUID를 사용하여 고유한 파일명 생성
+        String savedFilename = UUID.randomUUID().toString() + extension;
+        
+        // 파일 저장
+        File savedFile = new File(uploadDir, savedFilename);
+        file.transferTo(savedFile);
+        
+        // 웹에서 접근 가능한 경로 반환
+        return WEB_PATH + savedFilename;
+    }
 	
     
     
-    // 이미지 파일 저장 메소드
-    private String saveImageFile(MultipartFile file, String folder) throws IOException {
-        // 업로드 폴더 설정
-        String uploadDir = System.getProperty("user.dir") + "/src/main/webapp/assets/uploads/" + folder + "/";
-        
-        // 폴더가 없으면 생성
-        File dir = new File(uploadDir);
-        if (!dir.exists()) {
-            dir.mkdirs();
-        }
-        
-        // 파일명 생성 (중복 방지를 위해 UUID 사용)
-        String originalFileName = file.getOriginalFilename();
-        String extension = originalFileName.substring(originalFileName.lastIndexOf("."));
-        String savedFileName = UUID.randomUUID().toString() + extension;
-        
-        // 파일 저장
-        File savedFile = new File(uploadDir + savedFileName);
-        file.transferTo(savedFile);
-        
-        System.out.println("파일 저장 완료: " + savedFile.getAbsolutePath());
-        
-        return savedFileName;
-    }
-    
-    
-    
+
 	
 	
   //상세페이지
@@ -164,11 +182,10 @@ public class ShopController {
 	//상세페이지_펀딩
 	@RequestMapping(value="/productPage2", method= {RequestMethod.GET, RequestMethod.POST})
 	public String selectOne2() {	
-		System.out.println("ShopController.selectOne");//ㅇㅋ
+		System.out.println("ShopController.selectOne");
 		
 		return "shop/productPage_funding";
 	}
 	
 
-	
 }
