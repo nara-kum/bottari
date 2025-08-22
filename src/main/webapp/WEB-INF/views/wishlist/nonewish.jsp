@@ -47,8 +47,6 @@
 
             <div class="sec-content-main">
 
-                <div class="left-main content-height">
-
                     <h2 class="top-text">위시리스트</h2>
                     <div class="box-open-empty">
                         <img src="${pageContext.request.contextPath}/assets/images/icon-box-open-empty.jpg" alt="비어있는 위시리스트">
@@ -59,25 +57,6 @@
                         <button><a href="">위시리스트 등록</a></button>
                     </div>
 
-
-                </div> <!-- <div class="left-main content-height"> -->
-
-                <div class="right-main content-height">
-                    <h2 class="top-text">선택한 펀딩</h2>
-                    <div class="funding-controls">
-                        <select id="funding-table">
-                            <option value="">-- 기념일 선택 --</option>
-                            <option value="a">7월 11일 어머니 환갑잔치</option>
-                            <option value="b">7월 16일 ○○○생일</option>
-                            <option value="c">7월 27일 내 생일</option>
-                            <option value="d">8월 4일 결혼 기념일</option>
-                            <option value="e">8월 8일 돌잔치</option>
-                            <option value="f">9월 5일 쫑파티</option>
-                        </select>
-                    </div>
-
-                    <button class="btn-funding1" type="submit">펀딩시작하기</button>
-                </div> <!-- right-main content-height -->
             </div>  <!--sec-content-main-->
         </div> 
 

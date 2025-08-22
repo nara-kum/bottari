@@ -35,4 +35,12 @@ public class WishlistRepository {
 		return eList;
 	}
 	
+	//펀딩등록
+	public int insertFunding(WishlistVO wishlistVO) {
+		System.out.println("WishRepository.insertFunding()");
+		
+		
+		return 0;
+	}
+	
 }

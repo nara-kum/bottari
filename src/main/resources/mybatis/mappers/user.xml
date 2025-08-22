@@ -67,8 +67,9 @@
     <select id="selectIdPw" parameterType="com.example.vo.UserVO" resultType="com.example.vo.UserVO">
     
     	<![CDATA[
-				select  id,
-						pw
+				select user_no userNo
+					, id
+					, name
 				from users
 				where name = #{name}
 				and password = #{password}

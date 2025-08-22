@@ -5,17 +5,22 @@
 	<!-- 전체데이터 가져오기 -->
 	<select id="selectList" parameterType="int" resultType="com.example.vo.WishlistVO">
 		<![CDATA[
-			select w.user_no userNo
-				, w.wishlist_no wishlistNo
+			select w.wishlist_no wishlistNo
+				, w.user_no userNo
 				, p.brand
-			    , p.title
-			    , p.price
-			from users u
-				, wishlist w
-			    , product p
-			where  u.user_no = w.user_no
-			and w.product_no = p.product_no
-			and u.user_no = #{userNo}  
+				, p.title
+				, p.price
+			    , wo.wishlistoption_no wishlistoptionNo
+			    , wo.detailoption_no detailoptionNo
+			    , od.detailoption_name detailoptionName
+			from wishlist w
+				, product p
+				, wishlist_option wo
+			    , option_detail od
+			where  w.product_no = p.product_no
+			and w.wishlist_no = wo.wishlist_no
+			and wo.detailoption_no = od.detailoption_no
+			and w.user_no = #{userNo}  
 		]]>
 	</select>	
 
@@ -31,6 +36,7 @@
 			where c.user_no = u.user_no
 			and u.user_no = #{userNo}  
 		]]>
-	</select>	
+	</select>
+	<!-- 펀딩 등록하기 -->
 
 </mapper>
