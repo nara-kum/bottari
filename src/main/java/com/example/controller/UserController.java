@@ -70,84 +70,92 @@ public class UserController {
 	public String login(@ModelAttribute UserVO userVO, HttpSession session){
 		System.out.println("UserController.Login()");
 		
-		UserVO authUser = userService.exeLogin(userVO);
-		
-		//세션에 로그인 확인용 값을 넣어준다.
-		session.setAttribute("authUser", authUser);
-		
-		return "redirect:/loginForm";	
+		UserVO user = userService.exeLogin(userVO);
+		System.out.println(user);
+
+		if (user == null) {
+			System.out.println("로그인 실패: 사용자 정보 없음");
+		} else {
+			System.out.println("로그인 성공");
+			System.out.println(user.name);
+		}
+
+		// 세션에 로그인 확인용 값을 넣어준다(id/pw가 들어있는 주소)-->로그인
+		session.setAttribute("authUser", user);
+
+		return "redirect:shoppingMall";
 	}
 	
 	//로그아웃
 	@RequestMapping(value="/logout", method= {RequestMethod.GET, RequestMethod.POST})
-	public String logout(HttpSession session){
-		System.out.println("UserController.Logout()");
+	public String logOut(HttpSession session){
+		System.out.println("UserController.LogOut()");
 
 		//전부 날림
 		session.invalidate();
 
 		return "redirect:/loginForm";
 	}
-	
-	//로그인 이후에 화면 --> 위시리스트
-	@RequestMapping(value="/loginAfter", method= {RequestMethod.GET, RequestMethod.POST})
-	public String loginAfter(){
-		System.out.println("UserController.loginAfter");
-		
-		return "redirect:api/wishlist";
-	}	
-	
 
-	// 회원정보수정폼
+	/* 8/22부터 주말 수정하기
+	// --회원정보수정폼
 	@RequestMapping(value = "/editform", method = { RequestMethod.GET, RequestMethod.POST })
 	public String editForm(HttpSession session, Model model) {
-		System.out.println("UserController.editform()");
+		System.out.println("UserController.editForm");
 
-		//세션값 가져오기
+		//세션에 값이 있는지 가져온다
 		UserVO authUser = (UserVO)session.getAttribute("authUser");
-
-		//로그인 여부 체크
-		if(authUser==null) {
-			return "redirect:loginForm";
-		}else {
-			//no값 꺼내기
-			int no = authUser.getUserNo();
-			System.out.println(no);
-			
-			//수정
-			UserVO userVO = userService.exeEditData(no);
-
-			model.addAttribute("userVO", userVO);
-
-			return "user/Editform";
-		}	
-	}
 		
+		if (authUser == null) { // 로그인 안했을때
+
+			return "redirect:/user/loginform";
+
+		} else { // 로그인 했을때
+
+			// 세션에서 no값을 가져온다(지금접속한(로그인된) 사용자의 no값)
+			int no = authUser.getUserNo();
+
+			// no를 서비스에 넘겨서 no회원의 정보를 userVO 형태로 받는다
+			UserVO userVO = userService.exeEditForm(no);
+
+			// userVO를 모델에 담는다 -- > DispatcherServlet아!!! request의 어트리뷰트에 넣어라
+			model.addAttribute("userVO", userVO);
+		}
+
+		return "user/Editform";
+	}
+	*/
+		
+	/* 8/22부터 주말 수정하기
 	// 회원정보수정
 	@RequestMapping(value = "/edit", method = { RequestMethod.GET, RequestMethod.POST })
 	public String edit(@ModelAttribute UserVO userVO, HttpSession session) {
-		System.out.println("UserController.edit()");
-			
-		//1.세션에서 no값을 꺼내온다
-		UserVO authUser = (UserVO)session.getAttribute("authUser");
-		String no = authUser.getId();
-			
-		//2.DS가 묶어준 userVO에 세션에서 꺼낸 no를 추가한다
-		userVO.setId(no);
+		System.out.println("UserController.edit");
 
-		//3.서비스에 묶어둔 userVO를 넘긴다
+		// 세션에서 꺼내기
+		UserVO uservo = (UserVO) session.getAttribute("uservo");
+		
+		//로그인 여부
+		if (uservo == null) {
+			// 세션에 uservo가 없을 경우 예외 처리
+			System.out.println("사용자가 로그인하지 않았습니다.");
+		} else {
+			System.out.println("로그인 완료");
+		}
+
+		// userVO에 세션에서 꺼낸 id추가
+		userVO.setId(uservo.getId());
+		
+		// 서비스에 묶어둔 userVO를 넘긴다
 		userService.exeEdit(userVO);
-		
-		//-----
-		
-		//4.해더의 이름 변경  --> 세션의 이름변경
-		// 위에 1번에서 가져온 authUSer에 이름을 변경한다
-		authUser.setName(userVO.getName());
-			
-		//5.로그인 폼으로 리다이렉트 시켜준다
+
+		//세션에서 가져온 uservo에 이름을 변경한다.
+		userVO.setName(userVO.getName());
+
+		// 로그인 폼으로 리다이렉트 시켜준다
 		return "redirect:user/loginform";
-		//return "redirect:shop/shoppingMall";
-		
+
 	}
+	*/
 		
 }
