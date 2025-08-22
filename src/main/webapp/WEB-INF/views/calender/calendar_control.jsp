@@ -29,7 +29,7 @@
 <!-- 본인 파일의 경로에 맞게 수정해야함 -->
 <link rel="stylesheet" href="/assets/css/calender/moduler.css">
 
-<title>캘린더 ver.0.5.0</title>
+<title>캘린더 ver.0.5.2</title>
 </head>
 
 <body class="family">

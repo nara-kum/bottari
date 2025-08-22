@@ -33,17 +33,17 @@ public class CalenderApiController {
 
 	// 이벤트 연결 펀딩 리스트, 초대장 호출
 	@RequestMapping(value = "/event-details", method = { RequestMethod.GET, RequestMethod.POST })
-	public ResponseEntity<Map<String, Object>> getEventDetails(@RequestParam("event_id") int event_id) {
+	public ResponseEntity<Map<String, Object>> getEventDetails(@RequestParam("event_no") int event_no) {
 		System.out.println("CalenderApiController.getEventDetails()");
 
 		Map<String, Object> result = new HashMap<>();
 
-		System.out.println(event_id);
+		System.out.println(event_no);
 
 		try {
 			// DB에서 가져오기
-			List<InvitationVO> invitationList = calenderservice.exegetInvitationList(event_id);
-			List<ProductVO> productList = calenderservice.exegetProductList(event_id);
+			List<InvitationVO> invitationList = calenderservice.exegetInvitationList(event_no);
+			List<ProductVO> productList = calenderservice.exegetProductList(event_no);
 
 			result.put("success", true);
 			result.put("fundingList", productList);
