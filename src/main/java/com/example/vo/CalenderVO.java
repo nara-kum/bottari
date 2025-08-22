@@ -54,10 +54,10 @@ public class CalenderVO {
 	public void setEvent_memo(String event_memo) {
 		this.event_memo = event_memo;
 	}
-	public String geticon_id() {
+	public String getIcon_id() {
 		return icon_id;
 	}
-	public void seticon_id(String icon_id) {
+	public void setIcon_id(String icon_id) {
 		this.icon_id = icon_id;
 	}
 	//method normal

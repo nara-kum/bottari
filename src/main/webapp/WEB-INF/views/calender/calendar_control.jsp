@@ -29,7 +29,7 @@
 <!-- 본인 파일의 경로에 맞게 수정해야함 -->
 <link rel="stylesheet" href="/assets/css/calender/moduler.css">
 
-<title>캘린더 ver.0.1.4</title>
+<title>캘린더 ver.0.5.0</title>
 </head>
 
 <body class="family">
@@ -195,7 +195,7 @@
                         });
                		}else {
 						
-						showNoEventInfo();
+						showNoEventInfo(lastClickedDate);
 					}
 					
                		// 날짜간의 색을 변경하는 함수 호출
@@ -290,6 +290,7 @@
             function openScheduleModal(dateStr)	{
 				console.log('===========================');
 				console.log('deteced openScheduleModal()');
+				console.log('openScheduleModal().dateStr: ' + dateStr);
 				// sweetAlert2 사용
 				Swal.fire({
 					// createEventModalHTML()함수를 호출하여 html입력 관리
@@ -325,14 +326,40 @@
             
          // -----------------------------------------------------------------------------------------------------------------------
          
-		/*
          	// 이벤트 수정 팝업 //
          	function openEditScheduleModal(eventData){
          		console.log('==============================');
 				console.log('deteced openEditScheduleModal()');
+				console.log('openEditScheduleModal().eventData: ', eventData);
+                
 				// sweetAlert2 사용
+				Swal.fire({
+					// editEventModalHTML() 함수를 이용
+					html: editEventModalHTML(eventData),
+					showCancelButton: false,
+					showConfirmButton: false,
+					customClass: {
+						popup: 'swal2-no-padding'
+					},
+					showClass: {
+						popup: ''
+					},
+					hideClass: {
+						popup: ''
+					},
+					didOpen: () => {
+						// css 스타일 추가
+						addModalStyles();
+						// 아이콘 드롭다운 관련 함수
+						setupIconDropdownHandlers();
+						// 이벤트 수정 리스너 함수
+						setupEditModalListeners(eventData);
+					},
+					willClose: () => {
+						cleanupIconDropdownHandlers();
+					}
+				});
          	}
-		*/ 
          
             // /////////////////////////////////////////////////// //
             // ////////////////////함수 영역//////////////////////// //
@@ -357,7 +384,7 @@
 				if(hasEvent) {
 					let htmlStr = '';
 					htmlStr += '<div class="between-flex-box">';
-                	htmlStr += '	<div class="header-sub">'+dateStr+'</div>';
+                	htmlStr += '	<div class="header-sub">'+ dateStr +'</div>';
                 	htmlStr += '	<div class="row-flex-box">';
                 	htmlStr += '		<img class="popup-icon create-event-btn" src="../../../assets/icon/icon-add.svg">';
                 	htmlStr += '		<img id="edit-event-btn" class="popup-icon" src="../../../assets/icon/icon-menu-dots.svg">';
@@ -383,6 +410,7 @@
 				
 				// 이벤트 등록 버튼 => 이벤트 등록 모달창 호출
 				document.querySelector('#date-info .create-event-btn').onclick = function () {
+					console.log('click create-event-btn (dateStr): ' + dateStr);
 					openScheduleModal(dateStr);
 				};
 				// edit-event-btn이 있을 때만 이벤트 등록
@@ -425,9 +453,10 @@
             function showNoEventInfo(dateStr) {
 				const eventInfoDiv = document.getElementById('event-info');
 				const eventDetailsDiv = document.getElementById('event-details-info');
+				console.log('showNoEventInfo(): ' + dateStr);
 				
 				let htmlStr = '';
-				htmlStr += '<div class="no-event">';
+				htmlStr += '<div class="no-event align-center">';
 				htmlStr += '	<img class="middle-icon" src="../../../assets/icon/icon-calendar-exclamation.svg" />';
 				htmlStr += '	<div class="text-18">등록된 기념일이 없어요</div>';
 				htmlStr += '	<button class="btn-basic btn-orange size-normal create-event-btn">기념일 등록하기</button>';
@@ -440,7 +469,7 @@
 				
 				// 기념일 등록하기 버튼 클릭 시 일정 추가 팝업 호출
 				document.querySelector('#event-info .create-event-btn').onclick = function () {
-					console.log("기념일 등록 팝업 호출");
+					console.log('기념일 등록 팝업 호출 dateStr: ' + dateStr);
 					openScheduleModal(dateStr);
 				}
             }
@@ -453,25 +482,25 @@
             	
             	switch (icon) {
 	                case 'birthday':
-	                    iconSrc = '../../../assets/icon/icon-cake-birthday.svg';
+	                    iconSrc = '/assets/icon/icon-cake-birthday.svg';
 	                    break;
 	                case 'wedding':
-	                    iconSrc = '../../../assets/icon/icon-rings-wedding.svg';
+	                    iconSrc = '/assets/icon/icon-rings-wedding.svg';
 	                    break;
 	                case 'thanks':
-	                    iconSrc = '../../../assets/icon/icon-hand-holding-heart.svg';
+	                    iconSrc = '/assets/icon/icon-hand-holding-heart.svg';
 	                    break;
 	                case 'baby':
-	                    iconSrc = '../../../assets/icon/icon-child-head.svg';
+	                    iconSrc = '/assets/icon/icon-child-head.svg';
 	                    break;
 	                case 'event':
-	                    iconSrc = '../../../assets/icon/icon-glass-cheers.svg';
+	                    iconSrc = '/assets/icon/icon-glass-cheers.svg';
 	                    break;
 	                case 'celebrate':
-	                    iconSrc = '../../../assets/icon/icon-party-horn.svg';
+	                    iconSrc = '/assets/icon/icon-party-horn.svg';
 	                    break;
 	                default:
-	                    iconSrc = '../../../assets/icon/icon-interrogation.svg';
+	                    iconSrc = '/assets/icon/icon-interrogation.svg';
             	}
                 return iconSrc;
             }
@@ -533,6 +562,51 @@
 				htmlStr += '		<textarea id="eventComment" class="input-comment" placeholder="메모 입력"></textarea>';
 				htmlStr += '	</div>';
 				htmlStr += '	<button id="event-save-btn" class="btn-basic btn-orange size-normal" type="button">저장</button>';
+				htmlStr += '</div>';
+				
+				return htmlStr;
+         	}
+         
+         	// 이벤트 수정 모달 HTML 함수 //
+         	function editEventModalHTML(eventData) {
+         		// 기존의 코멘트(메모)와 기존의 아이콘
+				const existingComment = (eventData.extendedProps && eventData.extendedProps.comment) ? eventData.extendedProps.comment : '';
+                const existingIcon = (eventData.extendedProps && eventData.extendedProps.icon) ? eventData.extendedProps.icon : '';
+				
+                // switchIcon() 함수를 사용하여 아이콘 경로 설정
+				const iconSrc = switchIcon(existingIcon);
+         		
+				let htmlStr = '';
+				
+				htmlStr += '<div id="event-add-popup">';
+				htmlStr += '	<div class="cancel">';
+				htmlStr += '		<button id="event-cancel-btn" class="btn-cancel"><img class="popup-icon" src="../../../assets/icon/icon-cross.svg"></button>';
+				htmlStr += '	</div>';
+				htmlStr += '	<div class="event-name">';
+				htmlStr += '		<div class="event-icon-box">';
+				htmlStr += '			<div class="icon-selector">';
+				htmlStr += '				<div class="selected-icon" onclick="toggleIconDropdown()">';
+				htmlStr += '					<img src="' + iconSrc + '" id="selected-icon-img">';
+				htmlStr += '					<img class="dropdown-arrow" src="../../../assets/icon/icon-caret-down.svg">';
+				htmlStr += '				</div>';
+				htmlStr += '				<div class="icon-dropdown" id="icon-dropdown" style="display: none;">';
+				htmlStr += '					' + createIconDropdownHTML();
+				htmlStr += '				</div>';
+				htmlStr += '			</div>';
+				htmlStr += '			<input type="hidden" id="selected-icon-value" value="' + existingIcon + '">';
+				htmlStr += '		</div>';
+				htmlStr += '		<div class="event-name-box">';
+				htmlStr += '			<input id="eventName" class="input-name" placeholder="일정 제목" value="' + eventData.title +'">';
+				htmlStr += '		</div>';
+				htmlStr += '	</div>';
+				htmlStr += '	<div class="event-comment">';
+				htmlStr += '		<img class="popup-icon" src="../../../assets/icon/icon-comment.svg">';
+				htmlStr += '		<textarea id="eventComment" class="input-comment" placeholder="메모 입력">' + existingComment + '</textarea>';
+				htmlStr += '	</div>';
+				htmlStr += '	<div class="row-flex-box align-right">';
+				htmlStr += '		<button id="event-delete-btn" class="btn-basic btn-gray size-normal" type="button">삭제</button>';
+				htmlStr += '		<button id="event-edit-btn" class="btn-basic btn-orange size-normal" type="button">수정</button>';
+				htmlStr += '	</div>';
 				htmlStr += '</div>';
 				
 				return htmlStr;
@@ -652,6 +726,9 @@
 				const commentInput = document.getElementById('eventComment');
 				const selectedIconInput = document.getElementById('selected-icon-value');
 				
+				console.log('getEventFormData()');
+				console.log('titleInput: ' + titleInput + ', commentInput: ' + commentInput + ', seletcedIconInput: ' + selectedIconInput);
+				
 				return {
 			        title: titleInput ? titleInput.value.trim() : '',
 			        comment: commentInput ? commentInput.value.trim() : '',
@@ -661,6 +738,9 @@
          
          	// 일정 제목 확인 함수 //
          	function validateEventForm(eventData) {
+				console.log('validateEventForm()');
+				console.log('eventData: ' + eventData);
+         		
          	    if (!eventData.title || eventData.title.trim() === '') {
          	        alert('일정 제목을 입력해주세요.');
          	        return false;
@@ -684,6 +764,7 @@
 				//esc 버튼으로 닫기
 				document.addEventListener('keydown', function(e) {
 					if(e.key === 'Escape') {
+						console.log('deteced press esc key');
 						Swal.close();
 					}
 				});
@@ -714,10 +795,10 @@
             
             // 이벤트 수정 전용 리스너 함수 //
             function setupEditModalListeners(eventData) {
-				console.log('이벤트 수정 모달 리스너 (선택된 이벤트): ' + eventData);
+				console.log('이벤트 수정 모달 리스너 (선택된 이벤트Id): ' + eventData.id);
 				
 				// 수정 버튼 클릭시
-				const updateBtn = document.getElementById('event-update-btn');
+				const updateBtn = document.getElementById('event-edit-btn');
 				if(updateBtn) {
 					console.log('detected update button click');
 					updateBtn.addEventListener('click', () => {
@@ -772,8 +853,65 @@
          	}
          
          // -----------------------------------------------------------------------------------------------------------------------
+
+         	// 이벤트 수정 전용 서버 통신 함수 //
+         	async function updateEventToServer(eventData, formData) {
+				const formParams  = new URLSearchParams();
+				formParams.append("event_no", eventData.id);
+				formParams.append("event_name", formData.title);
+				formParams.append("event_memo", formData.comment);
+				formParams.append("icon_id", formData.icon);
+				
+				try {
+					const response = await fetch("/api/calender/event/update", {
+						method : "POST",
+						headers: {
+							"Content-Type": "application/x-www-form-urlencoded"
+						},
+						body: formParams.toString()
+					});
+					
+					// 오류 처리
+					if(!response.ok) {
+			            throw new Error('Http error! status:' + response.status);
+			        }
+			        
+			        return await response.json();
+				} catch (error) {
+			        console.log("서버 요청 실패: ", error);
+			        throw error;
+			    }
+         	}
          
-         	// 캘린더 업데이트 함수
+         // -----------------------------------------------------------------------------------------------------------------------
+
+         	// 이벤트 삭제 전용 서버 통신 함수 //
+         	async function deleteEventFromServer(eventId) {
+         		const formData = new URLSearchParams();
+         	    formData.append("event_no", eventId);
+         	    
+         	   try {
+         	        const response = await fetch("/api/calender/event/delete", {
+         	            method: "POST",
+         	            headers: {
+         	                "Content-Type": "application/x-www-form-urlencoded"
+         	            },
+         	            body: formData.toString()
+         	        });
+         	        
+         	        if(!response.ok) {
+         	            throw new Error('Http error! status:' + response.status);
+         	        }
+         	        
+         	        return await response.json();
+         	    } catch (error) {
+         	        console.log("서버 요청 실패: ", error);
+         	        throw error;
+         	    }
+         	}
+         
+         // -----------------------------------------------------------------------------------------------------------------------
+         	// 캘린더 이벤트 추가 함수
          	function addEventToCalendar(dateStr, eventData, serverResponse) {
 				try {
 					const newEvent = calendar.addEvent({
@@ -788,11 +926,12 @@
 					});
 					
 					console.log('이벤트 생성 성공: ', newEvent);
+					console.log('새 이벤트 Id: ' + newEvent.id);
 					
 					// 출력되는 이벤트 UI 업데이트
 					// 날짜 문자열, 이벤트 유무
 					showDateInfo(dateStr, true);
-					showEventInfo(newEvent.id, newEvent.title, newEvent.start, newEvent.comment, newEvent.icon);
+					showEventInfo(newEvent.id, newEvent.title, newEvent.start, newEvent.extendedProps.comment, newEvent.extendedProps.icon);
 					selectedEventId = newEvent.id;
 					
 					return newEvent;
@@ -817,6 +956,7 @@
 					
 					if(serverResponse.success) {
 						console.log("이벤트 서버 저장 완료: ", serverResponse.message);
+						console.log("serverResponse: ", serverResponse);						
 						addEventToCalendar(dateStr, eventData, serverResponse);
 						Swal.close();
 					} else {
@@ -828,9 +968,187 @@
 					Swal.fire("연결 실패", "서버 연결에 실패했습니다.", "error");
 				}
          	}
+         
+         // -----------------------------------------------------------------------------------------------------------------------
          	
+         	// 이벤트 수정 처리 함수 //
+         	async function handleEventUpdate(eventData) {
+				const formData = getEventFormData();
+				
+				if(!validateEventForm(formData)) {
+			        return;
+			    }
+				
+				try {
+					const serverResponse = await updateEventToServer(eventData, formData);
+					
+					if(serverResponse.success) {
+			            console.log("이벤트 서버 수정 완료: ", serverResponse.message);
+			            
+			            // 기존의 이벤트를 찾아서 캘린더 업데이트
+			            const event = calendar.getEventById(eventData.id);
+			            if(event) {
+			                event.setProp('title', formData.title);
+			                event.setExtendedProp('comment', formData.comment);
+			                event.setExtendedProp('icon', formData.icon);
+			                
+			                // UI 업데이트
+			                const eventDateStr = event.startStr;
+			                showEventInfo(event.id, event.title, event.start, formData.comment, formData.icon);
+			                
+			                console.log("캘린더 이벤트 업데이트 완료");
+			            }
+			            
+			            Swal.close();
+					} else {
+						console.error("이벤트 서버 수정 실패: ", serverResponse.error);
+			            Swal.fire("수정 실패", "이벤트 수정에 실패했습니다: " + serverResponse.error, "error");
+					}
+				} catch (error) {
+			        console.error("이벤트 수정 실패: ", error);
+			        Swal.fire("연결 실패", "서버 연결에 실패했습니다.", "error");
+			    }
+         	}
             
+         // -----------------------------------------------------------------------------------------------------------------------
             
+         	// 이벤트 삭제 처리 함수 //
+         	async function handleEventDelete(eventData) {
+         		// 삭제 확인 대화상자
+         	    const result = await Swal.fire({
+         	        title: '이벤트 삭제',
+         	        text: '정말로 이 이벤트를 삭제하시겠습니까?',
+         	        icon: 'warning',
+         	        showCancelButton: true,
+         	        confirmButtonColor: '#EF5327',
+         	        cancelButtonColor: '#6c757d',
+         	        confirmButtonText: '삭제',
+         	        cancelButtonText: '취소',
+         	       customClass: {
+						popup: 'swal2-no-padding'
+					},
+					showClass: {
+						popup: ''
+					},
+					hideClass: {
+						popup: ''
+					}
+         	    });
+         		
+         		if(result.isConfirmed) {
+					try{
+	         			const serverResponse = await deleteEventFromServer(eventData.id);
+	         			
+	         			if(serverResponse.success) {
+	         				console.log("이벤트 서버 삭제 완료: ", serverResponse.message);
+	         				
+	         				// 캘린더에서 이벤트 제거
+	         				const event = calendar.getEventById(eventData.id);
+	         				if(event) {
+								const eventDateStr = event.startStr;
+								event.remove();
+								
+								// UI 업데이트 = 해당 날짜에 다른 이벤트가 있는지 확인
+								const remainingEvents = calendar.getEvents().filter(ev => ev.startStr.startsWith(eventDateStr));
+								
+								if(remainingEvents.length > 0) {
+									// 다른 이벤트가 있따면 첫 번째 이벤트 표시하기
+									const firstEvent = remainingEvents[0];
+									const comment = firstEvent.extendedProps && firstEvent.extendedProps.comment ? firstEvent.extendedProps.comment : '';
+			                        const icon = firstEvent.extendedProps && firstEvent.extendedProps.icon ? firstEvent.extendedProps.icon : '';
+			                        showEventInfo(firstEvent.id, firstEvent.title, firstEvent.start, comment, icon);
+			                        selectedEventId = firstEvent.id;
+			                        showDateInfo(eventDateStr, true);
+								} else {
+									//다른 이벤트가 없으면 빈 상태로 표시
+									showNoEventInfo(eventDateStr);
+									selectedEventId = null;
+									showDateInfo(eventDateStr, false);
+								}
+								
+								console.log('캘린더 이벤트 삭제 완료');
+	         				}
+	         				
+	         				console.log('삭제 기능 진행 완료');
+	         			} else {
+							console.log('이벤트 서버 삭제 실패: ' + serverResponse.error);
+	         			}
+					} catch (error) {
+			            console.error("이벤트 삭제 실패: ", error);
+			            Swal.fire("연결 실패", "서버 연결에 실패했습니다.", "error");
+					}
+         		}
+			}
+         
+         // -----------------------------------------------------------------------------------------------------------------------
+         
+         	// 펀드리스트, 초대장 호출 함수
+         	function updateEventDetailsUI(data, selectedEventId) {
+			    var eventDetailDiv = document.getElementById('event-details-info');
+			    if (!selectedEventId) {
+			        eventDetailDiv.innerHTML = '<div style="display:none;"></div>';
+			        return;
+			    }
+			
+			    var html = '';
+			
+			    // 초대장 영역
+			    if (!data.invitationList || data.invitationList.length === 0) {
+			        html += ''
+			          + '<div class="column-flex-box celebrate-card-area row-align no-event">'
+			          + '  <img class="middle-icon" src="../../../assets/icon/icon-cross.svg" />'
+			          + '  <div class="text-18">초대장이 없어요</div>'
+			          + '  <button class="btn-basic btn-orange size-normal">초대장 만들기</button>'
+			          + '</div>';
+			    } else {
+			        var inv = data.invitationList[0]; // 필요한 만큼 루프 돌려도 됨
+			        html += ''
+			          + '<div class="celebrate-card-area">'
+			          + '  <div class="text-16 bold">내가 만든 초대장</div>'
+			          + '  <img class="celebrate-card-img" src="' + (inv.photo_url || '') + '">'
+			          + '  <div class="show-detail">'
+			          + '    <a href="/invitation/invitation?invitation_no=' + (inv.invitation_no || '') + '">자세히보기&gt;</a>'
+			          + '  </div>'
+			          + '</div>';
+			    }
+			
+			    // 펀딩 영역
+			    if (!data.fundingList || data.fundingList.length === 0) {
+			        html += ''
+			          + '<div class="column-flex-box celebrate-card-area row-align no-event">'
+			          + '  <img class="middle-icon" src="../../../assets/icon/icon-cross.svg" />'
+			          + '  <div class="text-18">펀딩 리스트가 비었어요</div>'
+			          + '  <button class="btn-basic btn-orange size-normal">펀딩 관리하기</button>'
+			          + '</div>';
+			    } else {
+			        html += ''
+			          + '<div class="funding-area column-flex-box">'
+			          + '  <div class="text-16 bold">진행중인 펀딩</div>';
+			
+			        data.fundingList.forEach(function (product) {
+			            html += ''
+			              + '  <a href="">'
+			              + '    <div class="list-basic list-360 row-flex-box">'
+			              + '      <img class="list-img-50 column-align" src="' + (product.itemimg || '') + '">'
+			              + '      <div class="column-flex-box column-align funding-detail">'
+			              + '        <div class="text-12">' + (product.brand || '') + '</div>'
+			              + '        <div class="text-12">' + (product.title || '') + '</div>'
+			              + '        <div class="text-16 bold">' + (product.price || 0) + '원</div>'
+			              + '      </div>'
+			              + '    </div>'
+			              + '  </a>';
+			        });
+			
+			        html += ''
+			          + '  <div class="show-detail">'
+			          + '    <a href="/funding/fundingList">전체보기&gt;</a>'
+			          + '  </div>'
+			          + '</div>';
+			    }
+			
+			    eventDetailDiv.innerHTML = html;
+			    eventDetailDiv.style.display = 'block';
+			}
 		});
 	</script>
 </body>

@@ -24,7 +24,6 @@
 .right-main {
     width: 385px !important;
     display: flex;
-    justify-content: center;
     align-items: center;
     flex-direction: column;
 }
@@ -189,7 +188,7 @@
 }
 
 .event-detail-area {
-    width: 360px;
+    width: 420px;
     height: auto;
     padding: 0px 10px 20px 10px;
     margin-top: 20px;
