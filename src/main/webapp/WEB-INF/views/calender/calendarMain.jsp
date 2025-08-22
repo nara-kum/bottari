@@ -932,6 +932,8 @@
 					// 날짜 문자열, 이벤트 유무
 					showDateInfo(dateStr, true);
 					showEventInfo(newEvent.id, newEvent.title, newEvent.start, newEvent.extendedProps.comment, newEvent.extendedProps.icon);
+					// 안되면 지울 수 있는 주석
+					updateEventDetailsUI(newEvent, newEvent.id);
 					selectedEventId = newEvent.id;
 					
 					return newEvent;
@@ -995,7 +997,6 @@
 			                // UI 업데이트
 			                const eventDateStr = event.startStr;
 			                showEventInfo(event.id, event.title, event.start, formData.comment, formData.icon);
-			                
 			                console.log("캘린더 이벤트 업데이트 완료");
 			            }
 			            

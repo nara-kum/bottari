@@ -27,19 +27,22 @@
             </div>
             <div class="sec-content-main">
                 <div class="left-main content-height">
-                    <div class="list-basic margin-10">
-                        <div class="row-flex-box detail-list">
-                            <img class="img list-img-100" src="">
-                            <div class="column-flex-box">
-                                <div class="text-14">람베르츠</div>
-                                <div class="text-14">"300년 전통" 독일 람베르츠 베스트 초콜릿 쿠키 컬렉션</div>
-                            </div>
-                        </div>
-                        <div class="between-flex-box detail-list">
-                            <div class="text-12">결제금액</div>
-                            <div class="text-14 bold">26,900원</div>
-                        </div>
-                    </div>
+                <!-- <c:forEach test="" var=""> -->
+	                    <div class="list-basic margin-10">
+	                        <div class="row-flex-box detail-list">
+	                            <img class="img list-img-100" src="">
+	                            <div class="column-flex-box">
+	                                <div class="text-14">람베르츠</div>
+	                                <div class="text-14">"300년 전통" 독일 람베르츠 베스트 초콜릿 쿠키 컬렉션</div>
+	                            </div>
+	                        </div>
+	                        <div class="between-flex-box detail-list">
+	                            <div class="text-12">결제금액</div>
+	                            <div class="text-14 bold">26,900원</div>
+	                        </div>
+	                    </div>
+              <!--  </c:forEach> -->
+                	
                 </div>
                 <div class="right-main content-height">
                     <div class="payment-method-box column-flex-box">
