@@ -34,8 +34,26 @@ public class ShopService {
 	public int exeProductadd(ProductVO productVO) {
 		System.out.println("ShopService.exeProductadd"); // ㅇㅋ
 
-		int count = shopRepository.ProductInsert(productVO);
-		return count;
+		
+		//대표이미지 처리 
+		// *대표이미지 경로
+		// 대표이미지 복사
+		
+		
+		//기본정보 입력
+		productVO.setItemimg("대표이미지 경로");
+        int count = shopRepository.ProductInsert(productVO);
+
+        
+        //상세이미지 처리
+        
+        
+        
+        //상품옵션구분(반복문)
+        	//상품디테일옵션(반복문)
+        
+        
+        return count;
 
 	}
 	

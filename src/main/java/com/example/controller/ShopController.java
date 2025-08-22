@@ -64,15 +64,30 @@ public class ShopController {
 
 	//상품등록
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public String insert(@ModelAttribute ProductVO productVO, 
-			    		 @RequestParam("file") MultipartFile file, 
-			             HttpSession session,
-			             Model model) {
+    public String insert(@ModelAttribute ProductVO productVO) {
 
-        System.out.println("ShopController.insert");
+        System.out.println("ShopController.register");
         
         System.out.println("받은 데이터: " + productVO);
+        System.out.println("받은 파일: " + productVO.getProductImage().getOriginalFilename());
+
+        for(int i=0; i<productVO.getDetailImages().length; i++) {
+        	 System.out.println("상품상세이미지: " + productVO.getDetailImages()[i].getOriginalFilename());
+        }
+                
+        for(int i=0; i<productVO.getOptionItems().length; i++) {
+        	 System.out.println(productVO.getOptionItems()[i]);
+        }
         
+        
+        
+        int result = shopService.exeProductadd(productVO);
+        
+        
+        
+        
+        
+        /*
         // 필수 필드 검증
         if (productVO.getTitle() == null || productVO.getTitle().trim().isEmpty()) {
             System.out.println("상품명이 비어있습니다!");
@@ -103,8 +118,9 @@ public class ShopController {
             productVO.setItemimg("/assets/images/default-product.jpg");
         }
         
-        int result = shopService.exeProductadd(productVO);
+        //int result = shopService.exeProductadd(productVO);
 
+        
         if (result > 0) {
             System.out.println("상품 등록 성공! 생성된 상품번호: " + productVO.getProduct_no());
             model.addAttribute("productVO", productVO);
@@ -114,6 +130,9 @@ public class ShopController {
             model.addAttribute("errorMessage", "상품 등록에 실패했습니다.");
             return "shop/shopform";
         }
+        */
+        
+        return "";
     }
 
     /**

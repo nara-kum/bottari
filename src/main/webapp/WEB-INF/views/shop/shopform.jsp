@@ -31,12 +31,24 @@
 						<label>카테고리</label>
 						<div class="category-wrapper">
 							<div class="category-box">
-								<span class="selected" data-category="1">결혼</span> 
-								<span data-category="2">생일</span> 
-								<span data-category="3">돌잔치</span>
-								<span data-category="4">이벤트</span> 
-								<span data-category="5">축하</span>
-								<span data-category="6">감사</span>
+								<label for="rdo-wed" class="selected">결혼</label>
+								<input id="rdo-wed" type="radio" name="category_no" value="1">
+								
+								<label for="rdo-bir">생일</label>
+								<input id="rdo-bir" type="radio" name="category_no" value="2">
+							
+								<label for="rdo-bir1">돌잔치</label>
+								<input id="rdo-bir1" type="radio" name="category_no" value="3">
+							
+								<label for="rdo-eve">이벤트</label>
+								<input id="rdo-eve" type="radio" name="category_no" value="4">
+							
+								<label for="rdo-con">축하</label>
+								<input id="rdo-con" type="radio" name="category_no" value="5">
+							
+								<label for="rdo-tha">감사</label>
+								<input id="rdo-tha" type="radio" name="category_no" value="6">
+							
 							</div>
 						</div>
 						<!-- 카테고리 번호 히든 필드 -->
@@ -65,10 +77,12 @@
 						</div>
 
 						<div id="optionContainer">
-							<div class="option-group">
+							<div class="option-group" data-gno="0">
 								<div class="option-row">
-									<input type="text" name="option_name[]" placeholder="옵션타이틀 입력 (예: 컬러)"> 
-									<input type="text" name="detailOption_name[]" placeholder="옵션 입력 (예: 하늘)"> 
+									<input type="text" name="option_names" placeholder="옵션타이틀 입력 (예: 컬러)"> 
+								
+									<input type="text" name="optionItems[0]" placeholder="옵션 입력 (예: 하늘)">
+									
 									<button type="button" class="add-detail-option" onclick="addDetailOption(this)">
 										<img class="add-logo2" src="../../../assets/icon-add.svg" alt="옵션 추가">
 									</button>
@@ -80,7 +94,7 @@
 					<!-- 상품 이미지 -->
 					<section class="section">
 						<label>상품 이미지</label> 
-						<input type="file" name="imageFile" id="imageFile" accept="image/*" style="display: none;">
+						<input type="file" name="productImage" id="imageFile" accept="image/*" style="display: none;">
 						<input type="hidden" name="itemimg" id="itemimg">
 						<div class="image-preview">
 							<div class="image-container">
@@ -97,7 +111,7 @@
 					<section class="section">
 						<label>상세 설명</label>
 						<div class="description-box">
-							<input type="file" name="detailImages[]" id="detailImages" accept="image/*" multiple style="display: none;">
+							<input type="file" name="detailImages" id="detailImages" accept="image/*" multiple style="display: none;" multiple="multiple">
 							<div class="detail-images-preview" id="detailImagesPreview">
 								<div class="no-detail-images">상세 설명 이미지를 등록하세요.</div>
 							</div>
@@ -111,8 +125,13 @@
 					<section class="section">
 						<label>배송여부</label>
 						<div class="delivery-box">
-							<div class="delivery-type active" data-shipping="1">배송</div>
-							<div class="delivery-type" data-shipping="0">배송없음</div>
+						
+							<label for="rdo-dely" class="delivery-type active">배송</label>
+							<input id="rdo-dely" type="radio" name="shipping_yn" value="y">
+								
+							<label for="rdo-deln" class="delivery-type">배송없음</label>
+							<input id="rdo-deln" type="radio" name="shipping_yn" value="n">
+							
 						</div>
 						<!-- 배송여부 히든 필드 -->
 						<input type="hidden" name="shipping_yn" id="shippingYn" value="1">
@@ -155,9 +174,9 @@
 
 	<script>
 		// 카테고리 선택 JavaScript
-		document.querySelectorAll('.category-box span').forEach(span => {
+		document.querySelectorAll('.category-box label').forEach(span => {
 			span.addEventListener('click', function() {
-				document.querySelectorAll('.category-box span').forEach(s => s.classList.remove('selected'));
+				document.querySelectorAll('.category-box label').forEach(s => s.classList.remove('selected'));
 				this.classList.add('selected');
 				document.getElementById('categoryNo').value = this.getAttribute('data-category');
 			});
@@ -215,14 +234,40 @@
 			}
 		});
 
+		
+		//옵션 추가할때 쓰는 변수
+		let optGroupNo = 0;
+		let gno; //마지막 사용한 그룹번호
+		
 		// 옵션 그룹 추가 함수
 		function addOptionGroup() {
+			
 			const container = document.getElementById('optionContainer');
 			const newGroup = document.createElement('div');
 			newGroup.className = 'option-group';
-			newGroup.innerHTML = `
+			
+			optGroupNo = optGroupNo+1;
+			newGroup.setAttribute('data-gno', optGroupNo);
+			
+			gno = newGroup.dataset.gno
+			
+			let htmlStr ='';
+			htmlStr += '<div class="option-row">';
+			htmlStr += '	<input type="text" name="option_names" placeholder="옵션타이틀 입력 (예: 사이즈)"> ';
+			htmlStr += '	<input type="text" name="optionItems[' + gno + ']" placeholder="옵션 입력 (예: L)"> ';
+			htmlStr += '	<button type="button" class="add-detail-option" onclick="addDetailOption(this)">';
+			htmlStr += '		<img class="add-logo2" src="../../../assets/icon-add.svg" alt="옵션 추가">';
+			htmlStr += '	</button>';
+			htmlStr += '	<button type="button" class="remove-option-group" onclick="removeOptionGroup(this)">';
+			htmlStr += '		<img class="remove-logo" src="../../../assets/icon-remove.svg" alt="옵션 그룹 제거">aaaa';
+			htmlStr += '	</button>';
+			htmlStr += '</div>';
+			
+			newGroup.innerHTML = htmlStr;
+			
+			/* newGroup.innerHTML = `
 				<div class="option-row">
-					<input type="text" name="option_name[]" placeholder="옵션타이틀 입력 (예: 사이즈)"> 
+					<input type="text" name="option_names" placeholder="옵션타이틀 입력 (예: 사이즈)"> 
 					<input type="text" name="detailOption_name[]" placeholder="옵션 입력 (예: L)"> 
 					<button type="button" class="add-detail-option" onclick="addDetailOption(this)">
 						<img class="add-logo2" src="../../../assets/icon-add.svg" alt="옵션 추가">
@@ -231,7 +276,7 @@
 						<img class="remove-logo" src="../../../assets/icon-remove.svg" alt="옵션 그룹 제거">
 					</button>
 				</div>
-			`;
+			`; */
 			container.appendChild(newGroup);
 		}
 
@@ -240,16 +285,35 @@
 			const optionGroup = button.closest('.option-group');
 			const newRow = document.createElement('div');
 			newRow.className = 'option-row detail-only';
-			newRow.innerHTML = `
+		
+			gno = optionGroup.dataset.gno;
+			
+			
+			let htmlStr = '';
+			htmlStr += '<input type="text" placeholder="옵션타이틀은 위와 동일">';
+			htmlStr += '<input type="text" name="optionItems['+ gno +']" placeholder="옵션 입력 (예: M)">';
+			htmlStr += '<button type="button" class="add-detail-option" onclick="addDetailOption(this)">';
+			htmlStr += '	<img class="add-logo2" src="../../../assets/icon-add.svg" alt="옵션 추가">';
+			htmlStr += '</button>';
+			htmlStr += '<button type="button" class="remove-detail-option" onclick="removeDetailOption(this)">';
+			htmlStr += '	<img class="remove-logo2" src="../../../assets/icon-remove.svg" alt="옵션 제거">';
+			htmlStr += '</button>';
+			htmlStr += '';
+			newRow.innerHTML = htmlStr;
+				
+				
+			/* newRow.innerHTML = 
 				<input type="text" placeholder="옵션타이틀은 위와 동일"> 
-				<input type="text" name="detailOption_name[]" placeholder="옵션 입력 (예: M)"> 
+				<input type="text" name="detailOption_name'+ optNo+1 +'" placeholder="옵션 입력 (예: M)"> 
 				<button type="button" class="add-detail-option" onclick="addDetailOption(this)">
 					<img class="add-logo2" src="../../../assets/icon-add.svg" alt="옵션 추가">
 				</button>
 				<button type="button" class="remove-detail-option" onclick="removeDetailOption(this)">
 					<img class="remove-logo2" src="../../../assets/icon-remove.svg" alt="옵션 제거">
 				</button>
-			`;
+			';
+			 */
+			
 			optionGroup.appendChild(newRow);
 		}
 

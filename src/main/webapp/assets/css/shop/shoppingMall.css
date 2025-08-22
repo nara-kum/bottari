@@ -39,14 +39,12 @@
   padding: 8px 16px;
   border-radius: 25px;
   cursor: pointer;
-  transition: all 0.3s ease;
   white-space: nowrap;
 }
 
 .sub-title-menu:hover {
   border-color: #ef5327;
   color: #ef5327;
-  transform: translateY(-2px);
 }
 
 .sub-title-menu.active {
@@ -69,7 +67,6 @@
   font-size: 14px;
   color: #000000;
   cursor: pointer;
-  transition: all 0.3s ease;
   background: none;
   border-top: none;
   border-bottom: none;
@@ -172,13 +169,11 @@
   border-radius: 4px;
   overflow: hidden;
   cursor: pointer;
-  transition: all 0.3s ease;
 }
 
 .goods-wrap:hover {
   border-color: #ef5327;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  transform: translateY(-5px);
 }
 
 .goods-img {
@@ -194,12 +189,8 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.3s ease;
 }
 
-.goods-wrap:hover .product-image {
-  transform: scale(1.05);
-}
 
 .brand-name {
   width: 100%;

@@ -83,7 +83,7 @@ select {
 	font-size: 20px;
 }
 
-.category-box span {
+.category-box label {
 	display: inline-block;
 	background: #ffffff;
 	padding: 6px 12px;
@@ -97,6 +97,11 @@ select {
 	background-color: #c9a37e;
 	color: white;
 }
+
+.category-box input[type="radio"] {
+	display: none;
+}
+
 
 /* 옵션 설정 관련 스타일 */
 .option-header {
@@ -358,6 +363,12 @@ label {
 	gap: 10px;
 	margin-bottom: 15px;
 }
+
+.delivery-box input[type="radio"] {
+	display: none;
+}
+
+
 
 .delivery-type {
 	padding: 8px 16px;

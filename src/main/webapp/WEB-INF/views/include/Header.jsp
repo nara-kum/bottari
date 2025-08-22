@@ -1,18 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<!-- CDN(외부 사이트 프리셋) 리셋 css 대용-->
-<link rel="stylesheet"
-	href="https://cdn.jsdelivr.net/npm/reset-css@4.0.1/reset.min.css" />
 
-<!-- global.css호출 -->
-<link rel="stylesheet" href="/assets/css/Global.css">
-<title>Insert title here</title>
-</head>
 <header class="controller">
 	<div id="sec-header" class="sector">
 		<div class="left-side">
@@ -65,4 +54,3 @@
 		</div>
 	</div>
 </header>
-</html>
