@@ -17,30 +17,38 @@ public class WishlistRepository {
 	
 	//위시리스트
 	public List<WishlistVO> selectWishList(int no){
-		System.out.println("WishRepository.selectList()");
+		System.out.println("WishRepository.selectWishList()");
 		
 		List<WishlistVO> wList = sqlSession.selectList("wishlist.selectList",no);
-		System.out.println(wList);
 		
 		return wList;
 	}
 	
 	//기념일리스트
 	public List<CalenderVO> selectEventList(int no){
-		System.out.println("WishRepository.selectList()");
+		System.out.println("WishRepository.selectEventList()");
 		
 		List<CalenderVO> eList = sqlSession.selectList("wishlist.selectEventList",no);
-		System.out.println(eList);
 		
 		return eList;
 	}
 	
 	//펀딩등록
-	public int insertFunding(WishlistVO wishlistVO) {
+	public int insertFunding(List<WishlistVO> wishlistVO) {
 		System.out.println("WishRepository.insertFunding()");
 		
+		int count = sqlSession.insert("wishlist.insertFunding",wishlistVO);
 		
-		return 0;
+		return count;
+	}
+	
+	//위시삭제
+	public int deleteWishlist(int eventNum) {
+		System.out.println("WishRepository.deleteWishlist()");
+		
+		int count = sqlSession.delete("wishlist.deleteWish",eventNum);
+		
+		return count;
 	}
 	
 }

@@ -353,34 +353,41 @@
 
 		const items = $('#selectedList .selected-item').map(function(){
 		const $it = $(this);
+		const basePrice = Number($it.data('price')) || 0;
+		const at = ($it.data('amountType') || 'FULL').toUpperCase();
+
+		let percent = 100;
+		let amount  = basePrice;
+		if (at === 'P5') {
+			percent = 5;
+			amount = Math.floor(basePrice * 0.05); 
+		}
+
 			return {
-			wishlist_no       : $it.data('wish-id'),
-			product_no        : $it.data('product-id'),
-			wishlistoption_no : $it.data('wishlist-option-id') || null,
-			detailoption_no   : $it.data('detail-option-id')   || null,
-			amount_type       : $it.data('amountType') || 'FULL',
-			percent           : $it.data('percent')    || 100,
-			amount            : $it.data('amount')     || Number($it.data('price')) || 0
+				eventNo: eventNo,
+				productNo: Number($it.data('product-id')) || 0,
+      			wishlistNo : Number($it.data('wish-id'))  || 0, 
+				percent: percent,
+				amount: amount
 			};
 		}).get();
 
-	if(!items.length){
-		alert('선택된 상품이 없습니다.');
-		return;
-	}
+		if(!items.length){
+			alert('선택된 상품이 없습니다.');
+			return;
+		}
 
-	const payload = { event_no: eventNo, items };
+		const $btn = $('#btnStartFunding').prop('disabled', true);
 
-	const $btn = $('#btnStartFunding').prop('disabled', true);
 		$.ajax({
 			url: CTX + '/api/openFunding',
 			type: 'POST',
 			contentType: 'application/json; charset=utf-8',
-			data: JSON.stringify(payload)
+			data: JSON.stringify(items)
 		})
 		.done(function (json) {
 			if (json && json.result === 'success') {
-				location.href = CTX + '/funding/my';
+				location.href = CTX + '/wishlist';
 			} else {
 				alert('처리에 실패했습니다. 잠시 후 다시 시도해주세요.');
 			}

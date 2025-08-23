@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.service.WishlistService;
@@ -66,12 +66,16 @@ public class WishlistApiController {
 	
 	//펀딩 등록하기
 	@PostMapping("/api/openFunding")
-	public JsonResult openFunding(@ModelAttribute WishlistVO wishlistVO) {
+	public JsonResult openFunding(@RequestBody List<WishlistVO> wishlistVO) {
 		System.out.println("WishlistApiController.openFunding()");
 		System.out.println(wishlistVO);
 		
 		wishlistService.exeFunding(wishlistVO);
 		
-		return null;
+		if (wishlistVO != null) {
+			return JsonResult.success(wishlistVO);
+		} else {
+			return JsonResult.fail("알 수 없는 오류");
+		}
 	}
 }

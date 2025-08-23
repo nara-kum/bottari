@@ -16,8 +16,8 @@ public class WishlistVO {
 	private int fundingNo;
 	private int eventNo;
 	private int productNo;
-	private String percent;
-	private String amount;
+	private int percent;
+	private int amount;
 	private String fundingStatus;
 	private String fundingDate;
 
@@ -27,8 +27,8 @@ public class WishlistVO {
 	}
 
 	public WishlistVO(int userNo, int wishlistNo, String brand, String title, int price, int wishlistoptionNo,
-			int detailoptionNo, String detailoptionName, int fundingNo, int eventNo, int productNo, String percent,
-			String amount, String fundingStatus, String fundingDate) {
+			int detailoptionNo, String detailoptionName, int fundingNo, int eventNo, int productNo, int percent,
+			int amount, String fundingStatus, String fundingDate) {
 		super();
 		this.userNo = userNo;
 		this.wishlistNo = wishlistNo;
@@ -47,7 +47,6 @@ public class WishlistVO {
 		this.fundingDate = fundingDate;
 	}
 
-	
 	//메소드-gs
 	public int getUserNo() {
 		return userNo;
@@ -137,19 +136,19 @@ public class WishlistVO {
 		this.productNo = productNo;
 	}
 
-	public String getPercent() {
+	public int getPercent() {
 		return percent;
 	}
 
-	public void setPercent(String percent) {
+	public void setPercent(int percent) {
 		this.percent = percent;
 	}
 
-	public String getAmount() {
+	public int getAmount() {
 		return amount;
 	}
 
-	public void setAmount(String amount) {
+	public void setAmount(int amount) {
 		this.amount = amount;
 	}
 
@@ -168,8 +167,9 @@ public class WishlistVO {
 	public void setFundingDate(String fundingDate) {
 		this.fundingDate = fundingDate;
 	}
-	//메소드-일반
 
+
+	//메소드-일반
 	@Override
 	public String toString() {
 		return "WishlistVO [userNo=" + userNo + ", wishlistNo=" + wishlistNo + ", brand=" + brand + ", title=" + title
@@ -178,4 +178,6 @@ public class WishlistVO {
 				+ ", productNo=" + productNo + ", percent=" + percent + ", amount=" + amount + ", fundingStatus="
 				+ fundingStatus + ", fundingDate=" + fundingDate + "]";
 	}
+	
+
 }
