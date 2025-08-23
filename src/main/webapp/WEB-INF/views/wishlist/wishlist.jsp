@@ -91,7 +91,7 @@
 			const productId = $card.data('product-id');
 			const brand     = $card.find('.buy').text().trim();
 			const title     = $card.find('.name').text().trim();
-			const priceText = $card.find('.price').text().trim();
+			const priceText = $card.find('.product-price').text().trim();
 			const priceNum  = toNumber(priceText);
 			const img       = $card.find('img.product-image').attr('src');
 			// 옵션 필드
@@ -314,9 +314,8 @@
 			<img class="selected-thumb" src="\${img}">
 			<div class="selected-meta">
 				<div class="selected-brand">\${escapeHtml(brand)}</div>
-				<div class="selected-title">\${escapeHtml(title)}</div>
-				<div class="selected-price-row">
-					<span class="selected-price">\${escapeHtml(priceText)}</span>
+				<div class="selected-title-row">
+				<span class="selected-title">\${escapeHtml(title)}</span>
 					\${detailOptionName ? '<span class="opt-sep"> · </span><span class="selected-opt">' + escapeHtml(detailOptionName) + '</span>' : ''}
 				</div>
 				<div class="sel-amount">

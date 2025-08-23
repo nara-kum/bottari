@@ -8,16 +8,16 @@
 			<a href="/shoppingMall"><img class="header-logo"
 				src="/assets/icon/Logo_colored.svg"></a>
 			<h1 class="header-menu">
-				<a href="/calender">캘린더</a>
+				<a href="${pageContext.request.contextPath}/calender">캘린더</a>
 			</h1>
 			<h1 class="header-menu">
-				<a href="">펀딩</a>
+				<a href="${pageContext.request.contextPath}">펀딩</a>
 			</h1>
 			<h1 class="header-menu">
-				<a href="">초대장</a>
+				<a href="${pageContext.request.contextPath}/invitationList">초대장</a>
 			</h1>
 			<h1 class="header-menu">
-				<a href="/history">구매내역</a>
+				<a href="${pageContext.request.contextPath}/history">구매내역</a>
 			</h1>
 		</div>
 		<div class="right-side">

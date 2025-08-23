@@ -65,7 +65,7 @@ public class WishlistApiController {
 	}
 	
 	//펀딩 등록하기
-	@PostMapping("/api/ ")
+	@PostMapping("/api/openFunding")
 	public JsonResult openFunding(@ModelAttribute WishlistVO wishlistVO) {
 		System.out.println("WishlistApiController.openFunding()");
 		System.out.println(wishlistVO);
