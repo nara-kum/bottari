@@ -7,9 +7,9 @@
 <head>
     <meta charset="UTF-8">
     <title>bottari 초대장 관리</title>
-    <link rel="stylesheet" href="../../../assets/css/reset.css">
-    <link rel="stylesheet" href="../../../assets/css/Global.css">
-    <link rel="stylesheet" href="../../../assets/css/invitationList.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/reset.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/Global.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/invitationList.css">
 </head>
 
 <body class="family">
