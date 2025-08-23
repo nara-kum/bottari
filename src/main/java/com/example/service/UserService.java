@@ -21,6 +21,7 @@ public class UserService {
 		return count;
 	}
 	
+	/*
 	//--아이디사용유무체크(회원가입)
 	public boolean exeIdcheck(String id) {
 		System.out.println("UserService.exeIdcheck()");
@@ -37,6 +38,7 @@ public class UserService {
 			return false;
 		}
 	}
+	*/
 	
 	/*
 	///////////////////////////////////////  8/22부터 주말 수정하기 ////////////////////////////////////////////////////

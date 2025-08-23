@@ -53,6 +53,7 @@ public class UserController {
 		
 		//세션에 로그인 확인용 값을 넣어준다.
 		session.setAttribute("authUser", authUser);
+		System.out.println(authUser);
 		
 		return "redirect:/loginForm";	
 	}

@@ -71,7 +71,7 @@
 					, id
 					, name
 				from users
-				where name = #{name}
+				where id = #{id}
 				and password = #{password}
          ]]>
     </select>

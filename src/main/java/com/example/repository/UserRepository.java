@@ -22,6 +22,7 @@ public class UserRepository {
 		return count;
 	}
 
+	/*
 	//--user정보가져오기(id password) -->세션저장용
 	public UserVO userSelectOneByIdPw(UserVO userVO) {
 		System.out.println("UserRepository.userSelectOneByIdPw()");
@@ -33,7 +34,7 @@ public class UserRepository {
 		//return null;
 		return authUser;
 	}	
-
+	*/
 	// /////////////////////////////////////  8/22부터 주말 수정하기 ////////////////////////////////////////////////////		
 	/* 
 	//--user정보가져오기(no) -->회원수정폼
@@ -59,7 +60,7 @@ public class UserRepository {
 		return count;
 	}	
 	*/
-	
+	/*
 	//아이디사용유무체크(회원가입)
 	public UserVO userSelectById(String id) {
 		System.out.println("UserRepository.userSelectById()");
@@ -68,6 +69,7 @@ public class UserRepository {
 		System.out.println(id);
 		return userVO;
 	}	
+	*/
 	
 	//로그인
 	public UserVO selectUser(UserVO userVO) {
