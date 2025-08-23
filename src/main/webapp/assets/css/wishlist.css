@@ -80,7 +80,6 @@
 .a-product .product-image {
 	width: 100px;
 	height: 100px;
-	margin-top: 5px;
 	gap: 10px;
 	/* 체크박스와 이미지 사이 간격 */
 	border-radius: 5px;
@@ -124,12 +123,6 @@
 	/* 세로 가운데 정렬 */
 	gap: 8px;
 	/* 체크박스와 이미지 사이 여백 */
-}
-
-.product-checkbox {
-	/* 필요 시 크기 조절 */
-	width: 18px;
-	height: 18px;
 }
 
 /* 선택 사항: 텍스트 크기 조정 */
@@ -388,4 +381,62 @@
 /* 제목이 길면 자연스레 줄바꿈 (원하면 clamp로 2줄 제한 가능) */
 .product-name {
 	line-height: 1.3;
+}
+
+/* =========================
+   [PATCH] 위시리스트 카드 정렬
+   - [체크박스 | 썸네일 | 내용] 3열 그리드
+   - 체크박스는 세로 가운데
+   - 아이콘 줄은 맨 아래로 고정
+   ========================= */
+
+/* 카드 한 줄 레이아웃: 전역 .image-row 폭 15px 무력화 */
+#wListArea .a-product > .image-row{
+  display: grid !important;
+  grid-template-columns: 24px 100px 1fr; /* 체크박스 | 썸네일 | 내용 */
+  column-gap: 12px;
+  align-items: stretch;       /* 행 높이를 가장 큰 아이템에 맞춤 */
+  width: auto !important;     /* 전역 width:15px 덮기 */
+}
+
+/* 혹시 내부 하위 .image-row가 있더라도 폭 제한 제거 */
+#wListArea .image-row{ width:auto !important; }
+
+/* 체크박스를 카드 높이 기준 '세로 가운데'에 */
+#wListArea .a-product .product-checkbox{
+  align-self: center;   /* ★ 그리드 셀 안에서 세로 가운데 */
+  justify-self: center; /* (선택) 가로 가운데 */
+  width:15px; height:15px;
+}
+
+/* 썸네일 고정 크기 */
+#wListArea .a-product .product-image{
+  width:100px; height:100px; object-fit:cover; border-radius:6px;
+}
+
+/* 내용 열: 세로 스택 + 전체 높이로 늘어나게 */
+#wListArea .a-product .product-info{
+  display:flex; flex-direction:column; gap:4px;
+  min-width:0;
+  align-self: stretch; /* 그리드 셀 높이만큼 채움 → 아래 고정이 가능해짐 */
+}
+
+/* 제목/옵션 줄은 한 줄에, 길면 자연 줄바꿈 */
+#wListArea .a-product .product-row{
+  display:flex; flex-wrap:wrap; align-items:baseline;
+  column-gap:6px; row-gap:2px;
+}
+#wListArea .a-product .product-row .name{ font-weight:600; }
+
+/* 가격은 별도 줄 */
+#wListArea .a-product .product-price{ font-weight:700; color:#333; }
+
+/* 카트/하트 줄을 맨 아래에 고정 */
+#wListArea .a-product .actions-row{
+  margin-top: auto;                 /* ★ 내용 영역의 바닥으로 밀착 */
+  display:inline-flex; gap:8px; align-items:center;
+}
+#wListArea .a-product .icon-cart,
+#wListArea .a-product .icon-heart{
+  width:16px; height:16px; object-fit:contain;
 }

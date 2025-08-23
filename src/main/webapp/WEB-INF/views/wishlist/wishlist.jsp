@@ -90,7 +90,7 @@
 			const wishId    = $card.data('wish-id');
 			const productId = $card.data('product-id');
 			const brand     = $card.find('.buy').text().trim();
-			const title     = $card.find('.product-name').text().trim();
+			const title     = $card.find('.name').text().trim();
 			const priceText = $card.find('.price').text().trim();
 			const priceNum  = toNumber(priceText);
 			const img       = $card.find('img.product-image').attr('src');
