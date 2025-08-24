@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <!DOCTYPE html>
@@ -89,14 +88,23 @@
 
 					<!-- 주문 영역 -->
 					<div class="order-section">
-						<div class="order-title">상품 선택</div>
+				<div class="order-title">상품 선택</div>
+
+						<select class="option-select" name="option_no">
+							<option value="">옵션을 선택하세요</option>
+							<c:forEach var="opt" items="${options}">
+								<option value="${opt.option_no}">${opt.option_name}</option>
+							</c:forEach>
+						</select>
+
+						<div style="font-size: 12px; color: #999; margin-bottom: 15px;">(선택한 옵션 표시)</div>
 
 
 						<!-- 옵션이 있는 경우 -->
 						<c:if test="${not empty productList}">
 							<c:set var="hasOptions" value="false" />
 							<c:forEach items="${productList}" var="item">
-								<c:if test="${not empty item.option_name}">
+								<c:if test="${not empty item.option_names}">
 									<c:set var="hasOptions" value="true" />
 								</c:if>
 							</c:forEach>
