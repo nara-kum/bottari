@@ -91,9 +91,18 @@
 					<div class="order-section">
 						<div class="order-title">상품 선택</div>
 
-						<!-- 옵션이 있는 경우
-							
-							-->
+
+						<!-- 옵션이 있는 경우 -->
+						<c:if test="${not empty productList}">
+							<c:set var="hasOptions" value="false" />
+							<c:forEach items="${productList}" var="item">
+								<c:if test="${not empty item.option_name}">
+									<c:set var="hasOptions" value="true" />
+								</c:if>
+							</c:forEach>
+
+						</c:if>
+
 
 						<div style="font-size: 12px; color: #999; margin-bottom: 15px;">
 							선택한 옵션이 표시됩니다</div>
