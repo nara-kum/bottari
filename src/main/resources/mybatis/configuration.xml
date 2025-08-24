@@ -13,5 +13,6 @@
         <mapper resource="mybatis/mappers/invitation.xml" />
         <mapper resource="mybatis/mappers/wishlist.xml" />
         <mapper resource="mybatis/mappers/funding.xml" />
+        <mapper resource="mybatis/mappers/checkout.xml" />
     </mappers>
 </configuration>

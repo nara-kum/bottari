@@ -1,21 +1,36 @@
 package com.example.controller;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import com.example.service.PaymentService;
+import com.example.vo.CheckOutVO;
 
 @Controller
 public class PaymentController {
 	//field
-	
+	@Autowired
+	private PaymentService paymentservice;
 	//editor
 	
 	//method g/s
 	
 	//method normal
 	@RequestMapping(value = "/checkout", method = { RequestMethod.GET, RequestMethod.POST })
-	public String checkoutList() {
+	public String checkoutList(@RequestParam(value="cart_no", required=false, defaultValue="1") int cart_no, Model model) {
 		System.out.println("PayController.checkoutList()");
+		System.out.println("cart_no= " + cart_no);
+		
+		List<CheckOutVO> checkoutList = paymentservice.execheckoutList(cart_no);
+		
+		model.addAttribute("pList", checkoutList);
+		
 		
 		return "/shop/checkout";
 	}

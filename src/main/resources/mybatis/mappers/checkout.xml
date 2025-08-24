@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="checkout">
+	<select id="selectList" resultType="com.example.vo.CheckOutVO">
+		<![CDATA[
+			select	c.cart_no,
+					c.user_no,
+			        c.product_no,
+			        p.title,
+			        p.price,
+			        c.quantity,
+			        p.brand,
+			        p.shipping_cost,
+			        p.itemimg,
+			        (p.price * c.quantity) AS item_total,
+				    SUM(c.quantity) OVER(PARTITION BY c.user_no) AS total_quantity,
+				    SUM(p.price * c.quantity) OVER(PARTITION BY c.user_no) AS total_amount
+			from cart c
+			inner join product p on c.product_no = p.product_no
+			where cart_no = #{cart_no}
+		]]>
+	</select>
+</mapper>

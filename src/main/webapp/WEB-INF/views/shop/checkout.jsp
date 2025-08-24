@@ -27,22 +27,21 @@
             </div>
             <div class="sec-content-main">
                 <div class="left-main content-height">
-                <!-- <c:forEach test="" var=""> -->
-	                    <div class="list-basic margin-10">
+					<c:forEach items="${RequestScope.pList}" var="vo">
+	                    <div class="list-basic margin-10">	
 	                        <div class="row-flex-box detail-list">
 	                            <img class="img list-img-100" src="">
 	                            <div class="column-flex-box">
-	                                <div class="text-14">람베르츠</div>
-	                                <div class="text-14">"300년 전통" 독일 람베르츠 베스트 초콜릿 쿠키 컬렉션</div>
+	                                <div class="text-14">${vo.brand}</div>
+	                                <div class="text-14">${vo.title}</div>
 	                            </div>
 	                        </div>
 	                        <div class="between-flex-box detail-list">
-	                            <div class="text-12">결제금액</div>
-	                            <div class="text-14 bold">26,900원</div>
+	                            <div class="text-12">결제금액(${vo.quantity} 개)</div>
+	                            <div class="text-14 bold">${vo.item_total}</div>
 	                        </div>
 	                    </div>
-              <!--  </c:forEach> -->
-                	
+                	</c:forEach>
                 </div>
                 <div class="right-main content-height">
                     <div class="payment-method-box column-flex-box">
@@ -84,17 +83,17 @@
                     <div class="payment-method-box">
                         <div class="text-18 bold margin-10">결제정보</div>
                         <div class="between-flex-box margin-10 row-align">
-                            <div class="text-14">총 상품금액(1개)</div>
-                            <div class="text-14">38,000원</div>
+                            <div class="text-14">총 상품금액(${vo.total_quantity}개)</div>
+                            <div class="text-14">${vo.total_amount}원</div>
                         </div>
                         <div class="between-flex-box margin-10 row-align">
-                            <div class="text-14">할인금액</div>
-                            <div class="text-14">0원</div>
+                            <div class="text-14">배송비</div>
+                            <div class="text-14">${vo.shipping_cost}원</div>
                         </div>
                     </div>
                     <div class="text-16 margin-10">최종 결제금액</div>
 
-                    <button class="btn-basic btn-orange size-large text-16 right-align">38,000원 결제하기</button>
+                    <button class="btn-basic btn-orange size-large text-16 right-align">${vo.totel_amount}원 결제하기</button>
                 </div>
             </div>
 
