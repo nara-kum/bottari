@@ -36,7 +36,7 @@ public class WishlistService {
 	}
 	
 	//펀딩 생성시 펀딩테이블에 인서트 하고, 위시리스트 삭제
-	public void exeFunding(List<WishlistVO> wishlistVO) {
+	public int exeFunding(List<WishlistVO> wishlistVO) {
 		System.out.println("WishService.exeFunding()");
 		
 		//펀딩테이블에 먼저 인서트
@@ -44,7 +44,9 @@ public class WishlistService {
 		
 		//위시리스트 삭제
 		int eventNum = wishlistVO.get(0).getEventNo();
-		wishlistRepository.deleteWishlist(eventNum);
+		int count = wishlistRepository.deleteWishlist(eventNum);
+		
+		return count;
 		
 	}
 	

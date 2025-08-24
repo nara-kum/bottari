@@ -7,6 +7,7 @@
 		<![CDATA[
 			select w.wishlist_no wishlistNo
 				, w.user_no userNo
+				, p.product_no productNo
 				, p.brand
 				, p.title
 				, p.price
@@ -20,7 +21,8 @@
 			where  w.product_no = p.product_no
 			and w.wishlist_no = wo.wishlist_no
 			and wo.detailoption_no = od.detailoption_no
-			and w.user_no = #{userNo}  
+			and w.user_no = #{userNo}
+			order by wishlistNo
 		]]>
 	</select>	
 

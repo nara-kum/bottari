@@ -36,6 +36,7 @@ public class WishlistRepository {
 	//펀딩등록
 	public int insertFunding(List<WishlistVO> wishlistVO) {
 		System.out.println("WishRepository.insertFunding()");
+		System.out.println(wishlistVO);
 		
 		int count = sqlSession.insert("wishlist.insertFunding",wishlistVO);
 		
