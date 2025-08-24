@@ -25,10 +25,10 @@
           <a href="${pageContext.request.contextPath}/wishlist" aria-current="page">펀딩 관리</a>
         </h2>
         <h2 class="header-sub">
-          <a href="${pageContext.request.contextPath}/fundinglist">마이 펀딩</a>
+          <a href="${pageContext.request.contextPath}/myfunding">마이 펀딩</a>
         </h2>
         <h2 class="header-sub">
-          <a href="${pageContext.request.contextPath}/friendfundinglist">친구 펀딩</a>
+          <a href="${pageContext.request.contextPath}/friendfunding">친구 펀딩</a>
         </h2>
       </div>
     </div>
@@ -103,9 +103,7 @@ function extractList(json){
 }
 
 /* =========================
-   서버 응답 -> 화면 모델 (VO 기준)
-   - productNo, wishlistNo, brand, title, price 필수
-   - 딱 한 번: product_no / wishlist_no 보정 허용
+   서버 응답
 ========================= */
 function normalizeWish(w){
   let productNo  = toInt(w.productNo);
@@ -204,8 +202,6 @@ function renderCard(wishVO){
 
 /* =========================
    기념일 옵션 로드
-   - VO 스타일(eventNo, eventName) 기본
-   - (보호) event_no, event_name 1회 허용
 ========================= */
 function loadAnniversaryOptions(){
   $.ajax({
@@ -288,7 +284,6 @@ function updateStartButtonState(){
 
 /* =========================
    펀딩 시작 (POST)
-   - payload 키: eventNo, productNo, wishlistNo, percent, amount
 ========================= */
 function startFunding(){
   const eventNo = Number($('#funding-table').val()) || 0;
@@ -320,7 +315,7 @@ function startFunding(){
   const $btn = $('#btnStartFunding').prop('disabled', true);
 
   $.ajax({
-    url: window.CTX + '/api/openFunding',
+    url: window.CTX + '/api/openfunding',
     type: 'POST',
     contentType: 'application/json; charset=utf-8',
     data: JSON.stringify(items)
@@ -332,7 +327,7 @@ function startFunding(){
 
       // ✅ 알림 띄우고 이동
       alert('펀딩이 생성되었습니다.');
-      location.href = window.CTX + '/fundinglist';
+      location.href = window.CTX + '/myfunding';
     } else {
       alert('처리에 실패했습니다. 잠시 후 다시 시도해주세요.');
     }

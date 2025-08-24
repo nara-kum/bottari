@@ -12,5 +12,6 @@
         <mapper resource="mybatis/mappers/calender.xml" />
         <mapper resource="mybatis/mappers/invitation.xml" />
         <mapper resource="mybatis/mappers/wishlist.xml" />
+        <mapper resource="mybatis/mappers/funding.xml" />
     </mappers>
 </configuration>

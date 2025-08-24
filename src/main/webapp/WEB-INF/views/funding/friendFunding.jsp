@@ -9,8 +9,6 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/reset.css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/Global.css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/myfunding.css">
-<script src="${pageContext.request.contextPath}/assets/js/jquery/jquery-3.7.1.js"></script>
-
 <title>마이 펀딩</title>
 </head>
 
@@ -32,15 +30,15 @@
 				</h2>
 
 				<!-- 마이 펀딩 -->
-				<h2 class="header-sub is-active">
-				<a href="${pageContext.request.contextPath}/fundinglist" aria-current="page">
+				<h2 class="header-sub">
+				<a href="${pageContext.request.contextPath}/myfunding">
 					마이 펀딩
 				</a>
 				</h2>
 
 				<!-- 친구 펀딩 -->
-				<h2 class="header-sub">
-					<a href="${pageContext.request.contextPath}/friendfundinglist">
+				<h2 class="header-sub is-active">
+					<a href="${pageContext.request.contextPath}/friendfunding" aria-current="page">
 					친구 펀딩
 					</a>
 				</h2>

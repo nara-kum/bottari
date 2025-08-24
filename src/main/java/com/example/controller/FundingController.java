@@ -8,27 +8,19 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class FundingController {
 
 	// 펀딩리스트
-	@RequestMapping(value = "/fundinglist", method = { RequestMethod.GET, RequestMethod.POST })
+	@RequestMapping(value = "/myfunding", method = { RequestMethod.GET, RequestMethod.POST })
 	public String myfunding() {
 		System.out.println("fundingController.myfunding");
 
-		return "funding/fundingList";
-	}
-
-	// 펀딩등록
-	@RequestMapping(value = "/fundingcreation", method = { RequestMethod.GET, RequestMethod.POST })
-	public String fundingCreation() {
-		System.out.println("fundingController.fundingcreation()");
-
-		return "funding/myfunding";
+		return "funding/myFunding";
 	}
 
 	// 친펀딩리스트
-	@RequestMapping(value = "/friendfundinglist", method = { RequestMethod.GET, RequestMethod.POST })
+	@RequestMapping(value = "/friendfunding", method = { RequestMethod.GET, RequestMethod.POST })
 	public String friendFunding() {
 		System.out.println("fundingController.myfunding");
 
-		return "funding/friendfundingList";
+		return "funding/friendFunding";
 	}
 
 }

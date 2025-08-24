@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="funding">
+
+<!-- 내 펀딩 목록 -->
+<select id="selectMyFunding" parameterType="int" resultType="com.example.vo.WishlistVO">
+  <![CDATA[
+    select funding_no fundingNo,
+        event_no  eventNo,
+        user_no userNo,
+        percent ,
+        amount ,
+        funding_status as fundingStatus,
+        DATE_FORMAT(funding_date, '%Y.%m.%d') fundingDate
+    from funding_product
+  ]]>
+</select>
+
+
+</mapper>

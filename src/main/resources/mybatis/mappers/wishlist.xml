@@ -44,7 +44,7 @@
 	<insert id="insertFunding" parameterType="java.util.List">
 			INSERT INTO funding_product values
 		<foreach collection="collection" item="item" separator=",">
-		(null,#{item.eventNo}, #{item.wishlistNo}, #{item.productNo}, #{item.percent}, #{item.amount},'O', NOW())
+		(null,#{item.userNo},#{item.eventNo}, #{item.wishlistNo},#{item.productNo}, #{item.percent}, #{item.amount},'O', NOW())
 		</foreach>
   	</insert>
   	
@@ -55,7 +55,7 @@
 			from wishlist w
 				, funding_product fp
 			where w.wishlist_no = fp.wishlist_no
-			and fp.event_no= #{eventNo}
+			and fp.event_no= #{value}
 		]]>
   	</delete>
 
