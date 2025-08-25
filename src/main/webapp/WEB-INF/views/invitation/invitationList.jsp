@@ -22,7 +22,7 @@
     <content class="controller">
         <div id="sec-content" class="sector">
             <div class="sec-sub-title">
-                <h2>나의 초대장</h2>
+                <h2 class="header-sub">나의 초대장</h2>
             </div>
             <div class="sec-content-main">
 
@@ -35,15 +35,6 @@
                         <div class="card">
                             <div class="buttons"><button>수정하기</button><button>전체보기</button></div>
                         </div>
-                        <div class="card">
-                            <div class="buttons"><button>수정하기</button><button>전체보기</button></div>
-                        </div>
-                        <div class="card">
-                            <div class="buttons"><button>수정하기</button><button>전체보기</button></div>
-                        </div>
-                        <div class="card">
-                            <div class="buttons"><button class="disabled">수정하기</button><button>전체보기</button></div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -54,6 +45,19 @@
 <c:import url="/WEB-INF/views/include/Footer.jsp"></c:import>
 <!-- ---------------------------------------------------- -->
 
+<script>
+(function(){
+  const CTX = "${pageContext.request.contextPath}";
+  document.addEventListener('DOMContentLoaded', function(){
+    const btn = document.querySelector('.create-button');
+    if (btn) {
+      btn.addEventListener('click', function(){
+        window.location.href = CTX + "/invitationForm";
+      });
+    }
+  });
+})();
+</script>
 </body>
 
 </html>

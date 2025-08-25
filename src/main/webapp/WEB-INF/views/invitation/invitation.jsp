@@ -22,7 +22,7 @@
     <content class="controller">
         <div id="sec-content" class="sector">
             <div class="sec-sub-title">
-                <h2>초대장 전체보기</h2>
+                <h2 class="header-sub">초대장 전체보기</h2>
             </div>
             <div class="sec-content-main">
 
