@@ -5,7 +5,7 @@
 <html lang="ko">
 
 <head>
-<meta charset="utf-8">
+<meta charset="UTF-8">
 <link rel="stylesheet" href="../../../assets/css/reset.css">
 <link rel="stylesheet" href="../../../assets/css/Global.css">
 <link rel="stylesheet" href="../../../assets/css/shop/productPage.css">
@@ -42,11 +42,6 @@
 									alt="기본 상품 이미지">
 							</c:otherwise>
 						</c:choose>
-
-						<!-- 상세 이미지들 표시 
-					
-							-->
-
 					</div>
 
 					<!-- 상품 정보 -->
@@ -57,8 +52,6 @@
 							원
 						</div>
 						<div class="brand-name">${product.brand}</div>
-						<!-- 카테고리 타이틀자리1 --> 
-
 
 						<div class="product-options">
 							<div class="option-label">배송정보</div>
@@ -88,49 +81,49 @@
 
 					<!-- 주문 영역 -->
 					<div class="order-section">
-				<div class="order-title">상품 선택</div>
+						<div class="order-title">상품 선택</div>
 
-						<select class="option-select" name="option_no">
-							<option value="">옵션을 선택하세요</option>
-							<c:forEach var="opt" items="${options}">
-								<option value="${opt.option_no}">${opt.option_name}</option>
+						<!-- 옵션 선택 영역 -->
+						<c:if test="${not empty optionNames}">
+							<c:forEach var="optionName" items="${optionNames}" varStatus="status">
+								<div class="option-group" style="margin-bottom: 15px;">
+									<label class="option-label">${optionName}</label>
+									<select class="option-select" name="option_${status.index}" onchange="updateSelection()">
+										<option value="">${optionName}을(를) 선택하세요</option>
+										<option value="기본옵션">기본옵션</option>
+										<option value="프리미엄옵션">프리미엄옵션</option>
+										<option value="스페셜옵션">스페셜옵션</option>
+									</select>
+								</div>
 							</c:forEach>
-						</select>
-
-						<div style="font-size: 12px; color: #999; margin-bottom: 15px;">(선택한 옵션 표시)</div>
-
-
-						<!-- 옵션이 있는 경우 -->
-						<c:if test="${not empty productList}">
-							<c:set var="hasOptions" value="false" />
-							<c:forEach items="${productList}" var="item">
-								<c:if test="${not empty item.option_names}">
-									<c:set var="hasOptions" value="true" />
-								</c:if>
-							</c:forEach>
-
 						</c:if>
 
+						<!-- 옵션이 없는 경우 -->
+						<c:if test="${empty optionNames}">
+							<div style="font-size: 14px; color: #666; margin-bottom: 15px;">
+								이 상품은 단일 옵션입니다.
+							</div>
+						</c:if>
 
-						<div style="font-size: 12px; color: #999; margin-bottom: 15px;">
-							선택한 옵션이 표시됩니다</div>
-
-						<div class="quantity-control">
-							<button class="quantity-btn" onclick="decreaseQuantity()">-</button>
-							<input type="number" value="1" class="quantity-input" min="1"
-								id="quantity">
-							<button class="quantity-btn" onclick="increaseQuantity()">+</button>
+						<!-- 수량 선택 -->
+						<div class="quantity-control" style="margin: 15px 0;">
+							<label class="option-label">수량</label>
+							<div style="display: flex; align-items: center; margin-top: 5px;">
+								<button type="button" class="quantity-btn" onclick="decreaseQuantity()">-</button>
+								<input type="number" value="1" class="quantity-input" min="1" id="quantity" onchange="updateSelection()">
+								<button type="button" class="quantity-btn" onclick="increaseQuantity()">+</button>
+							</div>
 						</div>
 
-						<div class="total-order" id="selectedProduct"
-							style="background: white; padding: 10px; border-radius: 4px; margin-bottom: 15px; font-size: 12px; color: #666;">
-							${product.title} <br> 수량: <span id="displayQuantity">1</span>개
+						<!-- 선택된 옵션 표시 영역 -->
+						<div id="selectedOptionsArea" style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 15px 0; display: none;">
+							<div style="font-weight: bold; margin-bottom: 10px; color: #333;">선택된 옵션</div>
+							<div id="selectedOptionsList"></div>
 						</div>
 
-						<div class="total-price" id="totalPrice">
-							총 결제 금액 :
-							<fmt:formatNumber value="${product.price}" pattern="#,###" />
-							원
+						<!-- 총 결제 금액 -->
+						<div class="total-price" id="totalPrice" style="font-size: 18px; font-weight: bold; text-align: center; margin: 20px 0; padding: 15px; background: #fffff; border-radius: 8px; color: #333;">
+							총 결제 금액 : <span id="totalAmount"><fmt:formatNumber value="${product.price}" pattern="#,###" /></span>원
 						</div>
 
 						<button class="cart-btn">장바구니 담기</button>
@@ -139,50 +132,16 @@
 							<button class="wishlist-btn">♡ 찜 등록하기</button>
 							<button class="funding-btn">구매하기</button>
 						</div>
-					</div>
-				</div>
 
-				<!-- 추천 상품 -->
-				<div class="recommendation-section">
-					<div class="section-title">이런 구성은 어떠세요?</div>
-					<div class="product-grid">
-						<div class="product-card">
-							<div
-								style="width: 100%; height: 100px; backgroun d: #8B4513; border-radius: 6px; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; color: white;">
-								🍫</div>
-							<div class="product-card-title">추천 상품 1</div>
-							<div class="product-card-price">65,900원</div>
-						</div>
-
-						<div class="product-card">
-							<div
-								style="width: 100%; height: 100px; background: #DDA0DD; border-radius: 6px; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; color: white;">
-								🍰</div>
-							<div class="product-card-title">추천 상품 2</div>
-							<div class="product-card-price">39,900원</div>
-						</div>
-
-						<div class="product-card">
-							<div
-								style="width: 100%; height: 100px; background: #8B4513; border-radius: 6px; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; color: white;">
-								🍫</div>
-							<div class="product-card-title">추천 상품 3</div>
-							<div class="product-card-price">65,900원</div>
-						</div>
 					</div>
 				</div>
 
 				<!-- 상품 설명 -->
 				<div class="product-description">
-					<img class="detailproduct" src="${product.itemimg}"
-						alt="${product.title}">
-					<!-- 카테고리 타이틀 자리 2  -->
-				
+					<img class="detailproduct" src="${product.itemimg}" alt="${product.title}">
 				</div>
 			</div>
 		</div>
-
-	</div>
 	</div>
 	</content>
 
@@ -191,12 +150,16 @@
 	<!-- ---------------------------------------------------- -->
 
 	<script>
-		// 수량 조절 함수
+		// 상품 기본 정보
+		const basePrice = ${product.price};
+		const productTitle = "${product.title}";
+		
+		// 수량 조절 함수들
 		function increaseQuantity() {
 			const quantityInput = document.getElementById('quantity');
 			const currentValue = parseInt(quantityInput.value);
 			quantityInput.value = currentValue + 1;
-			updateTotalPrice();
+			updateSelection();
 		}
 
 		function decreaseQuantity() {
@@ -204,29 +167,76 @@
 			const currentValue = parseInt(quantityInput.value);
 			if (currentValue > 1) {
 				quantityInput.value = currentValue - 1;
-				updateTotalPrice();
+				updateSelection();
 			}
 		}
 
-		// 총 가격 업데이트
-		function updateTotalPrice() {
-			const quantity = document.getElementById('quantity').value;
-			const basePrice = $
-			{
-				product.price
+		// 선택 사항 업데이트 함수
+		function updateSelection() {
+			const quantity = parseInt(document.getElementById('quantity').value);
+			const optionSelects = document.querySelectorAll('.option-select');
+			
+			// 선택된 옵션들 수집
+			let selectedOptions = [];
+			let hasSelectedOption = false;
+			
+			optionSelects.forEach(function(select, index) {
+				if (select.value !== '') {
+					selectedOptions.push({
+						name: select.previousElementSibling.textContent, // label 텍스트
+						value: select.value
+					});
+					hasSelectedOption = true;
+				}
+			});
+			
+			// 선택된 옵션 표시 영역 업데이트
+			const selectedOptionsArea = document.getElementById('selectedOptionsArea');
+			const selectedOptionsList = document.getElementById('selectedOptionsList');
+			
+			if (hasSelectedOption) {
+				selectedOptionsArea.style.display = 'block';
+				
+				let optionsHtml = '<div style="background: white; padding: 10px; border-radius: 5px; border: 1px solid #dee2e6;">';
+				optionsHtml += '<div style="font-weight: bold; color: #495057;">' + productTitle + '</div>';
+				
+				selectedOptions.forEach(function(option) {
+					optionsHtml += '<div style="font-size: 14px; color: #6c757d; margin: 5px 0;">• ' + option.name + ': ' + option.value + '</div>';
+				});
+				
+				optionsHtml += '<div style="font-size: 14px; color: #495057; margin-top: 8px;">수량: ' + quantity + '개</div>';
+				optionsHtml += '</div>';
+				
+				selectedOptionsList.innerHTML = optionsHtml;
+			} else {
+				selectedOptionsArea.style.display = 'none';
 			}
-			;
+			
+			// 총 금액 계산 및 표시
 			const totalPrice = basePrice * quantity;
-
-			document.getElementById('displayQuantity').textContent = quantity;
-			document.getElementById('totalPrice').innerHTML = '총 결제 금액 : '
-					+ totalPrice.toLocaleString() + '원';
+			document.getElementById('totalAmount').textContent = totalPrice.toLocaleString();
+			
+			console.log('🔄선택 업데이트:', {
+				quantity: quantity,
+				selectedOptions: selectedOptions,
+				totalPrice: totalPrice
+			});
 		}
 
-		// 수량 입력 필드 변경 이벤트
-		document.getElementById('quantity').addEventListener('input',
-				updateTotalPrice);
+		// 페이지 로드 시 초기화
+		document.addEventListener('DOMContentLoaded', function() {
+			console.log('📦 상품 정보 로드 완료');
+			console.log('기본 가격:', basePrice);
+			console.log('상품명:', productTitle);
+			
+			// 수량 입력 필드 변경 이벤트
+			document.getElementById('quantity').addEventListener('input', updateSelection);
+			
+			// 초기 상태 설정
+			updateSelection();
+		});
 	</script>
+
 </body>
 
 </html>

@@ -90,7 +90,7 @@
 
 
 
-	<!-- 상품 상세 조회 -->
+	<!-- 상품 상세 조회 
 	<select id="selectOne" parameterType="int"
 		resultType="com.example.vo.ProductVO">
         <![CDATA[
@@ -109,20 +109,67 @@
             where product_no = #{product_no}
         ]]>
 	</select>
+	-->
+
+
+	<!-- 상품 상세 조회 옵션도 
+	<select id="selectOne" parameterType="int" resultType="com.example.vo.ProductVO">
+        <![CDATA[
+	      select distinct
+	                p.product_no,
+	                p.category_no,
+	                p.title,
+	                p.price,
+	                p.brand,
+	                p.itemimg,
+	                p.shipping_yn,
+	                p.shipping_cost,
+	                p.zipcode,
+	                p.address,
+	                p.detail_address,
+	                po.option_no,
+	                po.option_name,
+	                od.detailOption_no,
+	                od.detailOption_name
+	            from product p
+	            left join product_option po on p.product_no = po.product_no
+	            left join option_detail od on po.option_no = od.option_no
+	            where p.product_no = #{product_no}
+	            order by po.option_no, od.detailOption_no
+        ]]>
+	</select>
+	-->
+
+
+	<!-- 상품 상세 조회 - 옵션명만 조회 -->
+	<select id="selectOne" parameterType="int" resultType="com.example.vo.ProductVO">
+	    <![CDATA[
+			select distinct
+		            p.product_no,
+		            p.category_no,
+		            p.title,
+		            p.price,
+		            p.brand,
+		            p.itemimg,
+		            p.shipping_yn,
+		            p.shipping_cost,
+		            p.zipcode,
+		            p.address,
+		            p.detail_address,
+		            po.option_no,
+		            po.option_name
+		        from product p
+		        left join product_option po on p.product_no = po.product_no
+		        where p.product_no = #{product_no}
+		        order by po.option_no
+	
+	    ]]>
+	</select>
 
 
 
 
-	<!-- 상품 상세 조회 - ProductTotalVO 사용 <select id="selectOne" parameterType="int" 
-		resultType="com.example.vo.ProductTotalVO"> <![CDATA[ SELECT p.product_no, 
-		p.category_no, c.category_title, p.title, p.price, p.brand, p.itemimg, p.shipping_yn, 
-		p.shipping_cost, p.zipcode, p.address, p.detail_address, o.option_no, o.detailOption_no, 
-		o.option_name, do.detailOption_name, di.detailedImage_no, di.image_URL, di.turn 
-		FROM product p LEFT JOIN category c ON p.category_no = c.category_no LEFT 
-		JOIN `option` o ON p.product_no = o.product_no LEFT JOIN detailOption do 
-		ON o.detailOption_no = do.detailOption_no LEFT JOIN detailed_image di ON 
-		p.product_no = di.product_no WHERE p.product_no = #{product_no} ORDER BY 
-		di.turn, o.option_no ]]> </select> -->
+
 
 
 </mapper>

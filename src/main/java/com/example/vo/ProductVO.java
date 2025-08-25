@@ -25,14 +25,24 @@ public class ProductVO {
 	private MultipartFile productImage; // 이미지경로
 	private MultipartFile[] detailImages; // 상세섦영 이미지들
 
-	// 생성자
+	
+	private int option_no;  //옵션번호
+	private int detailOPtion_no;  //디테일옵션번호
+	private String option_name;  //옵션이름
+	private String detailOPtion_name; // 디테일옵션이름
+
+	
+	//생성자
 	public ProductVO() {
+		super();
 	}
+
 
 	public ProductVO(int product_no, int category_no, String title, int price, String brand, String shipping_yn,
 			int shipping_cost, String zipcode, String address, String detail_address, String itemimg,
 			List<String> option_names, List<String>[] optionItems, MultipartFile productImage,
-			MultipartFile[] detailImages) {
+			MultipartFile[] detailImages, int option_no, int detailOPtion_no, String option_name,
+			String detailOPtion_name) {
 		super();
 		this.product_no = product_no;
 		this.category_no = category_no;
@@ -49,135 +59,215 @@ public class ProductVO {
 		this.optionItems = optionItems;
 		this.productImage = productImage;
 		this.detailImages = detailImages;
+		this.option_no = option_no;
+		this.detailOPtion_no = detailOPtion_no;
+		this.option_name = option_name;
+		this.detailOPtion_name = detailOPtion_name;
 	}
 
+
+	//메소드gs
 	public int getProduct_no() {
 		return product_no;
 	}
+
 
 	public void setProduct_no(int product_no) {
 		this.product_no = product_no;
 	}
 
+
 	public int getCategory_no() {
 		return category_no;
 	}
+
 
 	public void setCategory_no(int category_no) {
 		this.category_no = category_no;
 	}
 
+
 	public String getTitle() {
 		return title;
 	}
+
 
 	public void setTitle(String title) {
 		this.title = title;
 	}
 
+
 	public int getPrice() {
 		return price;
 	}
+
 
 	public void setPrice(int price) {
 		this.price = price;
 	}
 
+
 	public String getBrand() {
 		return brand;
 	}
+
 
 	public void setBrand(String brand) {
 		this.brand = brand;
 	}
 
+
 	public String getShipping_yn() {
 		return shipping_yn;
 	}
+
 
 	public void setShipping_yn(String shipping_yn) {
 		this.shipping_yn = shipping_yn;
 	}
 
+
 	public int getShipping_cost() {
 		return shipping_cost;
 	}
+
 
 	public void setShipping_cost(int shipping_cost) {
 		this.shipping_cost = shipping_cost;
 	}
 
+
 	public String getZipcode() {
 		return zipcode;
 	}
+
 
 	public void setZipcode(String zipcode) {
 		this.zipcode = zipcode;
 	}
 
+
 	public String getAddress() {
 		return address;
 	}
+
 
 	public void setAddress(String address) {
 		this.address = address;
 	}
 
+
 	public String getDetail_address() {
 		return detail_address;
 	}
+
 
 	public void setDetail_address(String detail_address) {
 		this.detail_address = detail_address;
 	}
 
+
 	public String getItemimg() {
 		return itemimg;
 	}
+
 
 	public void setItemimg(String itemimg) {
 		this.itemimg = itemimg;
 	}
 
+
 	public List<String> getOption_names() {
 		return option_names;
 	}
+
 
 	public void setOption_names(List<String> option_names) {
 		this.option_names = option_names;
 	}
 
+
 	public List<String>[] getOptionItems() {
 		return optionItems;
 	}
+
 
 	public void setOptionItems(List<String>[] optionItems) {
 		this.optionItems = optionItems;
 	}
 
+
 	public MultipartFile getProductImage() {
 		return productImage;
 	}
+
 
 	public void setProductImage(MultipartFile productImage) {
 		this.productImage = productImage;
 	}
 
+
 	public MultipartFile[] getDetailImages() {
 		return detailImages;
 	}
+
 
 	public void setDetailImages(MultipartFile[] detailImages) {
 		this.detailImages = detailImages;
 	}
 
+
+	public int getOption_no() {
+		return option_no;
+	}
+
+
+	public void setOption_no(int option_no) {
+		this.option_no = option_no;
+	}
+
+
+	public int getDetailOPtion_no() {
+		return detailOPtion_no;
+	}
+
+
+	public void setDetailOPtion_no(int detailOPtion_no) {
+		this.detailOPtion_no = detailOPtion_no;
+	}
+
+
+	public String getOption_name() {
+		return option_name;
+	}
+
+
+	public void setOption_name(String option_name) {
+		this.option_name = option_name;
+	}
+
+
+	public String getDetailOPtion_name() {
+		return detailOPtion_name;
+	}
+
+
+	public void setDetailOPtion_name(String detailOPtion_name) {
+		this.detailOPtion_name = detailOPtion_name;
+	}
+
+	
+	//메소드일반
 	@Override
 	public String toString() {
 		return "ProductVO [product_no=" + product_no + ", category_no=" + category_no + ", title=" + title + ", price="
 				+ price + ", brand=" + brand + ", shipping_yn=" + shipping_yn + ", shipping_cost=" + shipping_cost
 				+ ", zipcode=" + zipcode + ", address=" + address + ", detail_address=" + detail_address + ", itemimg="
 				+ itemimg + ", option_names=" + option_names + ", optionItems=" + Arrays.toString(optionItems)
-				+ ", productImage=" + productImage + ", detailImages=" + Arrays.toString(detailImages) + "]";
+				+ ", productImage=" + productImage + ", detailImages=" + Arrays.toString(detailImages) + ", option_no="
+				+ option_no + ", detailOPtion_no=" + detailOPtion_no + ", option_name=" + option_name
+				+ ", detailOPtion_name=" + detailOPtion_name + "]";
 	}
+	
 
 }

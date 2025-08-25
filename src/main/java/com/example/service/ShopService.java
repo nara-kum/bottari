@@ -38,7 +38,6 @@ public class ShopService {
 		System.out.println("ShopService.exeProductadd"); // ㅇㅋ
 		System.out.println(productVO);
 		System.out.println(productVO.getOptionItems().toString());
-		System.out.println(productVO.getOptionItems()[0].get(2));
 		System.out.println("-------------------------------------------------------");
 
 		// 파일저장경로
@@ -152,22 +151,15 @@ public class ShopService {
 			
 			
 			//디테일리스트 반복
-		    System.out.println("=======================================");
-			System.out.println(productVO.getOptionItems().length);
-			System.out.println("=======================================");
 			for(int j=0; j<productVO.getOptionItems()[i].size(); j++) {
 				
 				ProductOptionVO optionDetailVO = new ProductOptionVO();
 				optionDetailVO.setOption_no(productOptionVO.getOption_no());
 				
-				optionDetailVO.setDetailOPtion_name(productVO.getOptionItems()[i].get(j));
-
-				System.out.println("*=======================================");
-				System.out.println(optionDetailVO);
-				System.out.println("*=======================================");
+				optionDetailVO.setDetailOPtion_name(productVO.getOptionItems()[i].get(j).toString());
 				
 			    //디테일 옵션구분 저장
-			    shopRepository.detailOptionInsert(productOptionVO);
+			    shopRepository.detailOptionInsert(optionDetailVO);
 				
 			}
 			

@@ -223,10 +223,11 @@
 					reader.onload = function(e) {
 						const imageDiv = document.createElement('div');
 						imageDiv.className = 'detail-image-item';
-						imageDiv.innerHTML = `
-							<img src="${e.target.result}" alt="상세 이미지 ${index + 1}">
-							<span class="image-name">${file.name}</span>
-						`;
+						imageDiv.innerHTML = '';
+						
+						imageDiv.innerHTML += '<img src='+ e.target.result + ' alt="상세 이미지 ' + (index + 1) + '">';
+						imageDiv.innerHTML += '<span class="image-name">'+ file.name +'</span>';
+						
 						previewContainer.appendChild(imageDiv);
 					};
 					reader.readAsDataURL(file);
