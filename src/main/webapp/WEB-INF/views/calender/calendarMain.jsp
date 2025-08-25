@@ -1142,7 +1142,7 @@
 			
 			        html += ''
 			          + '  <div class="show-detail">'
-			          + '    <a href="/funding/fundingList">전체보기&gt;</a>'
+			          + '    <a href="/myfunding">전체보기&gt;</a>'
 			          + '  </div>'
 			          + '</div>';
 			    }

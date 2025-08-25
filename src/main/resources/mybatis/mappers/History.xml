@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="history">
+	<select id="">
+		<![CDATA[
+		  SELECT	pm.payment_date,
+					pm.product_no,
+					pm.fundingproduct_no,
+					pm.order_no,
+					pm.payment_amount,
+					pg.quantity,
+			    
+					pr.title AS,
+					pr.brand AS,
+					pr.price AS,
+			    
+					fp.percent AS,
+					fp.amount AS
+			FROM payment pm
+			LEFT JOIN product pr ON pm.product_no = pr.product_no
+			LEFT JOIN funding_product fp ON pm.fundingproduct_no = fp.funding_no
+			LEFT JOIN payment_goods pg ON pm.payment_no = pg.payment_no
+		]]>
+	</select>
+
+</mapper>

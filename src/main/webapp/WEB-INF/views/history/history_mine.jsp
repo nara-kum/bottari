@@ -28,24 +28,16 @@
             </div>
             <div class="sec-content-main">
                 <div class="filter-area">
-                    <img class="icon-small" src="../../asset/icon-interrogation.svg">
+                    <img class="icon-small" src="/assets/icon/icon-calendar.svg">
                     <select name="period" class="filter-period">
-                        <option>최근 6개월</option>
-                        <option>최근 1년</option>
-                        <option>최근 3년</option>
+                        <option value="sixMonth">최근 6개월</option>
+                        <option value="oneYear">최근 1년</option>
+                        <option value="threeYear">최근 3년</option>
+                        <option value="all">전체</option>
                     </select>
-                    <img class="icon-small" src="../../asset/icon-interrogation.svg">
-                    <input name="filter-name" class="search-name" type="text">
-                    <img class="icon-small" src="../../asset/icon-interrogation.svg">
-                    <div class="category-box">
-                        <button name="cat-marry" class="filter-category">결혼</button>
-                        <button name="cat-birthday" class="filter-category">생일</button>
-                        <button name="cat-first-birthday" class="filter-category">돌잔치</button>
-                        <button name="cat-event" class="filter-category">이벤트</button>
-                        <button name="cat-calebrate" class="filter-category">축하</button>
-                        <button name="cat-thanks" class="filter-category">감사</button>
-                    </div>
-                    <img class="icon-small more-detail" src="../../asset/icon-interrogation.svg">
+                    <img class="icon-small" src="/assets/icon/icon-filter.svg">
+                    <input id="filter-name" class="search-name" type="text">
+                    <img class="icon-small more-detail" src="/assets/icon/icon-search.svg">
                 </div>
                 <div class="purchase-by-date">
                     <div class="date">
@@ -57,6 +49,7 @@
                             <div class="column-flex-box">
                                 <div class="text-14 detail">르라보</div>
                                 <div class="text-14 detail">“단독 선출시” [NEW] 퍼퓨밍 핸드 크림 30ML</div>
+                                <div class="text-14 detail">38,000원</div>
                                 <div class="text-16 bold detail">38,000원</div>
                             </div>
                         </div>
