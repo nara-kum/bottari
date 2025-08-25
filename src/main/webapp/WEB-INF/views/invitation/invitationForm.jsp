@@ -24,7 +24,7 @@
     <content class="controller">
         <div id="sec-content" class="sector">
             <div class="sec-sub-title">
-                <h2>초대장 작성</h2>
+                <h2 class="header-sub">초대장 작성</h2>
             </div>
             <div class="sec-content-main">
                 <div class="content">

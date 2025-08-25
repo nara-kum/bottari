@@ -55,7 +55,7 @@ public class UserController {
 		session.setAttribute("authUser", authUser);
 		System.out.println(authUser);
 		
-		return "shop/shoppingMall";	
+		return "redirect:/bottarimall";	
 	}
 	
 	//로그아웃
