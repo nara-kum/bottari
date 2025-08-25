@@ -3,23 +3,28 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
     <meta charset="utf-8">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/reset.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/Global.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/history.css">
+    <!-- CDN(외부 사이트 프리셋) 리셋 css 대용-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reset-css@4.0.1/reset.min.css" />
+    <!-- 난 외부링크 못 믿겠다! 하시는 분은 CDN을 삭제 or 주석처리 후 아래의 css링크 주석 해제 후 사용할것 -->
+    <!-- <link rel="stylesheet" href="../Global_css/reset.css"> -->
+    <link rel="stylesheet" href="assets/css/Global.css"> <!-- 본인 파일의 경로에 맞게 수정해야함 -->
+    <link rel="stylesheet" href="assets/css/history.css">
+    <link rel="stylesheet" href="assets/css/moduler.css">
 </head>
 
 <body class="family">
-
-	<!------------------------ Header호출 ----------------------->
+    <!------------------------ Header호출 ----------------------->
 	<c:import url="/WEB-INF/views/include/Header.jsp"></c:import>
 	<!-- ---------------------------------------------------- -->
 
     <content class="controller">
         <div id="sec-content" class="sector">
-            <div class="sec-sub-title header-sub">
-                <h2>구매내역</h2>
+            <div class="sec-sub-title">
+                <!-- 여기부터 코딩 시작!! -->
+                <h2 class="header-sub">구매내역</h2>
             </div>
             <div class="sec-content-main">
                 <div class="filter-area">
@@ -46,7 +51,7 @@
                     <div class="date">
                         2025 . 07 . 31
                     </div>
-                    <div class="goods-list list-basic list-1200 between-flex-box">
+                    <div class="list-basic list-1200 between-flex-box">
                         <div class="row-flex-box">
                             <img class="list-img-100" src="../임시.JPG">
                             <div class="column-flex-box">
@@ -66,7 +71,7 @@
                     <div class="date">
                         2025 . 06 . 20
                     </div>
-                    <div class="goods-list list-basic list-1200 between-flex-box">
+                    <div class="list-basic list-1200 between-flex-box">
                         <div class="row-flex-box">
                             <img class="list-img-100" src="../임시.JPG">
                             <div class="column-flex-box">
@@ -84,7 +89,7 @@
 
                     <!-- 여러상품 버전 -->
                     <div class="goods-list list-basic list-1200">
-                        <div class="left-side">
+                        <div class="left-side row-flex-box">
                             <div class="multi-goods-img">
                                 <img class="img" src="../임시.JPG">
                                 <img class="img" src="../임시2.JPG">
@@ -104,12 +109,13 @@
                         </div>
                     </div>
                 </div>
+                
             </div>
         </div>
     </content>
-
-<!------------------------ Footer호출 ----------------------->
-<c:import url="/WEB-INF/views/include/Footer.jsp"></c:import>
-<!-- ---------------------------------------------------- -->
+    <!------------------------ Footer호출 ----------------------->
+	<c:import url="/WEB-INF/views/include/Footer.jsp"></c:import>
+	<!-- ---------------------------------------------------- -->
 </body>
+
 </html>

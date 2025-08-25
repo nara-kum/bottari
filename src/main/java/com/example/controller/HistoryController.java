@@ -17,6 +17,6 @@ public class HistoryController {
 	public String history() {
 		System.out.println("HistoryController.history()");
 		
-		return "history/history";
+		return "history/history_mine";
 	}
 }

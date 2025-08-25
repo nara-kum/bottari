@@ -1,262 +1,186 @@
 @charset "utf-8";
 
-/* =========================
-   공통 레이아웃
-========================= */
-
-/* Global.css 보완 정도만: 이 페이지 섹션 레이아웃 */
+/* global.css 변형 */
 .sec-content-main {
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
-  margin-top: 30px;
+    flex-direction: column;
+    gap: 30px;
 }
 
-/* =========================
-   필터 영역
-========================= */
+.goods-list {
+	margin-top: 30px !important;
+}
 
+/* 필터링 박스 */
 .filter-area {
-  width: 1280px;
-  height: 55px;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  border-bottom: 1px solid #eee;
+    width: 1280px;
+    height: 55px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    border-bottom: 1px solid #eee;
 }
 
 .icon-small {
-  width: 20px;
-  height: 20px;
-  margin-left: 20px;
-  display: block;
+    width: 20px;
+    height: 20px;
+    margin-left: 20px;
+    display: block;
 }
 
 .filter-period {
-  appearance: none;
-  width: 120px;
-  height: 23px;
-  border-radius: 4px;
-  text-align: center;
+    appearance: none;
+    /* 브라우저 기본 스타일 제거 */
+    width: 120px;
+    height: 23px;
+    border-radius: 4px;
+    text-align: center;
 }
 
 .search-name {
-  appearance: none;
-  width: 120px;
-  height: 19px;
-  border-radius: 5px;
-  border: 1px solid #9d9d9d;
-  text-align: center;
+    appearance: none;
+    width: 120px;
+    height: 19px;
+    border-radius: 5px;
+    border: 1px solid #9d9d9d;
+    text-align: center;
 }
 
 .filter-category {
-  appearance: none;
-  width: auto;
-  font-size: 14px;
-  background-color: #9d9d9d;
-  color: #fff;
-  border-radius: 4px;
-  border: 1px solid #ddd;
+    appearance: none;
+    width: auto;
+    font-size: 14px;
+    background-color: #9d9d9d;
+    color: white;
+    border-radius: 4px;
+    border: 1px solid #ddd;
 }
 
 .more-detail {
-  margin-left: auto;
-  margin-right: 50px;
+    margin-left: auto;
+    margin-right: 50px;
 }
 
-/* =========================
-   날짜별 구매내역 래퍼
-========================= */
+/* 날짜별 구매내역 */
 
 .purchase-by-date {
-  width: 1200px;
-  display: flex;
-  flex-direction: column;
-  margin: 0 auto;
-  border-radius: 10px;
+    width: 1200px;
+    display: flex;
+    flex-direction: column;
+    margin: 0px auto;
+    border-radius: 10px;
 }
 
 .purchase-by-date .date {
-  width: 1200px;
-  font-size: 18px;
-  font-weight: bold;
-  padding-bottom: 12px;
-  border-bottom: 1px solid #eee;
+    width: 1200px;
+    font-size: 18px;
+    font-weight: bold;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #eee;
 }
 
-/* =========================
-   카드 레이아웃 통일 (핵심)
-   - goods-list == list-basic.list-1200.between-flex-box
-   - purchase-by-date 내부 한정
-========================= */
-
-.purchase-by-date .goods-list,
-.purchase-by-date .list-basic.list-1200.between-flex-box {
-  /* 프레임 */
-  width: 1160px;              /* 좌우 padding(20*2) 합쳐서 전체 1200 정렬 */
-  min-height: 100px;          /* 같은 최소 높이 */
-  padding: 20px;
-  box-sizing: border-box;
-  margin-top: 30px;
-
-  border: 1px solid #eee;
-  border-radius: 4px;
-  background: #f9f9f9;
-
-  /* 정렬 */
-  display: flex;
-  justify-content: space-between;
-  align-items: center;        /* 세로 가운데 */
-  gap: 16px;
+.goods-list {
+    width: 1160px;
+    height: 100px;
+    border: 1px solid #eee;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 20px;
+    margin-top: 30px;
 }
 
-/* 좌측(이미지+텍스트) */
-.purchase-by-date .goods-list .row-flex-box,
-.purchase-by-date .list-basic.list-1200.between-flex-box .row-flex-box {
-  display: flex;
-  align-items: center;
-  gap: 12px;
+.goods-list .left-side {
+    display: flex;
 }
 
-/* 우측(주문번호/링크) */
-.purchase-by-date .goods-list .column-flex-box,
-.purchase-by-date .list-basic.list-1200.between-flex-box .column-flex-box {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
+.goods-img {
+    width: 98px;
+    height: 98px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
 }
 
-/* 오른쪽 정렬 */
-.purchase-by-date .goods-list .text-align-right,
-.purchase-by-date .list-basic.list-1200.between-flex-box .text-align-right {
-  text-align: right;
-}
-
-/* 썸네일 규격 통일 */
-.purchase-by-date .goods-list .list-img-100,
-.purchase-by-date .list-basic.list-1200.between-flex-box .list-img-100 {
-  width: 100px;
-  height: 100px;
-  object-fit: cover;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  flex: 0 0 100px;            /* 이미지 수축 방지 */
-}
-
-/* 카드 안에서 높이 틀어지게 만드는 여백 제거 */
-.purchase-by-date .list-basic.list-1200.between-flex-box .text-14,
-.purchase-by-date .list-basic.list-1200.between-flex-box .text-16.bold,
-.purchase-by-date .list-basic.list-1200.between-flex-box .show-detail {
-  margin: 0;
-  line-height: 1.4;
-}
-
-/* (필요 시) 텍스트 2줄 제한 예시
-.purchase-by-date .list-basic.list-1200.between-flex-box .text-14 {
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-*/
-
-/* =========================
-   여러상품(그리드 썸네일) 카드(옵션)
-========================= */
-
-.multi-goods-img {
-  width: 100px;
-  height: 100px;
-  display: grid;
-  grid-template-columns: repeat(2, 45px);
-  grid-template-rows: repeat(2, 45px);
-  gap: 10px;
-}
-
-.img {
-  width: 43px;
-  height: 43px;
-  border-radius: 4px;
-  border: 1px solid #ddd;
-}
-
-/* =========================
-   유틸리티 (필요 최소만 유지)
-========================= */
-
-.list-basic {
-  padding: 16px 20px;
-  border: 1px solid #eee;
-  border-radius: 8px;
-  background: #fff;
-}
-
-.list-1200 {
-  width: 1200px;
-  margin: 12px 0;
-}
-
-.between-flex-box {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-}
-
-.row-flex-box {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.column-flex-box {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.text-align-right { text-align: right; }
-
-.list-img-100 {
-  width: 100px;
-  height: 100px;
-  object-fit: cover;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-}
-
-.box-line {
-  padding-bottom: 8px;
-  margin-bottom: 8px;
-  border-bottom: 1px solid #eee;
-}
-
-/* 카드 내부에서 불필요한 큰 마진을 유발하던 예전 규칙을 통합/제거했음 */
-.text-14 { margin: 0; }
-.text-16.bold { margin: 0; }
-.show-detail { margin: 0; }
-
-/* 브랜드/상품명 공통 여백—필요할 때만 적용 (카드 내부는 margin:0이 우선됨) */
 .main-info .brand,
 .main-info .goods-title {
-  font-size: 14px;
-  padding-bottom: 5px;
-  margin-left: 10px;
+    font-size: 14px;
+    padding-bottom: 5px;
+    margin-left: 10px;
 }
 
-/* 쓰임새 불확실했던 규칙은 유지하되 카드 내부 영향 없게 최소화 */
-.goods-img {
-  width: 98px;
-  height: 98px;
-  border-radius: 4px;
-  border: 1px solid #ddd;
+.goods-price {
+    font-size: 16px;
+    font-weight: bold;
+    margin-top: 36px;
+    margin-left: 10px;
+}
+
+.text-14.detail {
+    margin-left: 10px;
+    margin-bottom: 5px;
+}
+
+.text-16.bold.detail {
+    margin-left: 10px;
+    margin-top: 42px;
+}
+
+.show-detail.text-align-right.detail {
+    margin-top: 59px;
 }
 
 .other-info {
-  font-size: 12px;
-  text-align: right;
-  color: #9d9d9d;
+    font-size: 12px;
+    text-align: right;
+    color: #9d9d9d;
 }
 
 .order-number,
-.funding-info { margin-top: 5px; }
+.funding-info {
+    margin-top: 5px;
+}
+
+
+/* 여러상품 버전 */
+
+.multi-goods-img {
+    width: 100px;
+    height: 100px;
+    display: grid;
+    grid-template-columns: repeat(2, 45px);
+    grid-template-rows: repeat(2, 45px);
+    border-radius: 4px;
+    gap: 10px;
+}
+
+.img {
+    width: 43px;
+    height: 43px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+
+
+/**************************/
+/* 구매내역 상세보기 페이지 */
+/**************************/
+
+.sec-content-main {
+    margin-top: 30px;
+}
+
+div.list-basic.list-1200.between-flex-box.detail {
+   height: auto;
+}
+
+.list-basic.list-1200.column-flex-box.detail {
+    height: auto;
+    gap: 5px;
+}
+
+.box-line {
+    padding-bottom: 8px;
+    margin-bottom: 8px;
+    border-bottom: 1px solid #eee;
+}
+
