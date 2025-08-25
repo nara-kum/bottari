@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
 <html lang="ko">
 
@@ -27,7 +28,7 @@
             </div>
             <div class="sec-content-main">
                 <div class="left-main content-height">
-					<c:forEach items="${RequestScope.pList}" var="vo">
+					<c:forEach items="${requestScope.pList}" var="vo">
 	                    <div class="list-basic margin-10">	
 	                        <div class="row-flex-box detail-list">
 	                            <img class="img list-img-100" src="">
@@ -38,7 +39,7 @@
 	                        </div>
 	                        <div class="between-flex-box detail-list">
 	                            <div class="text-12">결제금액(${vo.quantity} 개)</div>
-	                            <div class="text-14 bold">${vo.item_total}</div>
+	                            <div class="text-14 bold"><fmt:formatNumber value="${vo.item_total}" type="currency" currencySymbol="" />원</div>
 	                        </div>
 	                    </div>
                 	</c:forEach>
@@ -51,7 +52,7 @@
                                 <img class="button-icon" src="">
                                 <div class="text-14 column-align">신용/체크카드 결제</div>
                             </div>
-                            <img class="button-icon" src="../../asset/icon-check.svg">
+                            <img class="button-icon" src="/assets/icon/icon-check.svg">
                         </div>
                         <div class="list-basic between-flex-box">
                             <div class="row-flex-box">
@@ -83,17 +84,17 @@
                     <div class="payment-method-box">
                         <div class="text-18 bold margin-10">결제정보</div>
                         <div class="between-flex-box margin-10 row-align">
-                            <div class="text-14">총 상품금액(${vo.total_quantity}개)</div>
-                            <div class="text-14">${vo.total_amount}원</div>
+                            <div class="text-14">총 상품금액(<fmt:formatNumber value="${total_quantity}" type="currency" currencySymbol="" />개)</div>
+                            <div class="text-14"><fmt:formatNumber value="${total_amount}" type="currency" currencySymbol="" />원</div>
                         </div>
                         <div class="between-flex-box margin-10 row-align">
                             <div class="text-14">배송비</div>
-                            <div class="text-14">${vo.shipping_cost}원</div>
+                            <div class="text-14"><fmt:formatNumber value="${shipping_cost}" type="currency" currencySymbol="" />원</div>
                         </div>
                     </div>
                     <div class="text-16 margin-10">최종 결제금액</div>
 
-                    <button class="btn-basic btn-orange size-large text-16 right-align">${vo.totel_amount}원 결제하기</button>
+                    <button class="btn-basic btn-orange size-large text-16 right-align"><fmt:formatNumber value="${final_amount}" type="currency" currencySymbol="" />원 결제하기</button>
                 </div>
             </div>
 
@@ -103,6 +104,26 @@
     <!------------------------ Footer호출 ----------------------->
 	<c:import url="/WEB-INF/views/include/Footer.jsp"></c:import>
 	<!-- ---------------------------------------------------- -->
+	
+	<script>
+		document.addEventListener('DOMContentLoaded', function(){
+			console.log('돔트리 완료');
+			
+			<c:forEach items="${requestScope.pList}" var="vo">
+				console.log('cart_no: ${vo.cart_no}');
+				console.log('user_no: ${vo.user_no}');
+				console.log('product_no: + ${vo.product_no}');
+				console.log('title: ${vo.title}');
+				console.log('price: ${vo.price}');
+				console.log('quantity: ${vo.quantity}');
+				console.log('brand: ${vo.brand}');
+				console.log('shipping_cost: ${vo.shipping_cost}');
+				console.log('itemimg: ${vo.itemimg}');
+				console.log('==================================');
+			</c:forEach>
+		
+		});
+	</script>
 </body>
 
 </html>

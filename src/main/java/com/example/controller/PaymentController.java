@@ -31,6 +31,14 @@ public class PaymentController {
 		
 		model.addAttribute("pList", checkoutList);
 		
+		if (!checkoutList.isEmpty()) {
+	        CheckOutVO firstItem = checkoutList.get(0);
+	        model.addAttribute("total_quantity", firstItem.getTotal_quantity());
+	        model.addAttribute("total_amount", firstItem.getTotal_amount());
+	        model.addAttribute("shipping_cost", firstItem.getShipping_cost());
+	        model.addAttribute("final_amount", firstItem.getTotal_amount() + firstItem.getShipping_cost());
+	    }
+		
 		
 		return "/shop/checkout";
 	}
