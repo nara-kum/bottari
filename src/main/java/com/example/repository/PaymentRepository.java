@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.example.vo.CheckOutVO;
+import com.example.vo.CheckoutFundingVO;
 
 @Repository
 public class PaymentRepository {
@@ -27,5 +28,15 @@ public class PaymentRepository {
 		System.out.println(checkoutList);
 		
 		return checkoutList;
+	}
+	
+	public List<CheckoutFundingVO> checkoutFundingList(int funding_no) {
+		System.out.println("PaymentRepository.checkoutFundingList()");
+		
+		List<CheckoutFundingVO> checkoutFundingList = sqlsession.selectList("checkout.selectFundingList", funding_no);
+		
+		System.out.println(checkoutFundingList);
+		
+		return checkoutFundingList;
 	}
 }

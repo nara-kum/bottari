@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.service.PaymentService;
 import com.example.vo.CheckOutVO;
+import com.example.vo.CheckoutFundingVO;
 
 @Controller
 public class PaymentController {
@@ -25,7 +26,7 @@ public class PaymentController {
 	@RequestMapping(value = "/checkout", method = { RequestMethod.GET, RequestMethod.POST })
 	public String checkoutList(@RequestParam(value="cart_no", required=false, defaultValue="1") int cart_no, Model model) {
 		System.out.println("PayController.checkoutList()");
-		System.out.println("cart_no= " + cart_no);
+//		System.out.println("cart_no= " + cart_no);
 		
 		List<CheckOutVO> checkoutList = paymentservice.execheckoutList(cart_no);
 		
@@ -41,5 +42,26 @@ public class PaymentController {
 		
 		
 		return "/shop/checkout";
+	}
+	
+	@RequestMapping(value = "/checkout_funding", method = {RequestMethod.GET,RequestMethod.POST})
+	public String checkoutFundingList(@RequestParam(value="funding_no", required=false, defaultValue="0") int funding_no,
+									  @RequestParam(value="count", required=false, defaultValue="1") int count, 
+									  Model model) {
+		System.out.println("PaymentController.checkoutFundingList()");
+		
+		if(funding_no != 0 && count >= 1) {
+			List<CheckoutFundingVO> checkoutFundingList = paymentservice.execheckoutFundingList(funding_no);
+			
+			model.addAttribute("fList", checkoutFundingList);
+			model.addAttribute("amount", checkoutFundingList.get(0).getAmount());
+			model.addAttribute("percent", checkoutFundingList.get(0).getPercent());
+			
+			return "/shop/checkout_funding";
+		} else {
+			
+			return "/shop/error";
+		}
+		
 	}
 }

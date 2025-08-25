@@ -28,7 +28,7 @@
             </div>
             <div class="sec-content-main">
                 <div class="left-main content-height">
-					<c:forEach items="${requestScope.pList}" var="vo">
+					<c:forEach items="${requestScope.fList}" var="vo">
 	                    <div class="list-basic margin-10">	
 	                        <div class="row-flex-box detail-list">
 	                            <img class="img list-img-100" src="">
@@ -38,8 +38,8 @@
 	                            </div>
 	                        </div>
 	                        <div class="between-flex-box detail-list">
-	                            <div class="text-12">결제금액(${vo.quantity} 개)</div>
-	                            <div class="text-14 bold"><fmt:formatNumber value="${vo.item_total}" type="currency" currencySymbol="" />원</div>
+	                            <div class="text-12">상품금액</div>
+	                            <div class="text-14 bold"><fmt:formatNumber value="${vo.price}" type="currency" currencySymbol="" />원</div>
 	                        </div>
 	                    </div>
                 	</c:forEach>
@@ -86,17 +86,13 @@
                     <div class="payment-method-box">
                         <div class="text-18 bold margin-10">결제정보</div>
                         <div class="between-flex-box margin-10 row-align">
-                            <div class="text-14">총 상품금액(<fmt:formatNumber value="${total_quantity}" type="currency" currencySymbol="" />개)</div>
-                            <div class="text-14"><fmt:formatNumber value="${total_amount}" type="currency" currencySymbol="" />원</div>
-                        </div>
-                        <div class="between-flex-box margin-10 row-align">
-                            <div class="text-14">배송비</div>
-                            <div class="text-14"><fmt:formatNumber value="${shipping_cost}" type="currency" currencySymbol="" />원</div>
+                            <div class="text-14">총 상품금액(${param.count * percent}%)</div>
+                            <div class="text-14"><fmt:formatNumber value="${param.count * amount}" type="currency" currencySymbol="" />원</div>
                         </div>
                     </div>
                     <div class="text-16 margin-10">최종 결제금액</div>
 
-                    <button id="paymentButton" class="btn-basic btn-orange size-large text-16 right-align"><fmt:formatNumber value="${final_amount}" type="currency" currencySymbol="" />원 결제하기</button>
+                    <button id="paymentButton" class="btn-basic btn-orange size-large text-16 right-align"><fmt:formatNumber value="${param.count * amount}" type="currency" currencySymbol="" />원 결제하기</button>
                 </div>
             </div>
 
