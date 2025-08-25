@@ -2,7 +2,6 @@ package com.example.controller;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -16,10 +15,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.service.ShopService;
-import com.example.vo.DetailedImageVO;
 import com.example.vo.ProductVO;
-
-import jakarta.servlet.http.HttpSession;
+import com.example.vo.ProductViewVO;
 
 
 
@@ -173,35 +170,13 @@ public class ShopController {
 			return "shop/shoppingMall";
 		}
 
-		List<ProductVO> productList = shopService.exeProductDetail(productNo);
-
-		if (productList != null && !productList.isEmpty()) {
-			// 첫 번째 상품 정보 (기본 정보)
-			ProductVO productVO = productList.get(0);
-			model.addAttribute("product", productVO);
-
-			// 옵션 이름만 추출 (중복 제거)
-			List<String> optionNames = new ArrayList<>();
-
-			for (ProductVO item : productList) {
-				if (item.getOption_name() != null && !item.getOption_name().isEmpty()) {
-					if (!optionNames.contains(item.getOption_name())) {
-						optionNames.add(item.getOption_name());
-					}
-				}
-			}
-
-			// 옵션 데이터를 모델에 추가
-			model.addAttribute("optionNames", optionNames);
-
-			// 디버깅 출력
-			System.out.println("조회된 옵션명들: " + optionNames);
-
-		} else {
-			System.out.println("상품 정보를 찾을 수 없습니다!");
-			return "shop/shoppingMall";
-		}
-
+		ProductViewVO productViewVO= shopService.exeProductDetail(productNo);
+		model.addAttribute("productViewVO", productViewVO);
+		
+		System.out.println("---------------------------------");
+		System.out.println(productViewVO);
+		System.out.println("---------------------------------");
+		
 		return "shop/productPage";
 	}
     

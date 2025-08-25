@@ -15,12 +15,14 @@ import com.example.repository.ShopRepository;
 import com.example.vo.DetailedImageVO;
 import com.example.vo.ProductOptionVO;
 import com.example.vo.ProductVO;
+import com.example.vo.ProductViewVO;
 
 @Service
 public class ShopService {
 
 	@Autowired
 	private ShopRepository shopRepository;
+	private DetailedImageVO detailedImageVO;
 
 	// 쇼핑몰 리스트
 	public List<ProductVO> exeProductList(ProductVO productVO) {
@@ -64,7 +66,7 @@ public class ShopService {
 		System.out.println(filePath);
 
 		// productVO에 대표이미지경로 추가
-		productVO.setItemimg(filePath);
+		productVO.setItemimg(saveName);
 
 		// product 테이블에 정보저장
 		int count = shopRepository.productInsert(productVO);
@@ -112,7 +114,7 @@ public class ShopService {
 			System.out.println(detailFilePath);
 
 			//저장할VO
-			DetailedImageVO detailedImageVO = new DetailedImageVO(productVO.getProduct_no(), detailFilePath, i);
+			DetailedImageVO detailedImageVO = new DetailedImageVO(productVO.getProduct_no(), detailSaveName, i);
 			
 			
 			//레파지토리 vo넘겨서 저장
@@ -181,11 +183,23 @@ public class ShopService {
 	}
 
 	// 상품 상세페이지
-	public List<ProductVO> exeProductDetail(int productNo) {
+	public ProductViewVO exeProductDetail(int productNo) {
 		System.out.println("ShopService.exeProductDetail");
+		
+		
+		//상품기본정보
+		ProductViewVO productViewVO = shopRepository.ProductSelectOne(productNo);
+		
+		//상품상세이미지 리스트
+		List<DetailedImageVO> detailedImageList = shopRepository.ImageselectList(productViewVO.getProduct_no());
+		
+		//상품옵션리스트 -- 옵션들
+		List<ProductOptionVO> productOptionList = shopRepository.OptionselectList(productViewVO.getProduct_no());
 
-		List<ProductVO> productList = shopRepository.ProductSelectOne(productNo);
-		return productList;
+		productViewVO.setDetailedImageList(detailedImageList);
+		productViewVO.setProductOptionList(productOptionList);
+
+		return productViewVO;
 	}
 
 }

@@ -110,6 +110,13 @@ body {
 	margin-bottom: 4px;
 }
 
+.detailproduct {
+	width: 940px;
+}
+
+
+
+
 /* 주문 영역 */
 .order-section {
 	position: sticky;
@@ -266,15 +273,6 @@ body {
 }
 
 /* 상품 설명 */
-.product-description {
-	width: 835px;
-	background-color: #8B2635;
-	color: white;
-	padding: 40px;
-	border-radius: 8px;
-	text-align: center;
-	margin-bottom: 20px;
-}
 
 
 .highlight-text {

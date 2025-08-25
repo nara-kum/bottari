@@ -30,11 +30,10 @@
 					<!-- 상품 이미지 -->
 					<div class="product-images">
 						<c:choose>
-							<c:when test="${not empty product.itemimg}">
+							<c:when test="${not empty productViewVO.itemimg}">
 								<img class="main-image"
-									src="${pageContext.request.contextPath}/assets/upload/${product.itemimg}"
-									alt="${product.title}"
-									onerror="this.src='${pageContext.request.contextPath}/assets/upload/default-product.jpg'">
+									src="${pageContext.request.contextPath}/upload/${productViewVO.itemimg}"
+									alt="${productViewVO.title}">
 							</c:when>
 							<c:otherwise>
 								<img class="main-image"
@@ -46,30 +45,30 @@
 
 					<!-- 상품 정보 -->
 					<div class="product-info">
-						<h1 class="product-title">${product.title}</h1>
+						<h1 class="product-title">${productViewVO.title}</h1>
 						<div class="product-price">
-							<fmt:formatNumber value="${product.price}" pattern="#,###" />
+							<fmt:formatNumber value="${productViewVO.price}" pattern="#,###" />
 							원
 						</div>
-						<div class="brand-name">${product.brand}</div>
+						<div class="brand-name">${productViewVO.brand}</div>
 
 						<div class="product-options">
 							<div class="option-label">배송정보</div>
 							<div class="delivery-info">
 								<span class="icon">🚚</span>
 								<c:choose>
-									<c:when test="${product.shipping_cost == 0}">
+									<c:when test="${ProductView.shipping_cost == 0}">
 											택배비 무료
 										</c:when>
 									<c:otherwise>
-											배송비 <fmt:formatNumber value="${product.shipping_cost}"
+											배송비 <fmt:formatNumber value="${ProductView.shipping_cost}"
 											pattern="#,###" />원
 										</c:otherwise>
 								</c:choose>
 							</div>
 							<div class="delivery-info">
-								<span class="icon">📍</span> 배송지: ${product.address}
-								${product.detail_address} (${product.zipcode})
+								<span class="icon">📍</span> 배송지: ${ProductView.address}
+								${ProductView.detail_address} (${ProductView.zipcode})
 							</div>
 						</div>
 
@@ -84,22 +83,29 @@
 						<div class="order-title">상품 선택</div>
 
 						<!-- 옵션 선택 영역 -->
-						<c:if test="${not empty optionNames}">
-							<c:forEach var="optionName" items="${optionNames}" varStatus="status">
+						<c:if test="${not empty productViewVO.productOptionList}">
+							<c:forEach items="${productViewVO.productOptionList}" var="productOptionVO">
 								<div class="option-group" style="margin-bottom: 15px;">
-									<label class="option-label">${optionName}</label>
-									<select class="option-select" name="option_${status.index}" onchange="updateSelection()">
-										<option value="">${optionName}을(를) 선택하세요</option>
-										<option value="기본옵션">기본옵션</option>
-										<option value="프리미엄옵션">프리미엄옵션</option>
-										<option value="스페셜옵션">스페셜옵션</option>
+									<%-- <label class="option-label">${productOptionVO.option_name}</label> --%> 
+									
+									<select
+										class="option-select" name="option_name${status.index}"
+										onchange="updateSelection()">
+										<option value="">${productOptionVO.option_name}을(를)선택하세요</option>
+
+										<!-- 상세 옵션 출력 -->
+										<%-- 
+										<c:forEach var="detail" items="${detailOPtion_name[status.index]}">
+											<option value="${detail}">${detail}</option>
+										</c:forEach>
+										 --%>
 									</select>
 								</div>
 							</c:forEach>
 						</c:if>
 
 						<!-- 옵션이 없는 경우 -->
-						<c:if test="${empty optionNames}">
+						<c:if test="${empty productViewVO.productOptionList}">
 							<div style="font-size: 14px; color: #666; margin-bottom: 15px;">
 								이 상품은 단일 옵션입니다.
 							</div>
@@ -138,7 +144,9 @@
 
 				<!-- 상품 설명 -->
 				<div class="product-description">
-					<img class="detailproduct" src="${product.itemimg}" alt="${product.title}">
+					<c:forEach items="${productViewVO.detailedImageList}" var="detialedImageVO">
+						<img class="detailproduct" src="${pageContext.request.contextPath}/upload/${detialedImageVO.image_URL}" alt="상품상세이미지">
+					</c:forEach>
 				</div>
 			</div>
 		</div>

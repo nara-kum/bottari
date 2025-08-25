@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import com.example.vo.DetailedImageVO;
 import com.example.vo.ProductOptionVO;
 import com.example.vo.ProductVO;
+import com.example.vo.ProductViewVO;
 
 @Repository
 public class ShopRepository {
@@ -73,19 +74,33 @@ public class ShopRepository {
 	}
 
 	// 상품 상세 조회
-	public List<ProductVO> ProductSelectOne(int productNo) {
+	public ProductViewVO ProductSelectOne(int productNo) {
 		System.out.println("ShopRepository.ProductSelectOne");
 		System.out.println("조회할 상품번호: " + productNo);
 
-		try {
-			List<ProductVO> productList = sqlSession.selectList("product.selectOne", productNo);
-			System.out.println("조회 결과: " + productList);
-			return productList;
-
-		} catch (Exception e) {
-			System.out.println("상품 조회 중 예외 발생: " + e.getMessage());
-			e.printStackTrace();
-			return null;
-		}
+	
+		ProductViewVO productViewVO = sqlSession.selectOne("product.selectOne", productNo);
+		return productViewVO;
 	}
+	
+	
+	
+	public List<DetailedImageVO> ImageselectList(int productNo) {
+		System.out.println("ShopRepository.selectimageList");
+
+		List<DetailedImageVO> detailedImageList = sqlSession.selectList("product.selectImageList", productNo);
+
+		return detailedImageList;
+
+	}
+	
+	public List<ProductOptionVO> OptionselectList(int productNo) {
+		System.out.println("ShopRepository.selectimageList");
+
+		List<ProductOptionVO> productOptionList = sqlSession.selectList("product.selectOptionList", productNo);
+
+		return productOptionList;
+
+	}
+	
 }
