@@ -20,4 +20,20 @@
 			where cart_no = #{cart_no}
 		]]>
 	</select>
+	
+	<select id="selectFundingList" resultType="com.example.vo.CheckoutFundingVO">
+		<![CDATA[
+			select	fp.funding_no,
+					fp.product_no,
+			        fp.percent,
+			        fp.amount,
+			        fp.funding_status,
+			        p.title,
+			        p.brand,
+			        p.price
+			from funding_product fp
+			join product p on fp.product_no = p.product_no
+			where fp.funding_no = #{funding_no}
+		]]>
+	</select>
 </mapper>

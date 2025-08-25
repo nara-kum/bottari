@@ -31,8 +31,9 @@
 }
 
 .margin-10 {
-    width: 90%;
+    width: 95%;
     margin-top: 10px;
+    margin-left: 0px !important;
 }
 
 .right-align {
@@ -47,4 +48,8 @@
 
 .row-flex-box.detail-list {
     border-bottom: 1px solid #9d9d9d;
+}
+
+#cashReceipt {
+	margin-right: 23px;
 }
