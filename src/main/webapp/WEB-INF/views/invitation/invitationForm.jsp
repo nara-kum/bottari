@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="../../../assets/css/reset.css">
     <link rel="stylesheet" href="../../../assets/css/Global.css">
     <link rel="stylesheet" href="../../../assets/css/invitationForm.css">
+    <script src="${pageContext.request.contextPath}/assets/js/jquery/jquery-3.7.1.js"></script>
+
 
 </head>
 
@@ -31,8 +33,8 @@
 
                     <div class="card-box anniversary">
                         <div class="sub-title">기념일</div>
-                        <select>
-                            <option>선택하기</option>
+                        <select id="funding-table">
+                            <option value="">선택하기</option>
                         </select>
                         <div class="category-buttons">
                             <button class="btn">결혼</button>
@@ -110,7 +112,7 @@
 
                             <div class="footer-row">
                                 <span><strong>1단계</strong> / 4단계</span>
-                                <button class="save-btn">임시저장</button>
+                                <button class="temp-btn">임시저장</button>
                             </div>
 
                             <div class="card-box">
@@ -157,7 +159,7 @@
 
                             <div class="footer-row">
                                 <span><strong>2단계</strong> / 4단계</span>
-                                <button class="save-btn">임시저장</button>
+                                <button class="temp-btn">임시저장</button>
                             </div>
                             <!-- 모시는 글 -->
                             <div class="card-box">
@@ -206,7 +208,8 @@
 
                             <div class="footer-row">
                                 <span><strong>3단계</strong> / 4단계</span>
-                                <button class="save-btn">임시저장</button>
+                                <button class="temp-btn">임시저장</button>
+                                <button class="save-btn">저장</button>
                             </div>
                         </div>
                     </div>
@@ -219,6 +222,62 @@
 <!------------------------ Footer호출 ----------------------->
 <c:import url="/WEB-INF/views/include/Footer.jsp"></c:import>
 <!-- ---------------------------------------------------- -->
+<script>
+
+(function(){
+  const CTX = "${pageContext.request.contextPath}";
+
+  function loadAnniversaryOptions(){
+    $.ajax({
+      url: CTX + "/api/eventlist",
+      type: "GET",
+      dataType: "json"
+    })
+    .done(function(json){
+      // 다양한 응답 래핑 허용
+      var data = [];
+      if (Array.isArray(json)) {
+        data = json;
+      } else if (json && json.result === 'success') {
+        if (Array.isArray(json.data)) data = json.data;
+        else if (json.data && Array.isArray(json.data.list)) data = json.data.list;
+        else if (Array.isArray(json.apiData)) data = json.apiData;
+      } else if (json && Array.isArray(json.list)) {
+        data = json.list;
+      }
+
+      var $sel = $("#funding-table").empty()
+        .append('<option value="">------- 기념일 선택 -------</option>');
+
+      if (!data.length){
+        $sel.append('<option value="" disabled>기념일이 없습니다</option>');
+        return;
+      }
+
+      for (var i=0; i<data.length; i++){
+        var ev = data[i] || {};
+        // camelCase / snake_case 모두 허용
+        var eventNo   = Number(ev.eventNo != null ? ev.eventNo : ev.event_no);
+        var eventName = (ev.eventName != null ? ev.eventName : ev.event_name) || '';
+        if (!eventNo) continue;
+        $sel.append($('<option>', { value: eventNo, text: eventName }));
+      }
+    })
+    .fail(function(xhr, status, err){
+      console.error("[/api/eventlist] fail:", status, err, xhr.status, (xhr.responseText||'').slice(0,200));
+      $("#funding-table").empty()
+        .append('<option value="">------- 기념일 선택 -------</option>')
+        .append('<option value="" disabled>불러오기 실패</option>');
+    });
+  }
+
+  $(function(){
+    loadAnniversaryOptions();
+  });
+})();
+
+
+</script>
 
 </body>
 

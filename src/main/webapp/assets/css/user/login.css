@@ -81,3 +81,10 @@ body {
   color: #555;
 }
 
+	.success {
+		color: green;
+	}
+	
+	.failed {
+		color: red;
+	}

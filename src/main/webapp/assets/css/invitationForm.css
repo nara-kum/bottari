@@ -159,7 +159,7 @@ input[type="text"] {
 
 .footer-row {
   display: flex;
-  justify-content: space-between;
+  /* justify-content: space-between; */
   align-items: center;
   padding: 0 32px;
   /* 카드 박스 안쪽과 동일한 좌우 패딩 */
@@ -206,12 +206,13 @@ textarea {
 .category-buttons button,
 .option-group .btn,
 .option-group button,
-.save-btn {
+.temp-btn, .save-btn{
   background: #fff;
   color: #333;
   border: 1px solid #ddd;
   border-radius: 8px;
   padding: 10px 14px;
+  margin-right: 10px;
   cursor: pointer;
   transition: box-shadow .15s ease, transform .05s ease, border-color .15s ease;
 }
@@ -219,6 +220,7 @@ textarea {
 .category-buttons button:hover,
 .option-group .btn:hover,
 .option-group button:hover,
+.temp-btn:hover,
 .save-btn:hover {
   border-color: #bbb;
 }

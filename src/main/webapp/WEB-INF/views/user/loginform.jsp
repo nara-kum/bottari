@@ -9,17 +9,8 @@
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/reset.css">
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/Global.css">
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/user/login.css">
-<style>
-	<!-- 로그인폼 화면 css -->
-	.success {
-		color: green;
-	}
-	
-	.failed {
-		color: red;
-	}
-	<!-- 로그인폼 화면 css -->
-</style>
+	<script src="${pageContext.request.contextPath}/assets/js/jquery/jquery-3.7.1.js"></script>
+
 </head>
 
 <body class="family">
@@ -67,8 +58,8 @@
 
 	<script>
         // JSP에서 loginResult 값을 JavaScript 변수로 전달
-        var loginResult = "<%=request.getAttribute("login")%>
-		";
+        //var loginResult = "<%=request.getAttribute("login")%>" 여기 오류나서 막았음
+		
 
 		// 메시지를 DOM에 표시
 		var resultDiv = document.getElementById("resultMessage");
