@@ -2,11 +2,23 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="invitation">
 
-	<!-- 이벤트 가져오기 -->
-	
+	<!-- 초대장 리스트 가져오기 -->
+	<select id="selectEventList" parameterType="int" resultType="com.example.vo.CalenderVO">
+		<![CDATA[
+			select c.event_no
+				, c.event_name
+				, c.event_date
+				, u.user_no
+			from calender c
+				, users u
+			where c.user_no = u.user_no
+			and u.user_no = #{userNo}  
+		]]>
+	</select>
 	
 	<!-- 초대장 등록 -->
-	<insert id="insertInvi" parameterType="com.example.vo.InvitationVO">
+	<insert id="insertInvitation" parameterType="com.example.vo.InvitationVO"
+			useGeneratedKeys="true" keyProperty="invitationNo">
 		<![CDATA[
 			insert into invitaion 
 			values (null

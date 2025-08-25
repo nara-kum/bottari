@@ -12,7 +12,7 @@ public class InvitationService {
 	@Autowired
 	private InvitationRepository invitationRepository;
 	
-	public int exeInvt(InvitationVO invitationVO){
+	public int exeInvtReg(InvitationVO invitationVO){
 		System.out.println("InvitationService.exeInvt()");
 		
 		int count = invitationRepository.insertInvi(invitationVO);

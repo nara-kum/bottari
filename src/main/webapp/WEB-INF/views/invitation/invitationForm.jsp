@@ -37,12 +37,12 @@
                             <option value="">선택하기</option>
                         </select>
                         <div class="category-buttons">
-                            <button class="btn">결혼</button>
-                            <button class="btn">생일</button>
-                            <button class="btn">돌잔치</button>
-                            <button class="btn">이벤트</button>
-                            <button class="btn">축하</button>
-                            <button class="btn">감사</button>
+                            <button class="btn cat" data-cat="1">결혼</button>
+                            <button class="btn cat" data-cat="2">생일</button>
+                            <button class="btn cat" data-cat="3">돌잔치</button>
+                            <button class="btn cat" data-cat="4">이벤트</button>
+                            <button class="btn cat" data-cat="5">축하</button>
+                            <button class="btn cat" data-cat="6">감사</button>
                         </div>
                     </div>
 
@@ -55,10 +55,6 @@
                             <div class="card-box">
                                 <div class="sub-title">메인 이미지</div>
                                 <div class="template-grid">
-                                    <div class="template-card">타입A</div>
-                                    <div class="template-card">타입A</div>
-                                    <div class="template-card">타입A</div>
-                                    <div class="template-card">타입A</div>
                                     <div class="template-card">타입A</div>
                                     <div class="template-card">타입A</div>
                                     <div class="template-card">타입A</div>
@@ -177,11 +173,11 @@
                                 <div class="section grid-2">
                                     <div>
                                         <div class="small-label">날짜</div>
-                                        <input type="date">
+                                        <input type="date" id="celebrate-date">
                                     </div>
                                     <div>
                                         <div class="small-label">시간</div>
-                                        <input type="time">
+                                        <input type="time" id="celebrate-time">
                                     </div>
                                 </div>
                             </div>
@@ -209,7 +205,7 @@
                             <div class="footer-row">
                                 <span><strong>3단계</strong> / 4단계</span>
                                 <button class="temp-btn">임시저장</button>
-                                <button class="save-btn">저장</button>
+                                <button class="save-btn">완료</button>
                             </div>
                         </div>
                     </div>
@@ -275,6 +271,51 @@
     loadAnniversaryOptions();
   });
 })();
+
+$(document).on('click', '.save-btn', function(){
+  const CTX = "${pageContext.request.contextPath}";
+
+  // 필수값
+  const categoryNo    = SELECTED_CATEGORY_NO;
+  const eventNo       = Number($("#funding-table").val() || 0);
+  const celebrateDate = $("#celebrate-date").val();
+
+  if (!categoryNo){ alert("행사 카테고리를 선택하세요."); return; }
+  if (!eventNo){ alert("기념일을 선택하세요."); return; }
+  if (!celebrateDate){ alert("예식일(행사 날짜)을 선택하세요."); return; }
+
+  const payload = {
+    categoryNo,
+    eventNo,
+    celebrateDate,
+    celebrateTime: $("#celebrate-time").val() || null,
+    greeting: $("#greeting").val() || null,
+    place: $("#place").val() || null,
+    address1: $("#address1").val() || null,
+    address2: $("#address2").val() || null
+    // userNo ✖ (서버가 세션에서 주입)
+  };
+
+  $.ajax({
+    url: CTX + "/api/invtreg",
+    type: "POST",
+    contentType: "application/json; charset=UTF-8",
+    data: JSON.stringify(payload),
+    dataType: "json"
+  })
+  .done(function(res){
+    if (res && res.result === 'success'){
+      alert("초대장이 등록되었습니다.");
+      // location.href = CTX + "/invitation";
+    } else {
+      alert(res && res.message ? res.message : "초대장 등록에 실패했습니다.");
+    }
+  })
+  .fail(function(xhr){
+    alert("초대장 등록에 실패했습니다. 잠시 후 다시 시도해주세요.");
+    console.error(xhr.responseText);
+  });
+});
 
 
 </script>
