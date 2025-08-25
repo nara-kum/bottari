@@ -10,16 +10,17 @@
 					pm.payment_amount,
 					pg.quantity,
 			    
-					pr.title AS,
-					pr.brand AS,
-					pr.price AS,
+					pr.title,
+					pr.brand,
+					pr.price,
 			    
-					fp.percent AS,
-					fp.amount AS
+					fp.percent,
+					fp.amount
 			FROM payment pm
 			LEFT JOIN product pr ON pm.product_no = pr.product_no
 			LEFT JOIN funding_product fp ON pm.fundingproduct_no = fp.funding_no
 			LEFT JOIN payment_goods pg ON pm.payment_no = pg.payment_no
+			where pm.user_no = #{user_no}
 		]]>
 	</select>
 
