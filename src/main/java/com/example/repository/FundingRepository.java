@@ -15,12 +15,10 @@ public class FundingRepository {
 	private SqlSession sqlSession;	
 	
 	//위시리스트
-	public List<WishlistVO> selectFundingList(int userNo){
-		System.out.println("WishRepository.selectWishList()");
+	public List<WishlistVO> selectMyFundingList(int no){
+		System.out.println("FundingRepository.selectMyFundingList()");
 		
-		List<WishlistVO> pdlist = sqlSession.selectList("funding.selectMyFunding",userNo);
-		
-		return pdlist;
+		return sqlSession.selectList("funding.selectMyFundingList", no);
 	}
 	
 }

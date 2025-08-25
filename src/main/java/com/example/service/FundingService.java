@@ -15,12 +15,10 @@ public class FundingService {
 	private FundingRepository fundingRepository;
 	
 	// 캘린더 리스트
-	public List<WishlistVO> exeFundingList(int userNo) {
-		System.out.println("CalenderService.exeCalenderList()");
-
-		List<WishlistVO> pdlist = fundingRepository.selectFundingList(userNo);
-
-		return pdlist;
-	}
+	public List<WishlistVO> exeMyFundingList(int no) {
+	System.out.println("FundingService.exeMyFundingList()");
+	
+	return fundingRepository.selectMyFundingList(no);
+}
 
 }

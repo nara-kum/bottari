@@ -9,6 +9,9 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/reset.css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/Global.css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/myfunding.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/wishlist.css">
+<script src="${pageContext.request.contextPath}/assets/js/jquery/jquery-3.7.1.js"></script>
+
 <title>마이 펀딩</title>
 </head>
 
@@ -46,79 +49,117 @@
 		</div>
 
 		<div class="sec-content-main">
-			<div class="content">
-			
-				<!-- 한우맘 -->
-				<div class="card-box">
-					<div class="product-header">
-						<div class="left-side">
-							<span class="sub-title">2025.09.05 | </span> <span
-								class="sub-title">쫑파티</span>
-						</div>
-						<div class="right-side">
-							<span class="funding-ing">펀딩진행중</span>
-						</div>
-
-					</div>
-
-					<div class="product-body">
-						<div class="product-image">
-							<img src="../wishlist/image/5.webp" alt="한우맘 상품 이미지" />
-						</div>
-						<div class="product-details">
-							<div class="product-brand">한우맘</div>
-							<div class="product-description">한우맘 1++등급 한우 패밀리 프리미엄 홈마카세
-								1.4kg(등심+살치+갈비+안심+채끝)...</div>
-							<div class="price">249,000원</div>
-							<!-- 원가 -->
-						</div>
-						<div class="left-price-right-price">
-
-							<div class="progress-bar">
-								<div class="progress-fill" style="width: 95%;"></div>
-							</div>
-
-						</div>
-						<div class="percent">95%</div>
-						<div class="price-participation">236,550원</div>
-						<!-- 원가에서 펀딩 참여한 % 가격 -->
-
-						<div class="funding-action-wrapper">
-
-							<div class="action-buttons">
-								<button>펀딩 중단</button>
-								<button>펀딩 완료</button>
-							</div>
-						</div>
-
-					</div>
-					<!-- product-body -->
-
-
-				</div>
-
-			</div>
-			<!--product-body-->
+			<div id="myFundingList" class="content"></div>
+		  </div>
+	  
 		</div>
-		<!-- class="card-box"-->
+		</content>
+	  
+		<!------------------------ Footer ------------------------>
+		<c:import url="/WEB-INF/views/include/Footer.jsp"></c:import>
+		<!------------------------------------------------------->
+	  
+	  <script>
+	  (function(){
+	  
+		function fmtKRW(n){ return (Number(n)||0).toLocaleString('ko-KR') + '원'; }
+    function escapeHtml(s){
+      return String(s).replaceAll('&','&amp;').replaceAll('<','&lt;')
+                      .replaceAll('>','&gt;').replaceAll('"','&quot;')
+                      .replaceAll("'",'&#039;');
+    }
 
+    // ✅ 응답에서 리스트만 뽑아내는 유틸 (모든 케이스 커버)
+    function pluckList(json){
+      if (Array.isArray(json)) return json;
+      if (!json || typeof json !== 'object') return [];
+      if (Array.isArray(json.data)) return json.data;
+      if (Array.isArray(json.apiData)) return json.apiData;
+      if (json.data && Array.isArray(json.data.list)) return json.data.list;
+      if (Array.isArray(json.list)) return json.list;
+      return [];
+    }
 
+    function renderCard(vo){
+      const fundingNo     = Number(vo.fundingNo)||0;
+      const fundingDate   = vo.fundingDate || '';
+      // const eventName     = vo.eventName || '';
+      const brand         = vo.brand || '';
+      const title         = vo.title || '';
+      const price         = Number(vo.price)||0;
+      const amount        = Number(vo.amount)||0;
+      const percent       = Number(vo.percent)||0;
+      const fundingStatus = vo.fundingStatus || 'O';
+      const image         = vo.image || ('${pageContext.request.contextPath}/assets/images/eki.jpg');
+      const statusText    = (fundingStatus === 'O') ? '펀딩진행중' : '펀딩완료';
+      // const leftText   = eventName ? (fundingDate + ' | ' + eventName) : fundingDate;
 
+      return [
+        '<div class="card-box" data-funding-no="', fundingNo, '">',
+          '<div class="product-header">',
+            '<div class="left-side"><span class="sub-title">', escapeHtml(fundingDate), '</span></div>',
+            '<div class="right-side"><span class="', (fundingStatus==='O'?'funding-ing':'funding-done'), '">', statusText, '</span></div>',
+          '</div>',
+          '<div class="product-body">',
+            '<div class="product-image"><img src="', image, '" alt="상품 이미지"></div>',
+            '<div class="product-details">',
+              '<div class="product-brand">', escapeHtml(brand), '</div>',
+              '<div class="product-description">', escapeHtml(title), '</div>',
+              '<div class="price">', fmtKRW(price), '</div>',
+            '</div>',
+            '<div class="left-price-right-price">',
+              '<div class="progress-bar"><div class="progress-fill" style="width:', Math.max(0, Math.min(100, percent)), '%;"></div></div>',
+            '</div>',
+            '<div class="percent">', percent, '%</div>',
+            '<div class="price-participation">', fmtKRW(amount), '</div>',
+            '<div class="funding-action-wrapper">',
+              '<div class="action-buttons">',
+                '<button class="btn-funding1 btn-cancel"  data-funding-no="', fundingNo, '">펀딩 중단</button>',
+                '<button class="btn-funding1 btn-complete" data-funding-no="', fundingNo, '">펀딩 완료</button>',
+              '</div>',
+            '</div>',
+          '</div>',
+        '</div>'
+      ].join('');
+    }
+	  
+		// 목록 로드
+		function loadMyFunding(){
+      const CTX = "${pageContext.request.contextPath}";
+      $.ajax({
+        url: CTX + "/api/myfunding",
+        type: "GET",
+        dataType: "json"
+      })
+      .done(function(json){
+        console.log("[myfunding] raw:", json);
+        const list = pluckList(json);
+        console.log("[myfunding] parsed length:", list.length);
 
-	</div>
-	<!-- class="card-box"-->
+        const $area = $("#myFundingList").empty();
+        if (!list.length){
+          // 빈값이어도 안내는 보여주기
+          $area.html('<div class="empty">아직 등록된 펀딩이 없습니다.</div>');
+          return;
+        }
 
+        let html = '';
+        for (let i=0; i<list.length; i++) html += renderCard(list[i]||{});
+        $area.html(html);
+      })
+      .fail(function(xhr, status, err){
+        console.error('GET /api/myfunding fail:', status, err, xhr.status, (xhr.responseText||'').slice(0,200));
+        $("#myFundingList").html('<div class="empty">목록을 불러오지 못했습니다.</div>');
+      });
+    }
 
-
-	</div>
-	</div>
-
-	</div>
-	</content>
-
-	<!------------------------ Footer호출 ----------------------->
-	<c:import url="/WEB-INF/views/include/Footer.jsp"></c:import>
-	<!-- ---------------------------------------------------- -->
-
-</body>
-</html>
+    $(function(){
+      loadMyFunding();
+      $("#myFundingList").on('click', '.btn-cancel',  e => alert('펀딩 중단 API 준비중'));
+      $("#myFundingList").on('click', '.btn-complete', e => alert('펀딩 완료 API 준비중'));
+    });
+  })();
+	  </script>
+	  
+	  </body>
+	  </html>

@@ -1,477 +1,116 @@
-@charset "UTF-8";
+/* =========================================================
+   MyFunding (clean)
+   - 한 줄 레이아웃 (grid 사용 안 함)
+   - 우측 고정폭: 진행바(200) / 퍼센트(48) / 금액(120) / 버튼(160)
+   - 버튼 모양/패딩/모서리 = wishlist.css 의 .btn-funding1 그대로 사용
+========================================================= */
 
-html,
-body {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
+/* 카드 리스트 래퍼 */
+.content{
+  width:1280px;
+  max-width:1280px;
+  margin:0 auto;
+  display:flex;
+  flex-direction:column;
+  gap:16px;                 /* 카드 간 간격 */
+  padding:16px 0;           /* 상하 여백 */
 }
 
-.familly-a {
-  color: #5c5c5c93;
+/* 카드 */
+.card-box{
+  width:100%;
+  background:#fcfcfc;
+  border:1px solid #e0e0e0;
+  border-radius:12px;
+  box-shadow:0 4px 12px rgba(0,0,0,.05);
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;          /* 박스 밖 넘침 방지 */
 }
 
-content.controller {
-  flex: 1;
+/* 헤더 */
+.product-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:15px 30px 7px 30px;
+  border-bottom:.5px solid #929292;
+  font-size:16px;
+  font-weight:700;
+  color:#444;
 }
-
-content.controller {
-  flex: 1;
-  max-height: auto;
-  /* 또는 적절한 값 */
-}
-
-.right-main {
-  width: 530px;
-  height: auto;
-}
-
-.sec-sub-title .header-sub {
-  padding-right: 20px;
-  color: #ddd;
-}
-
-.sec-sub-title .header-sub:has(> a[aria-current="page"]) { color:#000; }
-
-.tab-row { display:flex; gap:16px; align-items:flex-end; }
-#sec-content .friend-fun {
-  font-weight: bold;
-  color: #dddddd;
-  display: flex;
-}
-
-/* ==== 작성 화면 요소 ==== */
-.sub-title {
-  font-size: 18px;
-  font-weight: bold;
-  margin-bottom: 20px;
-}
-
-.product-checkbox {
-  width: 18px;
-  height: 18px;
-}
-
-.product-info {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 4px;
-}
-
-.card-box {
-  width: 1280px;
-  background: #fcfcfc;
-  border-radius: 12px;
-  padding: 24px 0px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  font-size: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  border: 1px solid #e0e0e0;
-  margin-bottom: 20px;
-  overflow: hidden; /* 🔒 카드 밖 넘침 방지 */
-}
-
-.checkbox {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 12px;
-}
-
-.content {
-  flex-direction: column;
-  gap: 16px;
-  max-width: 1280px;
-  height: 1240px;
-  margin: 0 auto;
-  padding-top: 30px;
-}
-
-.sec-content-main {
-  width: 1280px;
-  height: 1100px;
-  justify-content: space-around;
-}
-
-/* ===== 헤더 ===== */
-.product-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.sec-content-main .product-header {
-  height: 18px;
-  font-size: 16px;
-  font-weight: bold;
-  color: #444;
-  border-bottom: 0.5px solid #929292;
-  padding-left: 30px;
-  padding: 0px 30px 7px 30px;
-}
-
-.product-header .right-side {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  padding-right: 30px;
-  gap: 5px;
-}
-
-.sec-content-main .product-header .sub-title { height: 18px; }
-.sec-content-main .product-header.funding-ing { display:flex; justify-content:flex-end; align-items:flex-end; }
-
-/* ===== 본문(플렉스) — 그리드 사용 안 함 ===== */
-.product-body {
-  display: flex;
-  flex-wrap: wrap;         /* ⬅ 래핑으로 오른쪽 칼럼을 세로로 쌓음 */
-  gap: 16px;
-  align-items: flex-start; /* 수직 맞춤(윗줄 기준) */
-  padding: 0px 30px 7px 30px;
-}
-
-/* 왼쪽 영역 고정폭: 이미지 + 상세 */
-.product-image { flex: 0 0 100px; }  /* 100px 고정 */
-.product-image img {
-  width: 100px;
-  height: 100px;
-  border-radius: 10px;
-  object-fit: cover;
-}
-
-.product-details {
-  flex: 0 0 500px;         /* 500px 고정 */
-  min-width: 500px;        /* 줄바꿈 시 폭 유지 */
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.product-brand { font-size: 16px; color: #929292; }
-.product-description {
-  width: 500px;
-  font-size: 14px;
-  line-height: 1.4;
-  padding-top: 5px;
-  padding-bottom: 8px;
-}
-.product-body .price {
-  width: 500px;
-  font-size: 16px;
-  font-weight: bold;
-}
-
-/* 오른쪽 칼럼(세로 스택) — 고정폭 + DOM 순서대로 위→아래 */
-.product-body .left-price-right-price,
-.product-body .percent,
-.product-body .price-participation,
-.product-body .funding-action-wrapper {
-  flex: 0 0 240px;         /* ⬅ 오른쪽 칼럼 폭 고정 */
-  max-width: 240px;
-}
-
-/* 첫 블록(진행바)만 오른쪽 끝으로 밀어 칼럼 시작점으로 사용 */
-.product-body .left-price-right-price {
-  margin-left: auto;       /* ⬅ 이 요소 하나만 오른쪽 정렬 트리거 */
-  padding-left: 10px;
-  text-align: start;
-}
-
-/* 진행바 너비 고정 */
-.progress-bar {
-  width: 200px;            /* 기존처럼 200px 유지 */
-  height: 10px;
-  background-color: #929292;
-  border-radius: 5px;
-  overflow: hidden;
-}
-.progress-fill {
-  height: 100%;
-  background-color: #EF5124;
-  transition: width 0.3s ease;
-}
-
-/* 퍼센트, 금액 — 오른쪽 칼럼 안에서 고정폭 + 줄 유지 */
-.product-body .percent {
-  font-weight: bold;
-  font-size: 14px;
-  padding: 12px 0 6px 0;
-  width: 240px;            /* 고정 폭 */
-}
-
-.product-body .price-participation {
-  font-weight: bold;
-  font-size: 14px;
-  padding: 6px 0 8px 0;
-  width: 240px;            /* 고정 폭 */
-  margin-left: 0 !important; /* 이전 auto 정렬 제거 */
-}
-
-/* 버튼 — 무조건 세로(위아래) 고정 + 박스 밖으로 안 나가게 */
-.product-body .funding-action-wrapper {
-  display: flex;
-  justify-content: flex-end;
-  align-items: flex-start;
-  padding-right: 0;
-  width: 240px;            /* 오른쪽 칼럼 폭과 동일 */
-  margin-left: 0 !important;
-  overflow: hidden;        /* 안전장치 */
-}
-
-.product-body .action-buttons {
-  display: flex;
-  flex-direction: column;  /* ⬅ 세로 고정 */
-  gap: 8px;
-  width: 100%;
-}
-
-.card-box .funding-action-wrapper .action-buttons .btn-cancel,
-.card-box .funding-action-wrapper .action-buttons .btn-complete{
-  appearance:none;
-  border:1px solid #e5e7eb;
-  background:#fff;
-  color:#111;
-  padding:10px 14px;
-  border-radius:10px;
-  font-size:14px;
-  line-height:1;
-  font-weight:600;
-  cursor:pointer;
-  box-sizing:border-box;
-  white-space:nowrap;
-  transition:transform .02s ease, box-shadow .15s ease, background .15s ease, color .15s ease, border-color .15s ease;
-}
-.card-box .funding-action-wrapper .action-buttons .btn-complete{
-  background:#ef5124; border-color:#ef5124; color:#fff;
-}
-.card-box .funding-action-wrapper .action-buttons .btn-complete:hover,
-.card-box .funding-action-wrapper .action-buttons .btn-cancel:hover{
-  transform:translateY(-1px);
-  box-shadow:0 2px 10px rgba(0,0,0,.06);
-}
-
-/* 우측 정렬용 커스텀(기존 보조 클래스들) */
-.product-body .right-ing-bar { justify-content: flex-end; align-items: center; }
-
-/* 테이블 등 기존 스타일 유지 */
-.funding-close {
-  height: 25px;
-  background-color: #EF5124;
-  color: white;
-  border-width: 0px;
-  border-radius: 5px;
-  font-weight: bold;
-}
-
-/* 테이블 관련 */
-table { border-collapse: collapse; border: 1px solid #000; text-align: center; margin-top: 70px; }
-table>thead { background-color: greenyellow; }
-table>thead>th, table>tbody>td { border: 1px solid #000; }
-table>tbody>tr:hover { background-color: #ff0; }
-
-.funding-status {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 4px;
-  margin-left: auto;
-  margin-right: 30px;
-  margin-top: 10px;
-}
-
-.participant-table { margin-top: 20px; padding-left: 30px; }
-.myfun-a { padding-right: 10px; color: #ddd; }
-
-#event-add-popup {
-  display: flex;
-  flex-direction: column;
-  padding: 20px;
-  width: 480px;
-  height: 250px;
-  border-radius: 5px;
-  border: 1px solid #ddd;
-  background-color: white;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-}
-
-.cancel {
-  display: flex;
-  justify-content: flex-end;
-  width: 460px;
-  height: 29px;
-  margin-top: 0px;
-  margin-left: 10px;
-  margin-right: 10px;
-  color: #fff;
-  background-color: white;
-}
-
-.save-btn-wrapper { display: flex; justify-content: flex-end; margin-top: auto; }
-.btn-save { background-color: #EF5124; color: white; padding: 8px 16px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; }
-
-.popup-icon { width: 24px; height: 24px; }
-
-.participant-list {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  padding: 10px 10px 0px 10px;
-  gap: 10px;
-  font-size: 14px;
-  color: #333;
-}
-
-.participant-row {
-  display: flex;
-  justify-content: space-between;
-  padding: 4px 0;
-  border-bottom: 1px solid #eee;
-  padding-bottom: 10px;
-}
-.participant-row.header { font-weight: bold; border-bottom: 2px solid #ccc; }
-.participant-name { flex: 1; text-align: center; }
-.participant-amount { flex: 1; text-align: center; }
-
-#event-add-popup-stop {
-  display: flex;
-  flex-direction: column;
-  padding: 20px;
-  width: 480px;
-  height: 250px;
-  border-radius: 5px;
-  border: 1px solid #ddd;
-  background-color: white;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-}
-
-/* =========================
-   한 줄(가로) 고정 레이아웃 패치
-   - flex-wrap: nowrap
-   - 우측 블록(진행바→퍼센트→금액→버튼) 고정폭
-   - 제목은 말줄임 처리로 넘침 방지
-========================= */
 
 /* 본문: 한 줄 고정 */
 .product-body{
-  display: flex !important;
-  align-items: center;
-  gap: 16px;
-  padding: 0 30px 7px 30px;
-  flex-wrap: nowrap !important;     /* ✅ 줄바꿈 금지 */
-  overflow: hidden;                  /* 카드 밖 넘침 방지(세이프가드) */
+  display:flex;
+  align-items:center;
+  gap:16px;
+  padding:10px 30px;
+  flex-wrap:nowrap;         /* 줄바꿈 금지 */
+  overflow:hidden;
 }
 
-/* 왼쪽: 이미지 고정폭 */
-.product-image{ flex: 0 0 100px !important; }
+/* 왼쪽: 이미지 고정폭, 상세는 남은 공간 */
+.product-image{ flex:0 0 100px; }
 .product-image img{
-  width: 100px; height: 100px; border-radius: 10px; object-fit: cover;
+  width:100px; height:100px; border-radius:10px; object-fit:cover;
 }
 
-/* 상품 정보: 기본 폭, 필요 시 살짝 줄어듦(버튼 확보) */
 .product-details{
-  flex: 1 1 420px !important;       /* 기본 420px, 공간 부족시 살짝 줄어듦 */
-  min-width: 360px;                  /* 너무 작아지지 않도록 하한선 */
+  flex:1 1 420px;           /* 남는 공간 차지 */
+  min-width:360px;          /* 너무 좁아지지 않도록 하한 */
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+}
+.product-brand{
+  font-size:14px; color:#929292;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.product-description{
+  font-size:16px; line-height:1.4;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.price{
+  font-size:16px; font-weight:700; white-space:nowrap;
 }
 
-/* 브랜드/설명/가격: 말줄임으로 한 줄 유지 */
-.product-brand{ font-size:16px; color:#929292; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.product-description{
-  width: 100% !important;
-  max-width: 500px;
-  font-size:14px; line-height:1.4;
-  padding-top:5px; padding-bottom:8px;
-  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;  /* ✅ 말줄임 */
+/* 오른쪽 고정폭 그룹 (진행바→퍼센트→금액→버튼) */
+.left-price-right-price{
+  margin-left:auto;         /* 우측 그룹 시작점으로 밀기 */
+  width:200px;
+  text-align:start;
 }
-.product-body .price{
-  width:auto; max-width: 500px;
-  font-size:16px; font-weight:bold;
+.progress-bar{
+  width:200px; height:10px; background:#929292;
+  border-radius:5px; overflow:hidden;
+}
+.progress-fill{ height:100%; background:#EF5124; transition:width .3s ease; }
+
+.percent{
+  width:48px;
+  text-align:right; font-weight:700; font-size:14px;
+  white-space:nowrap;
+}
+.price-participation{
+  width:120px;
+  text-align:right; font-weight:700; font-size:14px;
   white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
 }
 
-/* 오른쪽 그룹 시작점: 진행바(이 요소만 오른쪽으로 밀어 전체 우측 그룹 정렬) */
-.left-price-right-price{
-  margin-left: auto !important;      /* ✅ 우측 그룹을 오른쪽 끝으로 */
-  flex: 0 0 220px !important;        /* 블록 폭 */
-  padding-left: 10px;
-  text-align: start;
-}
-
-/* 진행바 너비 고정 */
-.progress-bar{ width: 200px !important; height:10px; background:#929292; border-radius:5px; overflow:hidden; }
-.progress-fill{ height:100%; background:#EF5124; transition:width .3s ease; }
-
-/* 퍼센트/금액: 고정폭 + 한 줄 유지 */
-.product-body .percent{
-  flex: 0 0 60px !important;
-  font-weight:bold; font-size:14px;
-  padding: 0;
-  text-align: right;
-  white-space: nowrap;
-}
-.product-body .price-participation{
-  flex: 0 0 120px !important;
-  font-weight:bold; font-size:14px;
-  padding: 0;
-  text-align: right;
-  margin-left: 0 !important;         /* 기존 auto 제거 */
-  white-space: nowrap; overflow:hidden; text-overflow:ellipsis;
-}
-
-/* 버튼: 같은 줄의 맨 오른쪽, 가로 배치, 줄바꿈 금지 */
+/* 버튼 영역: 세로 스택 (모양은 .btn-funding1에 맡김) */
 .funding-action-wrapper{
-  flex: 0 0 auto !important;
-  padding-right: 0;
-  margin-left: 0 !important;
-  overflow: hidden;                   /* 안전장치 */
+  width:160px;
+  padding-right:30px;
+  display:flex;
+  justify-content:flex-end;
 }
 .action-buttons{
-  display: flex !important;
-  flex-direction: row !important;     /* ✅ 가로 */
-  gap: 8px;
-  white-space: nowrap;                /* ✅ 버튼 줄바꿈 방지 */
-}
-.card-box .funding-action-wrapper .action-buttons .btn-cancel,
-.card-box .funding-action-wrapper .action-buttons .btn-complete{
-  appearance:none; border:1px solid #e5e7eb;
-  background:#fff; color:#111;
-  padding:10px 14px; border-radius:10px;
-  font-size:14px; line-height:1; font-weight:600;
-  cursor:pointer; box-sizing:border-box;
-  white-space:nowrap;
-  transition:transform .02s ease, box-shadow .15s ease, background .15s ease, color .15s ease, border-color .15s ease;
-}
-.card-box .funding-action-wrapper .action-buttons .btn-complete{
-  background:#ef5124; border-color:#ef5124; color:#fff;
-}
-.card-box .funding-action-wrapper .action-buttons .btn-complete:hover,
-.card-box .funding-action-wrapper .action-buttons .btn-cancel:hover{
-  transform:translateY(-1px);
-  box-shadow:0 2px 10px rgba(0,0,0,.06);
-}
-/* === 버튼만 세로로 나열 (카드 안에서만 적용) === */
-.card-box .funding-action-wrapper{
-  max-width: 100px;            /* 버튼 영역 살짝 좁게(원하면 조절) */
+  display:flex;
+  flex-direction:column;    /* 버튼 세로 */
+  gap:8px;
+  align-items:flex-end;     /* 오른쪽 정렬 */
 }
 
-.card-box .funding-action-wrapper .action-buttons{
-  display: flex !important;
-  flex-direction: column !important;  /* ✅ 세로 배열 */
-  gap: 8px;
-  align-items: stretch;                /* 버튼 너비 통일 */
-  white-space: normal !important;      /* 세로에선 줄바꿈 제한 해제 */
-}
-
-.card-box .funding-action-wrapper .action-buttons .btn-cancel,
-.card-box .funding-action-wrapper .action-buttons .btn-complete{
-  width: 100%;                 /* 버튼이 영역 너비 꽉 채우도록 */
-  text-align: center;
-}
+/* 👉 크기/패딩/모양은 wishlist.css 의 .btn-funding1을 그대로 사용.
+      여기서는 '배치'만 제어하고, 버튼 자체에는 가급적 손대지 않습니다. */

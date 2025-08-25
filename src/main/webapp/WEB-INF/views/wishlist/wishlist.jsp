@@ -289,26 +289,31 @@ function startFunding(){
   const eventNo = Number($('#funding-table').val()) || 0;
   if(!eventNo){ alert('기념일을 먼저 선택해주세요.'); return; }
 
-  const items = $('#selectedList .selected-item').map(function(){
-    const $it = $(this);
-    const basePrice = Number($it.attr('data-price')) || 0;
-    const sel = String($it.find('.sel-amount input[type=radio]:checked').val() || 'FULL').toUpperCase();
+const items = $('#selectedList .selected-item').map(function(){
+  const $it = $(this);
+  const basePrice = Number($it.attr('data-price')) || 0;
+  const sel = String($it.find('.sel-amount input[type=radio]:checked').val() || 'FULL').toUpperCase();
 
-    const percent = (sel === 'P5') ? 5 : 100;
-    const amount  = (sel === 'P5') ? Math.floor(basePrice * 0.05) : basePrice;
+  const percent = (sel === 'P5') ? 5 : 100;
+  const amount  = (sel === 'P5') ? Math.floor(basePrice * 0.05) : basePrice;
 
-    const wishlistNo = Number($it.attr('data-wishlist-no')) || 0;
-    const productNo  = Number($it.attr('data-product-no'))  || 0;
-    if (!wishlistNo || !productNo) return null; // 안전장치
+  const wishlistNo       = Number($it.attr('data-wishlist-no')) || 0;
+  const productNo        = Number($it.attr('data-product-no'))  || 0;
+  const detailoptionNo   = Number($it.attr('data-detail-option-no'))   || 0;   // ✅ 추가
+  const wishlistoptionNo = Number($it.attr('data-wishlist-option-no')) || 0;   // (옵션) 필요시
 
-    return {
-      eventNo:    eventNo,
-      productNo:  productNo,
-      wishlistNo: wishlistNo,
-      percent:    percent,
-      amount:     amount
-    };
-  }).get().filter(Boolean);
+  if (!wishlistNo || !productNo) return null;
+
+  return {
+    eventNo:    eventNo,
+    productNo:  productNo,
+    wishlistNo: wishlistNo,
+    percent:    percent,
+    amount:     amount,
+    detailoptionNo:   detailoptionNo,
+    wishlistoptionNo: wishlistoptionNo
+  };
+}).get().filter(Boolean);
 
   if(!items.length){ alert('선택된 상품이 없습니다.'); return; }
 
@@ -322,10 +327,9 @@ function startFunding(){
   })
   .done(function (json) {
     if (json && json.result === 'success') {
-      // ✅ 방금 열린 펀딩 정보 저장 (마이펀딩에서 강조 표시용)
+
       sessionStorage.setItem('NEW_FUNDING_ITEMS', JSON.stringify(items));
 
-      // ✅ 알림 띄우고 이동
       alert('펀딩이 생성되었습니다.');
       location.href = window.CTX + '/myfunding';
     } else {

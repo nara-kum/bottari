@@ -107,8 +107,9 @@
 }
 
 .product-price{
+	font-weight:700;
 	color: #333;
-	font-size: 14px;
+	font-size: 15px;
 	white-space: nowrap;
 	/* 줄바꿈 방지 */
 }
@@ -244,8 +245,14 @@
 	flex: 1;
 }
 
+.selected-brand {
+    color: #929292;
+    font-size: 14px;
+    white-space: nowrap;
+	margin-bottom: 4px;
+}
+
 .selected-title {
-	font-weight: 700;
 	margin-bottom: 4px;
 }
 
@@ -394,10 +401,9 @@
   display:flex; flex-wrap:wrap; align-items:baseline;
   column-gap:6px; row-gap:2px;
 }
-#wListArea .a-product .product-row .name{ font-weight:600; }
 
 /* 가격은 별도 줄 */
-#wListArea .a-product .product-price{ font-weight:700; color:#333; }
+#wListArea .a-product .product-price{ font-weight:700; color:#000000; }
 
 /* 카트/하트 줄을 맨 아래에 고정 */
 #wListArea .a-product .actions-row{

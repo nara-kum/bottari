@@ -9,6 +9,7 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/reset.css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/Global.css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/myfunding.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/wishlist.css">
 <script src="${pageContext.request.contextPath}/assets/js/jquery/jquery-3.7.1.js"></script>
 
 <title>마이 펀딩</title>
@@ -82,6 +83,7 @@
     function renderCard(vo){
       const fundingNo     = Number(vo.fundingNo)||0;
       const fundingDate   = vo.fundingDate || '';
+      // const eventName     = vo.eventName || '';
       const brand         = vo.brand || '';
       const title         = vo.title || '';
       const price         = Number(vo.price)||0;
@@ -90,6 +92,7 @@
       const fundingStatus = vo.fundingStatus || 'O';
       const image         = vo.image || ('${pageContext.request.contextPath}/assets/images/eki.jpg');
       const statusText    = (fundingStatus === 'O') ? '펀딩진행중' : '펀딩완료';
+      // const leftText   = eventName ? (fundingDate + ' | ' + eventName) : fundingDate;
 
       return [
         '<div class="card-box" data-funding-no="', fundingNo, '">',
@@ -111,8 +114,8 @@
             '<div class="price-participation">', fmtKRW(amount), '</div>',
             '<div class="funding-action-wrapper">',
               '<div class="action-buttons">',
-                '<button class="btn-cancel"  data-funding-no="', fundingNo, '">펀딩 중단</button>',
-                '<button class="btn-complete" data-funding-no="', fundingNo, '">펀딩 완료</button>',
+                '<button class="btn-funding1 btn-cancel"  data-funding-no="', fundingNo, '">펀딩 중단</button>',
+                '<button class="btn-funding1 btn-complete" data-funding-no="', fundingNo, '">펀딩 완료</button>',
               '</div>',
             '</div>',
           '</div>',

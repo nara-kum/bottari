@@ -40,23 +40,31 @@
 		]]>
 	</select>
 	
-	<!-- 펀딩 등록하기 -->
-	<insert id="insertFunding" parameterType="java.util.List">
-			INSERT INTO funding_product values
-		<foreach collection="collection" item="item" separator=",">
-		(null,#{item.userNo},#{item.eventNo}, #{item.wishlistNo},#{item.productNo}, #{item.percent}, #{item.amount},'O', NOW())
-		</foreach>
-  	</insert>
+	<!-- 펀딩 등록하기 (단건) : PK 회수 -->
+	<insert id="insertFundingOne"
+	        parameterType="com.example.vo.WishlistVO"
+	        useGeneratedKeys="true"
+	        keyProperty="fundingNo">
+	  INSERT INTO funding_product
+	    (funding_no, event_no, wishlist_no, user_no, product_no, percent, amount, funding_status, funding_date)
+	  VALUES
+	    (NULL, #{eventNo}, #{wishlistNo}, #{userNo}, #{productNo}, #{percent}, #{amount}, 'O', NOW())
+	</insert>
+
+	<!-- 펀딩 옵션 등록 (funding_no, detailoption_no) -->
+	<insert id="insertFundingOption" parameterType="map">
+	  INSERT INTO funding_option (funding_no, detailoption_no)
+	  VALUES (#{fundingNo}, #{detailoptionNo})
+	</insert>
   	
-	<!-- 위시 삭제하기 -->
-	<delete id="deleteWish" parameterType="int">
-		<![CDATA[
-			delete w.*
-			from wishlist w
-				, funding_product fp
-			where w.wishlist_no = fp.wishlist_no
-			and fp.event_no= #{value}
-		]]>
+	<!-- 위시 삭제하기 (eventNo 기준) -->
+	<delete id="deleteWish" parameterType="map">
+	  <![CDATA[
+	    DELETE w.*
+	    FROM wishlist w
+	    JOIN funding_product fp ON w.wishlist_no = fp.wishlist_no
+	    WHERE fp.event_no = #{eventNo}
+	  ]]>
   	</delete>
 
 </mapper>

@@ -18,8 +18,8 @@ public class FundingApiController {
 
 	@Autowired
 	private FundingService fundingService;
-	
-    // 내 펀딩 목록
+
+	// 내 펀딩 목록
 	@GetMapping("/api/myfunding")
 	public JsonResult myFunding(HttpSession session) {
 		System.out.println("FundingApiController.myFunding()");
@@ -28,12 +28,11 @@ public class FundingApiController {
 		if (authUser == null) {
 			return JsonResult.fail("로그인이 필요합니다.");
 		}
-		int userNo = authUser.getUserNo();
+		int no = authUser.getUserNo();
 
-		List<WishlistVO> pdlist = fundingService.exeFundingList(userNo);
+		List<WishlistVO> fList = fundingService.exeMyFundingList(no);
 		
-		System.out.println(pdlist);
-		return JsonResult.success(pdlist);
+		return (fList != null) ? JsonResult.success(fList) : JsonResult.fail("알 수 없는 오류");
 	}
 
 }
