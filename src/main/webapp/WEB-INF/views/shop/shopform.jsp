@@ -125,21 +125,20 @@
 					<section class="section">
 						<label>배송여부</label>
 						<div class="delivery-box">
-						
-							<label for="rdo-dely" class="delivery-type active">배송</label>
-							<input id="rdo-dely" type="radio" name="shipping_yn" value="y">
-								
-							<label for="rdo-deln" class="delivery-type">배송없음</label>
-							<input id="rdo-deln" type="radio" name="shipping_yn" value="n">
-							
+
+							<label for="rdo-dely" class="delivery-type active">배송</label> <input
+								id="rdo-dely" type="radio" name="shipping_yn" value="y">
+
+							<label for="rdo-deln" class="delivery-type">배송없음</label> <input
+								id="rdo-deln" type="radio" name="shipping_yn" value="n">
+
 						</div>
-						<!-- 배송여부 히든 필드 -->
-						<input type="hidden" name="shipping_yn" id="shippingYn" value="1">
+						<!-- 배송여부 히든 필드 제거 - 라디오 버튼으로 직접 전송 -->
 					</section>
 
-					<div class="input-group">
-						<label for="shipping-cost">배송비</label> 
-						<input type="text" name="shipping_cost" id="shipping-cost" placeholder="배송비 입력">
+					<div class="input-group" id="shipping-cost-group">
+						<label for="shipping-cost">배송비</label> <input type="text"
+							name="shipping_cost" id="shipping-cost" placeholder="배송비 입력">
 					</div>
 
 					<div class="input-group">
@@ -173,162 +172,162 @@
 	<!-- ---------------------------------------------------- -->
 
 	<script>
-		// 카테고리 선택 JavaScript
-		document.querySelectorAll('.category-box label').forEach(span => {
-			span.addEventListener('click', function() {
-				document.querySelectorAll('.category-box label').forEach(s => s.classList.remove('selected'));
-				this.classList.add('selected');
-				document.getElementById('categoryNo').value = this.getAttribute('data-category');
-			});
+	// 카테고리 선택 JavaScript
+	document.querySelectorAll('.category-box label').forEach(span => {
+		span.addEventListener('click', function() {
+			document.querySelectorAll('.category-box label').forEach(s => s.classList.remove('selected'));
+			this.classList.add('selected');
+			document.getElementById('categoryNo').value = this.getAttribute('data-category');
 		});
+	});
 
-		// 배송여부 선택 JavaScript
-		document.querySelectorAll('.delivery-type').forEach(deliveryType => {
-			deliveryType.addEventListener('click', function() {
-				document.querySelectorAll('.delivery-type').forEach(dt => dt.classList.remove('active'));
-				this.classList.add('active');
-				document.getElementById('shippingYn').value = this.getAttribute('data-shipping');
-			});
+	// 배송여부 선택 JavaScript - 완전 새로 작성
+	document.querySelectorAll('.delivery-type').forEach(deliveryType => {
+		deliveryType.addEventListener('click', function() {
+			// 모든 active 클래스 제거
+			document.querySelectorAll('.delivery-type').forEach(dt => dt.classList.remove('active'));
+			// 클릭된 라벨에 active 클래스 추가
+			this.classList.add('active');
+			
+			// 연결된 라디오 버튼 체크
+			const radioId = this.getAttribute('for');
+			document.getElementById(radioId).checked = true;
+			
+			// 배송비 입력창 제어
+			const shippingCostGroup = document.getElementById('shipping-cost-group');
+			const shippingCostInput = document.getElementById('shipping-cost');
+			
+			if (radioId === 'rdo-deln') {
+				// 배송없음일 때: 배송비 입력창 숨기고 값을 0으로 설정
+				shippingCostGroup.style.display = 'none';
+				shippingCostInput.value = '0';
+			} else {
+				// 배송일 때: 배송비 입력창 보이기
+				shippingCostGroup.style.display = 'block';
+				shippingCostInput.value = '';
+			}
 		});
+	});
 
-		// 상품 이미지 파일 선택 JavaScript
-		document.getElementById('imageFile').addEventListener('change', function(event) {
-			const file = event.target.files[0];
-			if (file) {
+	// 페이지 로드 시 초기 설정
+	document.addEventListener('DOMContentLoaded', function() {
+		// 기본적으로 배송이 선택되어 있으므로 배송비 입력창은 보이도록 설정
+		const shippingCostGroup = document.querySelector('#shipping-cost').closest('.input-group');
+		shippingCostGroup.style.display = 'block';
+	});
+
+	// 상품 이미지 파일 선택 JavaScript
+	document.getElementById('imageFile').addEventListener('change', function(event) {
+		const file = event.target.files[0];
+		if (file) {
+			const reader = new FileReader();
+			reader.onload = function(e) {
+				const previewImg = document.getElementById('previewImg');
+				const noImageText = document.getElementById('noImageText');
+				
+				previewImg.src = e.target.result;
+				previewImg.style.display = 'block';
+				noImageText.style.display = 'none';
+			};
+			reader.readAsDataURL(file);
+			
+			document.getElementById('itemimg').value = file.name;
+		}
+	});
+
+	// 상세 설명 이미지 파일 선택 JavaScript
+	document.getElementById('detailImages').addEventListener('change', function(event) {
+		const files = event.target.files;
+		const previewContainer = document.getElementById('detailImagesPreview');
+		
+		if (files.length > 0) {
+			previewContainer.innerHTML = '';
+			
+			Array.from(files).forEach((file, index) => {
 				const reader = new FileReader();
 				reader.onload = function(e) {
-					const previewImg = document.getElementById('previewImg');
-					const noImageText = document.getElementById('noImageText');
+					const imageDiv = document.createElement('div');
+					imageDiv.className = 'detail-image-item';
+					imageDiv.innerHTML = '';
 					
-					previewImg.src = e.target.result;
-					previewImg.style.display = 'block';
-					noImageText.style.display = 'none';
+					imageDiv.innerHTML += '<img src='+ e.target.result + ' alt="상세 이미지 ' + (index + 1) + '">';
+					imageDiv.innerHTML += '<span class="image-name">'+ file.name +'</span>';
+					
+					previewContainer.appendChild(imageDiv);
 				};
 				reader.readAsDataURL(file);
-				
-				document.getElementById('itemimg').value = file.name;
-			}
-		});
+			});
+		}
+	});
 
-		// 상세 설명 이미지 파일 선택 JavaScript
-		document.getElementById('detailImages').addEventListener('change', function(event) {
-			const files = event.target.files;
-			const previewContainer = document.getElementById('detailImagesPreview');
-			
-			if (files.length > 0) {
-				previewContainer.innerHTML = '';
-				
-				Array.from(files).forEach((file, index) => {
-					const reader = new FileReader();
-					reader.onload = function(e) {
-						const imageDiv = document.createElement('div');
-						imageDiv.className = 'detail-image-item';
-						imageDiv.innerHTML = '';
-						
-						imageDiv.innerHTML += '<img src='+ e.target.result + ' alt="상세 이미지 ' + (index + 1) + '">';
-						imageDiv.innerHTML += '<span class="image-name">'+ file.name +'</span>';
-						
-						previewContainer.appendChild(imageDiv);
-					};
-					reader.readAsDataURL(file);
-				});
-			}
-		});
+	//옵션 추가할때 쓰는 변수
+	let optGroupNo = 0;
+	let gno; //마지막 사용한 그룹번호
 
+	// 옵션 그룹 추가 함수
+	function addOptionGroup() {
 		
-		//옵션 추가할때 쓰는 변수
-		let optGroupNo = 0;
-		let gno; //마지막 사용한 그룹번호
+		const container = document.getElementById('optionContainer');
+		const newGroup = document.createElement('div');
+		newGroup.className = 'option-group';
 		
-		// 옵션 그룹 추가 함수
-		function addOptionGroup() {
-			
-			const container = document.getElementById('optionContainer');
-			const newGroup = document.createElement('div');
-			newGroup.className = 'option-group';
-			
-			optGroupNo = optGroupNo+1;
-			newGroup.setAttribute('data-gno', optGroupNo);
-			
-			gno = newGroup.dataset.gno
-			
-			let htmlStr ='';
-			htmlStr += '<div class="option-row">';
-			htmlStr += '	<input type="text" name="option_names" placeholder="옵션타이틀 입력 (예: 사이즈)"> ';
-			htmlStr += '	<input type="text" name="optionItems[' + gno + ']" placeholder="옵션 입력 (예: L)"> ';
-			htmlStr += '	<button type="button" class="add-detail-option" onclick="addDetailOption(this)">';
-			htmlStr += '		<img class="add-logo2" src="../../../assets/icon-add.svg" alt="옵션 추가">';
-			htmlStr += '	</button>';
-			htmlStr += '	<button type="button" class="remove-option-group" onclick="removeOptionGroup(this)">';
-			htmlStr += '		<img class="remove-logo" src="../../../assets/icon-remove.svg" alt="옵션 그룹 제거">aaaa';
-			htmlStr += '	</button>';
-			htmlStr += '</div>';
-			
-			newGroup.innerHTML = htmlStr;
-			
-			/* newGroup.innerHTML = `
-				<div class="option-row">
-					<input type="text" name="option_names" placeholder="옵션타이틀 입력 (예: 사이즈)"> 
-					<input type="text" name="detailOption_name[]" placeholder="옵션 입력 (예: L)"> 
-					<button type="button" class="add-detail-option" onclick="addDetailOption(this)">
-						<img class="add-logo2" src="../../../assets/icon-add.svg" alt="옵션 추가">
-					</button>
-					<button type="button" class="remove-option-group" onclick="removeOptionGroup(this)">
-						<img class="remove-logo" src="../../../assets/icon-remove.svg" alt="옵션 그룹 제거">
-					</button>
-				</div>
-			`; */
-			container.appendChild(newGroup);
-		}
-
-		// 세부 옵션 추가 함수
-		function addDetailOption(button) {
-			const optionGroup = button.closest('.option-group');
-			const newRow = document.createElement('div');
-			newRow.className = 'option-row detail-only';
+		optGroupNo = optGroupNo+1;
+		newGroup.setAttribute('data-gno', optGroupNo);
 		
-			gno = optionGroup.dataset.gno;
-			
-			
-			let htmlStr = '';
-			htmlStr += '<input type="text" placeholder="옵션타이틀은 위와 동일">';
-			htmlStr += '<input type="text" name="optionItems['+ gno +']" placeholder="옵션 입력 (예: M)">';
-			htmlStr += '<button type="button" class="add-detail-option" onclick="addDetailOption(this)">';
-			htmlStr += '	<img class="add-logo2" src="../../../assets/icon-add.svg" alt="옵션 추가">';
-			htmlStr += '</button>';
-			htmlStr += '<button type="button" class="remove-detail-option" onclick="removeDetailOption(this)">';
-			htmlStr += '	<img class="remove-logo2" src="../../../assets/icon-remove.svg" alt="옵션 제거">';
-			htmlStr += '</button>';
-			htmlStr += '';
-			newRow.innerHTML = htmlStr;
-				
-				
-			/* newRow.innerHTML = 
-				<input type="text" placeholder="옵션타이틀은 위와 동일"> 
-				<input type="text" name="detailOption_name'+ optNo+1 +'" placeholder="옵션 입력 (예: M)"> 
-				<button type="button" class="add-detail-option" onclick="addDetailOption(this)">
-					<img class="add-logo2" src="../../../assets/icon-add.svg" alt="옵션 추가">
-				</button>
-				<button type="button" class="remove-detail-option" onclick="removeDetailOption(this)">
-					<img class="remove-logo2" src="../../../assets/icon-remove.svg" alt="옵션 제거">
-				</button>
-			';
-			 */
-			
-			optionGroup.appendChild(newRow);
-		}
+		gno = newGroup.dataset.gno
+		
+		let htmlStr ='';
+		htmlStr += '<div class="option-row">';
+		htmlStr += '	<input type="text" name="option_names" placeholder="옵션타이틀 입력 (예: 사이즈)"> ';
+		htmlStr += '	<input type="text" name="optionItems[' + gno + ']" placeholder="옵션 입력 (예: L)"> ';
+		htmlStr += '	<button type="button" class="add-detail-option" onclick="addDetailOption(this)">';
+		htmlStr += '		<img class="add-logo2" src="../../../assets/icon-add.svg" alt="옵션 추가">';
+		htmlStr += '	</button>';
+		htmlStr += '	<button type="button" class="remove-option-group" onclick="removeOptionGroup(this)">';
+		htmlStr += '		<img class="remove-logo" src="../../../assets/icon-remove.svg" alt="옵션 그룹 제거">';
+		htmlStr += '	</button>';
+		htmlStr += '</div>';
+		
+		newGroup.innerHTML = htmlStr;
+		
+		container.appendChild(newGroup);
+	}
 
-		// 옵션 그룹 제거 함수
-		function removeOptionGroup(button) {
-			const optionGroup = button.closest('.option-group');
-			optionGroup.remove();
-		}
+	// 세부 옵션 추가 함수
+	function addDetailOption(button) {
+		const optionGroup = button.closest('.option-group');
+		const newRow = document.createElement('div');
+		newRow.className = 'option-row detail-only';
 
-		// 세부 옵션 제거 함수
-		function removeDetailOption(button) {
-			const optionRow = button.closest('.option-row');
-			optionRow.remove();
-		}
+		gno = optionGroup.dataset.gno;
+		
+		
+		let htmlStr = '';
+		htmlStr += '<input type="text" placeholder="옵션타이틀은 위와 동일">';
+		htmlStr += '<input type="text" name="optionItems['+ gno +']" placeholder="옵션 입력 (예: M)">';
+		htmlStr += '<button type="button" class="add-detail-option" onclick="addDetailOption(this)">';
+		htmlStr += '	<img class="add-logo2" src="../../../assets/icon-add.svg" alt="옵션 추가">';
+		htmlStr += '</button>';
+		htmlStr += '<button type="button" class="remove-detail-option" onclick="removeDetailOption(this)">';
+		htmlStr += '	<img class="remove-logo2" src="../../../assets/icon-remove.svg" alt="옵션 제거">';
+		htmlStr += '</button>';
+		htmlStr += '';
+		newRow.innerHTML = htmlStr;
+		
+		optionGroup.appendChild(newRow);
+	}
+
+	// 옵션 그룹 제거 함수
+	function removeOptionGroup(button) {
+		const optionGroup = button.closest('.option-group');
+		optionGroup.remove();
+	}
+
+	// 세부 옵션 제거 함수
+	function removeDetailOption(button) {
+		const optionRow = button.closest('.option-row');
+		optionRow.remove();
+	}
 	</script>
 </body>
 

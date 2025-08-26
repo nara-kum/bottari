@@ -65,7 +65,7 @@ public class ShopController {
 
 	//상품등록
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public String insert(@ModelAttribute ProductVO productVO) {
+    public String insert(@ModelAttribute ProductVO productVO, Model model) {
 
         System.out.println("ShopController.register");
 //        
@@ -83,6 +83,9 @@ public class ShopController {
         
         shopService.exeProductadd(productVO);
         
+        // 상품 등록 완료 후 상품명을 모델에 추가
+        model.addAttribute("productTitle", productVO.getTitle());
+        model.addAttribute("productVO", productVO);
         
         
         /*
@@ -124,7 +127,6 @@ public class ShopController {
         return "shop/shopSuccess";
    
     }
-    
     
     
 

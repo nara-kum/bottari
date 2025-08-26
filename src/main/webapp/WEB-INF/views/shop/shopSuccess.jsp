@@ -37,22 +37,22 @@
 					<p>고객님의 소중한 상품이 성공적으로 등록되었습니다.</p>
 				</div>
 
+
 				<div class="product-info">
 					<div class="info-item">
-						<span class="info-label">등록된 상품명:</span>
-						<span class="info-value">${productTitle != null ? productTitle : "${productTotalVO.title}"}</span>
+						<span class="info-label">등록된 상품명:</span> <span class="info-value">${productTitle}</span>
 					</div>
 					<div class="info-item">
-						<span class="info-label">등록 일시:</span>
-						<span class="info-value">
+						<span class="info-label">등록 일시:</span> <span class="info-value">
 							<script>
-								document.write(new Date().toLocaleDateString('ko-KR', {
-									year: 'numeric',
-									month: '2-digit',
-									day: '2-digit',
-									hour: '2-digit',
-									minute: '2-digit'
-								}));
+								document.write(new Date().toLocaleDateString(
+										'ko-KR', {
+											year : 'numeric',
+											month : '2-digit',
+											day : '2-digit',
+											hour : '2-digit',
+											minute : '2-digit'
+										}));
 							</script>
 						</span>
 					</div>
