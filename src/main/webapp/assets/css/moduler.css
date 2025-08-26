@@ -14,7 +14,7 @@
 
 .list-1280 {
     width: 1240px;
-    height: 100px;
+    min-height: 100px;
     padding: 20px 20px;
 }
 

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -27,7 +28,7 @@ public class CartController {
 	
 	//장바구니리스트
 	@RequestMapping(value="/cart", method= {RequestMethod.GET, RequestMethod.POST})
-	public String list(HttpSession session) {	
+	public String list(HttpSession session, Model model) {	
 		System.out.println("CartController.list()");
 		
 		UserVO authuser = (UserVO) session.getAttribute("authUser");
@@ -40,6 +41,12 @@ public class CartController {
 			int user_no = authuser.getUserNo();
 			
 			List<CartListVO> cartList = cartservice.execartList(user_no);
+			
+			if(cartList.isEmpty()) {
+				return "shop/
+			}
+			
+			model.addAttribute("cList", cartList);
 			
 			System.out.println(cartList);
 			

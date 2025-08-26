@@ -1,6 +1,14 @@
 @charset "UTF-8";
 
 
+.gap-10 {
+	gap: 10px;
+}
+
+.margin-5 {
+	margin: 5px;
+}
+
 /* 기본 세팅 */
 .container {
   width: 1280px;
