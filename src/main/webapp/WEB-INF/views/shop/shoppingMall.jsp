@@ -56,18 +56,20 @@
 		<c:choose>
 			<c:when test="${not empty productList}">
 				<c:forEach var="product" items="${productList}">
-					<div class="goods-wrap">
+					<div class="goods-wrap" onclick="location.href='${pageContext.request.contextPath}/productPage?productNo=${product.product_no}'" style="cursor: pointer;">
 						<div class="goods-img">
 							<c:choose>
-								<c:when test="${not empty product.itemimg}">
-									<img class="product-image" src="../../../uploads/${product.itemimg}" 
-										 alt="${product.title}" style="width: 100%; height: 100%; object-fit: cover;">
-								</c:when>
-								<c:otherwise>
-									<img class="product-image" src="../../../assets/images/no-image.png" 
-										 alt="이미지 없음" style="width: 100%; height: 100%; object-fit: cover;">
-								</c:otherwise>
-							</c:choose>
+							<c:when test="${not empty product.itemimg}">
+								<img class="main-image"
+									src="${pageContext.request.contextPath}/upload/${product.itemimg}"
+									alt="${product.title}">
+							</c:when>
+							<c:otherwise>
+								<img class="main-image"
+									src="${pageContext.request.contextPath}/assets/upload/default-product.jpg"
+									alt="기본 상품 이미지">
+							</c:otherwise>
+						</c:choose>
 						</div>
 						<div class="brand-name">${product.brand}</div>
 						<div class="goods-title">${product.title}</div>
@@ -92,7 +94,6 @@
 	<!------------------------ Footer호출 ----------------------->
 	<c:import url="/WEB-INF/views/include/Footer.jsp"></c:import>
 	<!-- ---------------------------------------------------- -->
-	
 
 </body>
 

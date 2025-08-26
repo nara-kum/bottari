@@ -12,6 +12,7 @@
 	            brand,
 	            itemimg
 		from product
+		order by product_no desc
 	]]>
 	</select>
 

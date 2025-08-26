@@ -30,8 +30,10 @@ public class ShopService {
 
 		System.out.println("ShopService.exeProductList");// ㅇㅋ
 		List<ProductVO> productList = shopRepository.selectList(productVO);
+
 		System.out.println("나눈 서비수");
 
+		
 		return productList;
 
 	}

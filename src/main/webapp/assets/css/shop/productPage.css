@@ -279,3 +279,41 @@ body {
 	color: #FFD700;
 	font-weight: 600;
 }
+
+
+
+/* 배송 불가 상품을 위한 스타일 */
+.delivery-info.no-delivery {
+	background-color: #fff5f5;
+	border: 1px solid #fed7d7;
+	color: #c53030;
+	font-weight: 500;
+}
+
+/* 배송 불가 상품의 서비스 아이템 스타일 */
+.service-item {
+	font-size: 13px;
+	color: #666;
+	margin-bottom: 4px;
+}
+
+/* 예약하기 버튼 (배송 불가 상품용) */
+.funding-btn.reservation {
+	background-color: #38a169;
+	border-color: #38a169;
+}
+
+.funding-btn.reservation:hover {
+	background-color: #2f855a;
+}
+
+/* 선택된 상품 영역 스타일 개선 */
+#selectedOptionsArea {
+	border: 1px solid #e2e8f0 !important;
+}
+
+#selectedOptionsList > div {
+	box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+
