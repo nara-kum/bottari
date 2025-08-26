@@ -40,9 +40,9 @@
 
 .inv-card-grid{
   display: grid;
-  grid-template-columns: repeat(4, 250px); /* 카드 너비 고정 */
-  column-gap: 80px;                        /* 좌우 간격 ↑ */
-  row-gap: 24px;
+  grid-template-columns: repeat(4, 280px); /* 카드 너비 고정 */
+  column-gap: 50px;                        /* 좌우 간격 ↑ */
+  row-gap: 30px;
   justify-content: center;
   margin-bottom: 20px;
 }
