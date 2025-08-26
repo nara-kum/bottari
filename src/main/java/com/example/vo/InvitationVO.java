@@ -1,8 +1,8 @@
 package com.example.vo;
 
 public class InvitationVO {
-	
-	//필드
+
+	// 필드
 	private int invitationNo;
 	private int categoryNo;
 	private int userNo;
@@ -33,8 +33,11 @@ public class InvitationVO {
 	private String babyMotherName;
 	private String babyMotherContect;
 	private String createdAt;
+	private int hasFunding;
+	private String eventName;
 
-	//생성자
+	// 생성자
+
 	public InvitationVO() {
 		super();
 	}
@@ -45,7 +48,7 @@ public class InvitationVO {
 			String groomMotherName, String groomMotherContect, String brideName, String brideContect,
 			String brideFatherName, String brideFatherContect, String brideMotherName, String brideMotherContect,
 			String babyName, String babyFatherName, String babyFatherContect, String babyMotherName,
-			String babyMotherContect, String createdAt) {
+			String babyMotherContect, String createdAt, int hasFunding, String eventName) {
 		super();
 		this.invitationNo = invitationNo;
 		this.categoryNo = categoryNo;
@@ -77,9 +80,10 @@ public class InvitationVO {
 		this.babyMotherName = babyMotherName;
 		this.babyMotherContect = babyMotherContect;
 		this.createdAt = createdAt;
+		this.hasFunding = hasFunding;
+		this.eventName = eventName;
 	}
 
-	
 	//메소드-gs
 	public int getInvitationNo() {
 		return invitationNo;
@@ -321,7 +325,22 @@ public class InvitationVO {
 		this.createdAt = createdAt;
 	}
 
-	//메소드 일반
+	public int getHasFunding() {
+		return hasFunding;
+	}
+
+	public void setHasFunding(int hasFunding) {
+		this.hasFunding = hasFunding;
+	}
+
+	public String getEventName() {
+		return eventName;
+	}
+
+	public void getEventName(String eventName) {
+		this.eventName = eventName;
+	}
+	//메소드-일반
 	@Override
 	public String toString() {
 		return "InvitationVO [invitationNo=" + invitationNo + ", categoryNo=" + categoryNo + ", userNo=" + userNo
@@ -334,9 +353,9 @@ public class InvitationVO {
 				+ ", brideFatherContect=" + brideFatherContect + ", brideMotherName=" + brideMotherName
 				+ ", brideMotherContect=" + brideMotherContect + ", babyName=" + babyName + ", babyFatherName="
 				+ babyFatherName + ", babyFatherContect=" + babyFatherContect + ", babyMotherName=" + babyMotherName
-				+ ", babyMotherContect=" + babyMotherContect + ", createdAt=" + createdAt + "]";
+				+ ", babyMotherContect=" + babyMotherContect + ", createdAt=" + createdAt + ", hasFunding=" + hasFunding
+				+ ", eventName=" + eventName+ "]";
 	}
-	
-	
+
 
 }

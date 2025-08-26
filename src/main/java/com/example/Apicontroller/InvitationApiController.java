@@ -1,6 +1,9 @@
 package com.example.Apicontroller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,8 +34,10 @@ public class InvitationApiController {
 	    invitationVO.setUserNo(authUser.getUserNo());
 
 	    // 필수값 검증
-	    if (invitationVO.getCategoryNo() == 0 || invitationVO.getEventNo() == 0
-	        || invitationVO.getCelebrateDate() == null || invitationVO.getCelebrateDate().isBlank()) {
+	    if (invitationVO.getCategoryNo() == 0 || 
+	    		invitationVO.getEventNo() == 0 || 
+	    		invitationVO.getCelebrateDate() == null || 
+	    		invitationVO.getCelebrateDate().isBlank()) {
 	        return JsonResult.fail("필수 항목을 확인해주세요.");
 	    }
 	
@@ -42,6 +47,17 @@ public class InvitationApiController {
 	    }
 	    return JsonResult.fail("초대장 등록에 실패했습니다.");
 	}
+	
+	//초대장 리스트
+    @GetMapping("/api/invtlist") 
+    public JsonResult invtlist(HttpSession session) {
+        System.out.println("InvitationApiController.invtlist()");
+        
+        UserVO authUser = (UserVO) session.getAttribute("authUser");
+        if (authUser == null) return JsonResult.fail("로그인이 필요합니다.");
 
+        List<InvitationVO> list = invitationService.exeInvtList(authUser.getUserNo());
+        return JsonResult.success(list);
+    }
 
 }

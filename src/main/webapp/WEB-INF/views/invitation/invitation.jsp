@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="../../../assets/css/reset.css">
     <link rel="stylesheet" href="../../../assets/css/Global.css">
     <link rel="stylesheet" href="../../../assets/css/invitation.css">
+    <script src="${pageContext.request.contextPath}/assets/js/jquery/jquery-3.7.1.js"></script>
+
 </head>
 
 <body class="family">

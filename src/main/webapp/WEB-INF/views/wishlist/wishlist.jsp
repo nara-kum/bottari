@@ -211,7 +211,7 @@ function loadAnniversaryOptions(){
     success  : function(json){
       const data = extractList(json);
       const $sel = $("#funding-table").empty()
-        .append('<option value="">------- 기념일 선택 -------</option>');
+        .append('<option value="">----- 기념일 선택 -----</option>');
 
       if (!data.length){
         $sel.append('<option value="" disabled>기념일이 없습니다</option>');

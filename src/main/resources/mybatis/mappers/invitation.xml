@@ -3,26 +3,35 @@
 <mapper namespace="invitation">
 
 	<!-- 초대장 리스트 가져오기 -->
-	<select id="selectEventList" parameterType="int" resultType="com.example.vo.CalenderVO">
-		<![CDATA[
-			select c.event_no
-				, c.event_name
-				, c.event_date
-				, u.user_no
-			from calender c
-				, users u
-			where c.user_no = u.user_no
-			and u.user_no = #{userNo}  
-		]]>
+	<select id="selectListByUser" parameterType="int" resultType="com.example.vo.InvitationVO">
+		SELECT
+			i.invitation_no             AS invitationNo,
+			i.event_no                  AS eventNo,
+			i.celebrate_date            AS celebrateDate,
+			i.user_no            		AS userNo,
+			COALESCE(i.photo_url,
+			         '/assets/images/placeholder.png') AS photoUrl,
+			c.event_name                AS eventName,
+			CASE WHEN EXISTS (
+			  SELECT 1
+			    FROM funding_product fp
+			   WHERE fp.user_no = i.user_no
+			     AND fp.event_no = i.event_no
+			) THEN 1 ELSE 0 END        AS hasFunding
+		FROM invitation i
+		LEFT JOIN calender c
+		  ON c.event_no = i.event_no
+		 AND c.user_no  = i.user_no
+		WHERE i.user_no = #{userNo}
+		ORDER BY i.invitation_no DESC
 	</select>
 	
 	<!-- 초대장 등록 -->
 	<insert id="insertInvitation" parameterType="com.example.vo.InvitationVO"
 			useGeneratedKeys="true" keyProperty="invitationNo">
 		<![CDATA[
-			insert into invitaion 
-			values (null
-					,#{categoryNo}
+			insert into invitation 
+			values (null,#{categoryNo}
 					,#{userNo}
 					,#{eventNo}
 					,#{themeNo}

@@ -57,7 +57,6 @@
   background: #fcfcfc;
   border-radius: 12px;
   padding: 24px 32px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   border: 1px solid #e0e0e0;
 }
 
@@ -103,6 +102,7 @@ input[type="text"] {
   font-size: 12px;
   color: #888;
   margin-top: 10px;
+  margin-bottom: 5px;
 }
 
 .template-grid {
@@ -206,7 +206,7 @@ textarea {
 .category-buttons button,
 .option-group .btn,
 .option-group button,
-.temp-btn, .save-btn{
+.save-btn{
   background: #fff;
   color: #333;
   border: 1px solid #ddd;
@@ -217,12 +217,7 @@ textarea {
   transition: box-shadow .15s ease, transform .05s ease, border-color .15s ease;
 }
 
-.category-buttons button:hover,
-.option-group .btn:hover,
-.option-group button:hover,
-.temp-btn:hover,
-.save-btn:hover {
-  border-color: #bbb;
+.template-grid .template-card.is-active,
+.category-buttons .cat.is-active{
+  outline: 2px solid #EF5124;
 }
-
-/* footer css */

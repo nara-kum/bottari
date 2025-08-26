@@ -159,21 +159,15 @@
 }
 
 .btn-funding1 {
-	background-color: #EF5124;
-	/* 배경색 */
-	color: white;
-	/* 글자색 */
-	border: 1px solid #ddd;
-	border-radius: 5px;
-	font-size: 13px;
-	/* 글자 크기 줄임 */
-	padding: 6px 12px;
-	/* 내부 여백 축소 */
-	margin-left: auto;
-	display: block;
-	/* margin 적용을 위해 block 처리 */
-	cursor: pointer;
-	justify-content: end;
+  appearance:none;
+  border:1px solid #EF5124;
+  background:#EF5124;
+  color:#fff;
+  padding:10px 14px;
+  border-radius:8px;
+  font-weight:700;
+  cursor:pointer;
+  justify-content: end;
 }
 
 .sale-price {
@@ -214,6 +208,10 @@
 
 .right-main #funding-table {
 	margin-top: 15px;
+  font-size: 14px;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
 }
 
 /* 우측 선택목록 스타일 */

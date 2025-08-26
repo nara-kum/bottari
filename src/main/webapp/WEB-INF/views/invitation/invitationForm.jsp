@@ -56,9 +56,9 @@
                                 <div class="sub-title">메인 이미지</div>
                                 <div class="template-grid">
                                     <div class="template-card">타입A</div>
-                                    <div class="template-card">타입A</div>
-                                    <div class="template-card">타입A</div>
-                                    <div class="template-card">타입A</div>
+                                    <div class="template-card">타입B</div>
+                                    <div class="template-card">타입C</div>
+                                    <div class="template-card">타입D</div>
                                 </div>
                                 <div class="upload-info">메인사진<br>이미지의 크기는 15MB 이내로 제한되어 있습니다.</div>
 
@@ -70,7 +70,7 @@
 
                             </div>
 
-                            <div class="card-box">
+                            <!-- <div class="card-box">
                                 <div class="sub-title">디자인</div>
                                 <div class="section">
                                     <div class="small-label">배경</div>
@@ -104,72 +104,89 @@
                                             class="btn">신부먼저</button>
                                     </div>
                                 </div>
-                            </div>
-
-                            <div class="footer-row">
-                                <span><strong>1단계</strong> / 4단계</span>
-                                <button class="temp-btn">임시저장</button>
-                            </div>
+                            </div> -->
 
                             <div class="card-box">
                                 <div class="sub-title">신랑측 정보</div>
                                 <div class="section">
+                                    <div class="small-label">신랑 <span class="required">(필수)</span></div>
+                                    <div class="input-row">
+                                        <input type="text" id="groom-name" placeholder="이름">
+                                        <input type="text" id="groom-contect" placeholder="연락처">
+                                    </div>
+
                                     <div class="small-label">아버님</div>
-                                    <div class="input-row"><input type="text" placeholder="성"><input type="text"
-                                            placeholder="이름"><input type="text" placeholder="연락처"></div>
-                                    <div class="checkbox"><input type="checkbox" id="groom-father-deceased"><label
-                                            for="groom-father-deceased">고인</label></div>
+                                    <div class="input-row">
+                                        <input type="text" id="groom-father-name" placeholder="이름">
+                                        <input type="text" id="groom-father-contect" placeholder="연락처">
+                                    </div>
 
                                     <div class="small-label">어머님</div>
-                                    <div class="input-row"><input type="text" placeholder="성"><input type="text"
-                                            placeholder="이름"><input type="text" placeholder="연락처"></div>
-                                    <div class="checkbox"><input type="checkbox" id="groom-mother-deceased"><label
-                                            for="groom-mother-deceased">고인</label></div>
-
-                                    <div class="small-label">신랑 <span class="required">(필수)</span></div>
-                                    <div class="input-row"><input type="text" placeholder="성"><input type="text"
-                                            placeholder="이름"><input type="text" placeholder="연락처"></div>
+                                    <div class="input-row">
+                                        <input type="text" id="groom-mother-name" placeholder="이름">
+                                        <input type="text" id="groom-mother-contect" placeholder="연락처">
+                                    </div>
                                 </div>
                             </div>
 
                             <div class="card-box">
                                 <div class="sub-title">신부측 정보</div>
                                 <div class="section">
+                                    <div class="small-label">신부 <span class="required">(필수)</span></div>
+                                    <div class="input-row">
+                                        <input type="text" id="bride-name" placeholder="이름">
+                                        <input type="text" id="bride-contect" placeholder="연락처">
+                                    </div>
+
                                     <div class="small-label">아버님</div>
-                                    <div class="input-row"><input type="text" placeholder="성"><input type="text"
-                                            placeholder="이름"><input type="text" placeholder="연락처"></div>
-                                    <div class="checkbox"><input type="checkbox" id="bride-father-deceased"><label
-                                            for="bride-father-deceased">고인</label></div>
+                                    <div class="input-row">
+                                        <input type="text" id="bride-father-name" placeholder="이름">
+                                        <input type="text" id="bride-father-contect" placeholder="연락처">
+                                    </div>
 
                                     <div class="small-label">어머님</div>
-                                    <div class="input-row"><input type="text" placeholder="성"><input type="text"
-                                            placeholder="이름"><input type="text" placeholder="연락처"></div>
-                                    <div class="checkbox"><input type="checkbox" id="bride-mother-deceased"><label
-                                            for="bride-mother-deceased">고인</label></div>
+                                    <div class="input-row">
+                                        <input type="text" id="bride-mother-name" placeholder="이름">
+                                        <input type="text" id="bride-mother-contect" placeholder="연락처">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="card-box">
+                                <div class="sub-title">아기 정보</div>
+                                <div class="section">
+                                    <div class="small-label">아기 <span class="required">(필수)</span></div>
+                                    <div class="input-row">
+                                        <input type="text" id="baby-name" placeholder="이름">
+                                    </div>
 
-                                    <div class="small-label">신부 <span class="required">(필수)</span></div>
-                                    <div class="input-row"><input type="text" placeholder="성"><input type="text"
-                                            placeholder="이름"><input type="text" placeholder="연락처"></div>
+                                    <div class="small-label">아버님</div>
+                                    <div class="input-row">
+                                        <input type="text" id="baby-father-name" placeholder="이름">
+                                        <input type="text" id="baby-father-contect" placeholder="연락처">
+                                    </div>
+
+                                    <div class="small-label">어머님</div>
+                                    <div class="input-row">
+                                        <input type="text" id="baby-mother-name" placeholder="이름">
+                                        <input type="text" id="baby-mother-contect" placeholder="연락처">
+                                    </div>
                                 </div>
                             </div>
 
-                            <div class="footer-row">
-                                <span><strong>2단계</strong> / 4단계</span>
-                                <button class="temp-btn">임시저장</button>
-                            </div>
                             <!-- 모시는 글 -->
                             <div class="card-box">
                                 <div class="sub-title">모시는 글</div>
                                 <div class="section">
                                     <div class="small-label">내용</div>
-                                    <textarea class="textarea" rows="6"
-                                        placeholder="두 사람의 마음을 담은 인사말을 입력하세요."></textarea>
+                                    <textarea id="greeting" class="textarea" rows="6"
+                                        placeholder="마음을 담은 인사말을 입력하세요."></textarea>
                                 </div>
                             </div>
 
-                            <!-- 예식일 -->
+                            <!-- 행사일 -->
                             <div class="card-box">
-                                <div class="sub-title">예식일</div>
+                                <div class="sub-title">행사일</div>
                                 <div class="section grid-2">
                                     <div>
                                         <div class="small-label">날짜</div>
@@ -184,16 +201,16 @@
 
                             <!-- 예식장소 -->
                             <div class="card-box">
-                                <div class="sub-title">예식장소</div>
+                                <div class="sub-title">행사장소</div>
                                 <div class="section">
                                     <div class="small-label">장소명</div>
-                                    <input type="text" placeholder="예: 보따리 웨딩홀 3층 아모르홀">
+                                    <input id="place" type="text" placeholder="예: 보따리 웨딩홀 3층 아모르홀">
 
                                     <div class="small-label">주소</div>
-                                    <input type="text" placeholder="도로명 주소">
+                                    <input id="address1" type="text" placeholder="도로명 주소">
 
                                     <div class="input-row">
-                                        <input type="text" placeholder="상세 주소">
+                                        <input id="address2" type="text" placeholder="상세 주소">
                                         <input type="text" placeholder="지도 링크(URL)">
                                         <button class="invitation-btn" id="address-search">지도 보기</button>
                                     </div>
@@ -203,9 +220,7 @@
                             </div>
 
                             <div class="footer-row">
-                                <span><strong>3단계</strong> / 4단계</span>
-                                <button class="temp-btn">임시저장</button>
-                                <button class="save-btn">완료</button>
+                                <button class="save-btn">저장</button>
                             </div>
                         </div>
                     </div>
@@ -219,6 +234,17 @@
 <c:import url="/WEB-INF/views/include/Footer.jsp"></c:import>
 <!-- ---------------------------------------------------- -->
 <script>
+    
+let SELECTED_CATEGORY_NO = 0;   // 카테고리(결혼/생일/…)
+let SELECTED_TEMPLATE_NO = 0;   // 타입 A/B/C/D → 1/2/3/4
+
+// 카테고리 버튼 클릭 시 활성화 표시
+  $(document).on('click', '.category-buttons .cat', function(){
+    SELECTED_CATEGORY_NO = Number($(this).data('cat') || 0);
+    // 같은 그룹 내에서만 단독 선택
+    $(this).closest('.category-buttons').find('.cat').removeClass('is-active');
+    $(this).addClass('is-active');
+  });
 
 (function(){
   const CTX = "${pageContext.request.contextPath}";
@@ -262,61 +288,146 @@
     .fail(function(xhr, status, err){
       console.error("[/api/eventlist] fail:", status, err, xhr.status, (xhr.responseText||'').slice(0,200));
       $("#funding-table").empty()
-        .append('<option value="">------- 기념일 선택 -------</option>')
+        .append('<option value="">----- 기념일 선택 -----</option>')
         .append('<option value="" disabled>불러오기 실패</option>');
+    });
+  }
+  
+  function initTemplateCards(){
+    var $cards = $(".template-grid .template-card");
+    $cards.each(function(idx){
+      // 이미 data-tpl 있으면 유지, 없으면 1~4 할당
+      if (!$(this).attr("data-tpl")) {
+        $(this).attr("data-tpl", (idx+1)); // A=1, B=2, C=3, D=4
+      }
     });
   }
 
   $(function(){
     loadAnniversaryOptions();
+    initTemplateCards();
   });
-})();
 
-$(document).on('click', '.save-btn', function(){
+})();
+let MAIN_PHOTO_URL = null;
+
+$(document).on('change', '#main-image-upload', function(e){
+  const file = e.target.files && e.target.files[0];
+  if (!file) return;
+
+  if (!/^image\//.test(file.type)) {
+    alert('이미지 파일만 업로드할 수 있어요.');
+    this.value = '';
+    return;
+  }
+  if (file.size > 15 * 1024 * 1024) {
+    alert('이미지는 15MB 이하여야 해요.');
+    this.value = '';
+    return;
+  }
+
+  if (window._previewObjectURL) {
+    URL.revokeObjectURL(window._previewObjectURL);
+  }
+  const url = URL.createObjectURL(file);
+  window._previewObjectURL = url;
+
+  $('.preview-box img')
+    .attr('src', url)
+    .attr('alt', file.name || '대표 이미지');
+
+  // 3) 필요 시 전송용으로도 들고 있기
+  //   (현재는 미리보기만 사용. 서버 업로드 후 받은 실제 URL을 넣는 게 정석)
+  MAIN_PHOTO_URL = url; // 미리보기 전용
+});
+
+// (선택) 저장 시 photoUrl 보내고 싶다면, 기존 payload에 아래처럼 할당하세요.
+// photoUrl: MAIN_PHOTO_URL || null,
+
+
+$(document).on("click", ".template-grid .template-card", function(){
+  var tpl = parseInt($(this).attr("data-tpl"), 10) || 0;
+  if (!tpl) return;
+  SELECTED_TEMPLATE_NO = tpl;
+  $(".template-grid .template-card").removeClass("is-active").attr("aria-selected", "false");
+  $(this).addClass("is-active").attr("aria-selected", "true");
+});
+
+
+// 저장
+$(document).on("click", ".save-btn", function(){
   const CTX = "${pageContext.request.contextPath}";
 
-  // 필수값
   const categoryNo    = SELECTED_CATEGORY_NO;
   const eventNo       = Number($("#funding-table").val() || 0);
   const celebrateDate = $("#celebrate-date").val();
 
-  if (!categoryNo){ alert("행사 카테고리를 선택하세요."); return; }
+  if (!categoryNo){ alert("기념일 카테고리를 선택하세요."); return; }
   if (!eventNo){ alert("기념일을 선택하세요."); return; }
-  if (!celebrateDate){ alert("예식일(행사 날짜)을 선택하세요."); return; }
+  if (!celebrateDate){ alert("행사 날짜를 선택하세요."); return; }
 
   const payload = {
     categoryNo,
     eventNo,
     celebrateDate,
     celebrateTime: $("#celebrate-time").val() || null,
-    greeting: $("#greeting").val() || null,
-    place: $("#place").val() || null,
-    address1: $("#address1").val() || null,
-    address2: $("#address2").val() || null
-    // userNo ✖ (서버가 세션에서 주입)
+    greeting:      $("#greeting").val() || null,
+    place:         $("#place").val() || null,
+    address1:      $("#address1").val() || null,
+    address2:      $("#address2").val() || null,
+
+    // 타입 A/B/C/D → 1/2/3/4 로 전송 (DB 컬럼 가정: themeNo)
+    themeNo:       SELECTED_TEMPLATE_NO || null,
+
+    // 아직 폼에서 안 받는 필드들은 null
+    photoUrl:      null,
+    groomName:           $("#groom-name").val() || null,
+    groomContect:        $("#groom-contect").val() || null,
+    groomFatherName:     $("#groom-father-name").val() || null,
+    groomFatherContect:  $("#groom-father-contect").val() || null,
+    groomMotherName:     $("#groom-mother-name").val() || null,
+    groomMotherContect:  $("#groom-mother-contect").val() || null,
+
+    brideName:           $("#bride-name").val() || null,
+    brideContect:        $("#bride-contect").val() || null,
+    brideFatherName:     $("#bride-father-name").val() || null,
+    brideFatherContect:  $("#bride-father-contect").val() || null,
+    brideMotherName:     $("#bride-mother-name").val() || null,
+    brideMotherContect:  $("#bride-mother-contect").val() || null,
+
+    babyName:            $("#baby-name").val() || null,
+    babyFatherName:      $("#baby-father-name").val() || null,
+    babyFatherContect:   $("#baby-father-contect").val() || null,
+    babyMotherName:      $("#baby-mother-name").val() || null,
+    babyMotherContect:   $("#baby-mother-contect").val() || null
+    // userNo는 서버 세션에서 주입
   };
+
+  const $btn = $(this).prop("disabled", true);
 
   $.ajax({
     url: CTX + "/api/invtreg",
     type: "POST",
     contentType: "application/json; charset=UTF-8",
-    data: JSON.stringify(payload),
-    dataType: "json"
+    dataType: "json",
+    data: JSON.stringify(payload)
   })
   .done(function(res){
-    if (res && res.result === 'success'){
+    if (res && res.result === "success"){
       alert("초대장이 등록되었습니다.");
-      // location.href = CTX + "/invitation";
+      location.href = CTX + "/invitationList";
     } else {
       alert(res && res.message ? res.message : "초대장 등록에 실패했습니다.");
     }
   })
   .fail(function(xhr){
+    console.error("[POST /api/invtreg] fail:", xhr.status, (xhr.responseText||"").slice(0,200));
     alert("초대장 등록에 실패했습니다. 잠시 후 다시 시도해주세요.");
-    console.error(xhr.responseText);
+  })
+  .always(function(){
+    $btn.prop("disabled", false);
   });
 });
-
 
 </script>
 
