@@ -16,56 +16,46 @@ import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class CartController {
-	//field
+	// field
 	@Autowired
 	private CartService cartservice;
-	//editor
-	
-	//method g/s
-	
-	//method normal
-	
-	
-	//장바구니리스트
-	@RequestMapping(value="/cart", method= {RequestMethod.GET, RequestMethod.POST})
-	public String list(HttpSession session, Model model) {	
+	// editor
+
+	// method g/s
+
+	// method normal
+
+	// 장바구니리스트
+	@RequestMapping(value = "/cart", method = { RequestMethod.GET, RequestMethod.POST })
+	public String list(HttpSession session, Model model) {
 		System.out.println("CartController.list()");
-		
+
 		UserVO authuser = (UserVO) session.getAttribute("authUser");
-		
-		if(authuser == null) {
+
+		if (authuser == null) {
 			// 로그인 안된 상태 → 로그인 페이지로 리다이렉트
 			return "redirect:/loginForm";
 		} else {
-			
 			int user_no = authuser.getUserNo();
-			
+
 			List<CartListVO> cartList = cartservice.execartList(user_no);
-			
-			if(cartList.isEmpty()) {
-				return "shop/
+
+			if (cartList.isEmpty()) {
+				return "shop/no_cart";
+			} else {
+				model.addAttribute("cList", cartList);
+				System.out.println(cartList);
+
+				return "shop/cart";
 			}
-			
-			model.addAttribute("cList", cartList);
-			
-			System.out.println(cartList);
-			
-			return "shop/cart";
 		}
-		
+
 	}
-	
-	
-	//장바구니등록
-	
-	
-	
-	//장바구니수정
-	
-	
-	
-	//장바구니삭제
-	
-	
-	
+
+	// 장바구니등록
+
+	// 장바구니수정
+
+	// 장바구니삭제
+
 }

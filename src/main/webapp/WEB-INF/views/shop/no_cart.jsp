@@ -6,10 +6,10 @@
 
 <head>
 <meta charset="utf-8">
-<link rel="stylesheet" href="../../../assets/css/reset.css">
-<link rel="stylesheet" href="../../../assets/css/Global.css">
-<link rel="stylesheet" href="../../../assets/css/shop/cart.css">
-<link rel="stylesheet" href="../../../assets/css/moduler.css">
+<link rel="stylesheet" href="/assets/css/reset.css">
+<link rel="stylesheet" href="/assets/css/Global.css">
+<link rel="stylesheet" href="/assets/css/shop/nocart.css">
+<link rel="stylesheet" href="/assets/css/moduler.css">
 
 </head>
 
@@ -18,85 +18,25 @@
 	<c:import url="/WEB-INF/views/include/Header.jsp"></c:import>
 	<!-- ---------------------------------------------------- -->
 
-
 	<content class="controller">
-	<div id="sec-content" class="sector">
-		<div class="sec-sub-title">
-			<h2 class="header-sub">장바구니</h2>
-			<!-- 여기부터 코딩 시작!! -->
+		<div id="sec-content" class="sector">
+			<div class="sec-sub-title">
+				<h2 class="header-sub">장바구니</h2>
+				<!-- 여기부터 코딩 시작!! -->
+			</div>
+			<div class="sec-content-main">
+				<section class="main-banner">
+					<div class="column-flex-box row-align align-center gap-10">
+						<div class="banner-text">아직 담은 선물이 없어요</div>
+						<div class="banner-subtext">소중한 마음을 담아 선물을 골라보세요</div>
+						<a href="bottarimall"><button class="btn-basic btn-orange size-normal">장바구니 담으러 가기</button></a>
+					</div>
+				</section>
+
+			</div>
 		</div>
-		<div class="sec-content-main">
-			<main class="main">
-				<div class="container">
-			<c:forEach items="${requestScope.pList}" var="vo">
-					<div class="list-basic list-1280">
-						<div class="between-flex-box">
-							<div class="row-flex-box">
-								<img class="list-img-100" src="../../../photo/장바구니박명수.JPG"
-									alt="상품 이미지">
-								<div class="column-flex-box gap-10 margin-5">
-									<p class="text-16">신지마루</p>
-									<p class="item-name">“활명수 굿즈출시” [명수 4종] 맥세이프 그립 톡 홀더 스마트톡
-										자석 아이폰...</p>
-								</div>
-							</div>
-							<div class="row-flex-box">
-								<div class="column-flex-box">
-									<select class="btn-basic size-normal">
-										<option>옵션 변경</option>
-										<option>선택 안함</option>
-										<option>옵션 A</option>
-										<option>옵션 B</option>
-									</select> <select class="btn-basic size-normal">
-										<option>1개</option>
-										<option>2개</option>
-										<option>3개</option>
-									</select> <select class="btn-basic size-normal">
-										<option>기념일 선택</option>
-										<option>생일</option>
-										<option>결혼</option>
-										<option>이벤트</option>
-										<option>돌잔치</option>
-									</select>
-								</div>
-								<div class="column-flex-box column-align size-normal">
-									<label for="select">담기</label>
-									<input type="checkbox" id="select">
-								</div>
-								<button class="btn-basic size-normal btn-orange column-align">삭제</button>
-							</div>
-						</div>
-					</div>
-			</c:forEach>
-
-
-
-
-
-
-
-					<!-- 총 금액 -->
-					<div class="summary ">
-						<div class="text-16">
-							상품금액: 36,000원
-						</div>
-						<div class="text-16">
-							배송비: 3,000원
-						</div>
-						<div class="text-18 bold">
-							총 결제금액: 39,000원
-						</div>
-					</div>
-
-					<div class="buy-button">
-						<button>구매하기</button>
-					</div>
-				</div>
-		</div>
-		</main>
-	</div>
-	</div>
 	</content>
+	
 	<!------------------------ Footer호출 ----------------------->
 	<c:import url="/WEB-INF/views/include/Footer.jsp"></c:import>
 	<!-- ---------------------------------------------------- -->

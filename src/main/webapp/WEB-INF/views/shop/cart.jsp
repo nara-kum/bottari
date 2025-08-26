@@ -28,52 +28,50 @@
 		<div class="sec-content-main">
 			<main class="main">
 				<div class="container">
-			<c:forEach items="${requestScope.pList}" var="vo">
-					<div class="list-basic list-1280">
-						<div class="between-flex-box">
-							<div class="row-flex-box">
-								<img class="list-img-100" src="../../../photo/장바구니박명수.JPG"
-									alt="상품 이미지">
-								<div class="column-flex-box gap-10 margin-5">
-									<p class="text-16">신지마루</p>
-									<p class="item-name">“활명수 굿즈출시” [명수 4종] 맥세이프 그립 톡 홀더 스마트톡
-										자석 아이폰...</p>
+					<div class="column-flex-box gap-10">
+						<c:forEach items="${requestScope.cList}" var="vo">
+								<div class="list-basic list-1280">
+									<div class="between-flex-box">
+										<div class="row-flex-box">
+											<img class="list-img-100" src="${vo.itemimg}"
+												alt="상품 이미지">
+											<div class="column-flex-box gap-10 margin-5">
+												<p class="text-16">${vo.brand}</p>
+												<p class="item-name">${vo.title}</p>
+												<p class="text-16 bold">${vo.price}원</p>
+											</div>
+										</div>
+										<div class="row-flex-box">
+											<div class="column-flex-box">
+												<select class="btn-basic size-normal">
+													<option>옵션 변경</option>
+													<option>선택 안함</option>
+													<option>옵션 A</option>
+													<option>옵션 B</option>
+												</select> 
+												<select class="btn-basic size-normal">
+													<option>1개</option>
+													<option>2개</option>
+													<option>3개</option>
+												</select> 
+												<select class="btn-basic size-normal">
+													<option>기념일 선택</option>
+													<option>생일</option>
+													<option>결혼</option>
+													<option>이벤트</option>
+													<option>돌잔치</option>
+												</select>
+											</div>
+											<div class="column-flex-box column-align size-normal">
+												<label for="select">담기</label>
+												<input type="checkbox" id="select">
+											</div>
+											<button class="btn-basic size-normal btn-orange column-align">삭제</button>
+										</div>
+									</div>
 								</div>
-							</div>
-							<div class="row-flex-box">
-								<div class="column-flex-box">
-									<select class="btn-basic size-normal">
-										<option>옵션 변경</option>
-										<option>선택 안함</option>
-										<option>옵션 A</option>
-										<option>옵션 B</option>
-									</select> <select class="btn-basic size-normal">
-										<option>1개</option>
-										<option>2개</option>
-										<option>3개</option>
-									</select> <select class="btn-basic size-normal">
-										<option>기념일 선택</option>
-										<option>생일</option>
-										<option>결혼</option>
-										<option>이벤트</option>
-										<option>돌잔치</option>
-									</select>
-								</div>
-								<div class="column-flex-box column-align size-normal">
-									<label for="select">담기</label>
-									<input type="checkbox" id="select">
-								</div>
-								<button class="btn-basic size-normal btn-orange column-align">삭제</button>
-							</div>
-						</div>
+						</c:forEach>
 					</div>
-			</c:forEach>
-
-
-
-
-
-
 
 					<!-- 총 금액 -->
 					<div class="summary ">
