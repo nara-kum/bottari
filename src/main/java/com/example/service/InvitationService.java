@@ -25,7 +25,6 @@ public class InvitationService {
 	}
 
 	// 초대장 리스트 셀렉트
-
     public List<InvitationVO> exeInvtList(int userNo){
         return invitationRepository.selectInvitationList(userNo);
     }

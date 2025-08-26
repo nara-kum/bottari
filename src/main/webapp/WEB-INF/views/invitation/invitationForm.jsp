@@ -48,7 +48,7 @@
 
                     <div class="main-content">
                         <div class="preview-box">
-                            <img src="https://via.placeholder.com/300x300.png?text=대표+이미지" alt="대표 이미지">
+                            <img id="preview-image" src="${pageContext.request.contextPath}/assets/images/placeholder.png" alt="대표 이미지">
                         </div>
 
                         <div class="template-section">
@@ -69,42 +69,6 @@
                                 </div>
 
                             </div>
-
-                            <!-- <div class="card-box">
-                                <div class="sub-title">디자인</div>
-                                <div class="section">
-                                    <div class="small-label">배경</div>
-                                    <div class="option-group"><button class="btn">종이</button><button
-                                            class="btn">화이트</button></div>
-
-                                    <div class="small-label">테마</div>
-                                    <div class="option-group">
-                                        <span class="btn"
-                                            style="width:20px;height:20px;border-radius:50%;padding:0;background:#d9cdbf;"></span>
-                                        <span class="btn"
-                                            style="width:20px;height:20px;border-radius:50%;padding:0;background:#e9d6cc;"></span>
-                                        <span class="btn"
-                                            style="width:20px;height:20px;border-radius:50%;padding:0;background:#e0b5a4;"></span>
-                                        <span class="btn"
-                                            style="width:20px;height:20px;border-radius:50%;padding:0;background:#a3a1dc;"></span>
-                                    </div>
-
-                                    <div class="small-label">폰트</div>
-                                    <div class="option-group"><button class="btn">돋움1</button><button
-                                            class="btn">돋움2</button><button class="btn">바탕1</button><button
-                                            class="btn">바탕2</button>
-                                    </div>
-
-                                    <div class="small-label">폰트</div>
-                                    <div class="option-group"><button class="btn">보통</button><button
-                                            class="btn">약간굵게</button><button class="btn">크게</button></div>
-
-                                    <div class="small-label">신랑/신부 표기 순서</div>
-                                    <div class="option-group"><button class="btn">약간굵게</button><button
-                                            class="btn">신부먼저</button>
-                                    </div>
-                                </div>
-                            </div> -->
 
                             <div class="card-box">
                                 <div class="sub-title">신랑측 정보</div>
@@ -233,22 +197,32 @@
 <!------------------------ Footer호출 ----------------------->
 <c:import url="/WEB-INF/views/include/Footer.jsp"></c:import>
 <!-- ---------------------------------------------------- -->
+
+
 <script>
-    
-let SELECTED_CATEGORY_NO = 0;   // 카테고리(결혼/생일/…)
-let SELECTED_TEMPLATE_NO = 0;   // 타입 A/B/C/D → 1/2/3/4
-
-// 카테고리 버튼 클릭 시 활성화 표시
-  $(document).on('click', '.category-buttons .cat', function(){
-    SELECTED_CATEGORY_NO = Number($(this).data('cat') || 0);
-    // 같은 그룹 내에서만 단독 선택
-    $(this).closest('.category-buttons').find('.cat').removeClass('is-active');
-    $(this).addClass('is-active');
-  });
-
 (function(){
   const CTX = "${pageContext.request.contextPath}";
+  let SELECTED_CATEGORY_NO = 0;  // 카테고리(결혼/생일/…)
+  let SELECTED_TEMPLATE_NO = 0;  // 타입 A/B/C/D → 1/2/3/4
 
+  // ---------- 유틸 ----------
+  function esc(s){ if (s==null) return ""; return String(s)
+    .replace(/&/g,"&amp;").replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+
+  function getArrayFromJsonResult(json){
+    // 서버 JsonResult 포맷: { result:"success", data:[], apiData:[], list:[] }
+    if (!json) return [];
+    if (Array.isArray(json)) return json;
+    if (json.result === "success"){
+      if (Array.isArray(json.apiData)) return json.apiData;
+      if (Array.isArray(json.data))    return json.data;
+      if (Array.isArray(json.list))    return json.list;
+    }
+    return [];
+  }
+
+  // ---------- 기념일 옵션 로드 ----------
   function loadAnniversaryOptions(){
     $.ajax({
       url: CTX + "/api/eventlist",
@@ -256,180 +230,215 @@ let SELECTED_TEMPLATE_NO = 0;   // 타입 A/B/C/D → 1/2/3/4
       dataType: "json"
     })
     .done(function(json){
-      // 다양한 응답 래핑 허용
-      var data = [];
-      if (Array.isArray(json)) {
-        data = json;
-      } else if (json && json.result === 'success') {
-        if (Array.isArray(json.data)) data = json.data;
-        else if (json.data && Array.isArray(json.data.list)) data = json.data.list;
-        else if (Array.isArray(json.apiData)) data = json.apiData;
-      } else if (json && Array.isArray(json.list)) {
-        data = json.list;
-      }
-
-      var $sel = $("#funding-table").empty()
+      const rows = getArrayFromJsonResult(json);
+      const $sel = $("#funding-table").empty()
         .append('<option value="">------- 기념일 선택 -------</option>');
 
-      if (!data.length){
+      if (!rows.length){
         $sel.append('<option value="" disabled>기념일이 없습니다</option>');
         return;
       }
-
-      for (var i=0; i<data.length; i++){
-        var ev = data[i] || {};
-        // camelCase / snake_case 모두 허용
-        var eventNo   = Number(ev.eventNo != null ? ev.eventNo : ev.event_no);
-        var eventName = (ev.eventName != null ? ev.eventName : ev.event_name) || '';
+      for (let i=0;i<rows.length;i++){
+        const ev = rows[i]||{};
+        const eventNo   = Number(ev.eventNo != null ? ev.eventNo : ev.event_no);
+        const eventName = (ev.eventName != null ? ev.eventName : ev.event_name) || '';
         if (!eventNo) continue;
         $sel.append($('<option>', { value: eventNo, text: eventName }));
       }
     })
-    .fail(function(xhr, status, err){
-      console.error("[/api/eventlist] fail:", status, err, xhr.status, (xhr.responseText||'').slice(0,200));
+    .fail(function(xhr){
+      console.error("[GET /api/eventlist] fail:", xhr.status, (xhr.responseText||"").slice(0,200));
       $("#funding-table").empty()
-        .append('<option value="">----- 기념일 선택 -----</option>')
+        .append('<option value="">------- 기념일 선택 -------</option>')
         .append('<option value="" disabled>불러오기 실패</option>');
     });
   }
-  
-  function initTemplateCards(){
-    var $cards = $(".template-grid .template-card");
-    $cards.each(function(idx){
-      // 이미 data-tpl 있으면 유지, 없으면 1~4 할당
-      if (!$(this).attr("data-tpl")) {
-        $(this).attr("data-tpl", (idx+1)); // A=1, B=2, C=3, D=4
-      }
+
+  // ---------- 카테고리 버튼 ----------
+  function bindCategoryButtons(){
+    $(document).on("click", ".category-buttons .cat", function(){
+      SELECTED_CATEGORY_NO = Number($(this).data("cat") || 0);
+      $(this).closest(".category-buttons").find(".cat").removeClass("is-active");
+      $(this).addClass("is-active");
     });
   }
 
+  // ---------- 템플릿 카드 ----------
+  function initTemplateCards(){
+    const $cards = $(".template-grid .template-card");
+    $cards.each(function(idx){
+      if (!$(this).attr("data-tpl")) $(this).attr("data-tpl", idx+1); // 1,2,3,4
+    });
+    $(document).on("click", ".template-grid .template-card", function(){
+      const tpl = parseInt($(this).attr("data-tpl"), 10) || 0;
+      if (!tpl) return;
+      SELECTED_TEMPLATE_NO = tpl;
+      $(".template-grid .template-card").removeClass("is-active").attr("aria-selected","false");
+      $(this).addClass("is-active").attr("aria-selected","true");
+    });
+  }
+
+  // ---------- 대표 이미지 프리뷰(외부 도메인 X + 무한 onerror 방지) ----------
+  function bindPreview(){
+    const $file    = $("#main-image-upload");
+    const $preview = $(".preview-box img").first();
+
+    const LOCAL_PLACEHOLDER = CTX + "/assets/images/placeholder.png";
+    const DATA_PLACEHOLDER =
+      'data:image/svg+xml;utf8,' +
+      encodeURIComponent(
+        '<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300">' +
+        '<rect width="100%" height="100%" fill="#f3f4f6"/>' +
+        '<text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" ' +
+        'font-family="sans-serif" font-size="16" fill="#9ca3af">대표 이미지</text>' +
+        '</svg>'
+      );
+
+    if (!$preview.attr("src")) $preview.attr("src", LOCAL_PLACEHOLDER);
+
+    $preview.on("error", function(){
+      const img = this;
+      if (!img.dataset.fallbackTriedLocal){
+        img.dataset.fallbackTriedLocal = "1";
+        img.src = LOCAL_PLACEHOLDER;   // 로컬 정적 파일 재시도
+        return;
+      }
+      if (!img.dataset.fallbackTriedData){
+        img.dataset.fallbackTriedData = "1";
+        img.onerror = null;            // 더 이상 onerror 루프 금지
+        img.src = DATA_PLACEHOLDER;    // 최후의 보루(항상 성공)
+        return;
+      }
+    });
+
+    $file.on("change", function(){
+      const f = this.files && this.files[0];
+      if (!f) return;
+      const objUrl = URL.createObjectURL(f);
+      $preview.attr("src", objUrl);
+      setTimeout(()=>URL.revokeObjectURL(objUrl), 30000);
+    });
+  }
+
+  // ---------- 파일 업로드 ----------
+  async function uploadMainImageIfAny(){
+    const $file = $("#main-image-upload");
+    const f = $file[0] && $file[0].files && $file[0].files[0];
+    if (!f) return null; // 파일 선택 안 했으면 업로드 생략
+
+    const fd = new FormData();
+    fd.append("file", f);
+
+    // 서버 응답 예: {result:"success", data:{url:"/upload/2025/08/11/xxx.jpg"}}
+    const res = await $.ajax({
+      url: CTX + "/api/upload/public",
+      type: "POST",
+      data: fd,
+      processData: false,
+      contentType: false,
+      dataType: "json"
+    });
+    if (res && res.result === "success"){
+      // data.url 또는 url 키 지원
+      return (res.data && res.data.url) || res.url || null;
+    }
+    throw new Error(res && res.message ? res.message : "이미지 업로드 실패");
+  }
+
+  // ---------- 저장 ----------
+  async function handleSave(btn){
+    const $btn = $(btn).prop("disabled", true);
+
+    try{
+      const categoryNo    = SELECTED_CATEGORY_NO;
+      const eventNo       = Number($("#funding-table").val() || 0);
+      const celebrateDate = $("#celebrate-date").val();
+
+      if (!categoryNo){ alert("기념일 카테고리를 선택하세요."); return; }
+      if (!eventNo){ alert("기념일을 선택하세요."); return; }
+      if (!celebrateDate){ alert("행사 날짜를 선택하세요."); return; }
+
+      // 1) 대표 이미지 업로드(선택된 경우)
+      let photoUrl = null;
+      try{
+        photoUrl = await uploadMainImageIfAny(); // 없으면 null
+      }catch(e){
+        console.warn("[upload] skip or fail:", e.message||e);
+        // 업로드 실패 시 저장 중단하고 싶으면 여기서 return 처리
+        // return;
+      }
+
+      // 2) 초대장 저장
+      const payload = {
+        categoryNo,
+        eventNo,
+        celebrateDate,
+        celebrateTime: $("#celebrate-time").val() || null,
+        greeting:      $("#greeting").val() || null,
+        place:         $("#place").val() || null,
+        address1:      $("#address1").val() || null,
+        address2:      $("#address2").val() || null,
+        themeNo:       SELECTED_TEMPLATE_NO || 0,
+        photoUrl:      photoUrl,
+
+        groomName:           $("#groom-name").val() || null,
+        groomContect:        $("#groom-contect").val() || null,
+        groomFatherName:     $("#groom-father-name").val() || null,
+        groomFatherContect:  $("#groom-father-contect").val() || null,
+        groomMotherName:     $("#groom-mother-name").val() || null,
+        groomMotherContect:  $("#groom-mother-contect").val() || null,
+
+        brideName:           $("#bride-name").val() || null,
+        brideContect:        $("#bride-contect").val() || null,
+        brideFatherName:     $("#bride-father-name").val() || null,
+        brideFatherContect:  $("#bride-father-contect").val() || null,
+        brideMotherName:     $("#bride-mother-name").val() || null,
+        brideMotherContect:  $("#bride-mother-contect").val() || null,
+
+        babyName:            $("#baby-name").val() || null,
+        babyFatherName:      $("#baby-father-name").val() || null,
+        babyFatherContect:   $("#baby-father-contect").val() || null,
+        babyMotherName:      $("#baby-mother-name").val() || null,
+        babyMotherContect:   $("#baby-mother-contect").val() || null
+        // userNo는 서버 세션에서 주입
+      };
+
+      const res = await $.ajax({
+        url: CTX + "/api/invtreg",
+        type: "POST",
+        contentType: "application/json; charset=UTF-8",
+        dataType: "json",
+        data: JSON.stringify(payload)
+      });
+
+      if (res && res.result === "success"){
+        alert("초대장이 등록되었습니다.");
+        location.href = CTX + "/invitationList";
+      } else {
+        alert(res && res.message ? res.message : "초대장 등록에 실패했습니다.");
+      }
+    }catch(err){
+      console.error("[save] error:", err);
+      alert("초대장 등록에 실패했습니다. 잠시 후 다시 시도해주세요.");
+    }finally{
+      $btn.prop("disabled", false);
+    }
+  }
+
+  // ---------- 바인딩 ----------
   $(function(){
     loadAnniversaryOptions();
+    bindCategoryButtons();
     initTemplateCards();
-  });
+    bindPreview();
 
+    $(document).on("click", ".save-btn", function(){
+      handleSave(this);
+    });
+  });
 })();
-let MAIN_PHOTO_URL = null;
-
-$(document).on('change', '#main-image-upload', function(e){
-  const file = e.target.files && e.target.files[0];
-  if (!file) return;
-
-  if (!/^image\//.test(file.type)) {
-    alert('이미지 파일만 업로드할 수 있어요.');
-    this.value = '';
-    return;
-  }
-  if (file.size > 15 * 1024 * 1024) {
-    alert('이미지는 15MB 이하여야 해요.');
-    this.value = '';
-    return;
-  }
-
-  if (window._previewObjectURL) {
-    URL.revokeObjectURL(window._previewObjectURL);
-  }
-  const url = URL.createObjectURL(file);
-  window._previewObjectURL = url;
-
-  $('.preview-box img')
-    .attr('src', url)
-    .attr('alt', file.name || '대표 이미지');
-
-  // 3) 필요 시 전송용으로도 들고 있기
-  //   (현재는 미리보기만 사용. 서버 업로드 후 받은 실제 URL을 넣는 게 정석)
-  MAIN_PHOTO_URL = url; // 미리보기 전용
-});
-
-// (선택) 저장 시 photoUrl 보내고 싶다면, 기존 payload에 아래처럼 할당하세요.
-// photoUrl: MAIN_PHOTO_URL || null,
-
-
-$(document).on("click", ".template-grid .template-card", function(){
-  var tpl = parseInt($(this).attr("data-tpl"), 10) || 0;
-  if (!tpl) return;
-  SELECTED_TEMPLATE_NO = tpl;
-  $(".template-grid .template-card").removeClass("is-active").attr("aria-selected", "false");
-  $(this).addClass("is-active").attr("aria-selected", "true");
-});
-
-
-// 저장
-$(document).on("click", ".save-btn", function(){
-  const CTX = "${pageContext.request.contextPath}";
-
-  const categoryNo    = SELECTED_CATEGORY_NO;
-  const eventNo       = Number($("#funding-table").val() || 0);
-  const celebrateDate = $("#celebrate-date").val();
-
-  if (!categoryNo){ alert("기념일 카테고리를 선택하세요."); return; }
-  if (!eventNo){ alert("기념일을 선택하세요."); return; }
-  if (!celebrateDate){ alert("행사 날짜를 선택하세요."); return; }
-
-  const payload = {
-    categoryNo,
-    eventNo,
-    celebrateDate,
-    celebrateTime: $("#celebrate-time").val() || null,
-    greeting:      $("#greeting").val() || null,
-    place:         $("#place").val() || null,
-    address1:      $("#address1").val() || null,
-    address2:      $("#address2").val() || null,
-
-    // 타입 A/B/C/D → 1/2/3/4 로 전송 (DB 컬럼 가정: themeNo)
-    themeNo:       SELECTED_TEMPLATE_NO || null,
-
-    // 아직 폼에서 안 받는 필드들은 null
-    photoUrl:      null,
-    groomName:           $("#groom-name").val() || null,
-    groomContect:        $("#groom-contect").val() || null,
-    groomFatherName:     $("#groom-father-name").val() || null,
-    groomFatherContect:  $("#groom-father-contect").val() || null,
-    groomMotherName:     $("#groom-mother-name").val() || null,
-    groomMotherContect:  $("#groom-mother-contect").val() || null,
-
-    brideName:           $("#bride-name").val() || null,
-    brideContect:        $("#bride-contect").val() || null,
-    brideFatherName:     $("#bride-father-name").val() || null,
-    brideFatherContect:  $("#bride-father-contect").val() || null,
-    brideMotherName:     $("#bride-mother-name").val() || null,
-    brideMotherContect:  $("#bride-mother-contect").val() || null,
-
-    babyName:            $("#baby-name").val() || null,
-    babyFatherName:      $("#baby-father-name").val() || null,
-    babyFatherContect:   $("#baby-father-contect").val() || null,
-    babyMotherName:      $("#baby-mother-name").val() || null,
-    babyMotherContect:   $("#baby-mother-contect").val() || null
-    // userNo는 서버 세션에서 주입
-  };
-
-  const $btn = $(this).prop("disabled", true);
-
-  $.ajax({
-    url: CTX + "/api/invtreg",
-    type: "POST",
-    contentType: "application/json; charset=UTF-8",
-    dataType: "json",
-    data: JSON.stringify(payload)
-  })
-  .done(function(res){
-    if (res && res.result === "success"){
-      alert("초대장이 등록되었습니다.");
-      location.href = CTX + "/invitationList";
-    } else {
-      alert(res && res.message ? res.message : "초대장 등록에 실패했습니다.");
-    }
-  })
-  .fail(function(xhr){
-    console.error("[POST /api/invtreg] fail:", xhr.status, (xhr.responseText||"").slice(0,200));
-    alert("초대장 등록에 실패했습니다. 잠시 후 다시 시도해주세요.");
-  })
-  .always(function(){
-    $btn.prop("disabled", false);
-  });
-});
-
 </script>
+
 
 </body>
 
