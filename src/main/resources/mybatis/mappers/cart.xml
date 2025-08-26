@@ -1,5 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cart">
+	<select id="selectCartList" resultType="com.example.vo.CartListVO">
+		<![CDATA[
+			select	c.cart_no,
+					c.category_no,
+			        c.user_no,
+			        c.Registration_date,
+			        c.quantity,
+			        c.product_no,
+			        p.title,
+			        p.brand,
+			        p.price,
+			        p.shipping_cost,
+			        p.itemimg,
+			        co.cartoption_no,
+			        co.detailoption_no
+			from cart c
+			left join product p on c.product_no = p.product_no
+			left join cart_option co on c.cart_no = co.cart_no
+			left join option_detail od on co.detailoption_no = od.detailoption_no
+			where user_no = #{user_no}
+		]]>
+	</select>
 	
 </mapper>

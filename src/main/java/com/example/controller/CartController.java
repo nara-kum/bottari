@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.example.service.CartService;
 import com.example.vo.CartListVO;
+import com.example.vo.UserVO;
+
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class CartController {
@@ -24,12 +27,25 @@ public class CartController {
 	
 	//장바구니리스트
 	@RequestMapping(value="/cart", method= {RequestMethod.GET, RequestMethod.POST})
-	public String list() {	
+	public String list(HttpSession session) {	
 		System.out.println("CartController.list()");
 		
-//		List<CartListVO> cartList = cartservice.execartList();
+		UserVO authuser = (UserVO) session.getAttribute("authUser");
 		
-		return "shop/cart";
+		if(authuser == null) {
+			// 로그인 안된 상태 → 로그인 페이지로 리다이렉트
+			return "redirect:/loginForm";
+		} else {
+			
+			int user_no = authuser.getUserNo();
+			
+			List<CartListVO> cartList = cartservice.execartList(user_no);
+			
+			System.out.println(cartList);
+			
+			return "shop/cart";
+		}
+		
 	}
 	
 	
