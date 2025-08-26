@@ -53,7 +53,7 @@ public class ShopController {
 	
 	
 	
-	//상품등록폼
+	//상품등록폼x
 	@RequestMapping(value="/shopform", method= {RequestMethod.GET, RequestMethod.POST})
 	public String shopform() {	
 		System.out.println("ShopController.shopform");
