@@ -173,110 +173,117 @@
 	<!-- ---------------------------------------------------- -->
 
 	<script>
-		// 상품 기본 정보
-		const productPrice = ${productViewVO.price};
-		
-		// 페이지 로드 시 옵션 데이터 가져오기
-		$(document).ready(function() {
-			console.log('상품 가격:', productPrice);
-			loadOptionDetails();
-		});
-		
-		// 옵션 상세 데이터 로드
-		function loadOptionDetails() {
-			$('.option-select').each(function() {
-				const optionSelect = $(this);
-				const optionNo = optionSelect.data('option-no');
-				
-				$.ajax({
-					url: "${pageContext.request.contextPath}/api/optiondetail",
-					type: "post",
-					data: {optionNo: optionNo},
-					dataType: "json",
-					success: function(data) {
-						console.log('옵션 데이터:', data);
-						data.forEach(function(item) {
-							optionSelect.append('<option value="' + item.detailoption_no + '">' + item.detailoption_name + '</option>');
-						});
-					},
-					error: function(xhr, status, error) {
-						console.error('옵션 로드 실패:', error);
-					}
-				});
-			});
-		}
-		
-		// 수량 변경
-		function changeQuantity(change) {
-			const quantityInput = document.getElementById('quantity');
-			let currentQuantity = parseInt(quantityInput.value);
-			currentQuantity += change;
+	// 상품 기본 정보
+	const productPrice = ${productViewVO.price};
+
+	// 페이지 로드 시 옵션 데이터 가져오기
+	$(document).ready(function() {
+		console.log('상품 가격:', productPrice);
+		loadOptionDetails();
+		// 페이지 로드 시 초기 가격 설정
+		updatePrice();
+	});
+
+	// 옵션 상세 데이터 로드
+	function loadOptionDetails() {
+		$('.option-select').each(function() {
+			const optionSelect = $(this);
+			const optionNo = optionSelect.data('option-no');
 			
-			if (currentQuantity < 1) {
-				currentQuantity = 1;
-			}
-			
-			quantityInput.value = currentQuantity;
-			updatePrice();
-		}
-		
-		// 옵션 선택 표시 업데이트
-		function updateOptionDisplay() {
-			let optionText = '';
-			let hasSelectedOptions = false;
-			
-			$('.option-select').each(function() {
-				const select = $(this)[0];
-				if (select.value !== '') {
-					hasSelectedOptions = true;
-					const optionName = $(select).find('option:first').text().replace('을(를) 선택하세요', '');
-					const selectedText = $(select).find('option:selected').text();
-					optionText += '<div style="font-size: 14px; color: #666; margin: 2px 0;">선택한 ' + optionName + ': ' + selectedText + '</div>';
+			$.ajax({
+				url: "${pageContext.request.contextPath}/api/optiondetail",
+				type: "post",
+				data: {optionNo: optionNo},
+				dataType: "json",
+				success: function(data) {
+					console.log('옵션 데이터:', data);
+					data.forEach(function(item) {
+						optionSelect.append('<option value="' + item.detailoption_no + '">' + item.detailoption_name + '</option>');
+					});
+				},
+				error: function(xhr, status, error) {
+					console.error('옵션 로드 실패:', error);
 				}
 			});
-			
-			// 옵션이 없는 상품인 경우 (옵션 select가 아예 없음)
-			if ($('.option-select').length === 0) {
-				optionText = '<div style="font-size: 14px; color: #666;">단일 상품 (옵션 없음)</div>';
-				hasSelectedOptions = true; // 단일 상품이므로 선택된 것으로 간주
-			}
-			
-			document.getElementById('selectedOptions').innerHTML = optionText;
-			
-			// 옵션을 선택했거나 단일 상품인 경우에만 선택한 상품 영역 표시
-			const selectedInfo = document.getElementById('selectedInfo');
-			if (hasSelectedOptions) {
-				selectedInfo.style.display = 'block';
-			} else {
-				selectedInfo.style.display = 'none';
-			}
-			
-			updatePrice();
+		});
+	}
+
+	// 수량 변경
+	function changeQuantity(change) {
+		const quantityInput = document.getElementById('quantity');
+		let currentQuantity = parseInt(quantityInput.value);
+		currentQuantity += change;
+		
+		if (currentQuantity < 1) {
+			currentQuantity = 1;
 		}
 		
-		// 가격 업데이트
-		function updatePrice() {
-			const quantity = parseInt(document.getElementById('quantity').value) || 1;
-			const totalPrice = productPrice * quantity;
-			
-			// 수량 표시 업데이트
-			document.getElementById('displayQuantity').textContent = quantity;
-			
-			// 가격 표시 업데이트
-			document.getElementById('productTotal').textContent = totalPrice.toLocaleString();
-			document.getElementById('totalAmount').textContent = totalPrice.toLocaleString();
-			
-			// 수량이 1보다 크거나 옵션이 선택된 경우 선택한 상품 영역 표시
-			const selectedInfo = document.getElementById('selectedInfo');
-			const hasSelectedOptions = $('.option-select').length === 0 || $('.option-select option:selected[value!=""]').length > 0;
-			
-			if (hasSelectedOptions && quantity >= 1) {
-				selectedInfo.style.display = 'block';
-				updateOptionDisplay(); // 옵션 표시도 함께 업데이트
+		quantityInput.value = currentQuantity;
+		updatePrice();
+	}
+
+	// 옵션 선택 표시 업데이트
+	function updateOptionDisplay() {
+		let optionText = '';
+		let hasSelectedOptions = false;
+		
+		$('.option-select').each(function() {
+			const select = $(this)[0];
+			if (select.value !== '') {
+				hasSelectedOptions = true;
+				const optionName = $(select).find('option:first').text().replace('을(를) 선택하세요', '');
+				const selectedText = $(select).find('option:selected').text();
+				optionText += '<div style="font-size: 14px; color: #666; margin: 2px 0;">선택한 ' + optionName + ': ' + selectedText + '</div>';
 			}
-			
-			console.log('가격 업데이트 - 수량:', quantity, '총 가격:', totalPrice);
+		});
+		
+		// 옵션이 없는 상품인 경우 (옵션 select가 아예 없음)
+		if ($('.option-select').length === 0) {
+			optionText = '<div style="font-size: 14px; color: #666;">단일 상품 (옵션 없음)</div>';
+			hasSelectedOptions = true; // 단일 상품이므로 선택된 것으로 간주
 		}
+		
+		document.getElementById('selectedOptions').innerHTML = optionText;
+		
+		// 옵션을 선택했거나 단일 상품인 경우에만 선택한 상품 영역 표시
+		const selectedInfo = document.getElementById('selectedInfo');
+		if (hasSelectedOptions) {
+			selectedInfo.style.display = 'block';
+		} else {
+			selectedInfo.style.display = 'none';
+		}
+		
+		updatePrice();
+	}
+
+	// 가격 업데이트 (수정된 부분)
+	function updatePrice() {
+		const quantity = parseInt(document.getElementById('quantity').value) || 1;
+		const totalPrice = productPrice * quantity;
+		
+		// 수량 표시 업데이트
+		const displayQuantityElement = document.getElementById('displayQuantity');
+		if (displayQuantityElement) {
+			displayQuantityElement.textContent = quantity;
+		}
+		
+		// 총 결제 금액 업데이트 (이 부분이 핵심!)
+		const totalAmountElement = document.getElementById('totalAmount');
+		if (totalAmountElement) {
+			totalAmountElement.textContent = totalPrice.toLocaleString();
+		}
+		
+		// 수량이 1보다 크거나 옵션이 선택된 경우 선택한 상품 영역 표시
+		const selectedInfo = document.getElementById('selectedInfo');
+		const hasSelectedOptions = $('.option-select').length === 0 || $('.option-select option:selected[value!=""]').length > 0;
+		
+		if (hasSelectedOptions && quantity >= 1) {
+			selectedInfo.style.display = 'block';
+			updateOptionDisplay(); // 옵션 표시도 함께 업데이트
+		}
+		
+		console.log('가격 업데이트 - 수량:', quantity, '총 가격:', totalPrice);
+	}
 	</script>
 
 </body>
