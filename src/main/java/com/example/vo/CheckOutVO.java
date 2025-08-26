@@ -11,6 +11,7 @@ public class CheckOutVO {
 	private String brand;
 	private int shipping_cost;
 	private String itemimg;
+	private String option_name;
 	private int item_total;
 	private int total_quantity;
 	private int total_amount;
@@ -19,7 +20,7 @@ public class CheckOutVO {
 		super();
 	}
 	public CheckOutVO(int cart_no, int user_no, int product_no, String title, int price, int quantity, String brand,
-			int shipping_cost, String itemimg, int item_total, int total_quantity, int total_amount) {
+			int shipping_cost, String itemimg, String option_name, int item_total, int total_quantity, int total_amount) {
 		super();
 		this.cart_no = cart_no;
 		this.user_no = user_no;
@@ -30,6 +31,7 @@ public class CheckOutVO {
 		this.brand = brand;
 		this.shipping_cost = shipping_cost;
 		this.itemimg = itemimg;
+		this.option_name = option_name;
 		this.item_total = item_total;
 		this.total_quantity = total_quantity;
 		this.total_amount = total_amount;
@@ -108,12 +110,18 @@ public class CheckOutVO {
 	public void setTotal_amount(int total_amount) {
 		this.total_amount = total_amount;
 	}
+	public String getOption_name() {
+		return option_name;
+	}
+	public void setOption_name(String option_name) {
+		this.option_name = option_name;
+	}
 	//method normal
 	@Override
 	public String toString() {
 		return "CheckOutVO [cart_no=" + cart_no + ", user_no=" + user_no + ", product_no=" + product_no + ", title="
 				+ title + ", price=" + price + ", quantity=" + quantity + ", brand=" + brand + ", shipping_cost="
-				+ shipping_cost + ", itemimg=" + itemimg + ", item_total=" + item_total + ", total_quantity="
-				+ total_quantity + ", total_amount=" + total_amount + "]";
+				+ shipping_cost + ", itemimg=" + itemimg + ", option_name=" + option_name + ", item_total=" + item_total
+				+ ", total_quantity=" + total_quantity + ", total_amount=" + total_amount + "]";
 	}
 }

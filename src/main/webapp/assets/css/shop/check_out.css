@@ -30,6 +30,16 @@
     width: 90%;
 }
 
+.gray {
+	color: gray;
+	width: 100% !important;
+}
+
+.detail-list .column-flex-box {
+	gap: 5px;
+	margin-left: 5px;
+}
+
 .margin-10 {
     width: 95%;
     margin-top: 10px;

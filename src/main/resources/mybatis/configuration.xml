@@ -15,5 +15,6 @@
         <mapper resource="mybatis/mappers/funding.xml" />
         <mapper resource="mybatis/mappers/checkout.xml" />
         <mapper resource="mybatis/mappers/history.xml" />
+        <mapper resource="mybatis/mappers/cart.xml" />
     </mappers>
 </configuration>

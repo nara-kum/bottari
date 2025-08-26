@@ -35,6 +35,7 @@
 	                            <div class="column-flex-box">
 	                                <div class="text-14">${vo.brand}</div>
 	                                <div class="text-14">${vo.title}</div>
+	                                <div class="text-12 gray">${vo.option_name}</div>
 	                            </div>
 	                        </div>
 	                        <div class="between-flex-box detail-list">
@@ -95,12 +96,32 @@
                         </div>
                     </div>
                     <div class="text-16 margin-10">최종 결제금액</div>
-
-                    <button id="paymentButton" class="btn-basic btn-orange size-large text-16 right-align"><fmt:formatNumber value="${final_amount}" type="currency" currencySymbol="" />원 결제하기</button>
+					<form id="paymentForm" action="${pageContext.request.contextPath}/checkout/payment" method="post">
+						<!-- 카트번호 -->
+						<input type="hidden" name="cart_no" value="${param.cart_no}">
+						<!-- 결제 수단 -->
+						<input type="hidden" name="paymentMethod" id="hiddenPaymentMethod">
+						<!-- 현금 영수증 여부 -->
+						<input type="hidden" name="cashReceiptRequested" id="hiddenCashReceipt" value="false">
+						<!-- 최종 결제 가격 -->
+						<input type="hidden" name="totalAmount" value="${final_amount}">
+						<!-- 총 갯수 (오타 수정: totalQuantitiy -> totalQuantity) -->
+						<input type="hidden" name="totalQuantity" value="${total_quantity}">
+						<!-- 배달요금 -->
+						<input type="hidden" name="shippingCost" value="${shipping_cost}">
+						
+						<c:forEach items="${requestScope.pList}" var="vo">
+							<input type="hidden" name="productId" value="${vo.product_no}">	
+							<input type="hidden" name="quantity" value="${vo.quantity}">	
+							<input type="hidden" name="itemTotal" value="${vo.item_total}">	
+						</c:forEach>
+						
+                    	<button type="submit" id="paymentButton" class="btn-basic btn-orange size-large text-16 right-align">
+                    		<fmt:formatNumber value="${final_amount}" type="currency" currencySymbol="" />원 결제하기
+                    	</button>
+					</form>
                 </div>
             </div>
-
-
         </div>
     </section>
     <!------------------------ Footer호출 ----------------------->
@@ -150,24 +171,59 @@
 			
 			// 현금영수증 버튼이 클릭 되었을 때
 			document.getElementById('cashReceipt').onclick = function() {
-				console.log('deteced cashReceipt button clicked');
+				console.log('detected cashReceipt button clicked');
 				
-				count ++;
+				count++;
 				
-				paymentMethod = 'cashReceipt';
-				
-				if(count%2 != 0) {
-					clickedButton();
-				} else {
+				// cashReceipt는 paymentMethod가 아님
+				if(count % 2 !== 0) {
+					// 체크 상태
 					const cash = document.getElementById('cashReceipt');
-					cash.src = "assets/icon/icon-check.svg"
+					cash.src = "/assets/icon/icon-check-confirm.jpg";
+				} else {
+					// 체크 해제 상태
+					const cash = document.getElementById('cashReceipt');
+					cash.src = "/assets/icon/icon-check.svg";
 				}
-				
 			}
 			
-			
-			//결제하기 버튼이 클릭 되었을 때
-			
+			// 결제하기 버튼이 클릭 되었을 때 (오타 수정: ducument -> document)
+			document.getElementById('paymentForm').onsubmit = function(e) {
+				e.preventDefault();
+				
+				console.log('결제버튼 클릭');
+				console.log('=== 폼 전송 전 값 확인 ===');
+			    console.log('paymentMethod:', paymentMethod);
+			    console.log('count:', count);
+			    console.log('cashReceipt 계산값:', (count % 2 !== 0));
+			    
+			    // 모든 hidden input 값들 확인
+			    const form = this;
+			    const formData = new FormData(form);
+			    for(let [key, value] of formData.entries()) {
+			        console.log(key + ':', value, '(길이:', value.length, ')');
+			    }
+				
+				// 결제 방식 선택 확인
+				if(!paymentMethod || paymentMethod === 'cashReceipt') {
+					alert('결제 방식을 선택해주세요');
+					return false;
+				}
+				
+				// 폼 데이터 설정 (오타 수정: hiddenPaymentmethod -> hiddenPaymentMethod)
+				document.getElementById('hiddenPaymentMethod').value = paymentMethod;
+				document.getElementById('hiddenCashReceipt').value = (count % 2 !== 0) ? 'true' : 'false';
+				
+				// 설정 후 값 확인
+				console.log('=== 값 설정 후 ===');
+				console.log('hiddenPaymentMethod.value:', document.getElementById('hiddenPaymentMethod').value);
+				console.log('hiddenCashReceipt.value:', document.getElementById('hiddenCashReceipt').value);
+				
+				// 폼 전송
+				this.submit();
+				
+				return false;
+			}
 			
 			// check.svg 가 클릭 되었을 때의 함수
 			function clickedButton() {
@@ -190,7 +246,6 @@
 					}
 				});
 			}
-		
 		});
 	</script>
 </body>
