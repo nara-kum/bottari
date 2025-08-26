@@ -40,20 +40,15 @@ public class UserService {
 	}
 	*/
 	
-	/*
-	///////////////////////////////////////  8/22부터 주말 수정하기 ////////////////////////////////////////////////////
+	
 	//회원정보 수정폼
 	public UserVO exeEditForm(int no) {
-		System.out.println("UserService.exeEditForm()");
-		System.out.println(no);
-		
+		System.out.println("UserService.exeEditForm()");		
 		UserVO userVO = userRepository.userSelectByNo(no);
-		
 		return userVO;
 	}
-	*/
 	
-	/* 8/22부터 주말 수정하기
+
 	//회원정보 수정
 	public int exeEdit(UserVO userVO) {
 		System.out.println("UserService.exeEdit()");
@@ -62,9 +57,7 @@ public class UserService {
 
 		return count;
 	}		
-	*/
-	// /////////////////////////////////////  8/22부터 주말 수정하기 ////////////////////////////////////////////////////	
-	
+
 	
 	//로그인
 	public UserVO exeLogin(UserVO userVO) {

@@ -14,41 +14,42 @@
 	<!-- user정보 가져오기(세션용) -->
 	<select id="selectOneByIdPw" parameterType="com.example.vo.UserVO" resultType="com.example.vo.UserVO">
 		<![CDATA[
-			select 	user_no,
-					name
-			from users
-			where id = #{id}
-			and password = #{password}
+				select 	user_no,
+						name
+				from users
+				where id = #{id}
+				and password = #{password}
 		]]>
 	</select>    
     
 	<!-- no로 user정보 가져오기(회원수정폼) -->
-	
-	<!--<select id="selectByNo" parameterType="int" resultType="com.example.vo.UserVO">
+	<select id="selectByNo" parameterType="int" resultType="com.example.vo.UserVO">
 		<![CDATA[
-			select	user_no
-				  , id
-				  , name
-				  , password
-				  , email
-				  , phone
-				  , birth
-				  , Join_date
-			from users
-			where user_no = #{user_no}
+				select	user_no
+					  , id
+					  , name
+					  , password
+					  , email
+					  , phone
+					  , birth
+				from users
+				where user_no = #{user_no}
 		]]>
-	</select>    --> 
+	</select>
 	
 	<!-- 회원정보 수정 -->
-<!-- 	<update id="update" parameterType="com.example.vo.UserVO">
+	<update id="userUpdate" parameterType="com.example.vo.UserVO">
 		<![CDATA[
-			update users
-			set password = #{password},
-				name = #{name},
-			    email = #{email}
-			where user_no = #{user_no}
+				update users
+				set password = #{password},
+				    name = #{name},
+				    birth = #{birth},
+				    email = #{email},
+				    phone = #{phone},
+				    birth = #{birth}
+				where id = #{id}
 		]]>		
-	</update>	 -->
+	</update>
     
 	<!-- 아이디 중복 체크 -->
 	<select id="userSelectById" parameterType="String" resultType="com.example.vo.UserVO" >

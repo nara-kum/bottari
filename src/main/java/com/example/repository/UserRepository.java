@@ -9,6 +9,7 @@ import com.example.vo.UserVO;
 @Repository
 public class UserRepository {
 	
+	public static Object userSelectByNo;
 	@Autowired
 	private SqlSession sqlSession;
 	
@@ -35,31 +36,30 @@ public class UserRepository {
 		return authUser;
 	}	
 	*/
-	// /////////////////////////////////////  8/22부터 주말 수정하기 ////////////////////////////////////////////////////		
-	/* 
+
 	//--user정보가져오기(no) -->회원수정폼
 	public UserVO userSelectByNo(int no) {
 		System.out.println("UserRepository.userSelectByNo()");
 		
-		System.out.println(no);
+		System.out.println(no); //유저VO에 있는 userNo (번호)
 		UserVO userVO = sqlSession.selectOne("user.selectByNo", no);
-		System.out.println(userVO);
 		
 		return userVO;	
 	}	
-	*/
+
 	
-	// /////////////////////////////////////  8/22부터 주말 수정하기 ////////////////////////////////////////////////////		
-	/*
+
 	//회원정보 수정
 	public int userUpdate(UserVO userVO) {
 		System.out.println("UserRepository.userUpdate()");
 
-		int count = sqlSession.update("user.update",userVO);
+		int count = sqlSession.update("user.userUpdate",userVO);
+		System.out.println(count);
 		
 		return count;
 	}	
-	*/
+
+	
 	/*
 	//아이디사용유무체크(회원가입)
 	public UserVO userSelectById(String id) {
