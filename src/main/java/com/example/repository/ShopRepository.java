@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.example.vo.DetailedImageVO;
+import com.example.vo.ProductOptionDetailVO;
 import com.example.vo.ProductOptionVO;
 import com.example.vo.ProductVO;
 import com.example.vo.ProductViewVO;
@@ -84,7 +85,7 @@ public class ShopRepository {
 	}
 	
 	
-	
+	// 상품상세 이미지
 	public List<DetailedImageVO> ImageselectList(int productNo) {
 		System.out.println("ShopRepository.selectimageList");
 
@@ -94,6 +95,7 @@ public class ShopRepository {
 
 	}
 	
+	// 옵션제목
 	public List<ProductOptionVO> OptionselectList(int productNo) {
 		System.out.println("ShopRepository.selectimageList");
 
@@ -103,4 +105,14 @@ public class ShopRepository {
 
 	}
 	
+	// 옵션디테일(아이템)
+	public List<ProductOptionDetailVO> optionDetailSelectList(int optionNo) {
+		System.out.println("ShopRepository.OptionDetailSelectList");
+
+		List<ProductOptionDetailVO> productOptionDetailList = sqlSession.selectList("product.selectOptionDetailList", optionNo);
+
+		return productOptionDetailList;
+
+	}
+		
 }

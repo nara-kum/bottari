@@ -6,9 +6,13 @@
 
 <head>
 <meta charset="UTF-8">
-<link rel="stylesheet" href="../../../assets/css/reset.css">
-<link rel="stylesheet" href="../../../assets/css/Global.css">
-<link rel="stylesheet" href="../../../assets/css/shop/productPage.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/reset.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/Global.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/shop/productPage.css">
+
+<!-- js -->
+<script src="${pageContext.request.contextPath}/assets/js/jquery/jquery-3.7.1.js"></script>    
+
 </head>
 
 <body class="family">
@@ -90,9 +94,10 @@
 									
 									<select
 										class="option-select" name="option_name${status.index}"
-										onchange="updateSelection()">
+										data-option-no="${productOptionVO.option_no}"
+										">
 										<option value="">${productOptionVO.option_name}을(를)선택하세요</option>
-
+										
 										<!-- 상세 옵션 출력 -->
 										<%-- 
 										<c:forEach var="detail" items="${detailOPtion_name[status.index]}">
@@ -159,8 +164,9 @@
 
 	<script>
 		// 상품 기본 정보
-		const basePrice = ${product.price};
-		const productTitle = "${product.title}";
+		const basePrice = '${productView.price}';
+		const productTitle = "${productView.title}";
+		const productNo = "${productView.product_no}";
 		
 		// 수량 조절 함수들
 		function increaseQuantity() {
@@ -242,7 +248,58 @@
 			
 			// 초기 상태 설정
 			updateSelection();
+			
+			
+			//옵션 디테일 출력
+			featchOptDetail()
 		});
+		
+		
+		// 옵션디테일 가져오기
+		function featchOptDetail(){
+			
+			let optionList= $('.option-select');
+			for(let i=0; i<optionList.length; i++){
+				let $this = $(optionList[i]);
+				let optionNo = $this.data('option-no');
+				
+				/* 서버랑 통신(주소치고엔터) --> !!!데이터만 받을거야!!!!*/
+				$.ajax({
+					url : "${pageContext.request.contextPath}/api/optiondetail",		
+					type : "post",
+					//contentType : "application/json",
+					data : {optionNo: optionNo},
+					
+					dataType : "json",
+					success : function(productOptionDetailList){
+						/*성공시 처리해야될 코드 작성*/
+						console.log(productOptionDetailList);
+						
+						for(let i=0; i<productOptionDetailList.length; i++){
+							optDetailRender(productOptionDetailList[i], $this);
+						}
+						
+					},
+					error : function(XHR, status, error) {
+						console.error(status + " : " + error);
+					}
+				});
+				
+				
+			}
+		}
+		
+		
+		function optDetailRender(optDetailVO, thisOption){
+			console.log(optDetailVO);
+			console.log(thisOption);
+			/* <option value="">${productOptionVO.option_name}을(를)선택하세요</option> */
+			let strHtml = '';
+			strHtml += '<option value="'+optDetailVO.detailoption_no+'">'+optDetailVO.detailoption_name+'</option> ';
+			
+			thisOption.append(strHtml);
+		}
+		
 	</script>
 
 </body>

@@ -12,9 +12,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.service.ShopService;
+import com.example.vo.ProductOptionDetailVO;
 import com.example.vo.ProductVO;
 import com.example.vo.ProductViewVO;
 
@@ -180,7 +182,20 @@ public class ShopController {
 		return "shop/productPage";
 	}
     
-    
+    // 옵션상세(아이템) 리스트
+	
+	
+	@ResponseBody
+	@RequestMapping(value = "/api/optiondetail", method = { RequestMethod.GET, RequestMethod.POST })
+	public List<ProductOptionDetailVO> optionDetail(@RequestParam(value="optionNo") int optionNo) {
+		System.out.println("ShopController.optionDetail");
+		System.out.println(optionNo);
+		
+		List<ProductOptionDetailVO> productOptionDetailList = shopService.exeOptionDetail(optionNo);
+		System.out.println(productOptionDetailList);
+		return productOptionDetailList;
+	}
+	
     
 	
 /*	
