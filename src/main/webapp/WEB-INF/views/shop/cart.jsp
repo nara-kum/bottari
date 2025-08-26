@@ -43,12 +43,8 @@
 										</div>
 										<div class="row-flex-box">
 											<div class="column-flex-box">
-												<select class="btn-basic size-normal">
-													<option>옵션 변경</option>
-													<option>선택 안함</option>
-													<option>옵션 A</option>
-													<option>옵션 B</option>
-												</select> 
+												<div class="btn-basic size-normal changeOptionBtn" data-product-id="${vo.product_no}">옵션 변경하기</div>
+												<div class="optionContainer"></div>
 												<select class="btn-basic size-normal">
 													<option>1개</option>
 													<option>2개</option>
@@ -98,6 +94,23 @@
 	<!------------------------ Footer호출 ----------------------->
 	<c:import url="/WEB-INF/views/include/Footer.jsp"></c:import>
 	<!-- ---------------------------------------------------- -->
+	
+	<script>
+		document.addEventListener('DOMContentLoaded', function(){
+			console.log('돔트리 완료');
+			
+			// changeOption이 클릭 되었을 때
+			document.querySelectotAll('.changeOptionBtn').forEach(btn => {
+				btn.addEventListener('click', function(){
+					const productNo = this.dataset.productId;
+					console.log('선택된 상품의 product_no: ', productNo);
+					
+					
+				});
+			});
+			
+		});
+	</script>
 </body>
 
 </html>
