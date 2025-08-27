@@ -38,6 +38,7 @@ public class CartService {
 			List<Integer> productNoList = 	cartList.stream()
 													.map(CartListVO::getProduct_no)
 													.collect(Collectors.toList());
+			System.out.println(productNoList);
 			
 			List<ProductOptionListVO> productOptionList = cartrepository.selectByProductNoList(productNoList);
 			System.out.println(productOptionList);

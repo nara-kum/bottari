@@ -49,19 +49,31 @@
 											<div class="optionContainer" id="option-${vo.cart_no}"
 												style="display: none;">
 												<!-- 서버에서 미리 렌더링된 옵션들 -->
-												<c:forEach items="${vo.optionList}" var="option">
-													<label
-														style="display: block; margin-bottom: 5px; font-weight: bold;">
-														${option.option_name} </label>
-													<select data-option-id="${option.option_no}"
-														style="width: 100%; padding: 8px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 4px;">
-														<c:forEach items="${option.detailList}" var="detail">
-															<option value="${detail.detailoption_no}"
-																<c:if test="${detail.isSelected}">selected</c:if>>
-																${detail.detailoption_name}</option>
+												<div class="row-flex-box">
+													<div class="column-flex-box">
+														<c:forEach items="${requestScope.cList}" var="vo">
+															<label>${vo.option_name}</label>
+															<select data-option-id="${vo.option_no}">
+																<c:forEach items="${vo.detailList}" var="detail">
+																	<c:set var="isSelected" value="false" />
+																	<c:forEach items="${cartDetailList}" var="cartVo">
+																		<c:if
+																			test="${cartVo.detailoption_no == detail.detailoption_no}">
+																			<c:set var="isSelected" value="true" />
+																		</c:if>
+																	</c:forEach>
+																	<option value="${detail.detailoption_no}">
+																		${detail.detailoption_name}</option>
+																</c:forEach>
+															</select>
 														</c:forEach>
-													</select>
-												</c:forEach>
+													</div>
+													<div class="column-flex-box quantity-container">
+														<input type="button" value="+" id="addQuantity">
+														<div class="text-16">${requestScop.cList.quantity}</div>
+														<input type="button" value="-" id="subQuantity">
+													</div>
+												</div>
 											</div>
 											<select class="btn-basic size-normal">
 												<option>1개</option>
@@ -106,76 +118,7 @@
 	<c:import url="/WEB-INF/views/include/Footer.jsp"></c:import>
 	<!-- ---------------------------------------------------- -->
 
-<!-- 
-	<script>
-		document.addEventListener('DOMContentLoaded', function(){
-		    console.log('돔트리 완료');
-		    
-		    let currentOpenContainer = null;
-		    
-		    // changeOption이 클릭 되었을 때
-		    document.querySelectorAll('.changeOptionBtn').forEach(btn => {
-		        btn.addEventListener('click', function(e){
-		            e.stopPropagation();
-		            
-		            const cartNo = this.dataset.cartId;
-		            
-		            // 기존에 열린 컨테이너가 있다면 닫기
-		            if (currentOpenContainer) {
-		                currentOpenContainer.style.display = 'none';
-		                currentOpenContainer = null;
-		            }
-		            
-		            // 해당 상품의 옵션 컨테이너 찾기
-		            const optionContainer = document.getElementById('option-' + cartNo);
-		            
-		            if (optionContainer) {
-		                // 컨테이너 표시
-		                optionContainer.style.display = 'block';
-		                optionContainer.style.cssText += `
-		                    background: #f9f9f9;
-		                    border: 1px solid #ddd;
-		                    border-radius: 4px;
-		                    padding: 15px;
-		                    margin: 10px 0;
-		                    position: relative;
-		                    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-		                `;
-		                
-		                // 현재 열린 컨테이너 추적
-		                currentOpenContainer = optionContainer;
-		                
-		                // 옵션 컨테이너 내부 클릭 시 이벤트 버블링 방지
-		                optionContainer.addEventListener('click', function(e) {
-		                    e.stopPropagation();
-		                });
-		            } else {
-		                console.error('옵션 컨테이너를 찾을 수 없습니다:', 'option-' + cartNo);
-		            }
-		        });
-		    });
-		    
-		    // 문서 전체 클릭 이벤트 (옵션 컨테이너 바깥 클릭 시 닫기)
-		    document.addEventListener('click', function(e) {
-		        if (currentOpenContainer && 
-		            !e.target.classList.contains('changeOptionBtn') && 
-		            !currentOpenContainer.contains(e.target)) {
-		            
-		            currentOpenContainer.style.display = 'none';
-		            currentOpenContainer = null;
-		        }
-		    });
-		    
-		    // ESC 키로 옵션 컨테이너 닫기
-		    document.addEventListener('keydown', function(e) {
-		        if (e.key === 'Escape' && currentOpenContainer) {
-		            currentOpenContainer.style.display = 'none';
-		            currentOpenContainer = null;
-		        }
-		    });
-		});
-	</script>
-	-->
+	
 </body>
 
 </html>

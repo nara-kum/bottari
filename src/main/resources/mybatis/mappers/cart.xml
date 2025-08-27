@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cart">
-	
-	<select id="selectCartList" resultType="com.example.vo.CartListVO">
+
+	<select id="selectCartList"
+		resultType="com.example.vo.CartListVO">
 		<![CDATA[
 			SELECT	c.cart_no,
 					c.product_no,
@@ -10,6 +11,7 @@
 			        p.title,
 			        p.brand,
 			        p.itemimg,
+			        p.price,
 			        p.shipping_cost,
 			        co.detailoption_no
 			FROM cart c
@@ -18,8 +20,9 @@
 			WHERE user_no = #{user_no}
 		]]>
 	</select>
-	
-	<select id="selectByProductNoList" resultType="com.example.vo.ProductOptionListVO">
+
+	<select id="selectByProductNoList"
+		resultType="com.example.vo.ProductOptionListVO">
 		<![CDATA[
 			SELECT	po.product_no,
 					po.option_no,
@@ -29,10 +32,10 @@
 			FROM product_option po
 			LEFT JOIN option_detail od ON po.option_no = od.option_no
 			WHERE product_no IN 
-			<foreach collection="list" item="productNo" open="(" close=")" separator=",">
-				#{productNo}
-			</foreach>
 		]]>
+		<foreach collection="list" item="productNo" open="(" close=")" separator=",">
+			#{productNo}
+		</foreach>
 	</select>
-	
+
 </mapper>
