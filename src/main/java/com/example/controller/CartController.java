@@ -38,7 +38,7 @@ public class CartController {
 		} else {
 			int user_no = authuser.getUserNo();
 
-			List<CartListVO> cartList = cartservice.execartList(user_no);
+			List<CartListVO> cartList = cartservice.exeAllinOne(user_no);
 
 			if (cartList.isEmpty()) {
 				return "shop/no_cart";
@@ -49,8 +49,9 @@ public class CartController {
 				return "shop/cart";
 			}
 		}
-
 	}
+	
+	
 
 	// 장바구니등록
 

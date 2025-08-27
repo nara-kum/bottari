@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.example.vo.CartListVO;
-import com.example.vo.CartOptionVO;
+import com.example.vo.ProductOptionListVO;
 
 @Repository
 public class CartRepository {
@@ -19,23 +19,18 @@ public class CartRepository {
 	// method g/s
 
 	// method normal
-	public List<CartListVO> cartList(int user_no) {
-		System.out.println("CartRepository.cartList");
+	public List<CartListVO> selectCartList(int user_no) {
+		System.out.println("CartRepository.selectCartList()");
 		
-		List<CartListVO> cartList = sqlsession.selectList("cart.selectCartList",user_no);
+		List<CartListVO> cartList = sqlsession.selectList("cart.selectCartList", user_no);
 		
 		return cartList;
 	}
 	
-	public List<CartOptionVO> cartOptionList(int product_no) {
-		System.out.println("CartRepository.cartOptionList()");
+	public List<ProductOptionListVO> selectByProductNoList(List<Integer>productNoList) {
 		
-		return null;
-	}
-	
-	public List<CartListVO> cartDetailList(int product_no, int user_no) {
-		System.out.println("CartRepository.cartDetailList()");
+		List<ProductOptionListVO> productOptionList = sqlsession.selectList("cart.selectByProductNoList", productNoList);
 		
-		return null;
+		return productOptionList;
 	}
 }

@@ -1,12 +1,10 @@
 package com.example.vo;
 
-public class CartOptionVO {
+public class ProductOptionListVO {
 	//field
 	
-	//product section
-	private int product_no;
-	
 	//product_option section
+	private int product_no;
 	private int option_no;
 	private String option_name;
 	
@@ -14,7 +12,7 @@ public class CartOptionVO {
 	private int detailoption_no;
 	private String detailoption_name;
 	//editor
-	public CartOptionVO(int product_no, int option_no, String option_name, int detailoption_no,
+	public ProductOptionListVO(int product_no, int option_no, String option_name, int detailoption_no,
 			String detailoption_name) {
 		super();
 		this.product_no = product_no;
@@ -23,7 +21,7 @@ public class CartOptionVO {
 		this.detailoption_no = detailoption_no;
 		this.detailoption_name = detailoption_name;
 	}
-	public CartOptionVO() {
+	public ProductOptionListVO() {
 		super();
 	}
 	//method g/s
@@ -60,7 +58,8 @@ public class CartOptionVO {
 	//method normal
 	@Override
 	public String toString() {
-		return "CartOptionVO [product_no=" + product_no + ", option_no=" + option_no + ", option_name=" + option_name
-				+ ", detailoption_no=" + detailoption_no + ", detailoption_name=" + detailoption_name + "]";
+		return "ProductOptionListVO [product_no=" + product_no + ", option_no=" + option_no + ", option_name="
+				+ option_name + ", detailoption_no=" + detailoption_no + ", detailoption_name=" + detailoption_name
+				+ "]";
 	}
 }
