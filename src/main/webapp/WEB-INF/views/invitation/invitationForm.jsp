@@ -9,7 +9,7 @@
     <title>bottari 초대장 작성</title>
     <link rel="stylesheet" href="../../../assets/css/reset.css">
     <link rel="stylesheet" href="../../../assets/css/Global.css">
-    <link rel="stylesheet" href="../../../assets/css/invitationForm.css">
+    <link rel="stylesheet" href="../../../assets/css/invitation/invitationForm.css">
     <script src="${pageContext.request.contextPath}/assets/js/jquery/jquery-3.7.1.js"></script>
 
 
@@ -48,7 +48,7 @@
 
                     <div class="main-content">
                         <div class="preview-box">
-                            <img id="preview-image" src="${pageContext.request.contextPath}/assets/images/placeholder.png" alt="대표 이미지">
+                          <img id="preview" src="${pageContext.request.contextPath}/assets/images/noimage.png" alt="">
                         </div>
 
                         <div class="template-section">
@@ -198,247 +198,190 @@
 <c:import url="/WEB-INF/views/include/Footer.jsp"></c:import>
 <!-- ---------------------------------------------------- -->
 
-
 <script>
-(function(){
+(function () {
   const CTX = "${pageContext.request.contextPath}";
-  let SELECTED_CATEGORY_NO = 0;  // 카테고리(결혼/생일/…)
-  let SELECTED_TEMPLATE_NO = 0;  // 타입 A/B/C/D → 1/2/3/4
+  let PHOTO_URL = null;          // 업로드 후 받은 웹 경로(/upload/xxx.jpg)
+  let SELECTED_CATEGORY_NO = 0;  // 카테고리 버튼(결혼/생일…)
+  let SELECTED_TEMPLATE_NO = 0;  // 타입 카드 A/B/C/D → 1/2/3/4
 
-  // ---------- 유틸 ----------
-  function esc(s){ if (s==null) return ""; return String(s)
-    .replace(/&/g,"&amp;").replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
-
-  function getArrayFromJsonResult(json){
-    // 서버 JsonResult 포맷: { result:"success", data:[], apiData:[], list:[] }
-    if (!json) return [];
-    if (Array.isArray(json)) return json;
-    if (json.result === "success"){
-      if (Array.isArray(json.apiData)) return json.apiData;
-      if (Array.isArray(json.data))    return json.data;
-      if (Array.isArray(json.list))    return json.list;
-    }
-    return [];
-  }
-
-  // ---------- 기념일 옵션 로드 ----------
-  function loadAnniversaryOptions(){
+  /* ---------- 기념일 셀렉트 로딩 ---------- */
+  function loadEvents() {
     $.ajax({
       url: CTX + "/api/eventlist",
       type: "GET",
       dataType: "json"
     })
-    .done(function(json){
-      const rows = getArrayFromJsonResult(json);
-      const $sel = $("#funding-table").empty()
+    .done(function (json) {
+      let data = [];
+      if (Array.isArray(json)) data = json;
+      else if (json && json.result === "success") {
+        if (Array.isArray(json.data)) data = json.data;
+        else if (json.data && Array.isArray(json.data.list)) data = json.data.list;
+        else if (Array.isArray(json.apiData)) data = json.apiData;
+      } else if (json && Array.isArray(json.list)) {
+        data = json.list;
+      }
+
+      const $sel = $("#funding-table")
+        .empty()
         .append('<option value="">------- 기념일 선택 -------</option>');
 
-      if (!rows.length){
+      if (!data.length) {
         $sel.append('<option value="" disabled>기념일이 없습니다</option>');
         return;
       }
-      for (let i=0;i<rows.length;i++){
-        const ev = rows[i]||{};
-        const eventNo   = Number(ev.eventNo != null ? ev.eventNo : ev.event_no);
-        const eventName = (ev.eventName != null ? ev.eventName : ev.event_name) || '';
-        if (!eventNo) continue;
-        $sel.append($('<option>', { value: eventNo, text: eventName }));
-      }
+
+      data.forEach(function (ev) {
+        const no   = Number(ev.eventNo != null ? ev.eventNo : ev.event_no);
+        const name = (ev.eventName != null ? ev.eventName : ev.event_name) || "";
+        if (no) $sel.append($('<option>', { value: no, text: name }));
+      });
     })
-    .fail(function(xhr){
-      console.error("[GET /api/eventlist] fail:", xhr.status, (xhr.responseText||"").slice(0,200));
-      $("#funding-table").empty()
+    .fail(function (xhr) {
+      console.error("[/api/eventlist] fail:", xhr.status, (xhr.responseText || "").slice(0, 200));
+      $("#funding-table")
+        .empty()
         .append('<option value="">------- 기념일 선택 -------</option>')
         .append('<option value="" disabled>불러오기 실패</option>');
     });
   }
 
-  // ---------- 카테고리 버튼 ----------
-  function bindCategoryButtons(){
-    $(document).on("click", ".category-buttons .cat", function(){
-      SELECTED_CATEGORY_NO = Number($(this).data("cat") || 0);
-      $(this).closest(".category-buttons").find(".cat").removeClass("is-active");
-      $(this).addClass("is-active");
+  /* ---------- 템플릿 카드 data-tpl 세팅 ---------- */
+  function initTemplateCards() {
+    $(".template-grid .template-card").each(function (idx) {
+      if (!$(this).attr("data-tpl")) $(this).attr("data-tpl", idx + 1); // A=1, B=2…
     });
   }
 
-  // ---------- 템플릿 카드 ----------
-  function initTemplateCards(){
-    const $cards = $(".template-grid .template-card");
-    $cards.each(function(idx){
-      if (!$(this).attr("data-tpl")) $(this).attr("data-tpl", idx+1); // 1,2,3,4
-    });
-    $(document).on("click", ".template-grid .template-card", function(){
-      const tpl = parseInt($(this).attr("data-tpl"), 10) || 0;
-      if (!tpl) return;
-      SELECTED_TEMPLATE_NO = tpl;
-      $(".template-grid .template-card").removeClass("is-active").attr("aria-selected","false");
-      $(this).addClass("is-active").attr("aria-selected","true");
-    });
-  }
+  /* ---------- 카테고리 버튼 클릭 ---------- */
+  $(document).on("click", ".category-buttons .cat", function () {
+    SELECTED_CATEGORY_NO = Number($(this).data("cat") || 0);
+    $(this).closest(".category-buttons").find(".cat").removeClass("is-active");
+    $(this).addClass("is-active");
+  });
 
-  // ---------- 대표 이미지 프리뷰(외부 도메인 X + 무한 onerror 방지) ----------
-  function bindPreview(){
-    const $file    = $("#main-image-upload");
-    const $preview = $(".preview-box img").first();
+  /* ---------- 템플릿 카드 클릭 ---------- */
+  $(document).on("click", ".template-grid .template-card", function () {
+    SELECTED_TEMPLATE_NO = parseInt($(this).attr("data-tpl"), 10) || 0;
+    $(".template-grid .template-card").removeClass("is-active").attr("aria-selected", "false");
+    $(this).addClass("is-active").attr("aria-selected", "true");
+  });
 
-    const LOCAL_PLACEHOLDER = CTX + "/assets/images/placeholder.png";
-    const DATA_PLACEHOLDER =
-      'data:image/svg+xml;utf8,' +
-      encodeURIComponent(
-        '<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300">' +
-        '<rect width="100%" height="100%" fill="#f3f4f6"/>' +
-        '<text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" ' +
-        'font-family="sans-serif" font-size="16" fill="#9ca3af">대표 이미지</text>' +
-        '</svg>'
-      );
+  /* ---------- 파일 선택 → 미리보기 + 업로드 ---------- */
+  $(document).on("change", "#main-image-upload", function () {
+    const f = this.files && this.files[0];
+    if (!f) return;
 
-    if (!$preview.attr("src")) $preview.attr("src", LOCAL_PLACEHOLDER);
+    // 미리보기
+    const reader = new FileReader();
+    reader.onload = (e) => $(".preview-box img").attr("src", e.target.result);
+    reader.readAsDataURL(f);
 
-    $preview.on("error", function(){
-      const img = this;
-      if (!img.dataset.fallbackTriedLocal){
-        img.dataset.fallbackTriedLocal = "1";
-        img.src = LOCAL_PLACEHOLDER;   // 로컬 정적 파일 재시도
-        return;
-      }
-      if (!img.dataset.fallbackTriedData){
-        img.dataset.fallbackTriedData = "1";
-        img.onerror = null;            // 더 이상 onerror 루프 금지
-        img.src = DATA_PLACEHOLDER;    // 최후의 보루(항상 성공)
-        return;
-      }
-    });
-
-    $file.on("change", function(){
-      const f = this.files && this.files[0];
-      if (!f) return;
-      const objUrl = URL.createObjectURL(f);
-      $preview.attr("src", objUrl);
-      setTimeout(()=>URL.revokeObjectURL(objUrl), 30000);
-    });
-  }
-
-  // ---------- 파일 업로드 ----------
-  async function uploadMainImageIfAny(){
-    const $file = $("#main-image-upload");
-    const f = $file[0] && $file[0].files && $file[0].files[0];
-    if (!f) return null; // 파일 선택 안 했으면 업로드 생략
-
+    // 업로드
     const fd = new FormData();
     fd.append("file", f);
 
-    // 서버 응답 예: {result:"success", data:{url:"/upload/2025/08/11/xxx.jpg"}}
-    const res = await $.ajax({
-      url: CTX + "/api/upload/public",
+    const jq = $.ajax({
+      url: CTX + "/api/upload",
       type: "POST",
       data: fd,
       processData: false,
       contentType: false,
       dataType: "json"
     });
-    if (res && res.result === "success"){
-      // data.url 또는 url 키 지원
-      return (res.data && res.data.url) || res.url || null;
-    }
-    throw new Error(res && res.message ? res.message : "이미지 업로드 실패");
-  }
 
-  // ---------- 저장 ----------
-  async function handleSave(btn){
-    const $btn = $(btn).prop("disabled", true);
-
-    try{
-      const categoryNo    = SELECTED_CATEGORY_NO;
-      const eventNo       = Number($("#funding-table").val() || 0);
-      const celebrateDate = $("#celebrate-date").val();
-
-      if (!categoryNo){ alert("기념일 카테고리를 선택하세요."); return; }
-      if (!eventNo){ alert("기념일을 선택하세요."); return; }
-      if (!celebrateDate){ alert("행사 날짜를 선택하세요."); return; }
-
-      // 1) 대표 이미지 업로드(선택된 경우)
-      let photoUrl = null;
-      try{
-        photoUrl = await uploadMainImageIfAny(); // 없으면 null
-      }catch(e){
-        console.warn("[upload] skip or fail:", e.message||e);
-        // 업로드 실패 시 저장 중단하고 싶으면 여기서 return 처리
-        // return;
+    jq.done(function (res) {
+      if (res && res.result === "success") {
+        const url = (res.data && res.data.url) || (res.apiData && res.apiData.url) || res.url;
+        PHOTO_URL = url || null; // 예: /upload/2025_....jpg
+      } else {
+        alert(res && res.message ? res.message : "이미지 업로드 실패");
+        PHOTO_URL = null;
       }
+    }).fail(function (xhr) {
+      console.error("[upload] fail:", xhr.status, (xhr.responseText || "").slice(0, 200));
+      alert("이미지 업로드 실패");
+      PHOTO_URL = null;
+    });
+  });
 
-      // 2) 초대장 저장
-      const payload = {
-        categoryNo,
-        eventNo,
-        celebrateDate,
-        celebrateTime: $("#celebrate-time").val() || null,
-        greeting:      $("#greeting").val() || null,
-        place:         $("#place").val() || null,
-        address1:      $("#address1").val() || null,
-        address2:      $("#address2").val() || null,
-        themeNo:       SELECTED_TEMPLATE_NO || 0,
-        photoUrl:      photoUrl,
+  /* ---------- 저장 ---------- */
+  $(document).on("click", ".save-btn", function () {
+    const eventNo       = Number($("#funding-table").val() || 0);
+    const categoryNo    = SELECTED_CATEGORY_NO;
+    const celebrateDate = $("#celebrate-date").val();
 
-        groomName:           $("#groom-name").val() || null,
-        groomContect:        $("#groom-contect").val() || null,
-        groomFatherName:     $("#groom-father-name").val() || null,
-        groomFatherContect:  $("#groom-father-contect").val() || null,
-        groomMotherName:     $("#groom-mother-name").val() || null,
-        groomMotherContect:  $("#groom-mother-contect").val() || null,
+    if (!categoryNo)   { alert("기념일 카테고리를 선택하세요."); return; }
+    if (!eventNo)      { alert("기념일을 선택하세요."); return; }
+    if (!celebrateDate){ alert("행사 날짜를 선택하세요."); return; }
 
-        brideName:           $("#bride-name").val() || null,
-        brideContect:        $("#bride-contect").val() || null,
-        brideFatherName:     $("#bride-father-name").val() || null,
-        brideFatherContect:  $("#bride-father-contect").val() || null,
-        brideMotherName:     $("#bride-mother-name").val() || null,
-        brideMotherContect:  $("#bride-mother-contect").val() || null,
+    const payload = {
+      categoryNo,
+      eventNo,
+      celebrateDate,
+      celebrateTime: $("#celebrate-time").val() || null,
+      greeting:      $("#greeting").val() || null,
+      place:         $("#place").val() || null,
+      address1:      $("#address1").val() || null,
+      address2:      $("#address2").val() || null,
+      themeNo:       SELECTED_TEMPLATE_NO || 0,
+      photoUrl:      PHOTO_URL || null,
 
-        babyName:            $("#baby-name").val() || null,
-        babyFatherName:      $("#baby-father-name").val() || null,
-        babyFatherContect:   $("#baby-father-contect").val() || null,
-        babyMotherName:      $("#baby-mother-name").val() || null,
-        babyMotherContect:   $("#baby-mother-contect").val() || null
-        // userNo는 서버 세션에서 주입
-      };
+      groomName:           $("#groom-name").val() || null,
+      groomContect:        $("#groom-contect").val() || null,
+      groomFatherName:     $("#groom-father-name").val() || null,
+      groomFatherContect:  $("#groom-father-contect").val() || null,
+      groomMotherName:     $("#groom-mother-name").val() || null,
+      groomMotherContect:  $("#groom-mother-contect").val() || null,
 
-      const res = await $.ajax({
-        url: CTX + "/api/invtreg",
-        type: "POST",
-        contentType: "application/json; charset=UTF-8",
-        dataType: "json",
-        data: JSON.stringify(payload)
-      });
+      brideName:           $("#bride-name").val() || null,
+      brideContect:        $("#bride-contect").val() || null,
+      brideFatherName:     $("#bride-father-name").val() || null,
+      brideFatherContect:  $("#bride-father-contect").val() || null,
+      brideMotherName:     $("#bride-mother-name").val() || null,
+      brideMotherContect:  $("#bride-mother-contect").val() || null,
 
-      if (res && res.result === "success"){
-        alert("초대장이 등록되었습니다.");
+      babyName:            $("#baby-name").val() || null,
+      babyFatherName:      $("#baby-father-name").val() || null,
+      babyFatherContect:   $("#baby-father-contect").val() || null,
+      babyMotherName:      $("#baby-mother-name").val() || null,
+      babyMotherContect:   $("#baby-mother-contect").val() || null
+      // userNo는 서버 세션에서 세팅
+    };
+
+    const $btn = $(this).prop("disabled", true);
+
+    const jq = $.ajax({
+      url: CTX + "/api/invtreg",
+      type: "POST",
+      contentType: "application/json; charset=UTF-8",
+      data: JSON.stringify(payload),
+      dataType: "json"
+    });
+
+    jq.done(function (res) {
+      if (res && res.result === "success") {
+        alert("초대장이 저장되었습니다.");
         location.href = CTX + "/invitationList";
       } else {
-        alert(res && res.message ? res.message : "초대장 등록에 실패했습니다.");
+        alert(res && res.message ? res.message : "저장 실패");
       }
-    }catch(err){
-      console.error("[save] error:", err);
-      alert("초대장 등록에 실패했습니다. 잠시 후 다시 시도해주세요.");
-    }finally{
+    }).fail(function (xhr) {
+      console.error("[save] fail:", xhr.status, (xhr.responseText || "").slice(0, 200));
+      alert("저장 실패");
+    }).always(function () {
       $btn.prop("disabled", false);
-    }
-  }
-
-  // ---------- 바인딩 ----------
-  $(function(){
-    loadAnniversaryOptions();
-    bindCategoryButtons();
-    initTemplateCards();
-    bindPreview();
-
-    $(document).on("click", ".save-btn", function(){
-      handleSave(this);
     });
+  });
+
+  /* ---------- 시작 ---------- */
+  $(function () {
+    loadEvents();
+    initTemplateCards();
   });
 })();
 </script>
-
 
 </body>
 

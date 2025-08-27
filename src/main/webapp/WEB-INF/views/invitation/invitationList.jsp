@@ -7,7 +7,7 @@
   <title>bottari 초대장 관리</title>
   <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/reset.css">
   <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/Global.css">
-  <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/invitationList.css">
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/invitation/invitationList.css">
   <script src="${pageContext.request.contextPath}/assets/js/jquery/jquery-3.7.1.js"></script>
 </head>
 <body class="family">

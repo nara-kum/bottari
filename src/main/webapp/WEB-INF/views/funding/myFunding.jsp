@@ -8,8 +8,8 @@
 <meta charset="UTF-8">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/reset.css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/Global.css">
-<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/myfunding.css">
-<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/wishlist.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/funding/myfunding.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/wishlist/wishlist.css">
 <script src="${pageContext.request.contextPath}/assets/js/jquery/jquery-3.7.1.js"></script>
 
 <title>마이 펀딩</title>

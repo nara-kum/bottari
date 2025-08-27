@@ -7,7 +7,7 @@
   <title>펀딩 관리 - 위시리스트</title>
   <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/reset.css">
   <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/Global.css">
-  <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/wishlist.css">
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/wishlist/wishlist.css">
   <script src="${pageContext.request.contextPath}/assets/js/jquery/jquery-3.7.1.js"></script>
 </head>
 <body class="family">

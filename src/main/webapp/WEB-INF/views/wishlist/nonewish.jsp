@@ -7,7 +7,7 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/reset.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/Global.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/nonewish.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/wishlist/nonewish.css">
 </head>
 
 <body class="family">
