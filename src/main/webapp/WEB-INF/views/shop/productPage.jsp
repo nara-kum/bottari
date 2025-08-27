@@ -149,17 +149,21 @@
 						</div>
 
 
-						<!-- 장바구니 폼 -->
+						<!-- 장바구니 폼 수정 -->
 						<form action="${pageContext.request.contextPath}/cartadd"
-							method="get" id="cartForm" onsubmit="updateHiddenQuantity()">
+							method="get" id="cartForm">
 							<input type="hidden" name="productNo"
 								value="${productViewVO.product_no}"> <input
 								type="hidden" name="quantity" id="hiddenQuantity" value="1">
+							<!-- 새로 추가: 선택된 옵션들을 저장할 숨겨진 필드 -->
+							<input type="hidden" name="selectedOptions"
+								id="selectedOptionsInput" value="">
 
-							<button type="submit" class="cart-btn">장바구니 담기</button>
+							<button type="submit" class="cart-btn"
+								onclick="setSelectedOptions()">장바구니 담기</button>
 						</form>
-						
-						
+
+
 						<div class="action-buttons">
 							<button class="wishlist-btn">♡ 찜 등록하기</button>
 							<button class="funding-btn">구매하기</button>
@@ -312,6 +316,24 @@
 	}
 	
 	
+		//장바구니 옵션
+		function setSelectedOptions() {
+			var selectedOptions = [];
+
+			// 모든 옵션 선택박스를 확인
+			$('.option-select').each(function() {
+				var selectedValue = $(this).val();
+				if (selectedValue && selectedValue !== '') {
+					selectedOptions.push(selectedValue); // detailoption_no 값들을 배열에 추가
+				}
+			});
+
+			// 선택된 옵션들을 JSON 문자열로 변환해서 숨겨진 필드에 설정
+			document.getElementById('selectedOptionsInput').value = JSON
+					.stringify(selectedOptions);
+
+			console.log('선택된 옵션들:', selectedOptions);
+		}
 	</script>
 
 </body>

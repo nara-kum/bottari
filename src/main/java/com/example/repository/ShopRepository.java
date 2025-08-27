@@ -6,6 +6,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.example.vo.CartDetailOptionVO;
 import com.example.vo.CartVO;
 import com.example.vo.DetailedImageVO;
 import com.example.vo.ProductOptionDetailVO;
@@ -128,5 +129,18 @@ public class ShopRepository {
 	    
 	    return count;
 	}
+	
+	
+	//장바구니 옵션 저장 메소드 (CartDetailOption 사용)
+	public int cartDetailOptionInsert(CartDetailOptionVO cartDetailOptionVO) {
+	    System.out.println("ShopRepository.cartDetailOptionInsert");
+	    System.out.println("저장할 옵션 데이터: " + cartDetailOptionVO);
+	    
+	    int count = sqlSession.insert("product.cartDetailOptionInsert", cartDetailOptionVO);
+	    
+	    System.out.println("옵션 저장 완료! 영향받은 행 수: " + count);
+	    return count;
+	}
+	
 	
 }

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.service.ShopService;
+import com.example.vo.CartDetailOptionVO;
 import com.example.vo.CartVO;
 import com.example.vo.ProductOptionDetailVO;
 import com.example.vo.ProductVO;
@@ -244,43 +245,102 @@ public class ShopController {
 	}
 	
 	
-	//장바구니등록
+
+	//장바구니등록 - 수정된 버전
 	@RequestMapping(value="/cartadd", method= {RequestMethod.GET, RequestMethod.POST})
 	@ResponseBody
 	public String insertCart(@RequestParam(value="productNo", required=false) Integer productNo,
-	                        @RequestParam(value="quantity", required=false) Integer quantity, // 기본값 제거
+	                        @RequestParam(value="quantity", required=false) Integer quantity,
+	                        @RequestParam(value="selectedOptions", required=false) String selectedOptionsJson, // 옵션 정보 추가
 	                        HttpSession session) {
 	    
+	    System.out.println("===== 장바구니 등록 시작 =====");
 	    System.out.println("받은 productNo: " + productNo);
 	    System.out.println("받은 quantity: " + quantity);
+	    System.out.println("받은 selectedOptions: " + selectedOptionsJson);
 	    
-	    CartVO cartVO = new CartVO();
-	    
+	    // 로그인 사용자 정보 확인
 	    UserVO authUser = (UserVO) session.getAttribute("authUser");
-	   
-	    int no = authUser.getUserNo();
+	    if (authUser == null) {
+	        return "user/loginform";
+	    }
 	    
-	    cartVO.setUser_no(no);
+	    int userNo = authUser.getUserNo();
 	    
-
-	    // quantity가 null이거나 0 이하면 1로 설정
+	    // 기본값 설정
 	    if (quantity == null || quantity <= 0) {
 	        quantity = 1;
 	    }
 	    
-	    if (productNo != null && productNo > 0) {
-	        
-	        cartVO.setUser_no(no);  
-	        cartVO.setProduct_no(productNo);  
-	        cartVO.setCategory_no(2);  
-	        cartVO.setQuantity(quantity); // 실제 선택한 수량이 들어감
-	        
-	        System.out.println("설정한 CartVO: " + cartVO);
-	        
-	        shopService.exeCartAdd(cartVO);
+	    if (productNo == null || productNo <= 0) {
+	        return "잘못된 상품 정보입니다";
 	    }
 	    
-	    return "success";
+	    try {
+	        // 1단계: 장바구니 기본 정보 등록
+	        CartVO cartVO = new CartVO();
+	        cartVO.setUser_no(userNo);
+	        cartVO.setProduct_no(productNo);
+	        cartVO.setCategory_no(2);
+	        cartVO.setQuantity(quantity);
+	        
+	        System.out.println("장바구니 기본 정보: " + cartVO);
+	        
+	        // 장바구니에 상품 등록하고 생성된 cart_no 받아오기
+	        shopService.exeCartAdd(cartVO);
+	        int cartNo = cartVO.getCart_no(); // 생성된 장바구니 번호
+	        
+	        System.out.println("생성된 cart_no: " + cartNo);
+	        
+	        // 2단계: 선택된 옵션들이 있으면 장바구니 옵션 테이블에도 등록
+	        if (selectedOptionsJson != null && !selectedOptionsJson.trim().isEmpty() 
+	            && !selectedOptionsJson.equals("[]")) {
+	            
+	            System.out.println("옵션 정보 처리 시작");
+	            
+	            // JSON 형태의 옵션 정보를 파싱 (간단하게 처리)
+	            // 예: "[1,2,3]" -> ["1","2","3"]
+	            String[] optionIds = selectedOptionsJson
+	                .replace("[", "")
+	                .replace("]", "")
+	                .replace("\"", "")
+	                .split(",");
+	            
+	            // 각 옵션별로 CartOptionVO 생성하여 저장
+	            for (String optionIdStr : optionIds) {
+	                optionIdStr = optionIdStr.trim();
+	                if (!optionIdStr.isEmpty()) {
+	                    try {
+	                        int detailOptionNo = Integer.parseInt(optionIdStr);
+	                        
+	                        CartDetailOptionVO cartDetailOptionVO = new CartDetailOptionVO();
+	                        cartDetailOptionVO.setCart_no(cartNo);  // 위에서 생성된 장바구니 번호
+	                        cartDetailOptionVO.setDetailoption_no(detailOptionNo);  // 선택된 옵션 번호
+	                        
+	                        System.out.println("저장할 옵션 정보: " + cartDetailOptionVO);
+	                        
+	                        // 장바구니 옵션 저장
+	                        shopService.exeCartDetailOptionAdd(cartDetailOptionVO);
+	                        
+	                    } catch (NumberFormatException e) {
+	                        System.out.println("잘못된 옵션 번호: " + optionIdStr);
+	                    }
+	                }
+	            }
+	            System.out.println("모든 옵션 저장 완료");
+	            
+	        } else {
+	            System.out.println("선택된 옵션이 없음 (단일 상품)");
+	        }
+	        
+	        System.out.println("===== 장바구니 등록 완료 =====");
+	        return "redirect:/cart";
+	        
+	    } catch (Exception e) {
+	        System.out.println("장바구니 등록 중 오류 발생: " + e.getMessage());
+	        e.printStackTrace();
+	        return "오류가 발생했습니다";
+	    }
 	}
 
 }
