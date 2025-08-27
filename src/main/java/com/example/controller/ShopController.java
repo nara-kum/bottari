@@ -20,6 +20,7 @@ import com.example.vo.CartVO;
 import com.example.vo.ProductOptionDetailVO;
 import com.example.vo.ProductVO;
 import com.example.vo.ProductViewVO;
+import com.example.vo.UserVO;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -253,14 +254,23 @@ public class ShopController {
 	    System.out.println("받은 productNo: " + productNo);
 	    System.out.println("받은 quantity: " + quantity);
 	    
+	    CartVO cartVO = new CartVO();
+	    
+	    UserVO authUser = (UserVO) session.getAttribute("authUser");
+	   
+	    int no = authUser.getUserNo();
+	    
+	    cartVO.setUser_no(no);
+	    
+
 	    // quantity가 null이거나 0 이하면 1로 설정
 	    if (quantity == null || quantity <= 0) {
 	        quantity = 1;
 	    }
 	    
 	    if (productNo != null && productNo > 0) {
-	        CartVO cartVO = new CartVO();
-	        cartVO.setUser_no(1);  
+	        
+	        cartVO.setUser_no(no);  
 	        cartVO.setProduct_no(productNo);  
 	        cartVO.setCategory_no(2);  
 	        cartVO.setQuantity(quantity); // 실제 선택한 수량이 들어감
