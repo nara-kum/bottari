@@ -6,6 +6,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.example.vo.CartVO;
 import com.example.vo.DetailedImageVO;
 import com.example.vo.ProductOptionDetailVO;
 import com.example.vo.ProductOptionVO;
@@ -115,4 +116,17 @@ public class ShopRepository {
 
 	}
 		
+	//장바구니등록
+	public int cartInsert(CartVO cartVO) {
+	    System.out.println("ShopRepository.cartInsert");
+	    System.out.println("DB 저장 전 데이터: " + cartVO);
+	    
+	    int count = sqlSession.insert("product.cartInsert", cartVO);
+	    
+	    System.out.println("DB 저장 완료! 영향받은 행 수: " + count);
+	    System.out.println("실제 저장된 cart_no: " + cartVO.getCart_no()); // auto_increment 값
+	    
+	    return count;
+	}
+	
 }

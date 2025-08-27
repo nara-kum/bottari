@@ -16,9 +16,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.service.ShopService;
+import com.example.vo.CartVO;
 import com.example.vo.ProductOptionDetailVO;
 import com.example.vo.ProductVO;
 import com.example.vo.ProductViewVO;
+
+import jakarta.servlet.http.HttpSession;
 
 
 
@@ -53,7 +56,7 @@ public class ShopController {
 	
 	
 	
-	//상품등록폼x
+	//상품등록폼x 
 	@RequestMapping(value="/shopform", method= {RequestMethod.GET, RequestMethod.POST})
 	public String shopform() {	
 		System.out.println("ShopController.shopform");
@@ -239,5 +242,35 @@ public class ShopController {
 		return "shop/productPage_funding";
 	}
 	
+	
+	//장바구니등록
+	@RequestMapping(value="/cartadd", method= {RequestMethod.GET, RequestMethod.POST})
+	@ResponseBody
+	public String insertCart(@RequestParam(value="productNo", required=false) Integer productNo,
+	                        @RequestParam(value="quantity", required=false) Integer quantity, // 기본값 제거
+	                        HttpSession session) {
+	    
+	    System.out.println("받은 productNo: " + productNo);
+	    System.out.println("받은 quantity: " + quantity);
+	    
+	    // quantity가 null이거나 0 이하면 1로 설정
+	    if (quantity == null || quantity <= 0) {
+	        quantity = 1;
+	    }
+	    
+	    if (productNo != null && productNo > 0) {
+	        CartVO cartVO = new CartVO();
+	        cartVO.setUser_no(1);  
+	        cartVO.setProduct_no(productNo);  
+	        cartVO.setCategory_no(2);  
+	        cartVO.setQuantity(quantity); // 실제 선택한 수량이 들어감
+	        
+	        System.out.println("설정한 CartVO: " + cartVO);
+	        
+	        shopService.exeCartAdd(cartVO);
+	    }
+	    
+	    return "success";
+	}
 
 }

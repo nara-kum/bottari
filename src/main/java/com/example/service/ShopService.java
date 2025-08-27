@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.repository.ShopRepository;
+import com.example.vo.CartVO;
 import com.example.vo.DetailedImageVO;
 import com.example.vo.ProductOptionDetailVO;
 import com.example.vo.ProductOptionVO;
@@ -216,4 +217,13 @@ public class ShopService {
 
 	}
 
+	
+	//장바구니 등록(데이터넘기기)
+	public void exeCartAdd(CartVO cartVO) {
+	    System.out.println("ShopService.exeCartAdd");
+	    System.out.println("Service에서 받은 CartVO: " + cartVO);
+	    
+	    shopRepository.cartInsert(cartVO);
+	}
+	
 }

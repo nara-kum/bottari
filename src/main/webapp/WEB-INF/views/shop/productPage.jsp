@@ -115,44 +115,54 @@
 						<div class="quantity-control" style="margin: 15px 0;">
 							<label class="option-label">수량</label>
 							<div style="display: flex; align-items: center; margin-top: 5px;">
-								<button type="button" class="quantity-btn" onclick="changeQuantity(-1)">-</button>
-								<input type="number" value="1" class="quantity-input" min="1" id="quantity" onchange="updatePrice()">
-								<button type="button" class="quantity-btn" onclick="changeQuantity(1)">+</button>
+								<button type="button" class="quantity-btn"
+									onclick="changeQuantity(-1)">-</button>
+								<input type="number" value="1" class="quantity-input" min="1"
+									id="quantity" name="quantity" onchange="updatePrice()">
+								<button type="button" class="quantity-btn"
+									onclick="changeQuantity(1)">+</button>
 							</div>
 						</div>
 
 						<!-- 선택한 옵션과 수량 표시 (처음에는 숨김) -->
-						<div class="selected-info" id="selectedInfo" style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 15px 0; display: none;">
+						<div class="selected-info" id="selectedInfo"
+							style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 15px 0; display: none;">
 							<div style="font-weight: bold; margin-bottom: 10px;">선택한 상품</div>
-							<div style="background: white; padding: 15px; border-radius: 5px;">
+							<div
+								style="background: white; padding: 15px; border-radius: 5px;">
 								<div style="font-weight: bold; margin-bottom: 10px;">${productViewVO.title}</div>
 								<div id="selectedOptions">
 									<!-- 선택한 옵션들이 여기에 표시됩니다 -->
 								</div>
-								<div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #eee;">
+								<div
+									style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #eee;">
 									수량: <span id="displayQuantity">1</span>개
 								</div>
 							</div>
 						</div>
 
 						<!-- 총 결제 금액 -->
-						<div class="total-price" style="font-size: 18px; font-weight: bold; text-align: center; margin: 20px 0; padding: 15px; background: #ffffff; border-radius: 8px; color: #333;">
-							총 결제 금액: <span id="totalAmount"><fmt:formatNumber value="${productViewVO.price}" pattern="#,###" /></span>원
+						<div class="total-price"
+							style="font-size: 18px; font-weight: bold; text-align: center; margin: 20px 0; padding: 15px; background: #ffffff; border-radius: 8px; color: #333;">
+							총 결제 금액: <span id="totalAmount"><fmt:formatNumber
+									value="${productViewVO.price}" pattern="#,###" /></span>원
 						</div>
 
-						<button class="cart-btn">장바구니 담기</button>
 
+						<!-- 장바구니 폼 -->
+						<form action="${pageContext.request.contextPath}/cartadd"
+							method="get" id="cartForm" onsubmit="updateHiddenQuantity()">
+							<input type="hidden" name="productNo"
+								value="${productViewVO.product_no}"> <input
+								type="hidden" name="quantity" id="hiddenQuantity" value="1">
+
+							<button type="submit" class="cart-btn">장바구니 담기</button>
+						</form>
+						
+						
 						<div class="action-buttons">
 							<button class="wishlist-btn">♡ 찜 등록하기</button>
-							<c:if test="${productViewVO.shipping_yn == '1' or productViewVO.shipping_yn == 'y' or productViewVO.shipping_yn == 'Y'}">
-								<button class="funding-btn">구매하기</button>
-							</c:if>
-							<c:if test="${productViewVO.shipping_yn == '0' or productViewVO.shipping_yn == 'n' or productViewVO.shipping_yn == 'N'}">
-								<button class="funding-btn">예약하기</button>
-							</c:if>
-							<c:if test="${empty productViewVO.shipping_yn}">
-								<button class="funding-btn">구매하기</button>
-							</c:if>
+							<button class="funding-btn">구매하기</button>
 						</div>
 					</div>
 				</div>
@@ -219,6 +229,9 @@
 		}
 		
 		quantityInput.value = currentQuantity;
+		
+	    updateHiddenQuantity();
+		
 		updatePrice();
 	}
 
@@ -261,6 +274,10 @@
 		const quantity = parseInt(document.getElementById('quantity').value) || 1;
 		const totalPrice = productPrice * quantity;
 		
+		
+	    // 여기에 추가: hidden input 업데이트
+	    updateHiddenQuantity();
+		
 		// 수량 표시 업데이트
 		const displayQuantityElement = document.getElementById('displayQuantity');
 		if (displayQuantityElement) {
@@ -284,6 +301,17 @@
 		
 		console.log('가격 업데이트 - 수량:', quantity, '총 가격:', totalPrice);
 	}
+	
+	
+	// 장바구니 수량 넘기기
+	function updateHiddenQuantity() {
+	    var actualQuantity = document.getElementById('quantity').value;
+	    document.getElementById('hiddenQuantity').value = actualQuantity;
+	    
+	    console.log('전송할 수량:', actualQuantity);
+	}
+	
+	
 	</script>
 
 </body>
