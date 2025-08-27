@@ -19,6 +19,7 @@ import com.example.vo.ProductOptionDetailVO;
 import com.example.vo.ProductOptionVO;
 import com.example.vo.ProductVO;
 import com.example.vo.ProductViewVO;
+import com.example.vo.WishlistVO;
 
 @Service
 public class ShopService {
@@ -236,4 +237,16 @@ public class ShopService {
 	    shopRepository.cartDetailOptionInsert(cartDetailOptionVO);
 	    System.out.println("장바구니 옵션 저장 완료");
 	}
+	
+	
+	
+	//위시리스트 등록
+	public void exeWishlistAdd(WishlistVO wishlistVO) {
+	    System.out.println("ShopService.exeWishlistAdd");
+	    System.out.println("Service에서 받은 WishlistVO: " + wishlistVO);
+	    
+	    shopRepository.wishlistInsert(wishlistVO);
+	}
+	
+	
 }

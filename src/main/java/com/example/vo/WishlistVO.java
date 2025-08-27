@@ -9,6 +9,7 @@ public class WishlistVO {
 	private String brand;
 	private String title;
 	private int price;
+	private int quantity;
 	private int wishlistoptionNo;
 	private int detailoptionNo;
 	private String detailoptionName;
@@ -21,20 +22,22 @@ public class WishlistVO {
 	private String fundingStatus;
 	private String fundingDate;
 
+	
 	// 생성자
 	public WishlistVO() {
 		super();
 	}
 
-	public WishlistVO(int userNo, int wishlistNo, String brand, String title, int price, int wishlistoptionNo,
-			int detailoptionNo, String detailoptionName, int fundingNo, int eventNo, int productNo, int percent,
-			int amount, String fundingStatus, String fundingDate) {
+	public WishlistVO(int userNo, int wishlistNo, String brand, String title, int price, int quantity,
+			int wishlistoptionNo, int detailoptionNo, String detailoptionName, int fundingNo, int eventNo,
+			int productNo, int percent, int amount, String fundingStatus, String fundingDate) {
 		super();
 		this.userNo = userNo;
 		this.wishlistNo = wishlistNo;
 		this.brand = brand;
 		this.title = title;
 		this.price = price;
+		this.quantity = quantity;
 		this.wishlistoptionNo = wishlistoptionNo;
 		this.detailoptionNo = detailoptionNo;
 		this.detailoptionName = detailoptionName;
@@ -47,7 +50,9 @@ public class WishlistVO {
 		this.fundingDate = fundingDate;
 	}
 
-	//메소드-gs
+	
+	
+	//메소드gs
 	public int getUserNo() {
 		return userNo;
 	}
@@ -86,6 +91,14 @@ public class WishlistVO {
 
 	public void setPrice(int price) {
 		this.price = price;
+	}
+
+	public int getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
 	}
 
 	public int getWishlistoptionNo() {
@@ -168,16 +181,17 @@ public class WishlistVO {
 		this.fundingDate = fundingDate;
 	}
 
-
-	//메소드-일반
+	
+	//메소드일반
 	@Override
 	public String toString() {
 		return "WishlistVO [userNo=" + userNo + ", wishlistNo=" + wishlistNo + ", brand=" + brand + ", title=" + title
-				+ ", price=" + price + ", wishlistoptionNo=" + wishlistoptionNo + ", detailoptionNo=" + detailoptionNo
-				+ ", detailoptionName=" + detailoptionName + ", fundingNo=" + fundingNo + ", eventNo=" + eventNo
-				+ ", productNo=" + productNo + ", percent=" + percent + ", amount=" + amount + ", fundingStatus="
-				+ fundingStatus + ", fundingDate=" + fundingDate + "]";
+				+ ", price=" + price + ", quantity=" + quantity + ", wishlistoptionNo=" + wishlistoptionNo
+				+ ", detailoptionNo=" + detailoptionNo + ", detailoptionName=" + detailoptionName + ", fundingNo="
+				+ fundingNo + ", eventNo=" + eventNo + ", productNo=" + productNo + ", percent=" + percent + ", amount="
+				+ amount + ", fundingStatus=" + fundingStatus + ", fundingDate=" + fundingDate + "]";
 	}
-	
+
+
 
 }

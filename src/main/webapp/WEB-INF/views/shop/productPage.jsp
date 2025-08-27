@@ -164,7 +164,18 @@
 
 
 						<div class="action-buttons">
-							<button class="wishlist-btn">♡ 찜 등록하기</button>
+						
+							<!-- 위시리스트 폼 추가 -->
+							<form action="${pageContext.request.contextPath}/wishlistadd"
+								method="get" id="wishlistForm" style="display: inline;">
+								<input type="hidden" name="productNo"
+									value="${productViewVO.product_no}"> <input
+									type="hidden" name="quantity" id="wishlistQuantity" value="1">
+
+								<button type="submit" class="wishlist-btn"
+									onclick="setWishlistQuantity()">♡ 찜 등록하기</button>
+							</form>
+							
 							<button class="funding-btn">구매하기</button>
 						</div>
 					</div>
@@ -314,25 +325,36 @@
 	    console.log('전송할 수량:', actualQuantity);
 	}
 	
+
+	//장바구니 옵션
+	function setSelectedOptions() {
+		var selectedOptions = [];
+
+		// 모든 옵션 선택박스를 확인
+		$('.option-select').each(function() {
+			var selectedValue = $(this).val();
+			if (selectedValue && selectedValue !== '') {
+				selectedOptions.push(selectedValue); // detailoption_no 값들을 배열에 추가
+			}
+		});
+
+		// 선택된 옵션들을 JSON 문자열로 변환해서 숨겨진 필드에 설정
+		document.getElementById('selectedOptionsInput').value = JSON
+				.stringify(selectedOptions);
+
+		console.log('선택된 옵션들:', selectedOptions);
+	}
 	
-		//장바구니 옵션
-		function setSelectedOptions() {
-			var selectedOptions = [];
-
-			// 모든 옵션 선택박스를 확인
-			$('.option-select').each(function() {
-				var selectedValue = $(this).val();
-				if (selectedValue && selectedValue !== '') {
-					selectedOptions.push(selectedValue); // detailoption_no 값들을 배열에 추가
-				}
-			});
-
-			// 선택된 옵션들을 JSON 문자열로 변환해서 숨겨진 필드에 설정
-			document.getElementById('selectedOptionsInput').value = JSON
-					.stringify(selectedOptions);
-
-			console.log('선택된 옵션들:', selectedOptions);
-		}
+	
+	// 위시리스트 수량 설정
+	function setWishlistQuantity() {
+	    var actualQuantity = document.getElementById('quantity').value;
+	    document.getElementById('wishlistQuantity').value = actualQuantity;
+	    
+	    console.log('위시리스트 전송할 수량:', actualQuantity);
+	}
+	
+	
 	</script>
 
 </body>

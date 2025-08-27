@@ -148,7 +148,17 @@
 			SELECT LAST_INSERT_ID()
 		</selectKey>
 	</insert>
-	
+
+
+
+	<!-- 위시리스트 등록 -->
+	<insert id="wishlistInsert" parameterType="com.example.vo.WishlistVO">
+	    <![CDATA[
+	        insert into wishlist(wishlist_no, user_no, product_no, quantity, date)
+	        values(null, #{userNo}, #{productNo}, now())
+	    ]]>
+
+	</insert>
 	
 	
 	

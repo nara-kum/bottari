@@ -22,6 +22,7 @@ import com.example.vo.ProductOptionDetailVO;
 import com.example.vo.ProductVO;
 import com.example.vo.ProductViewVO;
 import com.example.vo.UserVO;
+import com.example.vo.WishlistVO;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -343,4 +344,58 @@ public class ShopController {
 	    }
 	}
 
+	
+	
+	//위시리스트 등록
+	@RequestMapping(value="/wishlistadd", method= {RequestMethod.GET, RequestMethod.POST})
+	public String insertWishlist(@RequestParam(value="productNo", required=false) Integer productNo,
+	                            @RequestParam(value="quantity", required=false) Integer quantity,
+	                            
+	                            HttpSession session) {
+	    
+	    System.out.println("===== 위시리스트 등록 시작 =====");
+	    System.out.println("받은 productNo: " + productNo);
+	    System.out.println("받은 quantity: " + quantity);
+	    
+	    // 로그인 체크
+	    UserVO authUser = (UserVO) session.getAttribute("authUser");
+	    if (authUser == null) {
+	        return "user/loginform";
+	    }
+	    
+	    int userNo = authUser.getUserNo();
+	    
+	    // 기본값 설정
+	    if (quantity == null || quantity <= 0) {
+	        quantity = 1;
+	    }
+	    
+	    if (productNo == null || productNo <= 0) {
+	        return "잘못된 상품 정보입니다";
+	    }
+	    
+	    try {
+	        WishlistVO wishlistVO = new WishlistVO();
+	        wishlistVO.setUserNo(userNo);
+	        wishlistVO.setProductNo(productNo);
+	        wishlistVO.setQuantity(quantity);
+	        // WishlistVO에 quantity 관련 setter가 없다면 추가 필요
+	        
+	        System.out.println("위시리스트 정보: " + wishlistVO);
+	        
+	        shopService.exeWishlistAdd(wishlistVO);
+	        
+	        System.out.println("===== 위시리스트 등록 완료 =====");
+	        return "redirect:/wishlist";
+	        
+	    } catch (Exception e) {
+	        System.out.println("위시리스트 등록 중 오류 발생: " + e.getMessage());
+	        e.printStackTrace();
+	        return "오류가 발생했습니다";
+	    }
+	}
+	
+	
+	
+	
 }

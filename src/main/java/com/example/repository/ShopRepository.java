@@ -13,6 +13,7 @@ import com.example.vo.ProductOptionDetailVO;
 import com.example.vo.ProductOptionVO;
 import com.example.vo.ProductVO;
 import com.example.vo.ProductViewVO;
+import com.example.vo.WishlistVO;
 
 @Repository
 public class ShopRepository {
@@ -142,5 +143,16 @@ public class ShopRepository {
 	    return count;
 	}
 	
+	
+	//위시리스트 등록
+	public int wishlistInsert(WishlistVO wishlistVO) {
+	    System.out.println("ShopRepository.wishlistInsert");
+	    System.out.println("DB 저장 전 데이터: " + wishlistVO);
+	    
+	    int count = sqlSession.insert("product.wishlistInsert", wishlistVO);
+	    
+	    System.out.println("위시리스트 저장 완료! 영향받은 행 수: " + count);
+	    return count;
+	}
 	
 }
