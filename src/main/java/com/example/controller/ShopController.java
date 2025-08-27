@@ -248,11 +248,11 @@ public class ShopController {
 
 	//장바구니등록 - 수정된 버전
 	@RequestMapping(value="/cartadd", method= {RequestMethod.GET, RequestMethod.POST})
-	@ResponseBody
 	public String insertCart(@RequestParam(value="productNo", required=false) Integer productNo,
-	                        @RequestParam(value="quantity", required=false) Integer quantity,
-	                        @RequestParam(value="selectedOptions", required=false) String selectedOptionsJson, // 옵션 정보 추가
-	                        HttpSession session) {
+			 				 @RequestParam(value="categoryNo", required=false) Integer categoryNo,
+	                         @RequestParam(value="quantity", required=false) Integer quantity,
+	                         @RequestParam(value="selectedOptions", required=false) String selectedOptionsJson, // 옵션 정보 추가
+	                         HttpSession session) {
 	    
 	    System.out.println("===== 장바구니 등록 시작 =====");
 	    System.out.println("받은 productNo: " + productNo);
@@ -281,7 +281,7 @@ public class ShopController {
 	        CartVO cartVO = new CartVO();
 	        cartVO.setUser_no(userNo);
 	        cartVO.setProduct_no(productNo);
-	        cartVO.setCategory_no(2);
+	        cartVO.setCategory_no(categoryNo);
 	        cartVO.setQuantity(quantity);
 	        
 	        System.out.println("장바구니 기본 정보: " + cartVO);

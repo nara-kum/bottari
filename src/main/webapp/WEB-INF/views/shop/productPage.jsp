@@ -152,12 +152,11 @@
 						<!-- 장바구니 폼 수정 -->
 						<form action="${pageContext.request.contextPath}/cartadd"
 							method="get" id="cartForm">
-							<input type="hidden" name="productNo"
-								value="${productViewVO.product_no}"> <input
-								type="hidden" name="quantity" id="hiddenQuantity" value="1">
+							<input type="hidden" name="productNo" value="${productViewVO.product_no}">
+							<input type="hidden" name="categoryNo" value="${productViewVO.category_no}"> 
+							<input type="hidden" name="quantity" id="hiddenQuantity" value="1">
 							<!-- 새로 추가: 선택된 옵션들을 저장할 숨겨진 필드 -->
-							<input type="hidden" name="selectedOptions"
-								id="selectedOptionsInput" value="">
+							<input type="hidden" name="selectedOptions" id="selectedOptionsInput" value="">
 
 							<button type="submit" class="cart-btn"
 								onclick="setSelectedOptions()">장바구니 담기</button>

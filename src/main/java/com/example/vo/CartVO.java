@@ -17,7 +17,7 @@ public class CartVO {
 	}
 
 
-	public CartVO(int cart_no, int user_no, int product_no, int categoty_no, String registration_date, int quantity) {
+	public CartVO(int cart_no, int user_no, int product_no, int category_no, String registration_date, int quantity) {
 		super();
 		this.cart_no = cart_no;
 		this.user_no = user_no;
