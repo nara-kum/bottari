@@ -26,7 +26,7 @@ public class InvitationApiController {
 	@Autowired
 	private InvitationService invitationService;
 
-	//초대장 등록
+	// 초대장 등록
 	@PostMapping("/api/invtreg")
 	public JsonResult invtReg(@RequestBody InvitationVO invitationVO, HttpSession session) {
 		System.out.println("InvitationApiController.invtReg()");
@@ -36,7 +36,7 @@ public class InvitationApiController {
 		if (authUser == null) {
 			return JsonResult.fail("로그인이 필요합니다.");
 		}
-		
+
 		invitationVO.setUserNo(authUser.getUserNo());
 
 		// 필수값 검증
@@ -46,34 +46,34 @@ public class InvitationApiController {
 		}
 
 		int cnt = invitationService.exeInvtReg(invitationVO);
+
 		if (cnt > 0) {
 			return JsonResult.success(invitationVO);
 		}
 		return JsonResult.fail("초대장 등록에 실패했습니다.");
 	}
-	
-	//이미지 업로드
-    @PostMapping("/api/upload")
-    public JsonResult upload(@RequestParam("file") MultipartFile file, HttpSession session) {
+
+	// 이미지 업로드
+	@PostMapping("/api/upload")
+	public JsonResult upload(@RequestParam("file") MultipartFile file, HttpSession session) {
 		System.out.println("InvitationApiController.upload()");
-    	
-        UserVO authUser = (UserVO) session.getAttribute("authUser");
+
+		UserVO authUser = (UserVO) session.getAttribute("authUser");
 		if (authUser == null) {
 			return JsonResult.fail("로그인이 필요합니다.");
 		}
-        if (file == null || file.isEmpty()) {
-        	return JsonResult.fail("파일이 없습니다.");
-        }
+		if (file == null || file.isEmpty()) {
+			return JsonResult.fail("파일이 없습니다.");
+		}
 
-        String url = invitationService.save(file);
-        Map<String, Object> data = new HashMap<>();
-        data.put("url", url);
-        
-        return JsonResult.success(data);
-    }
-    
+		String url = invitationService.save(file);
+		Map<String, Object> data = new HashMap<>();
+		data.put("url", url);
 
-    //내 초대장 목록
+		return JsonResult.success(data);
+	}
+
+	// 내 초대장 목록
 	@GetMapping("/api/invtlist")
 	public JsonResult invtList(HttpSession session) {
 		System.out.println("InvitationApiController.invtList()");
@@ -91,17 +91,18 @@ public class InvitationApiController {
 
 	// 초대장 전체보기(불러오기)
 	@GetMapping("/api/invtview")
-	public JsonResult getView(@RequestParam int no, HttpSession session) {
-		
+	public JsonResult view(@RequestParam("no") int invitationNo, HttpSession session) {
 		UserVO authUser = (UserVO) session.getAttribute("authUser");
-
-		if (authUser == null) {
+		if (authUser == null)
 			return JsonResult.fail("로그인이 필요합니다.");
+
+		Map<String, Object> bundle = invitationService.getInvitationViewBundle(invitationNo, authUser.getUserNo());
+		
+		if (bundle == null) {
+			return JsonResult.fail("존재하지 않거나 권한이 없습니다.");
 		}
-		
-		InvitationVO vo = invitationService.getInvitation(authUser.getUserNo(), no);
-		
-		return vo != null ? JsonResult.success(vo) : JsonResult.fail("존재하지 않는 초대장입니다.");
+			
+		return JsonResult.success(bundle); // { detail:{...}, gifts:[...] }
 	}
 
 }

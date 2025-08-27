@@ -35,7 +35,7 @@
 						src="/assets/icon/icon-caret-down.svg"></a>
 					<h1>
 						<a class="header-usermenu"
-							href="${pageContext.request.contextPath}/joinForm">회원가입</a>
+							href="${pageContext.request.contextPath}/joinform">회원가입</a>
 					</h1>
 				</c:when>
 				<c:otherwise>

@@ -26,27 +26,30 @@ public class InvitationRepository {
 		return count;
 	}
 
-	//이미지 업로드
-    public int insertInvitation(InvitationVO vo) {
-        return sqlSession.insert("invitation.insertInvitation", vo);
-    }
+	// 이미지 업로드
+	public int insertInvitation(InvitationVO vo) {
+		System.out.println("이미지업로드??"+vo);
+		
+		return sqlSession.insert("invitation.insertInvitation", vo);
+	}
 
 	// 초대장 리스트 셀렉트
 	public List<InvitationVO> selectInvitationList(int userNo) {
 		System.out.println("InvitationRepository.selectInvitationList(userNo=" + userNo + ")");
+		
 		List<InvitationVO> invitationVO = sqlSession.selectList("invitation.selectListByUser", userNo);
-		
+
 		System.out.println(invitationVO);
-		
+
 		return invitationVO;
 	}
-	
-	//
-    public InvitationVO selectOne(int userNo, int invitationNo){
-        Map<String, Object> p = new HashMap<>();
-        p.put("userNo", userNo);
-        p.put("invitationNo", invitationNo);
-        return sqlSession.selectOne("invitation.selectOne", p);
-    }
+
+	public Map<String, Object> selectInvitationDetail(Map<String, Object> p) {
+		return sqlSession.selectOne("invitation.selectInvitationDetail", p);
+	}
+
+	public List<Map<String, Object>> selectGiftsByEvent(Map<String, Object> p) {
+		return sqlSession.selectList("invitation.selectGiftsByEvent", p);
+	}
 
 }

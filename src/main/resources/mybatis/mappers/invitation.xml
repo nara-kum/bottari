@@ -1,120 +1,156 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="invitation">
 
-	<!-- 초대장 리스트 가져오기 -->
-	<select id="selectListByUser" parameterType="int"
-		resultType="com.example.vo.InvitationVO">
-		<![CDATA[
-			SELECT
-				i.invitation_no AS invitationNo,
-				i.event_no AS eventNo,
-				i.celebrate_date AS celebrateDate,
-				i.user_no AS userNo,
-				COALESCE(i.photo_url,'/assets/images/placeholder.png') AS photoUrl,
-				c.event_name AS eventName,
-				CASE WHEN EXISTS ( SELECT 1
-									FROM funding_product fp
-									WHERE fp.user_no = i.user_no
-									AND fp.event_no = i.event_no) 
-					THEN 1 ELSE 0 END AS hasFunding
-			FROM invitation i
-			LEFT JOIN calender c
-			ON c.event_no = i.event_no
-			AND c.user_no = i.user_no
-			WHERE i.user_no = #{userNo}
-			ORDER BY i.invitation_no DESC
-		]]>
-	</select>
+  <!-- 초대장 등록 -->
+  <insert id="insertInvitation"
+          parameterType="com.example.vo.InvitationVO"
+          useGeneratedKeys="true"
+          keyProperty="invitationNo">
+    <![CDATA[
+      INSERT INTO invitation (
+          invitation_no,
+          category_no, user_no, event_no, theme_no,
+          photo_url,
+          celebrate_date, celebrate_time,
+          greeting,
+          place, address1, address2,
+          groom_name, groom_contect,
+          groom_father_name, groom_father_contect,
+          groom_mother_name, groom_mother_contect,
+          bride_name, bride_contect,
+          bride_father_name, bride_father_contect,
+          bride_mother_name, bride_mother_contect,
+          baby_name, baby_father_name, baby_father_contect,
+          baby_mother_name, baby_mother_contect,
+          created_at
+      ) VALUES (
+          NULL,
+          #{categoryNo}, #{userNo}, #{eventNo}, #{themeNo},
+          #{photoUrl},
+          #{celebrateDate}, #{celebrateTime},
+          #{greeting},
+          #{place}, #{address1}, #{address2},
+          #{groomName}, #{groomContect},
+          #{groomFatherName}, #{groomFatherContect},
+          #{groomMotherName}, #{groomMotherContect},
+          #{brideName}, #{brideContect},
+          #{brideFatherName}, #{brideFatherContect},
+          #{brideMotherName}, #{brideMotherContect},
+          #{babyName}, #{babyFatherName}, #{babyFatherContect},
+          #{babyMotherName}, #{babyMotherContect},
+          NOW()
+      )
+    ]]>
+  </insert>
 
-	<!-- 초대장 등록 -->
-	<insert id="insertInvitation"
-	        parameterType="com.example.vo.InvitationVO"
-	        useGeneratedKeys="true" keyProperty="invitationNo">
-		<![CDATA[
-			insert into invitation 
-			values (null,#{categoryNo}
-					,#{userNo}
-					,#{eventNo}
-					,#{themeNo}
-					,#{photoUrl}
-					,#{celebrateDate}
-					,#{celebrateTime}
-					,#{greeting}
-					,#{place}
-					,#{address1}
-					,#{address2}
-					,#{groomName}
-					,#{groomContect}
-					,#{groomFatherName}
-					,#{groomFatherContect}
-					,#{groomMotherName}
-					,#{groomMotherContect}
-					,#{brideName}
-					,#{brideContect}
-					,#{brideFatherName}
-					,#{brideFatherContect}
-					,#{brideMotherName}
-					,#{brideMotherContect}
-					,#{babyName}
-					,#{babyFatherName}
-					,#{babyFatherContect}
-					,#{babyMotherName}
-					,#{babyMotherContect}
-					,now())
-			]]>
-		</insert>
-
-	<!-- 초대장 단건(전체보기 화면에 필요한 모든 필드) -->
-	<select id="selectOne" parameterType="map" resultType="com.example.vo.InvitationVO">
+  <!-- 초대장 리스트 (레파지토리: selectInvitationList(int userNo)) -->
+  <!-- 단일 int 파라미터는 #{value} 로 접근! -->
+  <select id="selectListByUser"
+          parameterType="int"
+          resultType="com.example.vo.InvitationVO">
     <![CDATA[
       SELECT
-        i.invitation_no            AS invitationNo,
-        i.category_no              AS categoryNo,
-        i.user_no                  AS userNo,
-        i.event_no                 AS eventNo,
-        i.theme_no                 AS themeNo,
-        i.photo_url                AS photoUrl,
-        i.celebrate_date           AS celebrateDate,
-        i.celebrate_time           AS celebrateTime,
-        i.greeting                 AS greeting,
-        i.place                    AS place,
-        i.address1                 AS address1,
-        i.address2                 AS address2,
-
-        i.groom_name               AS groomName,
-        i.groom_contect            AS groomContect,
-        i.groom_father_name        AS groomFatherName,
-        i.groom_father_contect     AS groomFatherContect,
-        i.groom_mother_name        AS groomMotherName,
-        i.groom_mother_contect     AS groomMotherContect,
-
-        i.bride_name               AS brideName,
-        i.bride_contect            AS brideContect,
-        i.bride_father_name        AS brideFatherName,
-        i.bride_father_contect     AS brideFatherContect,
-        i.bride_mother_name        AS brideMotherName,
-        i.bride_mother_contect     AS brideMotherContect,
-
-        i.baby_name                AS babyName,
-        i.baby_father_name         AS babyFatherName,
-        i.baby_father_contect      AS babyFatherContect,
-        i.baby_mother_name         AS babyMotherName,
-        i.baby_mother_contect      AS babyMotherContect,
-
-        i.created_at               AS createdAt,
-        c.event_name               AS eventName,
-        CASE WHEN EXISTS (
-          SELECT 1 FROM funding_product fp
-          WHERE fp.user_no = i.user_no
-            AND fp.event_no = i.event_no
-        ) THEN 1 ELSE 0 END        AS hasFunding
+          i.invitation_no                                   AS invitationNo,
+          i.user_no                                         AS userNo,
+          i.event_no                                        AS eventNo,
+          i.celebrate_date                                  AS celebrateDate,
+          COALESCE(i.photo_url, '/assets/images/placeholder.png') AS photoUrl,
+          c.event_name                                      AS eventName,
+          CASE WHEN EXISTS (
+              SELECT 1
+              FROM funding_product fp
+              WHERE fp.user_no = i.user_no
+                AND fp.event_no = i.event_no
+          ) THEN 1 ELSE 0 END                               AS hasFunding
       FROM invitation i
-      LEFT JOIN calender c ON c.event_no = i.event_no
-      WHERE i.user_no = #{userNo}
+      LEFT JOIN calender c
+        ON c.event_no = i.event_no
+       AND c.user_no = i.user_no
+      WHERE i.user_no = #{value}
+      ORDER BY i.invitation_no DESC
+    ]]>
+  </select>
+
+  <!-- 초대장 단건 상세 (레파지토리: selectInvitationDetail(Map p) → Map 반환) -->
+  <select id="selectInvitationDetail"
+          parameterType="map"
+          resultType="map">
+    <![CDATA[
+      SELECT
+          i.invitation_no        AS invitationNo,
+          i.category_no          AS categoryNo,
+          i.user_no              AS userNo,
+          i.event_no             AS eventNo,
+          i.theme_no             AS themeNo,
+          COALESCE(i.photo_url, '/assets/images/placeholder.png') AS photoUrl,
+          i.celebrate_date       AS celebrateDate,
+          i.celebrate_time       AS celebrateTime,
+          i.greeting             AS greeting,
+          i.place                AS place,
+          i.address1             AS address1,
+          i.address2             AS address2,
+
+          i.groom_name           AS groomName,
+          i.groom_contect        AS groomContect,
+          i.groom_father_name    AS groomFatherName,
+          i.groom_father_contect AS groomFatherContect,
+          i.groom_mother_name    AS groomMotherName,
+          i.groom_mother_contect AS groomMotherContect,
+
+          i.bride_name           AS brideName,
+          i.bride_contect        AS brideContect,
+          i.bride_father_name    AS brideFatherName,
+          i.bride_father_contect AS brideFatherContect,
+          i.bride_mother_name    AS brideMotherName,
+          i.bride_mother_contect AS brideMotherContect,
+
+          i.baby_name            AS babyName,
+          i.baby_father_name     AS babyFatherName,
+          i.baby_father_contect  AS babyFatherContect,
+          i.baby_mother_name     AS babyMotherName,
+          i.baby_mother_contect  AS babyMotherContect,
+
+          i.created_at           AS createdAt,
+          c.event_name           AS eventName,
+          CASE WHEN EXISTS (
+            SELECT 1 FROM funding_product fp
+            WHERE fp.user_no = i.user_no
+              AND fp.event_no = i.event_no
+          ) THEN 1 ELSE 0 END    AS hasFunding
+      FROM invitation i
+      LEFT JOIN calender c
+        ON c.event_no = i.event_no
+       AND c.user_no = i.user_no
+      WHERE i.user_no       = #{userNo}
         AND i.invitation_no = #{invitationNo}
     ]]>
-	</select>
+  </select>
 
+  <!-- 동일 이벤트의 펀딩 선물 목록 (레파지토리: selectGiftsByEvent(Map p) → List<Map>) -->
+  <select id="selectGiftsByEvent"
+          parameterType="map"
+          resultType="map">
+    <![CDATA[
+      SELECT
+          fp.funding_no     AS fundingNo,
+          fp.event_no       AS eventNo,
+          fp.user_no        AS userNo,
+          fp.product_no     AS productNo,
+          p.brand           AS brand,
+          p.title           AS title,
+          p.price           AS price,
+          fp.percent        AS percent,
+          fp.amount         AS amount,
+          fp.funding_status AS fundingStatus,
+          fp.funding_date   AS fundingDate
+      FROM funding_product fp
+      JOIN product p ON p.product_no = fp.product_no
+      WHERE fp.user_no = #{userNo}
+        AND fp.event_no = #{eventNo}
+      ORDER BY fp.funding_no DESC
+    ]]>
+  </select>
 
 </mapper>

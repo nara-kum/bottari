@@ -7,7 +7,7 @@
   <title>bottari 초대장 전체보기</title>
   <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/reset.css">
   <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/Global.css">
-  <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/invitation/invitation.css"><!-- ↑ 위 CSS 교체 -->
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/invitation/invitation.css">
   <script src="${pageContext.request.contextPath}/assets/js/jquery/jquery-3.7.1.js"></script>
 </head>
 <body class="family">
@@ -70,68 +70,117 @@
 (function(){
   var CTX = "${pageContext.request.contextPath}";
 
-  // 쿼리스트링에서 no 가져오기
-  function qs(name){
-    var m = new RegExp("[?&]"+name+"=([^&#]*)").exec(location.search);
-    return m ? decodeURIComponent(m[1].replace(/\+/g,"%20")) : "";
+  // ?no=123 파라미터
+  function getQuery(key){
+    var s = new URLSearchParams(location.search);
+    return s.get(key);
   }
 
-  function fmtDate(s){ // yyyy-mm-dd -> yyyy . mm . dd
-    if(!s) return "";
-    var d = String(s).substring(0,10);
-    return d.replace(/-/g, " . ");
-  }
-  function weekName(dateStr){
-    try{
-      var d = new Date(dateStr);
-      return ["일","월","화","수","목","금","토"][d.getDay()];
-    }catch(e){ return ""; }
-  }
-  function esc(x){
-    return (x==null?"":String(x))
-      .replace(/&/g,"&amp;").replace(/</g,"&lt;")
-      .replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+  // 서버 응답에서 payload 뽑기 (apiData 우선, 없으면 data, 그래도 없으면 자체)
+  function pickPayload(res){
+    if (!res) return null;
+    if (res.apiData) return res.apiData;
+    if (res.data)    return res.data;
+    return res;
   }
 
-  // 데이터 렌더링
-  function render(vo){
-    // 대표 이미지 (지금은 이미지 없어도 됨. photoUrl 있으면 넣어줌)
-    if (vo.photoUrl){
-      $("#hero").addClass("has-photo").empty()
-        .append('<img alt="대표 이미지" src="'+esc(vo.photoUrl)+'" onerror="this.remove();">');
-    }
+  // yyyy-mm-dd -> yyyy. mm. dd
+  function fmtDate(s){
+    if (!s) return "";
+    return String(s).slice(0,10).replaceAll("-", " . ");
+  }
 
-    // 날짜 / 이름 / 메타
-    $("#v-date").text(fmtDate(vo.celebrateDate || vo.celebrate_date));
-    var groom = vo.groomName || vo.groom_name || "신랑";
-    var bride = vo.brideName || vo.bride_name || "신부";
-    $("#v-names").text(groom + "  &  " + bride);
+  function text(v){ return (v==null || v==="") ? "" : String(v); }
 
-    var time = vo.celebrateTime || vo.celebrate_time || "";
-    var place = vo.place || "";
-    var wday = weekName(vo.celebrateDate || vo.celebrate_date);
-    var timeText = time ? (" " + time.substring(0,5)) : "";
-    var meta = (vo.celebrateDate?fmtDate(vo.celebrateDate):"") + " " + wday + "요일" + timeText
-             + (place?(" / " + place):"");
-    $("#v-meta").text(meta.trim());
+  // DOM 채우기 (기존 마크업을 그대로 활용)
+  function render(detail, gifts){
+    detail = detail || {};
+    gifts  = Array.isArray(gifts) ? gifts : [];
 
-    // 선물 CTA (hasFunding 있으면 활성 / 없으면 비활)
-    var hasFunding = !!(vo.hasFunding || vo.has_funding);
-    if (!hasFunding){
-      $("#btn-funding").prop("disabled", true).text("펀딩이 연결되지 않았어요");
+    // 대표/기본 텍스트
+    var dateTxt = fmtDate(detail.celebrateDate);
+    var timeTxt = (text(detail.celebrateTime) || "").slice(0,5); // HH:mm 형태 가정
+    var place   = text(detail.place);
+    var addr1   = text(detail.address1);
+    var addr2   = text(detail.address2);
+    var eventNm = text(detail.eventName);
+
+    // 1) 대표 이미지 (upload 경로만 이미지 삽입, 그 외는 회색 플레이스홀더 유지)
+    var $hero = $("#hero").empty();
+    var url = text(detail.photoUrl);
+    if (url && /^\/upload\//.test(url)) {
+      $hero.append($('<img>', {src: url, alt: '대표 이미지'}));
     } else {
-      var to = CTX + "/funding?eventNo=" + (vo.eventNo || vo.event_no || "");
-      $("#btn-funding").on("click", function(){ location.href = to; });
+      // 이미지가 없으면 플레이스홀더 유지
+      $hero.append('<div class="ph" aria-hidden="true"></div>');
     }
+
+    // 2) 본문: 날짜 / 이름 / 메타
+    $("#v-date").text(dateTxt || "0000 . 00 . 00");
+
+    // 이름은 종류별로 없을 수 있으므로 유연하게 조합
+    var names = [];
+    if (detail.groomName || detail.brideName) {
+      if (detail.groomName) names.push(detail.groomName);
+      if (detail.brideName) names.push(detail.brideName);
+    } else if (detail.babyName) {
+      names.push(detail.babyName);
+    }
+    $("#v-names").text(names.length ? names.join("  &  ") : "신랑  &  신부");
+
+    // 메타(날짜·시간 / 장소·주소)
+    var meta = [];
+    var t1 = [fmtDate(detail.celebrateDate), timeTxt].filter(Boolean).join(" ");
+    if (t1) meta.push(t1);
+    var t2 = [place, [addr1, addr2].filter(Boolean).join(" ")].filter(Boolean).join(" · ");
+    if (t2) meta.push(t2);
+    $("#v-meta").text(meta.join(" / "));
+
+    // 3) 선물 패널
+    var $panel = $("#gift-panel").hide();
+    var $icons = $panel.find(".gift-icons").empty();
+
+    if (gifts.length) {
+      // 최대 4개만 아이콘화
+      gifts.slice(0,4).forEach(function(g){
+        // 이미지 없으므로 텍스트 아이콘: 브랜드나 제품명 첫글자
+        var label = (g.title || g.brand || "").trim().charAt(0) || "🎁";
+        var $ic = $('<div class="gift-icon" title="'+ (g.title || "") +'"></div>');
+        $ic.text(label);
+        $icons.append($ic);
+      });
+      $panel.show();
+      // 펀딩 페이지로 이동(이벤트 단위)
+      $("#btn-funding").off("click").on("click", function(){
+        if (detail.eventNo) {
+          location.href = CTX + "/myFunding?eventNo=" + detail.eventNo;
+        } else {
+          location.href = CTX + "/myFunding";
+        }
+      });
+    }
+
+    // 4) 공유 버튼 (동작 예시)
+    $("#btn-copy").off("click").on("click", function(){
+      var url = location.href;
+      navigator.clipboard?.writeText(url).then(function(){
+        alert("링크가 복사되었습니다.");
+      }).catch(function(){
+        alert("클립보드 복사에 실패했습니다.");
+      });
+    });
+    $("#btn-kakao").off("click").on("click", function(){
+      alert("카카오 공유는 나중에 연동할게요 😊");
+    });
   }
 
-  // 데이터 로드
-  function load(){
-    var no = qs("no") || qs("id");
-    if(!no){ // no 없으면 최소 안내만
-      render({});
+  function loadView(){
+    var no = parseInt(getQuery("no"), 10);
+    if (!no){
+      alert("잘못된 접근입니다. (no 파라미터 없음)");
       return;
     }
+
     $.ajax({
       url: CTX + "/api/invtview",
       type: "GET",
@@ -139,35 +188,24 @@
       dataType: "json"
     })
     .done(function(res){
-      var vo = (res && res.data) ? res.data :
-               (res && res.apiData) ? res.apiData : res;
-      if (!vo || res.result === "fail"){
-        alert(res && res.message ? res.message : "초대장을 불러오지 못했습니다.");
-        render({});
+      if (!res || res.result === "fail"){
+        alert((res && res.message) || "불러오지 못했습니다.");
         return;
       }
-      render(vo);
+      var payload = pickPayload(res);           // { detail:{...}, gifts:[...] } 형태 기대
+      var detail  = (payload && payload.detail) || payload || {};
+      var gifts   = (payload && payload.gifts)  || [];
+      render(detail, gifts);
     })
     .fail(function(xhr){
       console.error("[GET /api/invtview] fail:", xhr.status, (xhr.responseText||"").slice(0,200));
-      render({});
+      alert("불러오지 못했습니다. 잠시 후 다시 시도해주세요.");
     });
   }
 
-  // 공유 버튼(샘플)
-  $(document)
-    .on("click", "#btn-copy", function(){
-      var url = location.href;
-      navigator.clipboard?.writeText(url).then(function(){
-        alert("링크를 복사했어요.");
-      }, function(){ alert(url); });
-    })
-    .on("click", "#btn-kakao", function(){
-      alert("카카오 공유는 추후 연동합니다 🙂");
-    });
-
-  $(load);
+  $(function(){ loadView(); });
 })();
 </script>
+
 </body>
 </html>

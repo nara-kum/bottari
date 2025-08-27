@@ -20,7 +20,7 @@ public class InvitationController {
 	//초대장 전체보기
 	@RequestMapping(value="/invitation", method= {RequestMethod.GET, RequestMethod.POST})
 	public String Invitation(){
-		System.out.println("InvitationControllerInvitation()");
+		System.out.println("InvitationController.Invitation()");
 		
 		
 		return "invitation/invitation";
