@@ -47,25 +47,6 @@
   margin-bottom: 20px;
 }
 
-/* 카드 공통 */
-.inv-card,
-.inv-card--empty{
-  position:relative;
-  background:#fcfbf8;
-  border:1px solid #e7e3db;
-  border-radius:12px;
-  padding:12px;
-  min-height:290px;
-  display:flex;
-  flex-direction:column;
-  justify-content:space-between;
-}
-
-.inv-card--empty{
-  background:#f6f4ee;
-  opacity:.65;
-}
-
 /* 배지(펀딩 등) */
 .inv-badge{
   position:absolute;

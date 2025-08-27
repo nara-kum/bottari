@@ -1,171 +1,161 @@
-/* ===== Invitation View (mobile-first) ===== */
-.inv-wrap {
-	max-width: 420px;
-	margin: 24px auto;
-	padding: 0 12px;
+@charset "UTF-8";
+
+/* =========================
+   초대장(모바일 세로형 카드)
+   - 중앙 정렬(important 사용 X)
+   - Global.css 보다 '뒤에서' 로드되어야 함
+========================= */
+
+/* 상위 레이아웃 영향 제거 + 폭 꽉 채우기 */
+#sec-content .sec-content-main{
+  display: block;         /* 그리드/플렉스 등 상속 차단 */
+  width: 100%;
 }
 
-.inv-card {
-	background: #fbf9f6;
-	border: 1px solid #e7e3db;
-	border-radius: 16px;
-	box-shadow: 0 8px 24px rgba(0, 0, 0, .06);
-	overflow: hidden;
+/* 중앙 정렬 컨테이너 */
+.inv-wrap{
+  max-width: 100%;
+  padding: 24px 0 40px;
+  margin: 0 auto;              /* 중앙 배치 기본 */
+  display: flex;               /* 중앙 정렬용 */
+  justify-content: center;     /* 수평 중앙 */
 }
 
-/* hero(대표 이미지 자리) */
-.inv-hero {
-	position: relative;
-	width: 100%;
-	aspect-ratio: 3/4; /* 300x400 느낌 */
-	background: linear-gradient(180deg, #f3efe8 0%, #e9e5de 100%);
-	display: flex;
-	align-items: center;
-	justify-content: center;
+/* 안전장치: 부모가 flex가 아니더라도 중앙 유지 */
+.inv-wrap .inv-card{
+  margin: 0 auto;
 }
 
-.inv-hero.has-photo {
-	background: none;
+/* 단일 세로형 카드 */
+.inv-card{
+  width: 392px;                 /* iPhone Pro Max(430)보다 살짝 좁게 */
+  max-width: calc(100% - 32px); /* 모바일 가로 여백 */
+  background: #fcfbf8;
+  border: 1px solid #e7e3db;
+  border-radius: 16px;
+  overflow: hidden;             /* 모서리 라운드 유지 */
+  box-shadow: 0 6px 18px rgba(0,0,0,.05);
+  display: block;
 }
 
-.inv-hero .ph {
-	width: 70%;
-	height: 70%;
-	border-radius: 12px;
-	background: #ddd;
-	box-shadow: inset 0 0 0 2px #eee;
+/* 대표 이미지 */
+.inv-hero{
+  width: 100%;
+  aspect-ratio: 3/4;            /* 세로형 포스터 비율 */
+  background: #f7f5f1;
+  border-bottom: 1px solid #e7e3db;
+  position: relative;
+}
+.inv-hero img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.inv-hero .ph{
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(45deg,#f1ede6 0,#f1ede6 10px,#efe9e0 10px,#efe9e0 20px);
 }
 
-.inv-hero img {
-	display: block;
-	width: 100%;
-	height: 100%;
-	object-fit: cover;
+/* 본문(날짜/이름/메타) */
+.inv-body{
+  padding: 18px 18px 6px;
+  text-align: center;
 }
-
-/* 본문(카드 안쪽) */
-.inv-body {
-	padding: 18px 16px 8px;
+.sep{
+  font-size: 12px;
+  letter-spacing: .25em;
+  color: #999;
+  text-transform: uppercase;
+  margin-bottom: 6px;
 }
-
-.sep {
-	display: flex;
-	align-items: center;
-	gap: 8px;
-	color: #b7b2aa;
-	font-size: 12px;
+.inv-date{
+  font-size: 24px;
+  font-weight: 800;
+  color: #222;
+  letter-spacing: .25em;
 }
-
-.sep::before, .sep::after {
-	content: "";
-	flex: 1;
-	height: 1px;
-	background: #d6d1c8;
-	border-radius: 1px;
+.inv-names{
+  font-size: 18px;
+  font-weight: 800;
+  color: #222;
+  margin-top: 8px;
 }
-
-.inv-date {
-	margin: 10px 0 4px;
-	font-weight: 800;
-	letter-spacing: .16em;
-	text-align: center;
-	font-size: 20px;
-	color: #3b3b3b;
-}
-
-.inv-names {
-	margin: 6px 0 2px;
-	text-align: center;
-	font-weight: 700;
-	color: #555
-}
-
-.inv-meta {
-	text-align: center;
-	font-size: 12px;
-	color: #8a8680;
-	line-height: 1.6;
+.inv-meta{
+  color: #666;
+  font-size: 13px;
+  line-height: 1.7;
+  margin-top: 10px;
 }
 
 /* 선물 패널 */
-.gift-panel {
-	background: #f6f4ee;
-	border: 1px solid #e7e3db;
-	border-radius: 14px;
-	margin: 16px;
-	padding: 16px 14px;
+.gift-panel{
+  margin: 16px 12px 10px;
+  background: #fff;
+  border: 1px solid #e7e3db;
+  border-radius: 12px;
+  padding: 16px;
+  text-align: center;
+}
+.gift-title{
+  font-weight: 800;
+  margin-bottom: 10px;
+}
+.gift-icons{
+  display: flex;
+  gap: 8px;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+.gift-icon{
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #ffedd5;
+  color: #ef5124;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.gift-cta{
+  width: 100%;
+  appearance: none;
+  border: 1px solid #ef5124;
+  background: #ef5124;
+  color: #fff;
+  border-radius: 999px;
+  padding: 12px 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.gift-note{
+  font-size: 12px;
+  color: #777;
+  margin-top: 10px;
+  line-height: 1.5;
 }
 
-.gift-title {
-	font-weight: 800;
-	color: #3f3b35;
-	text-align: center;
-	margin-bottom: 8px;
+/* 공유 버튼 */
+.share{
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin: 12px 12px 18px;
+}
+.sbtn{
+  appearance: none;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  color: #111;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
 }
 
-.gift-icons {
-	display: grid;
-	grid-template-columns: repeat(4, 1fr);
-	gap: 10px;
-	margin: 10px 0 6px;
-}
-
-.gift-icon {
-	width: 56px;
-	height: 56px;
-	border-radius: 50%;
-	background: #e8e4dc;
-	margin: 0 auto;
-	position: relative;
-	overflow: hidden;
-}
-
-.gift-cta {
-	display: block;
-	width: 100%;
-	max-width: 220px;
-	margin: 8px auto 4px;
-	background: #ef5124;
-	color: #fff;
-	border: none;
-	border-radius: 999px;
-	padding: 12px 16px;
-	font-weight: 800;
-	cursor: pointer;
-}
-
-.gift-cta[disabled] {
-	opacity: .5;
-	cursor: default;
-}
-
-.gift-note {
-	font-size: 11px;
-	color: #7f7a73;
-	text-align: center;
-	margin-top: 6px
-}
-
-/* 공유 영역 */
-.share {
-	display: flex;
-	gap: 10px;
-	justify-content: center;
-	margin: 12px 0 8px;
-}
-
-.share .sbtn {
-	border: 1px solid #e7e3db;
-	background: #fff;
-	border-radius: 10px;
-	padding: 10px 12px;
-	font-weight: 700;
-	color: #3b3b3b;
-	cursor: pointer;
-}
-
-/* 접근성 */
-.gift-cta:focus-visible, .sbtn:focus-visible {
-	outline: 2px solid #ef5124;
-	outline-offset: 2px;
+/* 데스크탑에서도 단일 세로형 폭 유지 */
+@media (min-width: 900px){
+  .inv-card{ width: 420px; }
 }

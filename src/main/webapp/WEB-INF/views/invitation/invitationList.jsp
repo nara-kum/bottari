@@ -77,71 +77,67 @@
     var id    = row.invitationNo;
     var date  = row.celebrateDate;
     var title = row.eventName;
-    // var title = "초대장 #" + id;
     return {
       id: id,
       title: title,
       date: fmtDate(date),
-      photo: resolveUrl(row.photoUrl || ""),          // "/assets/..." 처리
-      hasFunding: Boolean(Number(row.hasFunding || 0)) // 0/1 → boolean
+      photo: resolveUrl(row.photoUrl || ""),
+      hasFunding: Boolean(Number(row.hasFunding || 0))
     };
   }
 
   // 카드 템플릿
-  function cardTpl(vm){
-    var html = '';
-    if (vm.empty){
-      html += '<div class="inv-card inv-card--empty">';
-      html += '  <div class="inv-actions">';
-      html += '    <button class="inv-btn" type="button" disabled>수정하기</button>';
-      html += '    <button class="inv-btn inv-btn--primary" type="button" disabled>전체보기</button>';
-      html += '  </div>';
-      html += '</div>';
-      return html;
-    }
-    html += '<div class="inv-card" data-id="'+ esc(vm.id) +'">';
-    if (vm.hasFunding){ html += '<div class="inv-badge">🎁 펀딩</div>'; }
-    html += '  <div class="inv-thumbbox">';
-    if (vm.photo){ html += '    <img class="inv-thumb" src="'+ esc(vm.photo) +'" alt="">'; }
-    else { html += '    <div class="inv-thumb inv-thumb--ph"></div>'; }
-    html += '  </div>';
-    html += '  <div class="inv-info">';
-    html += '    <div class="inv-title">'+ esc(vm.title) +'</div>';
-    html += '    <div class="inv-date">'+ esc(vm.date) +'</div>';
-    html += '  </div>';
-    html += '  <div class="inv-actions">';
-    html += '    <button class="inv-btn btn-edit" type="button">수정하기</button>';
-    html += '    <button class="inv-btn inv-btn--primary btn-view" type="button">전체보기</button>';
-    html += '  </div>';
-    html += '</div>';
-    return html;
+  function cardTpl(row) {
+  var html = '';
+  html += '<div class="inv-card" data-id="' + (row.id || '') + '">';
+  if (row.hasFunding) {
+    html += '<div class="inv-badge">🎁 펀딩</div>';
+  }
+  html += '<div class="inv-thumbbox">';
+  if (row.photo) {
+    html += '<img class="inv-thumb" src="' + esc(row.photo) + '" alt="">';
+  } else {
+    html += '<div class="inv-thumb inv-thumb--ph"></div>';
+  }
+  html += '</div>';
+  html += '<div class="inv-info">';
+  html += '<div class="inv-title">' + esc(row.title || "") + '</div>';
+  html += '<div class="inv-date">' + esc(row.date || "") + '</div>';
+  html += '</div>';
+  html += '<div class="inv-actions">';
+  html += '<button class="inv-btn btn-edit" type="button">수정하기</button>';
+  html += '<button class="inv-btn inv-btn--primary btn-view" type="button">전체보기</button>';
+  html += '</div>';
+  html += '</div>';
+  return html;
+}
+
+
+  function renderList(rows) {
+  var $wrap = $(".card-container");
+  if ($wrap.length === 0) {
+    $("#sec-content .sec-content-main").append('<div class="card-container"></div>');
+    $wrap = $(".card-container");
+  }
+  if ($wrap.find(".inv-card-grid").length === 0) {
+    $wrap.html('<div class="inv-card-grid"></div>');
+  }
+  var $grid = $wrap.find(".inv-card-grid").empty();
+
+  if (!rows || !rows.length) {
+    $grid.append('<div class="inv-empty">등록된 초대장이 없습니다.</div>');
+    $(".inv-more").hide();
+    return;
   }
 
-  function renderList(vms){
-    var $grid = $(".inv-card-grid");
-    if (!$grid.length){
-      $(".card-container").html('<div class="inv-card-grid"></div>');
-      $grid = $(".inv-card-grid");
-    }
-    $grid.empty();
-
-    if (!vms || !vms.length){
-      $grid.append('<div class="inv-empty">등록된 초대장이 없습니다.</div>');
-      $(".inv-more").hide();
-      return;
-    }
-
-    for (var i=0; i<vms.length; i++){ $grid.append(cardTpl(vms[i])); }
-
-    // 4칸 맞추기용 빈 카드
-    var mod = vms.length % 4;
-    if (mod){
-      for (var j=0; j<4-mod; j++){ $grid.append(cardTpl({empty:true})); }
-    }
-    $(".inv-more").toggle(vms.length >= 16);
+  for (var i = 0; i < rows.length; i++) {
+    $grid.append(cardTpl(rows[i]));
   }
 
-  // ✅ 리스트 로드: 지금 백엔드 응답 {result:'success', apiData:[...]}
+  $(".inv-more").toggle(rows.length >= 16);
+}
+
+
   function loadList(){
     $.ajax({
       url: CTX + "/api/invtlist",
@@ -184,7 +180,6 @@
   $(function(){ loadList(); });
 })();
 </script>
-
 
 </body>
 </html>
