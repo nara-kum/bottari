@@ -21,7 +21,7 @@
 			</h1>
 		</div>
 		<div class="right-side">
-			<a href=""><img class="header-icon header-shopping-cart"
+			<a href="${pageContext.request.contextPath}/cart"><img class="header-icon header-shopping-cart"
 				src="/assets/icon/icon-shopping-cart.svg"></a>
 			<!-- 세션에 값이 있을때 -->
 
