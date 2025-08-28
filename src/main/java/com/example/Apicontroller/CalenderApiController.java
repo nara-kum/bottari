@@ -50,6 +50,10 @@ public class CalenderApiController {
 			result.put("invitationList", invitationList);
 
 			System.out.println("invitationList Count:" + invitationList.size());
+			for(int i = 0 ; i<invitationList.size() ; i++) {
+				System.out.println(invitationList.get(i));
+			}
+			
 			System.out.println("fundingList Count:" + productList.size());
 
 			return ResponseEntity.ok(result);

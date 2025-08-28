@@ -56,9 +56,9 @@
 															<select data-option-id="${vo.option_no}">
 																<c:forEach items="${vo.detailList}" var="detail">
 																	<c:set var="isSelected" value="false" />
-																	<c:forEach items="${cartDetailList}" var="cartVo">
-																		<c:if
-																			test="${cartVo.detailoption_no == detail.detailoption_no}">
+																	<c:forEach items="${detail.cartDetailList}"
+																		var="cartVo">
+																		<c:if test="${cartVo.detailoption_no == detail.detailoption_no}">
 																			<c:set var="isSelected" value="true" />
 																		</c:if>
 																	</c:forEach>
@@ -118,7 +118,7 @@
 	<c:import url="/WEB-INF/views/include/Footer.jsp"></c:import>
 	<!-- ---------------------------------------------------- -->
 
-	
+
 </body>
 
 </html>

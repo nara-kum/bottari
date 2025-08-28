@@ -35,6 +35,8 @@ public class CalenderRepository {
 		System.out.println("CalenderRepository.getInvitattionList()");
 
 		List<InvitationVO> invitationList = sqlsession.selectList("calender.getInvitationList", event_id);
+		
+		System.out.println(invitationList);
 
 		return invitationList;
 	}
