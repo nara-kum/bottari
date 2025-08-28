@@ -33,22 +33,19 @@
             <!-- 본문 -->
             <div class="inv-body">
               <div class="sep">초대합니다</div>
+                <div class="inv-names" id="v-names"></div>
 
-              <div class="inv-date" id="v-date">0000 . 00 . 00</div>
-              <div class="inv-names" id="v-names">신랑  &amp;  신부</div>
+                <div class="inv-dateplace" id="v-dateplace"></div>
 
-              <div class="inv-meta" id="v-meta">
-                <!-- 예: 2025.08.11 일요일 오전 9시 59분 / 예식장명 · 예식장 층/홀 -->
-              </div>
+                <div class="inv-greeting" id="v-greeting"></div>
             </div>
 
             <!-- 선물 보내기 -->
             <div class="gift-panel" id="gift-panel">
               <div class="gift-title">축하 선물 보내기</div>
               <div class="gift-icons">
-                <div class="gift-icon"></div><div class="gift-icon"></div><div class="gift-icon"></div><div class="gift-icon"></div>
+                <div class="gift-icon"></div>
               </div>
-              <button class="gift-cta" id="btn-funding">선물하러 가기</button>
               <div class="gift-note">부담 없는 금액으로 마음을 전할 수 있는 보따리의 ‘펀딩’ 서비스예요.</div>
             </div>
 
@@ -94,85 +91,121 @@
 
   // DOM 채우기 (기존 마크업을 그대로 활용)
   function render(detail, gifts){
-    detail = detail || {};
-    gifts  = Array.isArray(gifts) ? gifts : [];
+  detail = detail || {};
+  gifts  = Array.isArray(gifts) ? gifts : [];
 
-    // 대표/기본 텍스트
-    var dateTxt = fmtDate(detail.celebrateDate);
-    var timeTxt = (text(detail.celebrateTime) || "").slice(0,5); // HH:mm 형태 가정
-    var place   = text(detail.place);
-    var addr1   = text(detail.address1);
-    var addr2   = text(detail.address2);
-    var eventNm = text(detail.eventName);
-
-    // 1) 대표 이미지 (upload 경로만 이미지 삽입, 그 외는 회색 플레이스홀더 유지)
-    var $hero = $("#hero").empty();
-    var url = text(detail.photoUrl);
-    if (url && /^\/upload\//.test(url)) {
-      $hero.append($('<img>', {src: url, alt: '대표 이미지'}));
-    } else {
-      // 이미지가 없으면 플레이스홀더 유지
-      $hero.append('<div class="ph" aria-hidden="true"></div>');
-    }
-
-    // 2) 본문: 날짜 / 이름 / 메타
-    $("#v-date").text(dateTxt || "0000 . 00 . 00");
-
-    // 이름은 종류별로 없을 수 있으므로 유연하게 조합
-    var names = [];
-    if (detail.groomName || detail.brideName) {
-      if (detail.groomName) names.push(detail.groomName);
-      if (detail.brideName) names.push(detail.brideName);
-    } else if (detail.babyName) {
-      names.push(detail.babyName);
-    }
-    $("#v-names").text(names.length ? names.join("  &  ") : "신랑  &  신부");
-
-    // 메타(날짜·시간 / 장소·주소)
-    var meta = [];
-    var t1 = [fmtDate(detail.celebrateDate), timeTxt].filter(Boolean).join(" ");
-    if (t1) meta.push(t1);
-    var t2 = [place, [addr1, addr2].filter(Boolean).join(" ")].filter(Boolean).join(" · ");
-    if (t2) meta.push(t2);
-    $("#v-meta").text(meta.join(" / "));
-
-    // 3) 선물 패널
-    var $panel = $("#gift-panel").hide();
-    var $icons = $panel.find(".gift-icons").empty();
-
-    if (gifts.length) {
-      // 최대 4개만 아이콘화
-      gifts.slice(0,4).forEach(function(g){
-        // 이미지 없으므로 텍스트 아이콘: 브랜드나 제품명 첫글자
-        var label = (g.title || g.brand || "").trim().charAt(0) || "🎁";
-        var $ic = $('<div class="gift-icon" title="'+ (g.title || "") +'"></div>');
-        $ic.text(label);
-        $icons.append($ic);
-      });
-      $panel.show();
-      // 펀딩 페이지로 이동(이벤트 단위)
-      $("#btn-funding").off("click").on("click", function(){
-        if (detail.eventNo) {
-          location.href = CTX + "/myFunding?eventNo=" + detail.eventNo;
-        } else {
-          location.href = CTX + "/myFunding";
-        }
-      });
-    }
-
-    // 4) 공유 버튼 (동작 예시)
-    $("#btn-copy").off("click").on("click", function(){
-      var url = location.href;
-      navigator.clipboard?.writeText(url).then(function(){
-        alert("링크가 복사되었습니다.");
-      }).catch(function(){
-        alert("클립보드 복사에 실패했습니다.");
-      });
-    });
-    $("#btn-kakao").off("click").on("click", function(){
-      alert("카카오 공유는 나중에 연동할게요 😊");
-    });
+  // 대표 이미지: /upload/로 시작할 때만 보여주고 아니면 placeholder 유지
+  var $hero = $("#hero").empty();
+  var photoUrl = (detail.photoUrl || "");
+  if (/^\/upload\//.test(photoUrl)) {
+    $hero.append($('<img>', { src: photoUrl, alt: '대표 이미지' }));
+  } else {
+    $hero.append('<div class="ph" aria-hidden="true"></div>');
   }
+
+  // ====== 이름 라인 구성 (두 명 vs 한 명) ======
+  var groom = (detail.groomName || "").trim();
+  var bride = (detail.brideName || "").trim();
+  var baby  = (detail.babyName || "").trim();
+  var eventName = (detail.eventName || detail.event_name || ("이벤트 #" + (detail.eventNo || ""))).trim();
+
+  var $names = $("#v-names").removeClass("inv-names--duo inv-names--single");
+  var namesText = "";
+  if (groom && bride) {                 // 두 명
+    namesText = groom + "  &  " + bride;
+    $names.addClass("inv-names--duo");
+  } else if (baby) {                    // 아기만
+    namesText = baby;
+    $names.addClass("inv-names--single");
+  } else if (groom || bride) {          // 한 명(단독)
+    namesText = groom || bride;
+    $names.addClass("inv-names--single");
+  } else if (eventName) {                 // 아무도 없으면 이벤트명
+    namesText = eventName;
+    $names.addClass("inv-names--single");
+  }else {                              // 이벤트명도 없으면 기본 문구
+  namesText = "초대합니다";
+  $names.addClass("inv-names--single");
+}
+  $names.text(namesText);
+
+  // ====== 날짜 + (시간) + 장소 ======
+  var dateTxt = (detail.celebrateDate ? String(detail.celebrateDate).slice(0,10).replaceAll("-", " . ") : "");
+  var timeTxt = (detail.celebrateTime ? String(detail.celebrateTime).slice(0,5) : "");
+  var place   = (detail.place || "").trim();
+  var left = [dateTxt, timeTxt].filter(Boolean).join(" ");
+  var right = place;
+  $("#v-dateplace").text([left, right].filter(Boolean).join(" · "));
+
+  // ====== 모시는 글 ======
+  var greeting = (detail.greeting || "").trim();
+  $("#v-greeting").text(greeting);
+
+  // ====== 선물 패널 (기존 로직 유지) ======
+var $panel = $("#gift-panel").hide();
+var $icons = $panel.find(".gift-icons").empty();
+
+if (Array.isArray(gifts) && gifts.length) {
+  gifts.slice(0, 4).forEach(function(g){
+    var label = (g.title || g.brand || "").trim().charAt(0) || "🎁";
+    // 접근성 + 클릭 편의 위해 button으로 생성
+    var $ic = $('<button type="button" class="gift-icon" title="'+ (g.title || "") +'"></button>');
+    $ic.text(label);
+    $ic.attr("data-product-no", g.productNo);
+    $ic.attr("data-funding-no", g.fundingNo);
+    $icons.append($ic);
+  });
+  $panel.show();
+  $("#btn-funding").off("click").on("click", function(){
+    if (detail.eventNo) {
+      location.href = CTX + "/myFunding?eventNo=" + detail.eventNo;
+    } else {
+      location.href = CTX + "/myFunding";
+    }
+  });
+}
+$(document).on("click", ".gift-icon", function(){
+  var productNo = $(this).data("product-no");
+  var fundingNo = $(this).data("funding-no");
+
+  if (!productNo || !fundingNo) return;
+
+  var LOGIN_URL = CTX + "/user/loginform"; // 프로젝트 로그인 URL과 맞춰주세요
+
+  // 권한 필요한 API를 핑해서 로그인 여부 판별
+  $.ajax({
+    url: CTX + "/api/invtlist",
+    type: "GET",
+    dataType: "json"
+  })
+  .done(function(res){
+    var loggedIn = res && res.result === "success";
+    if (loggedIn){
+      var qs = $.param({ productNo: productNo, fundingNo: fundingNo });
+      location.href = CTX + "/productPage2?" + qs;
+    } else {
+      location.href = LOGIN_URL;
+    }
+  })
+  .fail(function(){
+    // 네트워크/기타 오류시 서버 권한체크에 맡김
+    var qs = $.param({ productNo: productNo, fundingNo: fundingNo });
+    location.href = CTX + "/productPage2?" + qs;
+  });
+});
+
+  // 공유 버튼(유지)
+  $("#btn-copy").off("click").on("click", function(){
+    var url = location.href;
+    (navigator.clipboard?.writeText(url) || Promise.reject())
+      .then(function(){ alert("링크가 복사되었습니다."); })
+      .catch(function(){ alert("클립보드 복사에 실패했습니다."); });
+  });
+  $("#btn-kakao").off("click").on("click", function(){
+    alert("카카오 공유는 추후 연동 예정입니다 😊");
+  });
+}
+
 
   function loadView(){
     var no = parseInt(getQuery("no"), 10);

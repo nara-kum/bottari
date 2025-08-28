@@ -1,6 +1,5 @@
 package com.example.repository;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -43,11 +42,23 @@ public class InvitationRepository {
 
 		return invitationVO;
 	}
+	
+	//초대장 수정
+    public int updateInvitation(InvitationVO vo){
+        return sqlSession.update("invitation.updateInvitation", vo);
+    }
 
+    //초대장 삭제
+    public int deleteInvitation(Map<String, Object> p){
+        return sqlSession.delete("invitation.deleteInvitation", p);
+    }
+
+    //초대장 상세조회
 	public Map<String, Object> selectInvitationDetail(Map<String, Object> p) {
 		return sqlSession.selectOne("invitation.selectInvitationDetail", p);
 	}
 
+	
 	public List<Map<String, Object>> selectGiftsByEvent(Map<String, Object> p) {
 		return sqlSession.selectList("invitation.selectGiftsByEvent", p);
 	}

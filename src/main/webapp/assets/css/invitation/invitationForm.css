@@ -105,12 +105,6 @@ input[type="text"] {
   margin-bottom: 5px;
 }
 
-.template-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
-}
-
 .template-card {
   background: #eceae3;
   border-radius: 10px;
@@ -217,7 +211,7 @@ textarea {
   transition: box-shadow .15s ease, transform .05s ease, border-color .15s ease;
 }
 
-.template-grid .template-card.is-active,
+.template-card.is-active,
 .category-buttons .cat.is-active{
   outline: 2px solid #EF5124;
 }

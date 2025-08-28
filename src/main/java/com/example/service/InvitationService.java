@@ -64,11 +64,23 @@ public class InvitationService {
 		return invitationRepository.selectInvitationList(userNo);
 	}
 
-	// 초대장 단건
+	public Map<String, Object> getInvitationDetail(int invitationNo, int userNo) {
+		return invitationRepository.selectInvitationDetail(Map.of("invitationNo", invitationNo, "userNo", userNo));
+	}
 
+	public int updateInvitation(InvitationVO vo) {
+		return invitationRepository.updateInvitation(vo);
+	}
+
+	public int deleteInvitation(int invitationNo, int userNo) {
+		return invitationRepository.deleteInvitation(Map.of("invitationNo", invitationNo, "userNo", userNo));
+	}
+
+	// 초대장 단건
 	public Map<String, Object> getInvitationViewBundle(int invitationNo, int userNo) {
 		// 1) 초대장 상세 (userNo로 소유권 검증)
-		Map<String, Object> detail = invitationRepository.selectInvitationDetail(Map.of("invitationNo", invitationNo, "userNo", userNo));
+		Map<String, Object> detail = invitationRepository
+				.selectInvitationDetail(Map.of("invitationNo", invitationNo, "userNo", userNo));
 		if (detail == null)
 			return null;
 
@@ -81,7 +93,7 @@ public class InvitationService {
 		Map<String, Object> out = new HashMap<>();
 		out.put("detail", detail);
 		out.put("gifts", gifts);
-		
+
 		return out;
 	}
 

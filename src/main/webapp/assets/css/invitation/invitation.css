@@ -105,16 +105,16 @@
 .gift-icons{
   display: flex;
   gap: 8px;
-  justify-content: space-between;
+  justify-content: flex-start;
   margin-bottom: 12px;
 }
 .gift-icon{
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  background: #ffedd5;
-  color: #ef5124;
-  font-weight: 800;
+  background: #ef5124;
+  color: #fff;
+  font-weight: 500;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -158,4 +158,60 @@
 /* 데스크탑에서도 단일 세로형 폭 유지 */
 @media (min-width: 900px){
   .inv-card{ width: 420px; }
+}
+
+/* ===== 이름/날짜/모시는글 개편 ===== */
+.inv-names {
+  text-align: center;
+  margin-top: 6px;
+  font-weight: 800;
+  color: #222;
+}
+
+/* 두 명일 때(신랑 & 신부) */
+.inv-names--duo {
+  font-size: 18px;
+  letter-spacing: .02em;
+}
+
+/* 한 명일 때(아기/단독) – 조금 더 강조 */
+.inv-names--single {
+  font-size: 22px;
+  letter-spacing: .03em;
+}
+
+/* 날짜+장소 한 줄 */
+.inv-dateplace {
+  text-align: center;
+  margin-top: 6px;
+  font-size: 13px;
+  color: #444;
+}
+
+/* 모시는 글 */
+.inv-greeting {
+  margin: 12px auto 0;
+  padding: 0 18px;
+  text-align: center;
+  color: #555;
+  font-size: 14px;
+  line-height: 1.7;
+  white-space: pre-wrap; /* 줄바꿈 보존 */
+}
+/* gift-icon 전역 버튼 효과 제거 */
+.gift-panel .gift-icon{
+  appearance: none;
+  border: 1px solid #ef5124;
+  width: 48px; height: 48px; border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: #ef5124; color: #fff; font-weight: 700; cursor: pointer;
+
+  /* 전역 효과 끄기 */
+  transition: none; transform: none; box-shadow: none; outline: none;
+}
+.gift-panel .gift-icon:hover,
+.gift-panel .gift-icon:active,
+.gift-panel .gift-icon:focus,
+.gift-panel .gift-icon:focus-visible{
+  transition: none; transform: none; box-shadow: none; outline: none;
 }

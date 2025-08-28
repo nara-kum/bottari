@@ -3,11 +3,10 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="invitation">
 
-  <!-- 초대장 등록 -->
-  <insert id="insertInvitation"
-          parameterType="com.example.vo.InvitationVO"
-          useGeneratedKeys="true"
-          keyProperty="invitationNo">
+	<!-- 초대장 등록 -->
+	<insert id="insertInvitation"
+		parameterType="com.example.vo.InvitationVO" useGeneratedKeys="true"
+		keyProperty="invitationNo">
     <![CDATA[
       INSERT INTO invitation (
           invitation_no,
@@ -43,13 +42,11 @@
           NOW()
       )
     ]]>
-  </insert>
+	</insert>
 
-  <!-- 초대장 리스트 (레파지토리: selectInvitationList(int userNo)) -->
-  <!-- 단일 int 파라미터는 #{value} 로 접근! -->
-  <select id="selectListByUser"
-          parameterType="int"
-          resultType="com.example.vo.InvitationVO">
+	<!-- 초대장 리스트 -->
+	<select id="selectListByUser" parameterType="int"
+		resultType="com.example.vo.InvitationVO">
     <![CDATA[
       SELECT
           i.invitation_no                                   AS invitationNo,
@@ -71,12 +68,11 @@
       WHERE i.user_no = #{value}
       ORDER BY i.invitation_no DESC
     ]]>
-  </select>
+	</select>
 
-  <!-- 초대장 단건 상세 (레파지토리: selectInvitationDetail(Map p) → Map 반환) -->
-  <select id="selectInvitationDetail"
-          parameterType="map"
-          resultType="map">
+	<!-- 초대장 단건 상세 -->
+	<select id="selectInvitationDetail" parameterType="map"
+		resultType="map">
     <![CDATA[
       SELECT
           i.invitation_no        AS invitationNo,
@@ -126,12 +122,57 @@
       WHERE i.user_no       = #{userNo}
         AND i.invitation_no = #{invitationNo}
     ]]>
-  </select>
+	</select>
+	
+	<!-- 초대장 수정 -->
+	<update id="updateInvitation"
+		parameterType="com.example.vo.InvitationVO">
+  <![CDATA[
+    UPDATE invitation SET
+      category_no          = #{categoryNo},
+      event_no             = #{eventNo},
+      theme_no             = #{themeNo},
+      photo_url            = #{photoUrl},
+      celebrate_date       = #{celebrateDate},
+      celebrate_time       = #{celebrateTime},
+      greeting             = #{greeting},
+      place                = #{place},
+      address1             = #{address1},
+      address2             = #{address2},
+      groom_name           = #{groomName},
+      groom_contect        = #{groomContect},
+      groom_father_name    = #{groomFatherName},
+      groom_father_contect = #{groomFatherContect},
+      groom_mother_name    = #{groomMotherName},
+      groom_mother_contect = #{groomMotherContect},
+      bride_name           = #{brideName},
+      bride_contect        = #{brideContect},
+      bride_father_name    = #{brideFatherName},
+      bride_father_contect = #{brideFatherContect},
+      bride_mother_name    = #{brideMotherName},
+      bride_mother_contect = #{brideMotherContect},
+      baby_name            = #{babyName},
+      baby_father_name     = #{babyFatherName},
+      baby_father_contect  = #{babyFatherContect},
+      baby_mother_name     = #{babyMotherName},
+      baby_mother_contect  = #{babyMotherContect}
+    WHERE invitation_no = #{invitationNo}
+      AND user_no       = #{userNo}
+  ]]>
+	</update>
 
-  <!-- 동일 이벤트의 펀딩 선물 목록 (레파지토리: selectGiftsByEvent(Map p) → List<Map>) -->
-  <select id="selectGiftsByEvent"
-          parameterType="map"
-          resultType="map">
+	<!-- 초대장 삭제-->
+	<delete id="deleteInvitation" parameterType="map">
+  <![CDATA[
+    DELETE FROM invitation
+    WHERE invitation_no = #{invitationNo}
+      AND user_no       = #{userNo}
+  ]]>
+	</delete>
+
+	<!-- 동일 이벤트의 펀딩 선물 목록 -->
+	<select id="selectGiftsByEvent" parameterType="map"
+		resultType="map">
     <![CDATA[
       SELECT
           fp.funding_no     AS fundingNo,
@@ -151,6 +192,6 @@
         AND fp.event_no = #{eventNo}
       ORDER BY fp.funding_no DESC
     ]]>
-  </select>
+	</select>
 
 </mapper>

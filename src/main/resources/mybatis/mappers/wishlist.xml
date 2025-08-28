@@ -40,7 +40,7 @@
 		]]>
 	</select>
 	
-	<!-- 펀딩 등록하기 (단건) : PK 회수 -->
+	<!-- 펀딩 등록하기 -->
 	<insert id="insertFundingOne"
 	        parameterType="com.example.vo.WishlistVO"
 	        useGeneratedKeys="true"

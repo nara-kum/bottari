@@ -6,7 +6,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -89,6 +91,41 @@ public class InvitationApiController {
 		return JsonResult.success(list);
 	}
 
+	// 초대장 내용 가져오기
+	@GetMapping("/api/invtdetail")
+	public JsonResult detail(@RequestParam("no") int invitationNo, HttpSession session) {
+		UserVO auth = (UserVO) session.getAttribute("authUser");
+		if (auth == null)
+			return JsonResult.fail("로그인이 필요합니다.");
+		Map<String, Object> detail = invitationService.getInvitationDetail(invitationNo, auth.getUserNo());
+		if (detail == null)
+			return JsonResult.fail("존재하지 않거나 권한이 없습니다.");
+		return JsonResult.success(detail);
+	}
+
+	//초대장 수정 저장
+	@PostMapping("/api/invt/update") // PUT 대신 POST로 간단히
+	public JsonResult update(@RequestBody InvitationVO vo, HttpSession session) {
+		UserVO auth = (UserVO) session.getAttribute("authUser");
+		if (auth == null)
+			return JsonResult.fail("로그인이 필요합니다.");
+		if (vo.getInvitationNo() == 0)
+			return JsonResult.fail("invitationNo 누락");
+		vo.setUserNo(auth.getUserNo());
+		int cnt = invitationService.updateInvitation(vo);
+		return (cnt > 0) ? JsonResult.success(vo) : JsonResult.fail("수정 실패");
+	}
+
+	//초대장 삭제
+	@DeleteMapping("/api/invt/{no}")
+	public JsonResult delete(@PathVariable("no") int invitationNo, HttpSession session) {
+		UserVO auth = (UserVO) session.getAttribute("authUser");
+		if (auth == null)
+			return JsonResult.fail("로그인이 필요합니다.");
+		int cnt = invitationService.deleteInvitation(invitationNo, auth.getUserNo());
+		return (cnt > 0) ? JsonResult.success(cnt) : JsonResult.fail("삭제 실패");
+	}
+
 	// 초대장 전체보기(불러오기)
 	@GetMapping("/api/invtview")
 	public JsonResult view(@RequestParam("no") int invitationNo, HttpSession session) {
@@ -97,12 +134,12 @@ public class InvitationApiController {
 			return JsonResult.fail("로그인이 필요합니다.");
 
 		Map<String, Object> bundle = invitationService.getInvitationViewBundle(invitationNo, authUser.getUserNo());
-		
+
 		if (bundle == null) {
 			return JsonResult.fail("존재하지 않거나 권한이 없습니다.");
 		}
-			
-		return JsonResult.success(bundle); // { detail:{...}, gifts:[...] }
+
+		return JsonResult.success(bundle);
 	}
 
 }
