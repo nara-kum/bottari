@@ -182,6 +182,7 @@
           p.brand           AS brand,
           p.title           AS title,
           p.price           AS price,
+		  p.itemimg			AS image,
           fp.percent        AS percent,
           fp.amount         AS amount,
           fp.funding_status AS fundingStatus,

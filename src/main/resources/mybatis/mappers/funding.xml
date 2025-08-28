@@ -17,6 +17,7 @@
         , p.brand               AS brand
         , p.title               AS title
         , p.price               AS price
+        , p.itemimg             AS image
         , od.detailoption_name  AS detailoptionName
 		, c.event_name          AS eventName
       FROM funding_product fp

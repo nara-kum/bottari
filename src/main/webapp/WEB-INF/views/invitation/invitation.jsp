@@ -141,29 +141,46 @@
   var greeting = (detail.greeting || "").trim();
   $("#v-greeting").text(greeting);
 
-  // ====== 선물 패널 (기존 로직 유지) ======
+  // ✅ 추가: 선물 이미지 경로 결정 (파일명 → /upload/파일명)
+function resolveGiftImg(g){
+  var CTX = "${pageContext.request.contextPath}";
+  var raw = g.image || g.imageUrl || g.image_url || g.itemimg || g.saveName || "";
+
+  if (!raw) return CTX + "/assets/images/noimage.png"; // 폴백
+  raw = String(raw).trim();
+
+  if (/^https?:\/\//i.test(raw)) return raw;           // 외부 URL
+  if (raw.startsWith("/upload/")) return raw;           // 이미 매핑 URL
+  if (raw.startsWith("/")) return raw;                  // 그 외 절대경로(/assets 등)
+
+  // 파일명만 왔다면 /upload/ 붙여주기 (WebMvcConfig 매핑 전제)
+  return CTX + "/upload/" + raw;
+}
+
+  // ====== 선물 패널 ======
 var $panel = $("#gift-panel").hide();
 var $icons = $panel.find(".gift-icons").empty();
 
 if (Array.isArray(gifts) && gifts.length) {
   gifts.slice(0, 4).forEach(function(g){
-    var label = (g.title || g.brand || "").trim().charAt(0) || "🎁";
-    // 접근성 + 클릭 편의 위해 button으로 생성
-    var $ic = $('<button type="button" class="gift-icon" title="'+ (g.title || "") +'"></button>');
-    $ic.text(label);
-    $ic.attr("data-product-no", g.productNo);
-    $ic.attr("data-funding-no", g.fundingNo);
+    var img = resolveGiftImg(g);
+    var title = (g.title || "").trim();
+
+    // 버튼 안에 <img> 삽입
+    var $ic = $('<button type="button" class="gift-icon"></button>');
+    $ic.attr('title', title);
+    $ic.append($('<img>', { src: img, alt: title || "선물", 
+                            onerror: "this.src=\'' + CTX + '/assets/images/noimage.png\'" }));
+
+    // (이미 있다면 유지) 상세 이동에 쓰는 데이터
+    $ic.data('productNo', g.productNo || g.product_no || 0);
+    $ic.data('fundingNo', g.fundingNo || g.funding_no || 0);
+
     $icons.append($ic);
   });
   $panel.show();
-  $("#btn-funding").off("click").on("click", function(){
-    if (detail.eventNo) {
-      location.href = CTX + "/myFunding?eventNo=" + detail.eventNo;
-    } else {
-      location.href = CTX + "/myFunding";
-    }
-  });
 }
+
 $(document).on("click", ".gift-icon", function(){
   var productNo = $(this).data("product-no");
   var fundingNo = $(this).data("funding-no");

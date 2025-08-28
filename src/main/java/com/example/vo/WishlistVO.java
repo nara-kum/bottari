@@ -6,12 +6,14 @@ public class WishlistVO {
 	// 위시
 	private int userNo;
 	private int wishlistNo;
+	private String image;
 	private String brand;
 	private String title;
 	private int price;
 	private int quantity;
 	private int wishlistoptionNo;
 	private int detailoptionNo;
+	private String optionName;
 	private String detailoptionName;
 	// 펀딩
 	private int fundingNo;
@@ -28,18 +30,20 @@ public class WishlistVO {
 		super();
 	}
 
-	public WishlistVO(int userNo, int wishlistNo, String brand, String title, int price, int quantity,
-			int wishlistoptionNo, int detailoptionNo, String detailoptionName, int fundingNo, int eventNo,
+	public WishlistVO(int userNo, int wishlistNo, String image, String brand, String title, int price, int quantity,
+			int wishlistoptionNo, int detailoptionNo, String optionName, String detailoptionName, int fundingNo, int eventNo,
 			int productNo, int percent, int amount, String fundingStatus, String fundingDate) {
 		super();
 		this.userNo = userNo;
 		this.wishlistNo = wishlistNo;
+		this.brand = image;
 		this.brand = brand;
 		this.title = title;
 		this.price = price;
 		this.quantity = quantity;
 		this.wishlistoptionNo = wishlistoptionNo;
 		this.detailoptionNo = detailoptionNo;
+		this.optionName = optionName;
 		this.detailoptionName = detailoptionName;
 		this.fundingNo = fundingNo;
 		this.eventNo = eventNo;
@@ -67,6 +71,14 @@ public class WishlistVO {
 
 	public void setWishlistNo(int wishlistNo) {
 		this.wishlistNo = wishlistNo;
+	}
+
+	public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
 	}
 
 	public String getBrand() {
@@ -115,6 +127,14 @@ public class WishlistVO {
 
 	public void setDetailoptionNo(int detailoptionNo) {
 		this.detailoptionNo = detailoptionNo;
+	}
+
+	public String getOptionName() {
+		return optionName;
+	}
+
+	public void setOptionName(String optionName) {
+		this.optionName = optionName;
 	}
 
 	public String getDetailoptionName() {
@@ -185,9 +205,9 @@ public class WishlistVO {
 	//메소드일반
 	@Override
 	public String toString() {
-		return "WishlistVO [userNo=" + userNo + ", wishlistNo=" + wishlistNo + ", brand=" + brand + ", title=" + title
+		return "WishlistVO [userNo=" + userNo + ", wishlistNo=" + wishlistNo + ", image=" + image + ", brand=" + brand + ", title=" + title
 				+ ", price=" + price + ", quantity=" + quantity + ", wishlistoptionNo=" + wishlistoptionNo
-				+ ", detailoptionNo=" + detailoptionNo + ", detailoptionName=" + detailoptionName + ", fundingNo="
+				+ ", detailoptionNo=" + detailoptionNo + ", optionName=" + optionName + ", detailoptionName=" + detailoptionName + ", fundingNo="
 				+ fundingNo + ", eventNo=" + eventNo + ", productNo=" + productNo + ", percent=" + percent + ", amount="
 				+ amount + ", fundingStatus=" + fundingStatus + ", fundingDate=" + fundingDate + "]";
 	}

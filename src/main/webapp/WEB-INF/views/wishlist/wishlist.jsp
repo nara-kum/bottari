@@ -67,8 +67,7 @@
 window.CTX = "${pageContext.request.contextPath}";
 
 function toInt(v){
-  const n = Number(String(v ?? '').replace(/[^\d-]/g,''));
-  return Number.isFinite(n) ? n : 0;
+  const n = Number(String(v ?? '').replace(/[^\d-]/g,'')); return Number.isFinite(n) ? n : 0;
 }
 function toPrice(v){ return toInt(v); }
 function fmtKRW(n){ return (Number(n)||0).toLocaleString('ko-KR') + '원'; }
@@ -78,19 +77,33 @@ function escapeHtml(str){
     .replaceAll('"',"&quot;").replaceAll("'","&#039;");
 }
 
+/* 이미지 URL 정규화(플레이스홀더 경로 없음!)
+   - http(s)면 그대로
+   - "/upload/..." 처럼 루트 기준이면 CTX 붙임
+   - 상대경로면 CTX + '/' + 경로
+   - 없으면 null 반환(렌더링에서 회색 박스 표시)
+*/
+function ensureUrl(u){
+  if (!u) return null;
+  let s = String(u).trim();
+  if (!s) return null;
+  if (/^https?:\/\//i.test(s)) return s;              // http(s)
+  if (s.startsWith(window.CTX + "/")) return s;        // CTX포함
+  if (s.startsWith("/")) return window.CTX + s;        // 루트 경로
+  if (!s.includes("/")) s = "/upload/" + s;         // ▼ 맨 파일명(슬래시 없음) → /upload/ 접두사 붙임
+
+  return window.CTX + s;
+}
+
 /* =========================
    리스트 추출: 응답 형태 무엇이 와도 배열만 뽑기
 ========================= */
 function extractList(json){
   if (Array.isArray(json)) return json;
   if (!json || typeof json !== 'object') return [];
-
-  // 흔한 케이스
-  if (Array.isArray(json.data)) return json.data;
+  if (Array.isArray(json.data))    return json.data;
   if (Array.isArray(json.apiData)) return json.apiData;
-  if (json.result && typeof json.data !== 'undefined' && Array.isArray(json.data)) return json.data;
-
-  // 중첩 객체 내에서 첫 번째 배열 찾아서 반환
+  if (json.result && Array.isArray(json.data)) return json.data;
   for (const k of Object.keys(json)){
     const v = json[k];
     if (Array.isArray(v)) return v;
@@ -103,17 +116,14 @@ function extractList(json){
 }
 
 /* =========================
-   서버 응답
+   서버 응답 → 프론트 모델
 ========================= */
 function normalizeWish(w){
-  let productNo  = toInt(w.productNo);
-  let wishlistNo = toInt(w.wishlistNo);
-
-  // (보호) 서버가 실수로 snake_case로 보냈을 때만 보정
-  if (!productNo)  productNo  = toInt(w.product_no);
-  if (!wishlistNo) wishlistNo = toInt(w.wishlist_no);
+  let productNo  = toInt(w.productNo ?? w.product_no);
+  let wishlistNo = toInt(w.wishlistNo ?? w.wishlist_no);
 
   const priceNum = toPrice(w.price);
+  const rawImg = w.imageUrl || w.image || w.image_url || w.itemimg || null;
 
   return {
     productNo,
@@ -122,10 +132,12 @@ function normalizeWish(w){
     title:  w.title || '',
     priceNum,
     priceText: priceNum.toLocaleString('ko-KR') + ' 원',
-    image:  w.image || w.imageUrl || w.image_url || (window.CTX + "/assets/images/eki.jpg"),
-    wishlistOptionNo: toInt(w.wishlistoptionNo),
-    detailOptionNo:   toInt(w.detailoptionNo),
-    detailOptionName: w.detailoptionName || ''
+    img: ensureUrl(rawImg),  // 없으면 null
+
+    wishlistOptionNo: toInt(w.wishlistoptionNo ?? w.wishlist_option_no),
+    detailOptionNo:   toInt(w.detailoptionNo   ?? w.detail_option_no),
+    optionName: w.optionName ?? w.option_name ?? '',
+    detailOptionName: w.detailoptionName ?? w.detail_option_name ?? ''
   };
 }
 
@@ -159,16 +171,21 @@ function fetchList(){
 }
 
 /* =========================
-   카드 렌더 (data-*는 하이픈 고정)
+   카드 렌더 (이미지 없거나 에러면 회색 박스)
 ========================= */
 function renderCard(wishVO){
   const w = normalizeWish(wishVO);
-
-  // 필수 값 없으면 그리지 않음
   if (!w.productNo || !w.wishlistNo) {
-    console.warn('[renderCard] skip item (no productNo/wishlistNo):', wishVO);
+    console.warn('[renderCard] skip (no productNo/wishlistNo):', wishVO);
     return;
   }
+
+  const optParts = [];
+  if (w.optionName)       optParts.push(escapeHtml(w.optionName));
+  if (w.detailOptionName) optParts.push(escapeHtml(w.detailOptionName));
+  const optionText = optParts.join(' / '); // "색상 / 사이즈" 같이 노출됨
+
+  const hasImg = !!w.img;
 
   var str = '';
   str += '<div class="a-product"'
@@ -176,16 +193,29 @@ function renderCard(wishVO){
       +  ' data-product-no="'  + w.productNo  + '"'
       +  ' data-wishlist-option-no="' + (w.wishlistOptionNo || '') + '"'
       +  ' data-detail-option-no="'   + (w.detailOptionNo   || '') + '"'
+      +  ' data-option-name="'        + (w.optionName   || '') + '"'
       +  ' data-detail-option-name="' + (w.detailOptionName || '') + '">';
   str += '  <div class="image-row">';
   str += '    <input type="checkbox" class="product-checkbox">';
-  str += '    <img class="product-image" src="' + w.image + '" alt="">';
+
+  // 썸네일 박스(이미지+플레이스홀더)
+  str += '    <div class="thumbbox">';
+  if (hasImg){
+    str += '      <img class="product-image" src="' + w.img + '" alt=""'
+        +  ' onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'block\';">';
+    str += '      <div class="img-ph" style="display:none;"></div>';
+  } else {
+    str += '      <img class="product-image" src="" alt="" style="display:none">';
+    str += '      <div class="img-ph"></div>';
+  }
+  str += '    </div>';
+
   str += '    <div class="product-info">';
   str += '      <div class="buy">' + escapeHtml(w.brand) + '</div>';
   str += '      <div class="product-row">';
   str += '        <span class="name">' + escapeHtml(w.title) + '</span>';
-  if (w.detailOptionName) {
-    str += '    <span class="opt-sep"> · </span><span class="option-name">' + escapeHtml(w.detailOptionName) + '</span>';
+  if (optionText){
+    str += '    <span class="opt-sep"> / </span><span class="option-name">' + optionText + '</span>';
   }
   str += '      </div>';
   str += '      <div class="product-price">' + escapeHtml(w.priceText) + '</div>';
@@ -194,6 +224,7 @@ function renderCard(wishVO){
   str += '        <img class="icon-heart" src="' + window.CTX + '/assets/images/heart.jpg" alt="찜">';
   str += '      </div>';
   str += '    </div>';
+
   str += '  </div>';
   str += '</div>';
 
@@ -217,7 +248,6 @@ function loadAnniversaryOptions(){
         $sel.append('<option value="" disabled>기념일이 없습니다</option>');
         return;
       }
-
       for (let i=0; i<data.length; i++){
         const ev = data[i];
         const eventNo   = toInt(ev.eventNo ?? ev.event_no);
@@ -236,14 +266,26 @@ function loadAnniversaryOptions(){
 /* =========================
    선택 목록
 ========================= */
-function addSelected({wishlistNo, productNo, brand, title, priceText, priceNum, img,
-                      wishlistOptionNo, detailOptionNo, detailOptionName}){
-  if ($('#selectedList .selected-item').filter(function(){
-        return Number($(this).attr('data-wishlist-no')) === Number(wishlistNo);
-      }).length) return;
+function addSelected({
+  wishlistNo, productNo, brand, title, priceText, priceNum, img,
+  wishlistOptionNo, detailOptionNo, optionName, detailOptionName
+}){
+  // 중복 방지
+  if (
+    $('#selectedList .selected-item').filter(function(){
+      return Number($(this).attr('data-wishlist-no')) === Number(wishlistNo);
+    }).length
+  ) return;
 
   const pid    = Number(productNo) || 0;
   const pprice = Number(priceNum)  || 0;
+  const u      = ensureUrl(img); // 있으면 URL, 없으면 null
+
+  // 옵션 문자열(있을 때만 출력)
+  const optParts = [];
+  if (optionName)       optParts.push(escapeHtml(optionName));
+  if (detailOptionName) optParts.push(escapeHtml(detailOptionName));
+  const optionText = optParts.join(' / ');
 
   var html = ''
     + '<div class="selected-item"'
@@ -252,12 +294,24 @@ function addSelected({wishlistNo, productNo, brand, title, priceText, priceNum, 
     +   ' data-price="'       + pprice     + '"'
     +   ' data-wishlist-option-no="' + (wishlistOptionNo || '') + '"'
     +   ' data-detail-option-no="'   + (detailOptionNo   || '') + '"'
+    +   ' data-option-name="'        + (optionName       || '') + '"'
     +   ' data-detail-option-name="' + (detailOptionName || '') + '">'
-    +   '<img class="selected-thumb" src="' + (img || (window.CTX + "/assets/images/eki.jpg")) + '">'
+
+    +   '<div class="thumbbox">'
+    +     (u
+            ? '<img class="selected-thumb" src="' + u + '"'
+              + ' onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'block\';">'
+              + '<div class="img-ph" style="display:none;"></div>'
+            : '<img class="selected-thumb" src="" style="display:none;">'
+              + '<div class="img-ph"></div>'
+          )
+    +   '</div>'
+
     +   '<div class="selected-meta">'
     +     '<div class="selected-brand">' + escapeHtml(brand) + '</div>'
     +     '<div class="selected-title-row">'
     +       '<span class="selected-title">' + escapeHtml(title) + '</span>'
+    +       (optionText ? ' <span class="opt-sep"> / </span><span class="selected-option">' + optionText + '</span>' : '')
     +     '</div>'
     +     '<div class="sel-amount">'
     +       '<label><input type="radio" name="amt_' + wishlistNo + '" value="FULL" checked> 전액</label>'
@@ -271,6 +325,7 @@ function addSelected({wishlistNo, productNo, brand, title, priceText, priceNum, 
 
   $('#selectedList').append(html);
 }
+
 
 function removeSelected(wishlistNo){
   $('#selectedList .selected-item[data-wishlist-no="' + wishlistNo + '"]').remove();
@@ -289,31 +344,31 @@ function startFunding(){
   const eventNo = Number($('#funding-table').val()) || 0;
   if(!eventNo){ alert('기념일을 먼저 선택해주세요.'); return; }
 
-const items = $('#selectedList .selected-item').map(function(){
-  const $it = $(this);
-  const basePrice = Number($it.attr('data-price')) || 0;
-  const sel = String($it.find('.sel-amount input[type=radio]:checked').val() || 'FULL').toUpperCase();
+  const items = $('#selectedList .selected-item').map(function(){
+    const $it = $(this);
+    const basePrice = Number($it.attr('data-price')) || 0;
+    const sel = String($it.find('.sel-amount input[type=radio]:checked').val() || 'FULL').toUpperCase();
 
-  const percent = (sel === 'P5') ? 5 : 100;
-  const amount  = (sel === 'P5') ? Math.floor(basePrice * 0.05) : basePrice;
+    const percent = (sel === 'P5') ? 5 : 100;
+    const amount  = (sel === 'P5') ? Math.floor(basePrice * 0.05) : basePrice;
 
-  const wishlistNo       = Number($it.attr('data-wishlist-no')) || 0;
-  const productNo        = Number($it.attr('data-product-no'))  || 0;
-  const detailoptionNo   = Number($it.attr('data-detail-option-no'))   || 0;   // ✅ 추가
-  const wishlistoptionNo = Number($it.attr('data-wishlist-option-no')) || 0;   // (옵션) 필요시
+    const wishlistNo       = Number($it.attr('data-wishlist-no')) || 0;
+    const productNo        = Number($it.attr('data-product-no'))  || 0;
+    const detailoptionNo   = Number($it.attr('data-detail-option-no'))   || 0;
+    const wishlistoptionNo = Number($it.attr('data-wishlist-option-no')) || 0;
 
-  if (!wishlistNo || !productNo) return null;
+    if (!wishlistNo || !productNo) return null;
 
-  return {
-    eventNo:    eventNo,
-    productNo:  productNo,
-    wishlistNo: wishlistNo,
-    percent:    percent,
-    amount:     amount,
-    detailoptionNo:   detailoptionNo,
-    wishlistoptionNo: wishlistoptionNo
-  };
-}).get().filter(Boolean);
+    return {
+      eventNo:    eventNo,
+      productNo:  productNo,
+      wishlistNo: wishlistNo,
+      percent:    percent,
+      amount:     amount,
+      detailoptionNo:   detailoptionNo,
+      wishlistoptionNo: wishlistoptionNo
+    };
+  }).get().filter(Boolean);
 
   if(!items.length){ alert('선택된 상품이 없습니다.'); return; }
 
@@ -327,9 +382,7 @@ const items = $('#selectedList .selected-item').map(function(){
   })
   .done(function (json) {
     if (json && json.result === 'success') {
-
       sessionStorage.setItem('NEW_FUNDING_ITEMS', JSON.stringify(items));
-
       alert('펀딩이 생성되었습니다.');
       location.href = window.CTX + '/myfunding';
     } else {
@@ -347,7 +400,6 @@ const items = $('#selectedList .selected-item').map(function(){
    DOM Ready
 ========================= */
 $(function(){
-  // 리스트/옵션
   fetchList();
   loadAnniversaryOptions();
 
@@ -362,9 +414,14 @@ $(function(){
     const title  = $card.find('.name').text().trim();
     const priceText = $card.find('.product-price').text().trim();
     const priceNum  = toPrice(priceText);
-    const img    = $card.find('img.product-image').attr('src');
+
+    // 현재 카드의 썸네일 url(이미 ensureUrl 반영 완료)
+    const imgEl = $card.find('img.product-image')[0];
+    const img   = (imgEl && imgEl.src) ? imgEl.src : null;
+
     const wishlistOptionNo = $card.attr('data-wishlist-option-no') || null;
     const detailOptionNo   = $card.attr('data-detail-option-no')   || null;
+    const optionName       = $card.attr('data-option-name') || '';
     const detailOptionName = $card.attr('data-detail-option-name') || '';
 
     if (this.checked) {
@@ -375,7 +432,7 @@ $(function(){
       }
       addSelected({
         wishlistNo, productNo, brand, title, priceText, priceNum, img,
-        wishlistOptionNo, detailOptionNo, detailOptionName
+        wishlistOptionNo, detailOptionNo, optionName, detailOptionName
       });
     } else {
       removeSelected(wishlistNo);

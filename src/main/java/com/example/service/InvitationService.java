@@ -40,14 +40,18 @@ public class InvitationService {
 			String os = System.getProperty("os.name").toLowerCase();
 			String baseDir = os.contains("win") ? "C:/javaStudy/upload/" : "/data/upload/";
 			Files.createDirectories(Paths.get(baseDir));
+			System.out.println(baseDir);
 
 			String org = file.getOriginalFilename();
 			String ext = "";
 			if (org != null && org.lastIndexOf('.') > -1) {
 				ext = org.substring(org.lastIndexOf('.'));
 			}
+			System.out.println("org :"+org);
+			System.out.println("ext :"+ext);
 			String saveName = System.currentTimeMillis() + "_" + UUID.randomUUID().toString().replace("-", "") + ext;
 			Path target = Paths.get(baseDir, saveName);
+			System.out.println("target :"+target);
 
 			try (OutputStream out = Files.newOutputStream(target)) {
 				out.write(file.getBytes());
