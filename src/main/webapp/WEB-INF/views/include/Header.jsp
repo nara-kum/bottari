@@ -41,7 +41,7 @@
 				<c:otherwise>
 					<h1>
 						<a class="header-usermenu"
-							href="${pageContext.request.contextPath}/loginform">${sessionScope.authUser.name}</a>
+							href="${pageContext.request.contextPath}/editform">${sessionScope.authUser.name}</a>
 					</h1>
 					<a href=""><img class="header-icon"
 						src="/assets/icon/icon-caret-down.svg"></a>
