@@ -31,7 +31,7 @@
 				<div class="container">
 					<div class="column-flex-box gap-10">
 						<c:forEach items="${requestScope.cList}" var="vo">
-							<div class="list-basic list-1280">
+							<div class="list-basic list-1280" data-cart-no="${vo.cart_no}">
 								<div class="between-flex-box">
 									<div class="row-flex-box">
 										<div class="column-flex-box column-align size-normal">
@@ -135,8 +135,8 @@
 					if(data.success) {
 						console.log('장바구니 업데이트 성공');
 						// 필요시 총액 업데이트
-						if(data.newTotal) {
-							updateTotalPrice(data.newTotal, data.shippingCost);
+						if(data.total_price) {
+							updateTotalPrice(data.total_price, data.shipping_cost);
 						}
 					} else {
 						console.error('장바구니 업데이트 실패:', data.message);
@@ -150,10 +150,10 @@
 			}
 			
 			// 총 금액 업데이트 함수
-			function updateTotalPrice(productTotal, shippingCost) {
+			function updateTotalPrice(productTotal, shipping_cost) {
 				document.getElementById('product-total').textContent = productTotal.toLocaleString();
-				document.getElementById('shipping-cost').textContent = shippingCost.toLocaleString();
-				document.getElementById('final-total').textContent = (productTotal + shippingCost).toLocaleString();
+				document.getElementById('shipping-cost').textContent = shipping_cost.toLocaleString();
+				document.getElementById('final-total').textContent = (productTotal + shipping_cost).toLocaleString();
 			}
 			
 			// 수량 변경 이벤트
@@ -224,20 +224,20 @@
 				.then(response => response.json())
 				.then(data => {
 					if(data.success) {
-						// DOM에서 해당 아이템 제거
-						const cartItem = document.querySelector(`[data-cart-no="${cartNo}"]`);
-						if(cartItem) {
-							cartItem.remove();
-						}
-						
-						// 총액 업데이트
-						if(data.newTotal !== undefined) {
-							updateTotalPrice(data.newTotal, data.shippingCost);
-						}
-						
-						// 장바구니가 비었을 경우 처리
 						if(data.isEmpty) {
-							location.reload(); // 또는 빈 장바구니 메시지 표시
+							// 빈 장바구니일 때 리다이렉트
+							window.location.href = data.redirectUrl;
+						} else {
+							// DOM에서 해당 아이템 제거
+							const cartItem = document.querySelector(`[data-cart-no="${cartNo}"]`);
+							if(cartItem) {
+								cartItem.remove();
+							}
+							
+							// 총액 업데이트
+							if(data.total_price !== undefined) {
+								updateTotalPrice(data.total_price, data.shipping_cost);
+							}
 						}
 					} else {
 						alert('삭제 중 오류가 발생했습니다.');

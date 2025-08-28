@@ -16,7 +16,7 @@ public class CartListVO {
 	private String brand;
 	private String itemimg;
 	private int price;
-	private String shipping_cost;
+	private int shipping_cost;
 	
 	//cart_option section
 	private int detailoption_no;
@@ -30,7 +30,7 @@ public class CartListVO {
 	
 	//editor
 	public CartListVO(int cart_no, int user_no, int product_no, int quantity, String title, String brand,
-			String itemimg, int price, String shipping_cost, int detailoption_no, List<OptionVO> options,
+			String itemimg, int price, int shipping_cost, int detailoption_no, List<OptionVO> options,
 			int total_quantity, int total_price) {
 		super();
 		this.cart_no = cart_no;
@@ -117,11 +117,11 @@ public class CartListVO {
 		this.itemimg = itemimg;
 	}
 
-	public String getShipping_cost() {
+	public int getShipping_cost() {
 		return shipping_cost;
 	}
 
-	public void setShipping_cost(String shipping_cost) {
+	public void setShipping_cost(int shipping_cost) {
 		this.shipping_cost = shipping_cost;
 	}
 
