@@ -161,13 +161,19 @@
 	<script>
 		function checkDuplicateID(id) {
 			const existingIDs = [ '0603skfk', 'ahreum', 'sujin', 'nerunaru',
-					'sunny', 'aaaaaaaa', 'idksbhkbdh' ];
+					'sunny', 'aaaaaaaa', 'idksbhkbdh', 'rrrr', 'bbbbbb',
+					'kkkkk', 'Yunyoung0822', 'abn', 'gggg', 'roslina',
+					'Yunyoung0905', 'roslina0901', 'dgh', 'hhhh', 'ahreum0123',
+					'shya', 'nailshop', 'skfk0603', 'candy827' ,'shya100000'];
 			return existingIDs.includes(id.trim());
 		}
 
 		document.addEventListener('DOMContentLoaded', function() {
 			const existingIDs = [ '0603skfk', 'ahreum', 'sujin', 'nerunaru',
-					'sunny', 'aaaaaaaa', 'idksbhkbdh' ]; // 이미 등록된 ID
+					'sunny', 'aaaaaaaa', 'idksbhkbdh', 'rrrr', 'bbbbbb',
+					'kkkkk', 'Yunyoung0822', 'abn', 'gggg', 'roslina',
+					'Yunyoung0905', 'roslina0901', 'dgh', 'hhhh', 'ahreum0123',
+					'shya', 'nailshop', 'skfk0603', 'candy827','shya100000']; // 이미 등록된 ID
 			const input = document.getElementById('input-id');
 			const button = document.getElementById('duplicate-check');
 			const message = document.getElementById('id-check-message');
