@@ -397,6 +397,127 @@
 	
 	
 	
+	// 기존 setSelectedOptions 함수를 수정
+	function setSelectedOptions() {
+	    var selectedOptions = [];
+	    var hasRequiredOptions = true;
+
+	    // 모든 옵션 선택박스를 확인
+	    $('.option-select').each(function() {
+	        var selectedValue = $(this).val();
+	        if (selectedValue && selectedValue !== '') {
+	            selectedOptions.push(selectedValue); // detailoption_no 값들을 배열에 추가
+	        } else {
+	            hasRequiredOptions = false; // 선택되지 않은 옵션이 있음
+	        }
+	    });
+
+	    // 옵션이 있는 상품인데 선택하지 않은 경우
+	    if ($('.option-select').length > 0 && !hasRequiredOptions) {
+	        showOptionAlert();
+	        return false; // 폼 제출 중단
+	    }
+
+	    // 선택된 옵션들을 JSON 문자열로 변환해서 숨겨진 필드에 설정
+	    document.getElementById('selectedOptionsInput').value = JSON.stringify(selectedOptions);
+
+	    console.log('선택된 옵션들:', selectedOptions);
+	    return true;
+	}
+
+	// 옵션 선택 알림창 표시 함수
+	function showOptionAlert() {
+	    // 기존 알림창이 있다면 제거
+	    const existingAlert = document.getElementById('optionAlert');
+	    if (existingAlert) {
+	        existingAlert.remove();
+	    }
+
+	    // 알림창 HTML 생성
+	    const alertHtml = `
+	        <div id="optionAlert" class="option-alert-overlay">
+	            <div class="option-alert-box">
+	                <div class="alert-icon">⚠️</div>
+	                <div class="alert-title">옵션 선택 필요</div>
+	                <div class="alert-message">상품 옵션을 선택해주세요.</div>
+	                <button class="alert-close-btn" onclick="closeOptionAlert()">확인</button>
+	            </div>
+	        </div>
+	    `;
+
+	    // body에 알림창 추가
+	    document.body.insertAdjacentHTML('beforeend', alertHtml);
+
+	    // 0.1초 후에 표시 (애니메이션 효과)
+	    setTimeout(() => {
+	        const alert = document.getElementById('optionAlert');
+	        if (alert) {
+	            alert.classList.add('show');
+	        }
+	    }, 100);
+	}
+
+	// 알림창 닫기 함수
+	function closeOptionAlert() {
+	    const alert = document.getElementById('optionAlert');
+	    if (alert) {
+	        alert.classList.remove('show');
+	        setTimeout(() => {
+	            alert.remove();
+	        }, 300);
+	    }
+	}
+
+	// 장바구니 폼 제출 이벤트 수정 (기존 폼 제출을 막고 검증 후 제출)
+	$(document).ready(function() {
+	    $('#cartForm').on('submit', function(e) {
+	        e.preventDefault(); // 기본 제출 막기
+	        
+	        if (setSelectedOptions()) {
+	            // 검증 통과시 폼 제출
+	            this.submit();
+	        }
+	    });
+	});
+
+	// 위시리스트 함수도 동일하게 수정
+	function submitWishlist() {
+	    console.log('위시리스트 함수 시작');
+	    
+	    // 옵션 검증
+	    var hasRequiredOptions = true;
+	    var selectedOptions = [];
+	    
+	    $('.option-select').each(function() {
+	        var selectedValue = $(this).val();
+	        console.log('옵션 값:', selectedValue);
+	        if (selectedValue && selectedValue !== '') {
+	            selectedOptions.push(selectedValue);
+	        } else if ($('.option-select').length > 0) {
+	            hasRequiredOptions = false;
+	        }
+	    });
+	    
+	    // 옵션이 있는 상품인데 선택하지 않은 경우
+	    if ($('.option-select').length > 0 && !hasRequiredOptions) {
+	        showOptionAlert();
+	        return false;
+	    }
+	    
+	    // 수량 설정
+	    var actualQuantity = document.getElementById('quantity').value;
+	    document.getElementById('wishlistQuantity').value = actualQuantity;
+	    console.log('설정된 수량:', actualQuantity);
+	    
+	    console.log('선택된 옵션들:', selectedOptions);
+	    document.getElementById('wishlistSelectedOptions').value = JSON.stringify(selectedOptions);
+	    console.log('설정된 JSON:', JSON.stringify(selectedOptions));
+	    
+	    // 폼 제출
+	    document.getElementById('wishlistForm').submit();
+	}
+	
+
 	</script>
 
 </body>
