@@ -93,4 +93,40 @@ public class CartService {
 		}
 		return new ArrayList<>(productMap.values());
 	}
+	
+	// 수량 업데이트
+	public int exeupdateQuantity(int cartNo, int newQuantityValue) {
+		System.out.println("CartService.updateQuantity()");
+		
+		int count = cartrepository.updateCartQuantity(cartNo, newQuantityValue);
+		
+		return count;
+	}
+	
+	// 옵션 변경
+	public int exeupdateOption(int cartNo, int optionNo) {
+		System.out.println("CartService.exeupdateOption");
+		
+		int count = cartrepository.updateCartOptions(cartNo, optionNo);
+		
+		return count;
+	}
+	
+	// 기념일 변경
+	public int exeupdateAnniversary(int cartNo, int cartegory_no) {
+		System.out.println("CartService.exeupdateAnniversary()");
+		
+		int count = cartrepository.updateCartAnniversary(cartNo, cartegory_no);
+		
+		return count;
+	}
+	
+	// 장바구니 삭제
+	public int exedeleteCartItem(int cart_no) {
+		System.out.println("CartService.exedeleteCartItem()");
+		
+		int count = cartrepository.deleteCartItem(cart_no);
+		
+		return count;
+	}
 }

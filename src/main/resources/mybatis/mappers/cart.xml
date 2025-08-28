@@ -39,5 +39,28 @@
 			#{productNo}
 		</foreach>
 	</select>
+	
+	<update id="updateCartQuantity">
+		update cart
+		set quantity = #{newQuantityValue}
+		where cart_no = #{cart_no}
+	</update>
+	
+	<update id="updateCartOptions">
+		update cart_option
+		set detailoption_no = #{option_no}
+		where cart_no = #{cart_no}
+	</update>
+	
+	<update id="updateCartAnniversary">
+		update cart
+		set category_no = #{event_no}
+		where cart_no = #{cart_no}
+	</update>
+	
+	<delete id="deleteCartItem">
+		delete from cart
+		where cart_no = #{cart_no}
+	</delete>
 
 </mapper>

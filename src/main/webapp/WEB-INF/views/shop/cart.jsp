@@ -35,7 +35,7 @@
 								<div class="between-flex-box">
 									<div class="row-flex-box">
 										<div class="column-flex-box column-align size-normal">
-											<input type="checkbox" id="select">
+											<input type="checkbox" id="select-${vo.cart_no}" class="cart-checkbox">
 										</div>
 										<img class="list-img-100" src="${vo.itemimg}" alt="상품 이미지">
 										<div class="column-flex-box gap-10 margin-5">
@@ -51,8 +51,11 @@
 												<!-- 서버에서 미리 렌더링된 옵션들 -->
 												<div class="row-flex-box">
 														<c:forEach items="${vo.options}" var="option">
-															<label>${option.option_name}</label>
-															<select data-option-no="${option.option_no}">
+															<label for="option-${option.option_no}-${vo.cart_no}">${option.option_name}</label>
+															<select id="option-${option.option_no}-${vo.cart_no}" 
+																class="option-select" 
+																data-option-no="${option.option_no}"
+																data-cart-no="${vo.cart_no}">
 																<c:forEach items="${option.detailList}" var="detail">
 																	<c:choose>
 																		<c:when
@@ -82,7 +85,8 @@
 											</select>
 										</div>
 
-										<button class="btn-basic size-normal btn-orange column-align">삭제</button>
+										<button class="btn-basic size-normal btn-orange column-align delete-btn" 
+												data-cart-no="${vo.cart_no}">삭제</button>
 									</div>
 								</div>
 							</div>
@@ -91,9 +95,9 @@
 
 					<!-- 총 금액 -->
 					<div class="summary ">
-						<div class="text-16">상품금액: <fmt:formatNumber value="${total_price}" type="currency" currencySymbol="" />원</div>
-						<div class="text-16">배송비: <fmt:formatNumber value="${shipping_cost}" type="currency" currencySymbol="" />원</div>
-						<div class="text-18 bold">총 결제금액: <fmt:formatNumber value="${total_price + shipping_cost}" type="currency" currencySymbol="" />원</div>
+						<div class="text-16">상품금액: <span id="product-total"><fmt:formatNumber value="${total_price}" type="currency" currencySymbol="" /></span>원</div>
+						<div class="text-16">배송비: <span id="shipping-cost"><fmt:formatNumber value="${shipping_cost}" type="currency" currencySymbol="" /></span>원</div>
+						<div class="text-18 bold">총 결제금액: <span id="final-total"><fmt:formatNumber value="${total_price + shipping_cost}" type="currency" currencySymbol="" /></span>원</div>
 					</div>
 
 					<div class="buy-button" id="purchase-btn">
@@ -262,13 +266,13 @@
 				
 				// 구매 페이지로 이동 (선택된 아이템들의 정보와 함께)
 				const form = document.createElement('form');
-				form.method = 'POST';
-				form.action = '/order/checkout';
+				form.method = 'GET';
+				form.action = '/checkout';
 				
 				selectedItems.forEach(function(cartNo) {
 					const input = document.createElement('input');
 					input.type = 'hidden';
-					input.name = 'cartNos';
+					input.name = 'cart_no';
 					input.value = cartNo;
 					form.appendChild(input);
 				});
