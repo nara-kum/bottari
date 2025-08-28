@@ -167,6 +167,10 @@ body {
 	cursor: pointer;
 }
 
+input.input-error {
+    border: 1px solid red;
+}
+
 /* .submit-btn:hover {
 	background-color: #e64a17;
 }

@@ -17,6 +17,7 @@
 </script>
 
 </head>
+
 <body class="family">
 	<!------------------------ Header호출 ----------------------->
 	<c:import url="/WEB-INF/views/include/Header.jsp"></c:import>
@@ -35,7 +36,7 @@
 					<div class="form-group with-button">
 						<label>아이디</label>
 						<div class="input-row">
-							<input type="text" placeholder="아이디 입력(6~20자)" name="id" id="input-id" value="">
+							<input type="text" placeholder="아이디 입력(6~20자)" name="id" id="input-id" required />
 							<button type="button" value="중복 확인" id="duplicate-check">중복확인</button>
 						</div>
 						<p id="id-check-message"></p>
@@ -43,15 +44,21 @@
 					</div>
 
 					<div class="form-group">
-						<label>비밀번호</label> <input type="password" placeholder="비밀번호 입력 (문자, 숫자, 특수문자 포함 8~20자)" name="password" value="">
+						<label>비밀번호</label> <input type="password" placeholder="비밀번호 입력 (문자, 숫자, 특수문자 포함 8~20자)" name="password" id="pswd1" required />
 					</div>
 
 					<div class="form-group">
-						<label>이름</label> <input type="text" placeholder="이름을 입력해주세요" name="name" value="">
+						<label>비밀번호 확인</label> <input type="password" placeholder="비밀번호 재입력" name="password2" id="pswd1" required />
+
+					</div>
+
+					<div class=" form-group">
+						<label>이름</label> <input type="text" placeholder="이름을 입력해주세요" name="name" id="name-msg" required />
+
 					</div>
 
 					<div class="form-group">
-						<label>전화번호</label> <input type="tel" placeholder="휴대폰 번호 입력('-' 제외 11자리 입력)" name="phone" value="">
+						<label>전화번호</label> <input type="tel" placeholder="휴대폰 번호 입력('-' 제외 11자리 입력)" name="phone" required/>
 					</div>
 
 					<div class="form-group email-group">
@@ -155,24 +162,88 @@
 	<c:import url="/WEB-INF/views/include/Footer.jsp"></c:import>
 	<!-- ---------------------------------------------------- -->
 
-	<script>
-		function checkDuplicateID(id) {
-			const existingIDs = [ '0603skfk', 'ahreum', 'sujin', 'nerunaru',
-								  'sunny', 'aaaaaaaa', 'idksbhkbdh','rrrr',
-								  'bbbbbb','kkkkk','Yunyoung0822','abn',
-								  'gggg','roslina','Yunyoung0905','roslina0901',
-								  'dgh','hhhh','ahreum0123','shya',
-								  'nailshop','skfk0603','candy827','shya100000'];
-			return existingIDs.includes(id.trim());
-		}
 
+
+	<script>
 		document.addEventListener('DOMContentLoaded', function() {
+			const form = document.querySelector('.signup-form');
+			const idInput = document.getElementById('input-id');
+
+			const password1Input = document
+					.querySelector('input[name="password1"]');
+			const password2Input = document
+					.querySelector('input[name="password2"]');
+			const nameInput = document.querySelector('input[name="name"]');
+
+			const password1Error = document.querySelector('.password1-error');
+			const password2Error = document.querySelector('.password2-error');
+			const nameError = document.querySelector('.name-error');
+
+			// ✅ 아이디 한글 입력 방지
+			idInput.addEventListener('input', function() {
+				// 입력값에서 영어 대소문자와 숫자 외의 문자 제거
+				const cleaned = idInput.value.replace(/[^a-zA-Z0-9]/g, '');
+
+				// 변경된 값이 기존과 다르면 다시 세팅
+				if (idInput.value !== cleaned) {
+					idInput.value = cleaned;
+				}
+			});
+
+			// ✅ 이름 숫자, 특수문자 입력 방지
+			nameInput.addEventListener('input', function() {
+				// 한글(가-힣), 영어(a-zA-Z)만 허용
+				const cleaned = nameInput.value.replace(/[^a-zA-Z가-힣]/g, '');
+
+				if (nameInput.value !== cleaned) {
+					nameInput.value = cleaned;
+				}
+			});
+
+			form.addEventListener('submit', function(e) {
+				let isValid = true;
+
+				// 비밀번호 1 검사
+				if (!password1Input.value.trim()) {
+					password1Input.classList.add('input-error');
+					password1Error.style.display = 'block';
+					isValid = false;
+				} else {
+					password1Input.classList.remove('input-error');
+					password1Error.style.display = 'none';
+				}
+
+				// 비밀번호 2 검사
+				if (!password2Input.value.trim()) {
+					password2Input.classList.add('input-error');
+					password2Error.style.display = 'block';
+					isValid = false;
+				} else {
+					password2Input.classList.remove('input-error');
+					password2Error.style.display = 'none';
+				}
+
+				// 이름 검사
+				if (!nameInput.value.trim()) {
+					nameInput.classList.add('input-error');
+					nameError.style.display = 'block';
+					isValid = false;
+				} else {
+					nameInput.classList.remove('input-error');
+					nameError.style.display = 'none';
+				}
+
+				// 제출 막기
+				if (!isValid) {
+					e.preventDefault();
+				}
+			});
+
+			// ------- 중복 아이디 체크 ---------------------------------------------- -->
 			const existingIDs = [ '0603skfk', 'ahreum', 'sujin', 'nerunaru',
-								  'sunny', 'aaaaaaaa', 'idksbhkbdh','rrrr',
-								  'bbbbbb','kkkkk','Yunyoung0822','abn',
-								  'gggg','roslina','Yunyoung0905','roslina0901',
-								  'dgh','hhhh','ahreum0123','shya',
-								  'nailshop','skfk0603','candy827','shya100000' ]; // 이미 등록된 ID
+					'sunny', 'rrrr', 'Yunyoung0822', 'abn', 'gggg', 'roslina',
+					'Yunyoung0905', 'roslina0901', 'dgh', 'hhhh', 'ahreum0123',
+					'shya', 'nailshop', 'skfk0603', 'obs' ]; // 이미 등록된 ID
 			const input = document.getElementById('input-id');
 			const button = document.getElementById('duplicate-check');
 			const message = document.getElementById('id-check-message');
@@ -193,9 +264,13 @@
 					message.textContent = '사용 가능한 아이디입니다';
 					message.style.color = 'green';
 				}
+
 			});
+			// -------중복 아이디 체크---------------------------------------------- -->
+
 		});
 	</script>
+
 </body>
 
 </html>

@@ -26,11 +26,11 @@
 			<content class="controller">
 				<div id="sec-content" class="sector">
 					<div class="sec-sub-title">
-						<h2 class="header-sub">회원정보수정</h2>
+						<h2 class="header-sub">회원정보 수정</h2>
 					</div>
 					<div class="sec-content-main">
 						<main class="signup-container">
-							<p class="subtitle">회원정보수정!!</p>
+							<p class="subtitle">회원정보 수정</p>
 
 							<form class="signup-form" action="${pageContext.request.contextPath}/edit" method="get">
 								<div class="form-group with-button">
