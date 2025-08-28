@@ -13,6 +13,7 @@ import com.example.vo.ProductOptionDetailVO;
 import com.example.vo.ProductOptionVO;
 import com.example.vo.ProductVO;
 import com.example.vo.ProductViewVO;
+import com.example.vo.WishlistOptionVO;
 import com.example.vo.WishlistVO;
 
 @Repository
@@ -153,6 +154,12 @@ public class ShopRepository {
 	    
 	    System.out.println("위시리스트 저장 완료! 영향받은 행 수: " + count);
 	    return count;
+	}
+	
+	//위시리스트 옵션 저장
+	public int wishlistOptionInsert(WishlistOptionVO wishlistOptionVO) {
+	    System.out.println("ShopRepository.wishlistOptionInsert");
+	    return sqlSession.insert("product.wishlistOptionInsert", wishlistOptionVO);
 	}
 	
 }

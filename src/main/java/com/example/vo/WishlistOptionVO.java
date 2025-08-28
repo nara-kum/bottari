@@ -5,8 +5,8 @@ public class WishlistOptionVO {
 	// 필드
 	private int wishlistoptionNo;
 	private int wishlistNo;
-	private String detailoptionName;
-
+	private int detailoptionNo;
+	
 	
 	//생성자
 	public WishlistOptionVO() {
@@ -14,17 +14,19 @@ public class WishlistOptionVO {
 	}
 
 
-	public WishlistOptionVO(int wishlistoptionNo, int wishlistNo, String detailoptionName) {
+	public WishlistOptionVO(int wishlistoptionNo, int wishlistNo, int detailoptionNo) {
 		super();
 		this.wishlistoptionNo = wishlistoptionNo;
 		this.wishlistNo = wishlistNo;
-		this.detailoptionName = detailoptionName;
+		this.detailoptionNo = detailoptionNo;
 	}
 
-	//메소
+
+	//메소드gs
 	public int getWishlistoptionNo() {
 		return wishlistoptionNo;
 	}
+
 
 
 	public void setWishlistoptionNo(int wishlistoptionNo) {
@@ -32,9 +34,11 @@ public class WishlistOptionVO {
 	}
 
 
+
 	public int getWishlistNo() {
 		return wishlistNo;
 	}
+
 
 
 	public void setWishlistNo(int wishlistNo) {
@@ -42,22 +46,24 @@ public class WishlistOptionVO {
 	}
 
 
-	public String getDetailoptionName() {
-		return detailoptionName;
+
+	public int getDetailoptionNo() {
+		return detailoptionNo;
 	}
 
 
-	public void setDetailoptionName(String detailoptionName) {
-		this.detailoptionName = detailoptionName;
+
+	public void setDetailoptionNo(int detailoptionNo) {
+		this.detailoptionNo = detailoptionNo;
 	}
 
 
+	//메소드일반
 	@Override
 	public String toString() {
-		return "WishlistVO [wishlistoptionNo=" + wishlistoptionNo + ", wishlistNo=" + wishlistNo + ", detailoptionName="
-				+ detailoptionName + "]";
+		return "WishlistOptionVO [wishlistoptionNo=" + wishlistoptionNo + ", wishlistNo=" + wishlistNo
+				+ ", detailoptionNo=" + detailoptionNo + "]";
 	}
-	
-	
 
+	
 }

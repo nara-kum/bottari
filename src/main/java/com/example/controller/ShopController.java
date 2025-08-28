@@ -22,6 +22,7 @@ import com.example.vo.ProductOptionDetailVO;
 import com.example.vo.ProductVO;
 import com.example.vo.ProductViewVO;
 import com.example.vo.UserVO;
+import com.example.vo.WishlistOptionVO;
 import com.example.vo.WishlistVO;
 
 import jakarta.servlet.http.HttpSession;
@@ -346,22 +347,29 @@ public class ShopController {
 
 	
 	
-	//위시리스트 등록
+	//위시리스트 등록 - 수정된 버전
 	@RequestMapping(value="/wishlistadd", method= {RequestMethod.GET, RequestMethod.POST})
 	public String insertWishlist(@RequestParam(value="productNo", required=false) Integer productNo,
 	                            @RequestParam(value="quantity", required=false) Integer quantity,
-	                            
+	                            @RequestParam(value="selectedOptions", required=false) String selectedOptionsJson, // 옵션 정보 추가
 	                            HttpSession session) {
 	    
 	    System.out.println("===== 위시리스트 등록 시작 =====");
 	    System.out.println("받은 productNo: " + productNo);
 	    System.out.println("받은 quantity: " + quantity);
+	    System.out.println("받은 selectedOptions: " + selectedOptionsJson);
 	    
-	    // 로그인 체크
+	    // 로그인 체크 - 디버깅 추가
+	    System.out.println("세션 확인 중...");
 	    UserVO authUser = (UserVO) session.getAttribute("authUser");
+	    System.out.println("세션에서 가져온 authUser: " + authUser);
+	    
 	    if (authUser == null) {
+	        System.out.println("로그인되지 않은 사용자 - 로그인 페이지로 이동");
 	        return "user/loginform";
 	    }
+	    
+	    System.out.println("로그인된 사용자 확인: userNo = " + authUser.getUserNo());
 	    
 	    int userNo = authUser.getUserNo();
 	    
@@ -375,15 +383,64 @@ public class ShopController {
 	    }
 	    
 	    try {
+	        // 1단계: 위시리스트 기본 정보 등록
 	        WishlistVO wishlistVO = new WishlistVO();
 	        wishlistVO.setUserNo(userNo);
 	        wishlistVO.setProductNo(productNo);
 	        wishlistVO.setQuantity(quantity);
-	        // WishlistVO에 quantity 관련 setter가 없다면 추가 필요
 	        
-	        System.out.println("위시리스트 정보: " + wishlistVO);
+	        System.out.println("위시리스트 기본 정보: " + wishlistVO);
 	        
+	        // 위시리스트에 상품 등록하고 생성된 wishlist_no 받아오기
 	        shopService.exeWishlistAdd(wishlistVO);
+	        int wishlistNo = wishlistVO.getWishlistNo(); // 생성된 위시리스트 번호
+	        
+	        System.out.println("생성된 wishlist_no: " + wishlistNo);
+	        
+	        // 2단계: 선택된 옵션들이 있으면 위시리스트 옵션 테이블에도 등록
+	        System.out.println("selectedOptionsJson 원본: '" + selectedOptionsJson + "'");
+	        System.out.println("selectedOptionsJson이 null인가? " + (selectedOptionsJson == null));
+	        System.out.println("selectedOptionsJson이 비어있나? " + (selectedOptionsJson != null && selectedOptionsJson.trim().isEmpty()));
+	        System.out.println("selectedOptionsJson이 []인가? " + (selectedOptionsJson != null && selectedOptionsJson.equals("[]")));
+	        
+	        if (selectedOptionsJson != null && !selectedOptionsJson.trim().isEmpty() 
+	            && !selectedOptionsJson.equals("[]")) {
+	            
+	            System.out.println("위시리스트 옵션 정보 처리 시작");
+	            
+	            // JSON 형태의 옵션 정보를 파싱
+	            String[] optionIds = selectedOptionsJson
+	                .replace("[", "")
+	                .replace("]", "")
+	                .replace("\"", "")
+	                .split(",");
+	            
+	            // 각 옵션별로 WishlistOptionVO 생성하여 저장
+	            for (String optionIdStr : optionIds) {
+	                optionIdStr = optionIdStr.trim();
+	                if (!optionIdStr.isEmpty()) {
+	                    try {
+	                        int detailOptionNo = Integer.parseInt(optionIdStr);
+	                        
+	                        WishlistOptionVO wishlistOptionVO = new WishlistOptionVO();
+	                        wishlistOptionVO.setWishlistNo(wishlistNo);  // 위에서 생성된 위시리스트 번호
+	                        wishlistOptionVO.setDetailoptionNo(detailOptionNo);  // 선택된 옵션 번호
+	                        
+	                        System.out.println("저장할 위시리스트 옵션 정보: " + wishlistOptionVO);
+	                        
+	                        // 위시리스트 옵션 저장
+	                        shopService.exeWishlistOptionAdd(wishlistOptionVO);
+	                        
+	                    } catch (NumberFormatException e) {
+	                        System.out.println("잘못된 옵션 번호: " + optionIdStr);
+	                    }
+	                }
+	            }
+	            System.out.println("모든 위시리스트 옵션 저장 완료");
+	            
+	        } else {
+	            System.out.println("선택된 옵션이 없음 (단일 상품)");
+	        }
 	        
 	        System.out.println("===== 위시리스트 등록 완료 =====");
 	        return "redirect:/wishlist";
@@ -394,8 +451,5 @@ public class ShopController {
 	        return "오류가 발생했습니다";
 	    }
 	}
-	
-	
-	
 	
 }

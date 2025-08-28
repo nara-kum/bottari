@@ -168,14 +168,14 @@
 							<!-- 위시리스트 폼 추가 -->
 							<form action="${pageContext.request.contextPath}/wishlistadd"
 								method="get" id="wishlistForm" style="display: inline;">
-								<input type="hidden" name="productNo"
-									value="${productViewVO.product_no}"> <input
-									type="hidden" name="quantity" id="wishlistQuantity" value="1">
+								<input type="hidden" name="productNo" value="${productViewVO.product_no}"> 
+								<input type="hidden" name="quantity" id="wishlistQuantity" value="1">
+								<input type="hidden" name="selectedOptions" id="wishlistSelectedOptions" value="">
 
-								<button type="submit" class="wishlist-btn"
-									onclick="setWishlistQuantity()">♡ 찜 등록하기</button>
+								<button type="button" class="wishlist-btn"
+									    onclick="submitWishlist()">♡ 찜 등록하기</button>
 							</form>
-							
+
 							<button class="funding-btn">구매하기</button>
 						</div>
 					</div>
@@ -346,13 +346,55 @@
 	}
 	
 	
-	// 위시리스트 수량 설정
-	function setWishlistQuantity() {
+	function submitWishlist() {
+	    console.log('위시리스트 함수 시작');
+	    
+	    // 수량 설정
+	    var actualQuantity = document.getElementById('quantity').value;
+	    document.getElementById('wishlistQuantity').value = actualQuantity;
+	    console.log('설정된 수량:', actualQuantity);
+	    
+	    // 옵션 설정
+	    var selectedOptions = [];
+	    $('.option-select').each(function() {
+	        var selectedValue = $(this).val();
+	        console.log('옵션 값:', selectedValue);
+	        if (selectedValue && selectedValue !== '') {
+	            selectedOptions.push(selectedValue);
+	        }
+	    });
+	    
+	    console.log('선택된 옵션들:', selectedOptions);
+	    document.getElementById('wishlistSelectedOptions').value = JSON.stringify(selectedOptions);
+	    console.log('설정된 JSON:', JSON.stringify(selectedOptions));
+	    
+	    // 폼 제출
+	    document.getElementById('wishlistForm').submit();
+	}
+	
+	
+	// 찜하기 버튼 클릭 전에 로그인 상태 확인
+	function setWishlistData() {
+	    // 세션 확인을 위한 임시 코드
+	    console.log('찜하기 버튼 클릭됨');
+	    
 	    var actualQuantity = document.getElementById('quantity').value;
 	    document.getElementById('wishlistQuantity').value = actualQuantity;
 	    
-	    console.log('위시리스트 전송할 수량:', actualQuantity);
+	    var selectedOptions = [];
+	    $('.option-select').each(function() {
+	        var selectedValue = $(this).val();
+	        if (selectedValue && selectedValue !== '') {
+	            selectedOptions.push(selectedValue);
+	        }
+	    });
+	    
+	    document.getElementById('wishlistSelectedOptions').value = JSON.stringify(selectedOptions);
+	    
+	    console.log('위시리스트 전송 수량:', actualQuantity);
+	    console.log('위시리스트 선택된 옵션들:', selectedOptions);
 	}
+	
 	
 	
 	</script>
