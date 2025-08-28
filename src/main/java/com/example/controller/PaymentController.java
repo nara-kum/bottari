@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.example.service.PaymentService;
 import com.example.vo.CheckOutVO;
 import com.example.vo.CheckoutFundingVO;
+import com.example.vo.PaymentGoodsOptionVO;
+import com.example.vo.PaymentGoodsVO;
 import com.example.vo.PaymentVO;
 import com.example.vo.UserVO;
 
@@ -33,25 +35,44 @@ public class PaymentController {
 	
 	//일반 구매일 때
 	@RequestMapping(value = "/checkout", method = { RequestMethod.GET, RequestMethod.POST })
-	public String checkoutList(@RequestParam(value="cart_no", required=false, defaultValue="1") int cart_no, Model model) {
-		System.out.println("PayController.checkoutList()");
-//		System.out.println("cart_no= " + cart_no);
+	public String checkOutList(@RequestParam("cart_no") List<Integer> cartNos,
+								Model model, HttpSession session) {
+		System.out.println("PaymentController.checkOutList() 진입");
 		
-		List<CheckOutVO> checkoutList = paymentservice.execheckoutList(cart_no);
+		System.out.println("cartNos: " + cartNos);
 		
-		model.addAttribute("pList", checkoutList);
-		
-		if (!checkoutList.isEmpty()) {
-	        CheckOutVO firstItem = checkoutList.get(0);
-	        model.addAttribute("total_quantity", firstItem.getTotal_quantity());
-	        model.addAttribute("total_amount", firstItem.getTotal_amount());
-	        model.addAttribute("shipping_cost", firstItem.getShipping_cost());
-	        model.addAttribute("final_amount", firstItem.getTotal_amount() + firstItem.getShipping_cost());
-	    }
-		
-		
-		return "/shop/checkout";
+		UserVO authuser = (UserVO) session.getAttribute("authUser");
+        
+        
+        if(authuser == null)
+			return "/loginForm";
+		else {
+			int user_no = authuser.getUserNo();
+			
+        	List<CheckOutVO> checkoutList = paymentservice.execheckoutList(cartNos);
+        	System.out.println("PaymentController.checkOutList() 재진입");
+        	
+        	model.addAttribute("cList", checkoutList);
+        	
+        	if(!checkoutList.isEmpty()) {
+        		CheckOutVO firstItem = checkoutList.get(0);
+        		if(firstItem.getUser_no() != user_no) {
+        			return "/shop/error";
+        		} else {
+        			model.addAttribute("total_quantity", firstItem.getTotal_quantity());
+        			model.addAttribute("total_price",firstItem.getTotal_price());
+        			model.addAttribute("total_amount",firstItem.getTotal_amount()); 
+        			model.addAttribute("shipping_cost", firstItem.getShipping_cost());
+        		}
+        		
+        		return "/shop/checkout";
+        	} else {
+        		return "/shop/error";
+        	}
+        }
 	}
+	
+	
 	
 	//펀딩일 때 
 	@RequestMapping(value = "/checkout_funding", method = {RequestMethod.GET,RequestMethod.POST})
@@ -78,7 +99,7 @@ public class PaymentController {
 	// 결제버튼을 클릭했을 때
 	@RequestMapping(value = "/checkout/payment", method = {RequestMethod.GET,RequestMethod.POST})
 	public String checkoutPayment(
-			@RequestParam("cart_no") int cart_no,
+			@RequestParam("cart_no") int cart_no[],
 			@RequestParam String paymentMethod,
 			@RequestParam String cashReceiptRequested,
 			@RequestParam int totalAmount,
@@ -87,6 +108,7 @@ public class PaymentController {
 			@RequestParam("productId") int[] product_no,
 			@RequestParam("quantity") int[] quantity,
 			@RequestParam("itemTotal") int[] item_total,
+			@RequestParam("detailoption_no") int[] detailoption_no,
 			HttpSession session)	{
 		System.out.println("PaymentController.checkoutPayment()");
 		System.out.println(cart_no);
@@ -98,9 +120,11 @@ public class PaymentController {
         
         // 상품 정보 처리
         for(int i = 0; i < product_no.length; i++) {
-            System.out.println("상품ID: " + product_no[i] + 
+            System.out.println("카트ID: " + cart_no[i] + 
+            				  ", 상품ID: " + product_no[i] + 
                               ", 수량: " + quantity[i] + 
-                              ", 금액: " + item_total[i]);
+                              ", 금액: " + item_total[i] +
+                              ", 세부옵션번호: " + detailoption_no[i]);
         }
         
         UserVO authuser = (UserVO) session.getAttribute("authUser");
@@ -108,6 +132,8 @@ public class PaymentController {
         int user_no = authuser.getUserNo();
         
         List<PaymentVO> paymentList = new ArrayList<>();
+        List<PaymentGoodsVO> paymentGoodsList = new ArrayList<>();
+        List<PaymentGoodsOptionVO> paymentGoodsOptionList = new ArrayList<>();
         
         for(int i = 0 ; i < product_no.length ; i++) {
         	PaymentVO paymentvo = new PaymentVO();
@@ -123,16 +149,33 @@ public class PaymentController {
         	paymentList.add(paymentvo);
         }
         
-        for(int i = 0 ; i<quantity.length ; i++) {
+        for(int i = 0 ; i < quantity.length ; i++) {
+        	PaymentGoodsVO paymentGoods = new PaymentGoodsVO();
         	
+        	paymentGoods.setProduct_no(product_no[i]);
+        	paymentGoods.setQuantity(quantity[i]);
+        	
+        	paymentGoodsList.add(paymentGoods);
         }
+        
+        for(int i = 0 ; i < detailoption_no.length ; i++) {
+        	PaymentGoodsOptionVO paymentGoodsOption = new PaymentGoodsOptionVO();
+        	
+        	paymentGoodsOption.setDetailoprion_no(detailoption_no[i]);
+        	
+        	paymentGoodsOptionList.add(paymentGoodsOption);
+        }
+        
         System.out.println(paymentList);
+        System.out.println(paymentGoodsList);
+        System.out.println(paymentGoodsOptionList);
+        
         
         Map<String, Object> paymentMap = new HashMap<>();
         
-        paymentMap.put("cart_no", cart_no);
-        paymentMap.put("quantity", quantity);
         paymentMap.put("paymentList", paymentList);
+        paymentMap.put("paymentGoodsList", paymentGoodsList);
+        paymentMap.put("paymentGoodsOptionList", paymentGoodsOptionList);
         
         paymentservice.exepayment(paymentMap);
 		

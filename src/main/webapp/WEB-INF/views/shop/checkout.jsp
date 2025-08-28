@@ -28,7 +28,7 @@
             </div>
             <div class="sec-content-main">
                 <div class="left-main content-height">
-					<c:forEach items="${requestScope.pList}" var="vo">
+					<c:forEach items="${requestScope.cList}" var="vo">
 	                    <div class="list-basic margin-10">	
 	                        <div class="row-flex-box detail-list">
 	                            <img class="img list-img-100" src="">
@@ -40,7 +40,7 @@
 	                        </div>
 	                        <div class="between-flex-box detail-list">
 	                            <div class="text-12">결제금액(${vo.quantity} 개)</div>
-	                            <div class="text-14 bold"><fmt:formatNumber value="${vo.item_total}" type="currency" currencySymbol="" />원</div>
+	                            <div class="text-14 bold"><fmt:formatNumber value="${vo.total_price}" type="currency" currencySymbol="" />원</div>
 	                        </div>
 	                    </div>
                 	</c:forEach>
@@ -97,8 +97,6 @@
                     </div>
                     <div class="text-16 margin-10">최종 결제금액</div>
 					<form id="paymentForm" action="${pageContext.request.contextPath}/checkout/payment" method="post">
-						<!-- 카트번호 -->
-						<input type="hidden" name="cart_no" value="${param.cart_no}">
 						<!-- 결제 수단 -->
 						<input type="hidden" name="paymentMethod" id="hiddenPaymentMethod">
 						<!-- 현금 영수증 여부 -->
@@ -110,14 +108,16 @@
 						<!-- 배달요금 -->
 						<input type="hidden" name="shippingCost" value="${shipping_cost}">
 						
-						<c:forEach items="${requestScope.pList}" var="vo">
+						<c:forEach items="${requestScope.cList}" var="vo">
+							<input type="hidden" name="cart_no" value="${param.cart_no}">
 							<input type="hidden" name="productId" value="${vo.product_no}">	
 							<input type="hidden" name="quantity" value="${vo.quantity}">	
-							<input type="hidden" name="itemTotal" value="${vo.item_total}">	
+							<input type="hidden" name="itemTotal" value="${vo.total_price}">	
+							<input type="hidden" name="detailoption_no" value="${vo.detailoption_no}">
 						</c:forEach>
 						
                     	<button type="submit" id="paymentButton" class="btn-basic btn-orange size-large text-16 right-align">
-                    		<fmt:formatNumber value="${final_amount}" type="currency" currencySymbol="" />원 결제하기
+                    		<fmt:formatNumber value="${total_amount}" type="currency" currencySymbol="" />원 결제하기
                     	</button>
 					</form>
                 </div>
