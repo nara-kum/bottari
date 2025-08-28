@@ -13,7 +13,9 @@
 			        p.itemimg,
 			        p.price,
 			        p.shipping_cost,
-			        co.detailoption_no
+			        co.detailoption_no,
+			        SUM(c.quantity) OVER(partition by c.user_no) AS total_quantity,
+			        SUM(p.price * c.quantity) OVER(partition by c.user_no) AS total_price
 			FROM cart c
 			LEFT JOIN product p ON c.product_no = p.product_no
 			LEFT JOIN cart_option co ON c.cart_no = co.cart_no

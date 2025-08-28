@@ -24,9 +24,14 @@ public class CartListVO {
 	//nestedOptions section
 	private List<OptionVO> options;
 	
+	//total section
+	private int total_quantity;
+	private int total_price;
+	
 	//editor
 	public CartListVO(int cart_no, int user_no, int product_no, int quantity, String title, String brand,
-			String itemimg, int price, String shipping_cost, int detailoption_no, List<OptionVO> options) {
+			String itemimg, int price, String shipping_cost, int detailoption_no, List<OptionVO> options,
+			int total_quantity, int total_price) {
 		super();
 		this.cart_no = cart_no;
 		this.user_no = user_no;
@@ -39,6 +44,8 @@ public class CartListVO {
 		this.shipping_cost = shipping_cost;
 		this.detailoption_no = detailoption_no;
 		this.options = options;
+		this.total_quantity = total_quantity;
+		this.total_price = total_price;
 	}
 
 	public CartListVO() {
@@ -133,12 +140,28 @@ public class CartListVO {
 	public void setOptions(List<OptionVO> options) {
 		this.options = options;
 	}
+	
+	public int getTotal_quantity() {
+		return total_quantity;
+	}
+	
+	public void setTotal_quantity(int total_quantity) {
+		this.total_quantity = total_quantity;
+	}
+	
+	public int getTotal_price() {
+		return total_price;
+	}
+	
+	public void setTotal_price(int total_price) {
+		this.total_price = total_price;
+	}
 	//method normal
-
 	@Override
 	public String toString() {
 		return "CartListVO [cart_no=" + cart_no + ", user_no=" + user_no + ", product_no=" + product_no + ", quantity="
-				+ quantity + ", title=" + title + ", brand=" + brand + ", itemimg=" + itemimg + ", shipping_cost="
-				+ shipping_cost + ", detailoption_no=" + detailoption_no + ", options=" + options + "]";
+				+ quantity + ", title=" + title + ", brand=" + brand + ", itemimg=" + itemimg + ", price=" + price
+				+ ", shipping_cost=" + shipping_cost + ", detailoption_no=" + detailoption_no + ", options=" + options
+				+ ", total_quantity=" + total_quantity + ", total_price=" + total_price + "]";
 	}
 }

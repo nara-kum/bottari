@@ -45,6 +45,13 @@ public class CartController {
 			} else {
 				model.addAttribute("cList", cartList);
 				System.out.println(cartList);
+				
+				if(!cartList.isEmpty()) {
+					CartListVO firstItem = cartList.get(0);
+					model.addAttribute("total_quantity", firstItem.getTotal_quantity());
+					model.addAttribute("total_price", firstItem.getTotal_price());
+					model.addAttribute("shipping_cost", firstItem.getShipping_cost());
+				}
 
 				return "shop/cart";
 			}
