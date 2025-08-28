@@ -3,6 +3,7 @@ package com.example.controller;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -244,20 +245,23 @@ public class ShopController {
 	
 	//펀딩상세페이지
 	@RequestMapping(value = "/productPage2", method = { RequestMethod.GET, RequestMethod.POST })
-	public String fundingproductDetail(@RequestParam(required = false) Integer productNo, Model model) {
+	public String fundingproductDetail(@RequestParam(value="productNo", required = false) Integer productNo, 
+									   @RequestParam(value="fundingNo", required = false) Integer fundingNo,
+			                           Model model) {
 		System.out.println("ShopController.productDetail");
 		System.out.println("상품번호: " + productNo);
-
+		System.out.println("펀딩번호: " + fundingNo);
+		
 		if (productNo == null) {
 			System.out.println("상품번호가 없습니다!");
 			return "shop/shoppingMall";
 		}
 
-		ProductViewVO productViewVO= shopService.exefungdingProductDetail(productNo);
-		model.addAttribute("productViewVO", productViewVO);
+		Map<String, Object> fundingProductDetailMap = shopService.exefungdingProductDetail(productNo, fundingNo);
+		model.addAttribute("fundingProductDetailMap", fundingProductDetailMap);
 		
 		System.out.println("---------------------------------");
-		System.out.println(productViewVO);
+		System.out.println(fundingProductDetailMap);
 		System.out.println("---------------------------------");
 		
 		return "shop/productPage_funding";

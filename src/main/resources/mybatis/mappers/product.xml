@@ -60,6 +60,7 @@
 		]]>
 	</insert>
 
+
 	<!-- 상품 상세 조회 -->
 	<select id="selectOne" parameterType="int" resultType="com.example.vo.ProductViewVO">
 	    <![CDATA[
@@ -117,6 +118,48 @@
     		where option_no = #{optionNo}
 		]]>
 	</select>
+	
+	
+	
+	
+	<!-- 펀딩상세페이지 
+	<select id = "selectOneFunding" parameterType="int" resultType="com.example.vo.WishlistVO">
+		<![CDATA[
+		]]>	
+	</select>
+	-->
+	
+	
+
+	<!-- 선택한 펀딩 옵션과 옵션제목들 -->
+	<select id="selectListFundingOption" parameterType="int" resultType="com.example.vo.FundingOptionViewVO">
+		<![CDATA[
+			select 	fo.funding_no,
+			        po.product_no,
+					po.option_no,
+					po.option_name,
+					od.detailoption_no,
+		            od.detailoption_name
+			from funding_option fo, option_detail od, product_option po
+			where fo.funding_no = #{fundingNo}
+			and od.detailoption_no = fo.detailoption_no
+			and od.option_no = po.option_no
+		]]>
+	</select>
+	
+	
+	<!-- 펀딩별 현재 총결제액 -->
+	<select id="selectTotalPayForFundingNo" parameterType="int" resultType="int">
+		<![CDATA[
+			select sum(p.payment_amount) totalpay
+			from payment p
+			where p.fundingproduct_no =  #{fundingNo}
+		]]>
+	</select>
+	
+	
+	
+	
 	
 	
 	<!-- 장바구니 등록 -->

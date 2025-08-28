@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import com.example.vo.CartDetailOptionVO;
 import com.example.vo.CartVO;
 import com.example.vo.DetailedImageVO;
+import com.example.vo.FundingOptionViewVO;
 import com.example.vo.ProductOptionDetailVO;
 import com.example.vo.ProductOptionVO;
 import com.example.vo.ProductVO;
@@ -87,6 +88,34 @@ public class ShopRepository {
 		ProductViewVO productViewVO = sqlSession.selectOne("product.selectOne", productNo);
 		return productViewVO;
 	}
+	
+	
+	
+	
+	public List<FundingOptionViewVO> fundingOptionSelectList(int fundingNo){
+		System.out.println("ShopRepository.fundingOptionSelectList");
+		System.out.println("조회할 펀딩번호: " + fundingNo);
+
+		List<FundingOptionViewVO> fundingOptionList = sqlSession.selectList("product.selectListFundingOption", fundingNo);
+		
+		System.out.println("-------------------------------------");
+		System.out.println(fundingOptionList);
+		System.out.println("-------------------------------------");
+		return fundingOptionList;
+	}
+	
+	
+	public int fundingTotalPay(int fundingNo){
+		System.out.println("ShopRepository.fundingTotalPay");
+
+		int fundingTotalPay = sqlSession.selectOne("product.selectTotalPayForFundingNo", fundingNo);
+		return fundingTotalPay;
+	}
+	
+	
+	
+	
+	
 	
 	
 	// 상품상세 이미지

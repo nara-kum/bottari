@@ -4,7 +4,9 @@ import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,7 @@ import com.example.repository.ShopRepository;
 import com.example.vo.CartDetailOptionVO;
 import com.example.vo.CartVO;
 import com.example.vo.DetailedImageVO;
+import com.example.vo.FundingOptionViewVO;
 import com.example.vo.ProductOptionDetailVO;
 import com.example.vo.ProductOptionVO;
 import com.example.vo.ProductVO;
@@ -214,7 +217,7 @@ public class ShopService {
 
 	
 	// 펀딩상세페이지
-	public ProductViewVO exefungdingProductDetail(int productNo) {
+	public Map<String, Object> exefungdingProductDetail(int productNo, int fundingNo) {
 		System.out.println("ShopService.exefungdingProductDetail");
 
 		// 상품기본정보
@@ -223,10 +226,36 @@ public class ShopService {
 		// 상품상세이미지 리스트
 		List<DetailedImageVO> detailedImageList = shopRepository.ImageselectList(productViewVO.getProduct_no());
 
-
+		
+		// 상품기본정보+이미지리스트
 		productViewVO.setDetailedImageList(detailedImageList);
 		
-		return productViewVO;
+		
+		//펀딩번호를 알고있다 fundingNo
+		//펀딩프로덕트VO 가져오기
+		
+		
+		//펀딩번호(상품) 오션명들(옵션)
+		// 사이즈-데   용량-2G   칼라-빨강
+
+		List<FundingOptionViewVO> fundingOptionList = shopRepository.fundingOptionSelectList(fundingNo);
+		System.out.println("******여기확인:" + fundingOptionList);
+		
+		//지금까지 결재액
+		int fundingTotalPay = shopRepository.fundingTotalPay(fundingNo);
+		System.out.println("fundingTotalPay-->" + fundingTotalPay );
+		
+		
+	
+		//모두묶어서 화면으로 보낸다
+		Map<String, Object> fundingProductDetailMap = new HashMap<String, Object>();
+		
+		fundingProductDetailMap.put("productViewVO", productViewVO);
+		fundingProductDetailMap.put("fundingOptionList", fundingOptionList);
+		fundingProductDetailMap.put("fundingTotalPay", fundingTotalPay);
+		
+		
+		return fundingProductDetailMap;
 	}
 		
 	
