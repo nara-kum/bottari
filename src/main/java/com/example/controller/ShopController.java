@@ -238,17 +238,37 @@ public class ShopController {
     
     */
 	
-	//상세페이지_펀딩
-	@RequestMapping(value="/productPage2", method= {RequestMethod.GET, RequestMethod.POST})
-	public String selectOne2() {	
-		System.out.println("ShopController.selectOne");
+	
+	
+	
+	
+	//펀딩상세페이지
+	@RequestMapping(value = "/productPage2", method = { RequestMethod.GET, RequestMethod.POST })
+	public String fundingproductDetail(@RequestParam(required = false) Integer productNo, Model model) {
+		System.out.println("ShopController.productDetail");
+		System.out.println("상품번호: " + productNo);
+
+		if (productNo == null) {
+			System.out.println("상품번호가 없습니다!");
+			return "shop/shoppingMall";
+		}
+
+		ProductViewVO productViewVO= shopService.exefungdingProductDetail(productNo);
+		model.addAttribute("productViewVO", productViewVO);
+		
+		System.out.println("---------------------------------");
+		System.out.println(productViewVO);
+		System.out.println("---------------------------------");
 		
 		return "shop/productPage_funding";
 	}
 	
 	
+	
+	
 
-	//장바구니등록 - 수정된 버전
+
+	//장바구니등록 
 	@RequestMapping(value="/cartadd", method= {RequestMethod.GET, RequestMethod.POST})
 	public String insertCart(@RequestParam(value="productNo", required=false) Integer productNo,
 			 				 @RequestParam(value="categoryNo", required=false) Integer categoryNo,

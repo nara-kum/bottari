@@ -210,6 +210,30 @@ public class ShopService {
 	}
 	
 	
+	
+
+	
+	// 펀딩상세페이지
+	public ProductViewVO exefungdingProductDetail(int productNo) {
+		System.out.println("ShopService.exefungdingProductDetail");
+
+		// 상품기본정보
+		ProductViewVO productViewVO = shopRepository.ProductSelectOne(productNo);
+
+		// 상품상세이미지 리스트
+		List<DetailedImageVO> detailedImageList = shopRepository.ImageselectList(productViewVO.getProduct_no());
+
+
+		productViewVO.setDetailedImageList(detailedImageList);
+		
+		return productViewVO;
+	}
+		
+	
+	
+
+	
+	
 	// 옵션디테일(아이템)
 	public List<ProductOptionDetailVO> exeOptionDetail(int optionNo) {
 		System.out.println("ShopRepository.exeOptionDetail");

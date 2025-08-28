@@ -1,16 +1,21 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+
 
 <!DOCTYPE html>
 <html lang="ko">
 
 <head>
 <meta charset="utf-8">
-<link rel="stylesheet" href="../../../assets/css/reset.css">
-<link rel="stylesheet" href="../../../assets/css/Global.css">
-<link rel="stylesheet"
-	href="../../../assets/css/shop/productPage_funding.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/reset.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/Global.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/shop/productPage_funding.css">
 </head>
+
+<!-- js -->
+<script src="${pageContext.request.contextPath}/assets/js/jquery/jquery-3.7.1.js"></script>    
+
 
 <body class="family">
 	<!------------------------ Header호출 ----------------------->
@@ -32,21 +37,28 @@
 					<!-- 상품 이미지 -->
 					<div class="product-images">
 						<c:choose>
+							<c:when test="${not empty productViewVO.itemimg}">
+								<img class="main-image"
+									src="${pageContext.request.contextPath}/upload/${productViewVO.itemimg}"
+									alt="${productViewVO.title}">
+							</c:when>
 							<c:otherwise>
-								<img class="main-image" src="${product.itemimg}"
-									alt="${product.title}">
+								<img class="main-image"
+									src="${pageContext.request.contextPath}/assets/upload/default-product.jpg"
+									alt="기본 상품 이미지">
 							</c:otherwise>
 						</c:choose>
 					</div>
 
 					<!-- 상품 정보 -->
 					<div class="product-info">
-						<h1 class="product-title">${product.title}</h1>
+						<h1 class="product-title">${productViewVO.title}</h1>
 						<div class="product-price">
-							<fmt:formatNumber value="${product.price}" pattern="#,###" />
+							<fmt:formatNumber value="${productViewVO.price}" pattern="#,###" />
 							원
 						</div>
-						<div class="brand-name">${product.brand}</div>
+						<div class="brand-name">${productViewVO.brand}</div>
+
 						<!-- 카테고리 타이틀 자리1 -->
 
 						<div class="product-options">
@@ -76,71 +88,72 @@
 					</div>
 
 					<!-- 주문 영역 -->
-					<div class="order-section">
-						<div class="order-title">펀딩 상품 정보</div>
+            <div class="order-section">
+                <div class="order-title">펀딩 상품 정보</div>
 
-						<div class="funding-box">
-							<div class="funding-box-font" id="productName">
-								[단독]하겐다즈 프리미엄 수제 아이스크림 케이크<br> 리얼블랙 (바닐라+벨지안 초코)
-							</div>
-							<div class="funding-box-font2" id="productOption">옵션: 바닐라</div>
-							<div class="funding-controll">
-								<button class="quantity-btn" id="decreaseBtn">-</button>
-								<div class="funding-five" id="fundingPercent">5%</div>
-								<button class="quantity-btn" id="increaseBtn">+</button>
-							</div>
-						</div>
+                <!-- 펀딩 타입 선택 -->
+                <div class="funding-type-selector">
+                    <div class="funding-type-options">
+                        <button class="funding-type-btn active" data-type="partial">부분 펀딩</button>
+                        <button class="funding-type-btn" data-type="full">전액 펀딩</button>
+                    </div>
+                </div>
 
-						<div class="total-order" id="orderSummary">
-							<span id="summaryProductName">[단독]하겐다즈 프리미엄 수제 아이스크림 케이크<br>리얼블랙
-								(바닐라+벨지안 초코)
-							</span><br> <span id="summaryOption">바닐라</span> x 1<br> <span
-								id="summaryPercent">5%</span> x <span id="summaryQuantity">1</span>
-						</div>
+                <!-- 부분 펀딩 컨트롤 -->
+                <div class="partial-funding-control" id="partialFundingControl">
+                    <div class="funding-box">
+                        <div class="funding-box-font" id="productName">
+                            [단독]하겐다즈 프리미엄 수제 아이스크림 케이크<br> 리얼블랙 (바닐라+벨지안 초콜릿)
+                        </div>
+                        <div class="funding-box-font2" id="productOption">옵션: 바닐라</div>
+                        <div class="funding-control">
+                            <button class="quantity-btn" id="decreaseBtn">-</button>
+                            <div class="funding-display" id="fundingDisplay">5% (1개)</div>
+                            <button class="quantity-btn" id="increaseBtn">+</button>
+                        </div>
+                    </div>
+                </div>
 
-						<div class="total-price">
-							총 결제 금액 : <span class="price-highlight" id="totalPrice">1,500원</span>
-						</div>
+                <!-- 전액 펀딩 정보 -->
+                <div class="full-funding-info hidden" id="fullFundingInfo">
+                    <div class="full-funding-price">32,900원</div>
+                    <div class="full-funding-desc">상품 전체 금액을 한번에 결제합니다</div>
+                </div>
 
-						<button class="cart-btn" onclick="goToFunding()">펀딩하러 가기</button>
-					</div>
-				</div>
+                <!-- 주문 요약 -->
+                <div class="order-summary">
+                    <div class="summary-item">
+                        <span>상품명</span>
+                        <span>하겐다즈 케이크</span>
+                    </div>
+                    <div class="summary-item">
+                        <span>펀딩 타입</span>
+                        <span id="summaryType">부분 펀딩</span>
+                    </div>
+                    <div class="summary-item" id="summaryQuantity">
+                        <span>수량</span>
+                        <span>5% × 1개</span>
+                    </div>
+                    <div class="summary-item">
+                        <span>결제 금액</span>
+                        <span id="summaryAmount">1,645원</span>
+                    </div>
+                </div>
 
-				<!-- 추천 상품 -->
-				<div class="recommendation-section">
-					<div class="section-title">이런 구성은 어떠세요?</div>
-					<div class="product-grid">
-						<div class="product-card">
-							<div
-								style="width: 100%; height: 100px; background: #8B4513; border-radius: 6px; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; color: white;">
-								🍫</div>
-							<div class="product-card-title">추천 상품 1</div>
-							<div class="product-card-price">65,900원</div>
-						</div>
+                <div class="total-price">
+                    총 결제 금액: <span id="totalPrice">1,645원</span>
+                </div>
 
-						<div class="product-card">
-							<div
-								style="width: 100%; height: 100px; background: #DDA0DD; border-radius: 6px; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; color: white;">
-								🍰</div>
-							<div class="product-card-title">추천 상품 2</div>
-							<div class="product-card-price">39,900원</div>
-						</div>
+                <button class="funding-btn" onclick="goToFunding()">펀딩하러 가기</button>
+            </div>
+        </div>
 
-						<div class="product-card">
-							<div
-								style="width: 100%; height: 100px; background: #8B4513; border-radius: 6px; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; color: white;">
-								🍫</div>
-							<div class="product-card-title">추천 상품 3</div>
-							<div class="product-card-price">65,900원</div>
-						</div>
-					</div>
-				</div>
 
 				<!-- 상품 설명 -->
 				<div class="product-description">
-					<img class="detailproduct" src="${product.itemimg}"
-						alt="${product.title}">
-					<!-- 카테고리 타이틀 자리 2  -->
+					<c:forEach items="${productViewVO.detailedImageList}" var="detailedImageVO">
+						<img class="detailproduct" src="${pageContext.request.contextPath}/upload/${detailedImageVO.image_URL}" alt="상품상세이미지">
+					</c:forEach>
 				</div>
 
 			</div>
@@ -153,128 +166,205 @@
 	<!-- ---------------------------------------------------- -->
 
 	<script>
-		// URL 파라미터에서 상품 정보 가져오기
-		function getUrlParams() {
-			const urlParams = new URLSearchParams(window.location.search);
-			return {
-				productName: urlParams.get('productName') || '[단독]하겐다즈 프리미엄 수제 아이스크림 케이크 리얼블랙 (바닐라+벨지안 초코)',
-				option: urlParams.get('option') || '바닐라',
-				basePrice: parseInt(urlParams.get('basePrice')) || 32900
-			};
+	// 상품 정보 (JSP에서 JavaScript로 데이터 전달)
+	const productInfo = {
+		name: '${product.title}',
+		brand: '${product.brand}',
+		basePrice: parseInt('${product.price}') || 32900
+	};
+
+	console.log('Product Info:', productInfo); // 디버깅용
+
+	// 현재 상태
+	let currentFundingType = 'partial';
+	let currentPercent = 5; // 5%부터 시작
+
+	// 전역 함수로 선언 (HTML onclick에서 호출 가능)
+	window.changeFundingType = function(type) {
+		console.log('changeFundingType called:', type);
+		currentFundingType = type;
+		
+		// 버튼 활성화 상태 변경
+		const fundingTypeBtns = document.querySelectorAll('.funding-type-btn');
+		fundingTypeBtns.forEach(btn => {
+			btn.classList.remove('active');
+			if (btn.dataset.type === type) {
+				btn.classList.add('active');
+			}
+		});
+
+		// UI 표시/숨김
+		const partialFundingControl = document.getElementById('partialFundingControl');
+		const fullFundingInfo = document.getElementById('fullFundingInfo');
+		
+		if (type === 'partial') {
+			if (partialFundingControl) partialFundingControl.classList.remove('hidden');
+			if (fullFundingInfo) fullFundingInfo.classList.add('hidden');
+		} else {
+			if (partialFundingControl) partialFundingControl.classList.add('hidden');
+			if (fullFundingInfo) fullFundingInfo.classList.remove('hidden');
 		}
 
-		// 상품 정보 초기화
-		const productInfo = getUrlParams();
-		let currentPercent = 5;
+		updateDisplay();
+	};
 
-		// DOM 요소들
-		const productNameEl = document.getElementById('productName');
-		const productOptionEl = document.getElementById('productOption');
-		const fundingPercentEl = document.getElementById('fundingPercent');
-		const decreaseBtn = document.getElementById('decreaseBtn');
-		const increaseBtn = document.getElementById('increaseBtn');
-		const totalPriceEl = document.getElementById('totalPrice');
-		const summaryProductNameEl = document.getElementById('summaryProductName');
-		const summaryOptionEl = document.getElementById('summaryOption');
-		const summaryQuantityEl = document.getElementById('summaryQuantity');
-
-		// 초기 상품 정보 설정
-		function initializeProduct() {
-			if (productNameEl && productOptionEl) {
-				productNameEl.innerHTML = productInfo.productName.replace(' 리얼블랙', '<br> 리얼블랙');
-				productOptionEl.textContent = `옵션: ${productInfo.option}`;
-			}
-			if (summaryProductNameEl && summaryOptionEl) {
-				summaryProductNameEl.innerHTML = productInfo.productName.replace(' 리얼블랙', '<br>리얼블랙');
-				summaryOptionEl.textContent = productInfo.option;
-			}
+	// 전역 함수로 선언
+	window.decreasePercent = function() {
+		console.log('decreasePercent called, current:', currentPercent);
+		if (currentPercent > 5) { // 최소 5%
+			currentPercent -= 5; // 5%씩 감소
 			updateDisplay();
 		}
+	};
 
-		// 화면 업데이트
-		function updateDisplay() {
-			if (fundingPercentEl) {
-				fundingPercentEl.textContent = `${currentPercent}%`;
-			}
-			if (summaryQuantityEl) {
-				summaryQuantityEl.textContent = currentPercent / 5; // 5% 단위로 수량 표시
-			}
+	// 전역 함수로 선언
+	window.increasePercent = function() {
+		console.log('increasePercent called, current:', currentPercent);
+		if (currentPercent < 100) {
+			currentPercent += 5; // 5%씩 증가
+			updateDisplay();
+		}
+	};
+
+	// 화면 업데이트
+	function updateDisplay() {
+		console.log('updateDisplay called:', { type: currentFundingType, percent: currentPercent });
+		
+		let displayAmount, displayType, displayQuantity;
+
+		if (currentFundingType === 'partial') {
+			// 부분 펀딩
+			const quantity = currentPercent / 5;
+			displayAmount = Math.round((productInfo.basePrice * currentPercent) / 100);
+			displayType = '부분 펀딩';
+			displayQuantity = currentPercent + '% × ' + quantity + '개';
 			
-			// 총 결제 금액 계산 (기본 가격의 5% × 수량)
-			const totalAmount = Math.round((productInfo.basePrice * 5 * (currentPercent / 5)) / 100);
-			if (totalPriceEl) {
-				totalPriceEl.textContent = `${totalAmount.toLocaleString()}원`;
+			// 부분 펀딩 컨트롤 업데이트
+			const fundingDisplay = document.getElementById('fundingDisplay');
+			if (fundingDisplay) {
+				fundingDisplay.textContent = currentPercent + '% (' + quantity + '개)';
 			}
 			
 			// 버튼 상태 업데이트
+			const decreaseBtn = document.getElementById('decreaseBtn');
+			const increaseBtn = document.getElementById('increaseBtn');
+			
 			if (decreaseBtn) {
 				decreaseBtn.disabled = currentPercent <= 5;
-				if (decreaseBtn.disabled) {
-					decreaseBtn.style.backgroundColor = '#f5f5f5';
-					decreaseBtn.style.color = '#ccc';
-					decreaseBtn.style.cursor = 'not-allowed';
-				} else {
-					decreaseBtn.style.backgroundColor = 'white';
-					decreaseBtn.style.color = '#333';
-					decreaseBtn.style.cursor = 'pointer';
-				}
+				decreaseBtn.style.backgroundColor = decreaseBtn.disabled ? '#f5f5f5' : 'white';
+				decreaseBtn.style.color = decreaseBtn.disabled ? '#ccc' : '#333';
+				decreaseBtn.style.cursor = decreaseBtn.disabled ? 'not-allowed' : 'pointer';
 			}
 			
 			if (increaseBtn) {
 				increaseBtn.disabled = currentPercent >= 100;
-				if (increaseBtn.disabled) {
-					increaseBtn.style.backgroundColor = '#f5f5f5';
-					increaseBtn.style.color = '#ccc';
-					increaseBtn.style.cursor = 'not-allowed';
-				} else {
-					increaseBtn.style.backgroundColor = 'white';
-					increaseBtn.style.color = '#333';
-					increaseBtn.style.cursor = 'pointer';
-				}
+				increaseBtn.style.backgroundColor = increaseBtn.disabled ? '#f5f5f5' : 'white';
+				increaseBtn.style.color = increaseBtn.disabled ? '#ccc' : '#333';
+				increaseBtn.style.cursor = increaseBtn.disabled ? 'not-allowed' : 'pointer';
 			}
-		}
-
-		// 퍼센트 감소 (수량 감소)
-		function decreasePercent() {
-			if (currentPercent > 5) {
-				currentPercent -= 5;
-				updateDisplay();
-			}
-		}
-
-		// 퍼센트 증가 (수량 증가)
-		function increasePercent() {
-			if (currentPercent < 100) {
-				currentPercent += 5;
-				updateDisplay();
-			}
-		}
-
-		// 펀딩하러 가기
-		function goToFunding() {
-			const fundingData = {
-				productName: productInfo.productName,
-				option: productInfo.option,
-				basePrice: productInfo.basePrice,
-				fundingPercent: currentPercent,
-				quantity: currentPercent / 5,
-				totalAmount: Math.round((productInfo.basePrice * 5 * (currentPercent / 5)) / 100)
-			};
 			
-			// 실제 구현에서는 펀딩 페이지로 이동하거나 결제 프로세스 시작
-			console.log('펀딩 데이터:', fundingData);
-			alert(`펀딩 진행\n상품: ${productInfo.productName}\n펀딩 비율: 5% x ${currentPercent / 5}개\n결제 금액: ${fundingData.totalAmount.toLocaleString()}원`);
+			// 수량 항목 표시
+			const summaryQuantityItem = document.getElementById('summaryQuantityItem');
+			if (summaryQuantityItem) {
+				summaryQuantityItem.style.display = 'flex';
+			}
+		} else {
+			// 전액 펀딩
+			displayAmount = productInfo.basePrice;
+			displayType = '전액 펀딩';
+			displayQuantity = '전체 (1개)';
 			
-			// 실제 펀딩 페이지로 이동하려면 아래 주석을 해제하고 URL을 수정하세요
-			// window.location.href = '/funding/process?productId=' + encodeURIComponent(fundingData.productName) + '&amount=' + fundingData.totalAmount;
+			// 수량 항목 숨김
+			const summaryQuantityItem = document.getElementById('summaryQuantityItem');
+			if (summaryQuantityItem) {
+				summaryQuantityItem.style.display = 'none';
+			}
 		}
 
-		// 이벤트 리스너 등록
-		document.addEventListener('DOMContentLoaded', function() {
-			if (decreaseBtn) decreaseBtn.addEventListener('click', decreasePercent);
-			if (increaseBtn) increaseBtn.addEventListener('click', increasePercent);
-			initializeProduct();
+		// UI 업데이트
+		const summaryType = document.getElementById('summaryType');
+		const summaryQuantity = document.getElementById('summaryQuantity');
+		const summaryAmount = document.getElementById('summaryAmount');
+		const totalPrice = document.getElementById('totalPrice');
+		
+		if (summaryType) summaryType.textContent = displayType;
+		if (summaryQuantity) summaryQuantity.textContent = displayQuantity;
+		if (summaryAmount) summaryAmount.textContent = displayAmount.toLocaleString() + '원';
+		if (totalPrice) totalPrice.textContent = displayAmount.toLocaleString() + '원';
+		
+		console.log('Display updated:', { amount: displayAmount, type: displayType });
+	}
+
+	// 전역 함수로 선언
+	window.goToFunding = function() {
+		const fundingData = {
+			productName: productInfo.name,
+			brand: productInfo.brand,
+			basePrice: productInfo.basePrice,
+			fundingType: currentFundingType,
+			fundingPercent: currentFundingType === 'partial' ? currentPercent : 100,
+			quantity: currentFundingType === 'partial' ? currentPercent / 5 : 1,
+			totalAmount: currentFundingType === 'partial' 
+				? Math.round((productInfo.basePrice * currentPercent) / 100)
+				: productInfo.basePrice
+		};
+		
+		console.log('펀딩 데이터:', fundingData);
+		
+		let message = '펀딩 진행\n';
+		message += '상품: ' + fundingData.productName + '\n';
+		message += '펀딩 타입: ' + (fundingData.fundingType === 'partial' ? '부분 펀딩' : '전액 펀딩') + '\n';
+		
+		if (fundingData.fundingType === 'partial') {
+			message += '펀딩 비율: ' + fundingData.fundingPercent + '% (' + fundingData.quantity + '개)\n';
+		} else {
+			message += '펀딩 비율: 전액 (100%)\n';
+		}
+		
+		message += '결제 금액: ' + fundingData.totalAmount.toLocaleString() + '원';
+		
+		alert(message);
+	};
+
+	// DOM 로드 완료 후 실행
+	$(document).ready(function() {
+		console.log('DOM Ready - jQuery');
+		
+		// 기존 이벤트 리스너 제거 (중복 방지)
+		$('.funding-type-btn').off('click');
+		$('#decreaseBtn').off('click');
+		$('#increaseBtn').off('click');
+		
+		// 펀딩 타입 버튼 클릭 이벤트
+		$('.funding-type-btn').on('click', function() {
+			const type = $(this).data('type');
+			console.log('Button clicked:', type);
+			changeFundingType(type);
 		});
+
+		// 수량 조절 버튼 클릭 이벤트
+		$('#decreaseBtn').on('click', function(e) {
+			e.preventDefault();
+			e.stopPropagation();
+			console.log('Decrease button clicked');
+			decreasePercent();
+		});
+		
+		$('#increaseBtn').on('click', function(e) {
+			e.preventDefault();
+			e.stopPropagation();
+			console.log('Increase button clicked');
+			increasePercent();
+		});
+
+		// 초기 화면 업데이트
+		updateDisplay();
+		
+		console.log('Event listeners attached');
+	});
+
+	// DOMContentLoaded 이벤트는 제거 (jQuery만 사용)
+	// jQuery가 있으므로 vanilla JS 이벤트 리스너는 제거하여 중복 방지
 	</script>
 </body>
 

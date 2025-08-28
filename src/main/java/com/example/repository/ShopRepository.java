@@ -156,6 +156,7 @@ public class ShopRepository {
 	    return count;
 	}
 	
+	
 	//위시리스트 옵션 저장
 	public int wishlistOptionInsert(WishlistOptionVO wishlistOptionVO) {
 	    System.out.println("ShopRepository.wishlistOptionInsert");
