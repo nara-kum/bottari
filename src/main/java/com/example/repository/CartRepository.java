@@ -52,12 +52,15 @@ public class CartRepository {
 	// 옵션 변경
 	public int updateCartOptions(int cart_no, int option_no) {
 		System.out.println("CartRepository.updateCartOptions()");
+		System.out.println("cart_no: " + cart_no + ", option_no: " + option_no);
 		
 		Map<String, Object> optionMap = new HashMap<>();
 		optionMap.put("cart_no", cart_no);
 		optionMap.put("option_no", option_no);
 		
 		int count = sqlsession.update("cart.updateCartOptions", optionMap);
+		
+		System.out.println("어엏 나 나와따");
 		
 		return count;
 	}

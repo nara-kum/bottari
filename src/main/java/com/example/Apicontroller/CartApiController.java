@@ -63,6 +63,7 @@ public class CartApiController {
 			}
 
 			if (updateResult > 0) {
+				System.out.println("어헣 업데이트 결과가 1보타 크다");
 				// 업데이트된 총액 계산
 				List<CartListVO> updateCartList = cartservice.exeAllinOne(user_no);
 				if (!updateCartList.isEmpty()) {

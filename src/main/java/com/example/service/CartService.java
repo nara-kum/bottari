@@ -109,6 +109,8 @@ public class CartService {
 		
 		int count = cartrepository.updateCartOptions(cartNo, optionNo);
 		
+		System.out.println("어헣 나 서비스로 내려와따");
+		
 		return count;
 	}
 	
