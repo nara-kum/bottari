@@ -100,14 +100,13 @@
     html += '<div class="inv-thumb inv-thumb--ph"></div>';
   }
   html += '</div>';
-  html += '<div class="inv-info">';
-  html += '<div class="inv-title">' + esc(row.title || "") + '</div>';
-  html += '<div class="inv-date">' + esc(row.date || "") + '</div>';
-  html += '</div>';
-  html += '<div class="inv-actions">';
-  html += '<button class="inv-btn btn-edit" type="button">수정하기</button>';
-  html += '<button class="inv-btn inv-btn--primary btn-view" type="button">전체보기</button>';
-  html += '</div>';
+  html += ' <div class="inv-info">';
+  html += '   <div class="inv-title">' + esc(row.title || "") + '</div>';
+  html += '   <div class="inv-date">' + esc(row.date || "") + '</div>';
+  html += '   <div class="inv-actions">';
+  html += '   <button class="inv-btn btn-edit" type="button">수정하기</button>';
+  html += '   </div>';
+  html += ' </div>';
   html += '</div>';
   return html;
 }
@@ -171,7 +170,7 @@
       var id = $(this).closest(".inv-card").data("id") || "";
       location.href = CTX + "/invitationForm" + (id ? ("?no=" + id) : "");
     })
-    .on("click", ".inv-card .btn-view", function(){
+    .on("click", ".inv-card .inv-thumb", function(){
       var id = $(this).closest(".inv-card").data("id") || "";
       location.href = CTX + "/invitation" + (id ? ("?no=" + id) : "");
     });

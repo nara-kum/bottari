@@ -41,7 +41,8 @@
 			from calender c
 				, users u
 			where c.user_no = u.user_no
-			and u.user_no = #{userNo}  
+			and u.user_no = #{userNo}
+			and c.event_date >= now()
 		]]>
 	</select>
 	

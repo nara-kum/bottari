@@ -54,7 +54,7 @@
   border:1px solid #e7e3db;
   border-radius:12px;
   padding:12px;
-  min-height:290px;
+  min-height:350px;
   display:flex;
   flex-direction:column;
   justify-content:space-between;
@@ -75,7 +75,7 @@
 
 /* 썸네일 박스 + 이미지 */
 .inv-thumbbox{
-  height:160px;
+  height:260px;
   background:#eee;
   border-radius:10px;
   overflow:hidden;
@@ -85,6 +85,7 @@
   height:100%;
   object-fit:cover;
   display:block;
+  cursor: pointer;
 }
 
 /* 카드 정보 */
@@ -94,13 +95,13 @@
 }
 .inv-title{
   font-weight:700;
-  font-size:14px;
+  font-size:20px;
   white-space:nowrap;
   overflow:hidden;
   text-overflow:ellipsis;
 }
 .inv-date{
-  font-size:12px;
+  font-size:16px;
   color:#666;
   margin-top:2px;
 }
@@ -118,12 +119,11 @@
   color:#333;
   border:1px solid #ddd;
   border-radius:8px;
-  padding:8px 12px;
+  padding:2px 2px;
   font-weight:600;
   cursor:pointer;
 }
 .inv-btn[disabled]{ opacity:.45; cursor:default; }
-.inv-btn--primary{ background:#ef5327; color:#fff; border-color:#ef5124; }
 .inv-btn--ghost{ background:#f6f4ee; border-color:#e7e3db; }
 
 .inv-more{

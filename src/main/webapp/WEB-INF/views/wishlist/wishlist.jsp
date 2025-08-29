@@ -175,16 +175,12 @@ function fetchList(){
 ========================= */
 function renderCard(wishVO){
   const w = normalizeWish(wishVO);
-  if (!w.productNo || !w.wishlistNo) {
-    console.warn('[renderCard] skip (no productNo/wishlistNo):', wishVO);
-    return;
-  }
+  if (!w.productNo || !w.wishlistNo) return;
 
   const optParts = [];
   if (w.optionName)       optParts.push(escapeHtml(w.optionName));
   if (w.detailOptionName) optParts.push(escapeHtml(w.detailOptionName));
-  const optionText = optParts.join(' / '); // "색상 / 사이즈" 같이 노출됨
-
+  const optionText = optParts.join(' / ');
   const hasImg = !!w.img;
 
   var str = '';
@@ -193,12 +189,16 @@ function renderCard(wishVO){
       +  ' data-product-no="'  + w.productNo  + '"'
       +  ' data-wishlist-option-no="' + (w.wishlistOptionNo || '') + '"'
       +  ' data-detail-option-no="'   + (w.detailOptionNo   || '') + '"'
-      +  ' data-option-name="'        + (w.optionName   || '') + '"'
+      +  ' data-option-name="'        + (w.optionName       || '') + '"'
       +  ' data-detail-option-name="' + (w.detailOptionName || '') + '">';
+
+  // 한 줄 레이아웃
   str += '  <div class="image-row">';
+
+  // 체크박스
   str += '    <input type="checkbox" class="product-checkbox">';
 
-  // 썸네일 박스(이미지+플레이스홀더)
+  // 썸네일 (100x100)
   str += '    <div class="thumbbox">';
   if (hasImg){
     str += '      <img class="product-image" src="' + w.img + '" alt=""'
@@ -210,26 +210,29 @@ function renderCard(wishVO){
   }
   str += '    </div>';
 
+  // 상품 정보 (가격은 바닥 고정)
   str += '    <div class="product-info">';
   str += '      <div class="buy">' + escapeHtml(w.brand) + '</div>';
   str += '      <div class="product-row">';
   str += '        <span class="name">' + escapeHtml(w.title) + '</span>';
   if (optionText){
-    str += '    <span class="opt-sep"> / </span><span class="option-name">' + optionText + '</span>';
+    str += '        <span class="opt-sep"> / </span><span class="option-name">' + optionText + '</span>';
   }
   str += '      </div>';
   str += '      <div class="product-price">' + escapeHtml(w.priceText) + '</div>';
-  str += '      <div class="actions-row">';
-  str += '        <img class="icon-cart"  src="' + window.CTX + '/assets/icon/icon-shopping-cart.svg" alt="장바구니">';
-  str += '        <img class="icon-heart" src="' + window.CTX + '/assets/images/heart.jpg" alt="찜">';
-  str += '      </div>';
   str += '    </div>';
 
-  str += '  </div>';
-  str += '</div>';
+  str += '    <div class="product-actions">';
+  str += '      <button type="button" class="cart-btn">장바구니</button>';
+  str += '      <button type="button" class="wishlist-btn">찜 해제</button>';
+  str += '    </div>';
+
+  str += '  </div>'; // .image-row
+  str += '</div>';   // .a-product
 
   $('#wListArea').append(str);
 }
+
 
 /* =========================
    기념일 옵션 로드
@@ -297,15 +300,11 @@ function addSelected({
     +   ' data-option-name="'        + (optionName       || '') + '"'
     +   ' data-detail-option-name="' + (detailOptionName || '') + '">'
 
-    +   '<div class="thumbbox">'
     +     (u
             ? '<img class="selected-thumb" src="' + u + '"'
               + ' onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'block\';">'
-              + '<div class="img-ph" style="display:none;"></div>'
             : '<img class="selected-thumb" src="" style="display:none;">'
-              + '<div class="img-ph"></div>'
           )
-    +   '</div>'
 
     +   '<div class="selected-meta">'
     +     '<div class="selected-brand">' + escapeHtml(brand) + '</div>'
