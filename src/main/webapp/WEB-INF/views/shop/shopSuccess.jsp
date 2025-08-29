@@ -60,10 +60,10 @@
 
 				<div class="action-buttons">
 					<a class="btn secondary-btn"
-						href="${pageContext.request.contextPath}/shopform"> 다른 상품 올리기
+						href="${pageContext.request.contextPath}/shop/shopform"> 다른 상품 올리기
 					</a> 
 					<a class="btn primary-btn"
-						href="${pageContext.request.contextPath}/productPage?productNo=${productVO.product_no}">
+						href="${pageContext.request.contextPath}/shop/productPage?productNo=${productVO.product_no}">
 						상품 확인하러 가기 
 					</a>
 				</div>

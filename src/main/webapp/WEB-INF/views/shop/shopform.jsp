@@ -5,9 +5,9 @@
 
 <head>
 	<meta charset="utf-8">
-	<link rel="stylesheet" href="../../../assets/css/reset.css">
-	<link rel="stylesheet" href="../../../assets/css/Global.css">
-	<link rel="stylesheet" href="../../../assets/css/shop/shopform.css">
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/reset.css">
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/Global.css">
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/shop/shopform.css">
 </head>
 
 <body class="family">
@@ -23,7 +23,7 @@
 		<div class="sec-content-main">
 
 			<!-- 폼 시작 -->
-			<form action="/register" method="post" enctype="multipart/form-data">
+			<form action="${pageContext.request.contextPath}/shop/register" method="post" enctype="multipart/form-data">
 
 				<!-- 카테고리 -->
 				<main class="container">

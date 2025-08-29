@@ -44,7 +44,7 @@ public class ShopController {
 	
 	
 	//쇼핑몰리스트
-	@RequestMapping(value="/bottarimall", method= {RequestMethod.GET, RequestMethod.POST})
+	@RequestMapping(value="/shop/bottarimall", method= {RequestMethod.GET, RequestMethod.POST})
 	public String list(ProductVO productVO,Model model) {	
 		System.out.println("ShopController.list");
 		
@@ -61,8 +61,8 @@ public class ShopController {
 	
 	
 	
-	//상품등록폼x 
-	@RequestMapping(value="/shopform", method= {RequestMethod.GET, RequestMethod.POST})
+	//상품등록폼
+	@RequestMapping(value="/shop/productform", method= {RequestMethod.GET, RequestMethod.POST})
 	public String shopform() {	
 		System.out.println("ShopController.shopform");
 		
@@ -72,11 +72,13 @@ public class ShopController {
 
 
 	//상품등록
-    @RequestMapping(value = "/register", method = RequestMethod.POST)
+    @RequestMapping(value = "/shop/register", method = RequestMethod.POST)
     public String insert(@ModelAttribute ProductVO productVO, Model model) {
 
         System.out.println("ShopController.register");
-//        
+        System.out.println(productVO);
+        
+     //        
 //       System.out.println("받은 데이터: " + productVO);
 //      System.out.println("받은 파일: " + productVO.getProductImage().getOriginalFilename());
 //
@@ -172,7 +174,7 @@ public class ShopController {
     
 
 	// 상세페이지
-	@RequestMapping(value = "/productPage", method = { RequestMethod.GET, RequestMethod.POST })
+	@RequestMapping(value = "shop/productPage", method = { RequestMethod.GET, RequestMethod.POST })
 	public String productDetail(@RequestParam(required = false) Integer productNo, Model model) {
 		System.out.println("ShopController.productDetail");
 		System.out.println("상품번호: " + productNo);
@@ -193,8 +195,7 @@ public class ShopController {
 	}
     
     // 옵션상세(아이템) 리스트
-	
-	
+
 	@ResponseBody
 	@RequestMapping(value = "/api/optiondetail", method = { RequestMethod.GET, RequestMethod.POST })
 	public List<ProductOptionDetailVO> optionDetail(@RequestParam(value="optionNo") int optionNo) {
@@ -208,43 +209,8 @@ public class ShopController {
 	
     
 	
-/*	
-  //상세페이지
-    @RequestMapping(value="/productPage", method= {RequestMethod.GET, RequestMethod.POST})
-    public String productDetail(@RequestParam(required = false) Integer productNo, Model model) {    
-        System.out.println("ShopController.productDetail");
-        System.out.println("상품번호: " + productNo);
-        
-        if (productNo == null) {
-            System.out.println("상품번호가 없습니다!");
-            return "shop/shoppingMall";
-        }
-        
-        List<ProductVO> productList = shopService.exeProductDetail(productNo);
-            
-        if (productList != null && !productList.isEmpty()) {
-            // 첫 번째 상품 정보 (기본 정보)
-            ProductVO productVO = productList.get(0);
-            model.addAttribute("product", productVO);
-            
-            // 전체 리스트 (옵션, 이미지 포함)
-            model.addAttribute("productList", productList);
-        } else {
-            System.out.println("상품 정보를 찾을 수 없습니다!");
-            return "shop/shoppingMall";
-        }
-        
-        return "shop/productPage";
-    }
-    
-    */
-	
-	
-	
-	
-	
 	//펀딩상세페이지
-	@RequestMapping(value = "/productPage2", method = { RequestMethod.GET, RequestMethod.POST })
+	@RequestMapping(value = "shop/productPage2", method = { RequestMethod.GET, RequestMethod.POST })
 	public String fundingproductDetail(@RequestParam(value="productNo", required = false) Integer productNo, 
 									   @RequestParam(value="fundingNo", required = false) Integer fundingNo,
 			                           Model model) {
@@ -273,7 +239,7 @@ public class ShopController {
 
 
 	//장바구니등록 
-	@RequestMapping(value="/cartadd", method= {RequestMethod.GET, RequestMethod.POST})
+	@RequestMapping(value="cart/cartadd", method= {RequestMethod.GET, RequestMethod.POST})
 	public String insertCart(@RequestParam(value="productNo", required=false) Integer productNo,
 			 				 @RequestParam(value="categoryNo", required=false) Integer categoryNo,
 	                         @RequestParam(value="quantity", required=false) Integer quantity,
@@ -360,7 +326,7 @@ public class ShopController {
 	        }
 	        
 	        System.out.println("===== 장바구니 등록 완료 =====");
-	        return "redirect:/cart";
+	        return "redirect:cart/cart";
 	        
 	    } catch (Exception e) {
 	        System.out.println("장바구니 등록 중 오류 발생: " + e.getMessage());
@@ -372,7 +338,7 @@ public class ShopController {
 	
 	
 	//위시리스트 등록 - 수정된 버전
-	@RequestMapping(value="/wishlistadd", method= {RequestMethod.GET, RequestMethod.POST})
+	@RequestMapping(value="whishlist/wishlistadd", method= {RequestMethod.GET, RequestMethod.POST})
 	public String insertWishlist(@RequestParam(value="productNo", required=false) Integer productNo,
 	                            @RequestParam(value="quantity", required=false) Integer quantity,
 	                            @RequestParam(value="selectedOptions", required=false) String selectedOptionsJson, // 옵션 정보 추가
@@ -467,7 +433,7 @@ public class ShopController {
 	        }
 	        
 	        System.out.println("===== 위시리스트 등록 완료 =====");
-	        return "redirect:/wishlist";
+	        return "redirect:wishlist/wishlist";
 	        
 	    } catch (Exception e) {
 	        System.out.println("위시리스트 등록 중 오류 발생: " + e.getMessage());
