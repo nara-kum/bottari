@@ -164,7 +164,7 @@
   // 라우팅
   $(document)
     .on("click", ".create-button", function(){
-      location.href = CTX + "invitation/form";
+      location.href = CTX + "/invitation/form";
     })
     .on("click", ".inv-card .btn-edit", function(){
       var id = $(this).closest(".inv-card").data("id") || "";
@@ -172,7 +172,7 @@
     })
     .on("click", ".inv-card .inv-thumb", function(){
       var id = $(this).closest(".inv-card").data("id") || "";
-      location.href = CTX + "invitation/invitation" + (id ? ("?no=" + id) : "");
+      location.href = CTX + "/invitation/invitation" + (id ? ("?no=" + id) : "");
     });
 
   // 시작!

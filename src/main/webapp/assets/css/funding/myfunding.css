@@ -101,7 +101,8 @@
 /* 버튼 영역: 세로 스택 (모양은 .btn-funding1에 맡김) */
 .funding-action-wrapper{
   width:160px;
-  padding-right:30px;
+  /* flex:0 0 160px;  ← 고정폭으로 두고 싶으면 주석 해제 */
+  padding-right:0;         /* ← 이게 핵심! */
   display:flex;
   justify-content:flex-end;
 }
@@ -111,6 +112,21 @@
   gap:8px;
   align-items:flex-end;     /* 오른쪽 정렬 */
 }
+.card-box{ --pad-x: 30px; }
 
-/* 👉 크기/패딩/모양은 wishlist.css 의 .btn-funding1을 그대로 사용.
-      여기서는 '배치'만 제어하고, 버튼 자체에는 가급적 손대지 않습니다. */
+.product-header{
+  padding:15px var(--pad-x) 7px var(--pad-x);
+}
+
+.product-body{
+  padding:10px var(--pad-x);
+}
+
+/* 버튼 컨테이너는 우측 패딩 없음 (본문 패딩만 사용) */
+.funding-action-wrapper{
+  width:160px;
+  /* flex:0 0 160px; */     /* 필요시 고정폭 */
+  padding-right:0;
+  display:flex;
+  justify-content:flex-end;
+}

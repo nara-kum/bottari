@@ -22,13 +22,13 @@
     <div class="sec-sub-title">
       <div class="tab-row" role="navigation">
         <h2 class="header-sub is-active">
-          <a href="${pageContext.request.contextPath}/wishlist" aria-current="page">펀딩 관리</a>
+          <a href="${pageContext.request.contextPath}/funding/wish" aria-current="page">펀딩 관리</a>
         </h2>
         <h2 class="header-sub">
-          <a href="${pageContext.request.contextPath}/myfunding">마이 펀딩</a>
+          <a href="${pageContext.request.contextPath}/funding/my">마이 펀딩</a>
         </h2>
         <h2 class="header-sub">
-          <a href="${pageContext.request.contextPath}/friendfunding">친구 펀딩</a>
+          <a href="${pageContext.request.contextPath}/funding/friend">친구 펀딩</a>
         </h2>
       </div>
     </div>
@@ -383,7 +383,7 @@ function startFunding(){
     if (json && json.result === 'success') {
       sessionStorage.setItem('NEW_FUNDING_ITEMS', JSON.stringify(items));
       alert('펀딩이 생성되었습니다.');
-      location.href = window.CTX + 'funding/my';
+      location.href = window.CTX + '/funding/my';
     } else {
       alert('처리에 실패했습니다. 잠시 후 다시 시도해주세요.');
     }

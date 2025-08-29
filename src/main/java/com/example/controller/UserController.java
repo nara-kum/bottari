@@ -73,7 +73,7 @@ public class UserController {
 		session.setAttribute("authUser", authUser);
 		System.out.println(authUser);
 
-		return "redirect:/bottarimall";
+		return "redirect:/shop/bottarimall";
 	}
 
 	// 로그아웃
@@ -129,7 +129,7 @@ public class UserController {
 
 		authUser.setName(userVO.getName());
 		
-		return "redirect:/bottarimall"; //보따리 몰로 이동
+		return "redirect:/user/bottarimall"; //보따리 몰로 이동
 	    
 	}
 	

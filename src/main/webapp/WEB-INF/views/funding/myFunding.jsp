@@ -24,13 +24,13 @@
     <div class="sec-sub-title">
       <div class="tab-row" role="navigation">
         <h2 class="header-sub">
-          <a href="${pageContext.request.contextPath}/wishlist">펀딩 관리</a>
+          <a href="${pageContext.request.contextPath}/funding/wish">펀딩 관리</a>
         </h2>
         <h2 class="header-sub is-active">
-          <a href="${pageContext.request.contextPath}/myfunding" aria-current="page">마이 펀딩</a>
+          <a href="${pageContext.request.contextPath}/funding/my" aria-current="page">마이 펀딩</a>
         </h2>
         <h2 class="header-sub">
-          <a href="${pageContext.request.contextPath}/friendfunding">친구 펀딩</a>
+          <a href="${pageContext.request.contextPath}/funding/friend">친구 펀딩</a>
         </h2>
       </div>
     </div>
@@ -127,8 +127,8 @@
           '<div class="price-participation">', fmtKRW(amount), '</div>',
           '<div class="funding-action-wrapper">',
             '<div class="action-buttons">',
-              '<button class="btn-funding1 btn-cancel"  data-funding-no="', fundingNo, '">펀딩 중단</button>',
-              '<button class="btn-funding1 btn-complete" data-funding-no="', fundingNo, '">펀딩 완료</button>',
+              '<button class="btn-funding2 btn-cancel"  data-funding-no="', fundingNo, '">펀딩환불</button>',
+              '<button class="btn-funding2 btn-complete" data-funding-no="', fundingNo, '">펀딩완료</button>',
             '</div>',
           '</div>',
         '</div>',

@@ -199,7 +199,7 @@ $(document).on("click", ".gift-icon", function(){
     var loggedIn = res && res.result === "success";
     if (loggedIn){
       var qs = $.param({ productNo: productNo, fundingNo: fundingNo });
-      location.href = CTX + "/productPage2?" + qs;
+      location.href = CTX + "/shop/productPage2?" + qs;
     } else {
       location.href = LOGIN_URL;
     }
@@ -207,7 +207,7 @@ $(document).on("click", ".gift-icon", function(){
   .fail(function(){
     // 네트워크/기타 오류시 서버 권한체크에 맡김
     var qs = $.param({ productNo: productNo, fundingNo: fundingNo });
-    location.href = CTX + "/productPage2?" + qs;
+    location.href = CTX + "/shop/productPage2?" + qs;
   });
 });
 
