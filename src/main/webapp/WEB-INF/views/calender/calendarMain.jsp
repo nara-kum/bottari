@@ -1099,7 +1099,7 @@
 			          + '<div class="column-flex-box celebrate-card-area row-align no-event">'
 			          + '  <img class="middle-icon" src="../../../assets/icon/icon-cross.svg" />'
 			          + '  <div class="text-18">초대장이 없어요</div>'
-			          + '  <button class="btn-basic btn-orange size-normal">초대장 만들기</button>'
+			          + '  <a href="/invitation/list"><button class="btn-basic btn-orange size-normal">초대장 만들기</button></a>'
 			          + '</div>';
 			    } else {
 			        var inv = data.invitationList[0]; // 필요한 만큼 루프 돌려도 됨
@@ -1119,7 +1119,7 @@
 			          + '<div class="column-flex-box celebrate-card-area row-align no-event">'
 			          + '  <img class="middle-icon" src="../../../assets/icon/icon-cross.svg" />'
 			          + '  <div class="text-18">펀딩 리스트가 비었어요</div>'
-			          + '  <button class="btn-basic btn-orange size-normal">펀딩 관리하기</button>'
+			          + '  <a href="/funding/wish"><button class="btn-basic btn-orange size-normal">펀딩 관리하기</button></a>'
 			          + '</div>';
 			    } else {
 			        html += ''
@@ -1142,7 +1142,7 @@
 			
 			        html += ''
 			          + '  <div class="show-detail">'
-			          + '    <a href="/myfunding">전체보기&gt;</a>'
+			          + '    <a href="/funding/myfunding">전체보기&gt;</a>'
 			          + '  </div>'
 			          + '</div>';
 			    }
