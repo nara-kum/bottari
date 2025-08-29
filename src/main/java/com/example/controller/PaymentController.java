@@ -13,8 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.example.service.PaymentService;
 import com.example.vo.CheckOutVO;
 import com.example.vo.CheckoutFundingVO;
-import com.example.vo.PaymentGoodsOptionVO;
-import com.example.vo.PaymentGoodsVO;
 import com.example.vo.PaymentVO;
 import com.example.vo.UserVO;
 
@@ -72,19 +70,23 @@ public class PaymentController {
 	
 	
 	
-	//펀딩일 때 
+	// 펀딩 결제일 때 리스트 조회 함수
 	@RequestMapping(value = "/checkout_funding", method = {RequestMethod.GET,RequestMethod.POST})
-	public String checkoutFundingList(@RequestParam(value="funding_no", required=false, defaultValue="0") int funding_no,
-									  @RequestParam(value="count", required=false, defaultValue="1") int count, 
+	public String checkoutFundingList(@RequestParam("funding_no") int funding_no,
+									  @RequestParam("count") int count, 
 									  Model model) {
 		System.out.println("PaymentController.checkoutFundingList()");
 		
 		if(funding_no != 0 && count >= 1) {
 			List<CheckoutFundingVO> checkoutFundingList = paymentservice.execheckoutFundingList(funding_no);
+			int percent = checkoutFundingList.get(0).getPercent();
+			int total_percent = percent*count;
 			
 			model.addAttribute("fList", checkoutFundingList);
 			model.addAttribute("amount", checkoutFundingList.get(0).getAmount());
 			model.addAttribute("percent", checkoutFundingList.get(0).getPercent());
+			model.addAttribute("total_percent", total_percent);
+			model.addAttribute("total_amount", count*checkoutFundingList.get(0).getAmount());
 			
 			return "/shop/checkout_funding";
 		} else {

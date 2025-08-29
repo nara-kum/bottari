@@ -86,13 +86,13 @@
                     <div class="payment-method-box">
                         <div class="text-18 bold margin-10">결제정보</div>
                         <div class="between-flex-box margin-10 row-align">
-                            <div class="text-14">총 상품금액(${param.count * percent}%)</div>
-                            <div class="text-14"><fmt:formatNumber value="${param.count * amount}" type="currency" currencySymbol="" />원</div>
+                            <div class="text-14">총 상품금액(${total_percent}%)</div>
+                            <div class="text-14"><fmt:formatNumber value="${total_amount}" type="currency" currencySymbol="" />원</div>
                         </div>
                     </div>
                     <div class="text-16 margin-10">최종 결제금액</div>
 
-                    <button id="paymentButton" class="btn-basic btn-orange size-large text-16 right-align"><fmt:formatNumber value="${param.count * amount}" type="currency" currencySymbol="" />원 결제하기</button>
+                    <button id="paymentButton" class="btn-basic btn-orange size-large text-16 right-align"><fmt:formatNumber value="${total_amount}" type="currency" currencySymbol="" />원 결제하기</button>
                 </div>
             </div>
 
@@ -163,7 +163,33 @@
 			
 			
 			//결제하기 버튼이 클릭 되었을 때
-			
+			document.getElementById('paymentForm').onsubmit = function(e) {
+				
+				console.log('결제버튼 클릭');
+				
+				
+				// 결제 방식 선택 확인
+				if(!paymentMethod || paymentMethod === 'cashReceipt') {
+					alert('결제 방식을 선택해주세요');
+					return;
+				}
+				
+				// 상품 번호 수접
+				
+				// 폼 데이터 설정 (오타 수정: hiddenPaymentmethod -> hiddenPaymentMethod)
+				document.getElementById('hiddenPaymentMethod').value = paymentMethod;
+				document.getElementById('hiddenCashReceipt').value = (count % 2 !== 0) ? 'true' : 'false';
+				
+				// 설정 후 값 확인
+				console.log('=== 값 설정 후 ===');
+				console.log('hiddenPaymentMethod.value:', document.getElementById('hiddenPaymentMethod').value);
+				console.log('hiddenCashReceipt.value:', document.getElementById('hiddenCashReceipt').value);
+				
+				// 폼 전송
+				this.submit();
+				
+				return false;
+			}
 			
 			// check.svg 가 클릭 되었을 때의 함수
 			function clickedButton() {

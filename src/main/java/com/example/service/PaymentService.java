@@ -50,7 +50,9 @@ public class PaymentService {
 		
 		return checkoutList;
 	}
-
+	
+	
+	// 펀딩 결제일 때 리스트 조회 함수
 	public List<CheckoutFundingVO> execheckoutFundingList(int funding_no) {
 		System.out.println("PaymentService.execheckoutFundingList()");
 

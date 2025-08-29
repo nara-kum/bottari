@@ -1,7 +1,6 @@
 package com.example.repository;
 
 import java.util.List;
-import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +10,6 @@ import com.example.vo.CheckAddressVO;
 import com.example.vo.CheckOutVO;
 import com.example.vo.CheckoutFundingVO;
 import com.example.vo.DetailOptionVO;
-import com.example.vo.PaymentGoodsOptionVO;
-import com.example.vo.PaymentGoodsVO;
 import com.example.vo.PaymentVO;
 
 @Repository
@@ -44,6 +41,7 @@ public class PaymentRepository {
 		return detailList;
 	}
 	
+	// 펀딩 결제일 때 리스트 조회 함수
 	public List<CheckoutFundingVO> checkoutFundingList(int funding_no) {
 		System.out.println("PaymentRepository.checkoutFundingList()");
 		
@@ -52,18 +50,6 @@ public class PaymentRepository {
 		System.out.println(checkoutFundingList);
 		
 		return checkoutFundingList;
-	}
-	
-	public int savePayments(Map<String, Object> paymentMap) {
-		System.out.println("PaymentRepository.savePayments()");
-		
-		List<PaymentVO> paymentList = (List<PaymentVO>) paymentMap.get("paymentList");
-		List<PaymentGoodsVO> paymentGoodsList = (List<PaymentGoodsVO>) paymentMap.get("paymentGoodsList");
-		List<PaymentGoodsOptionVO> paymentGoodsOptionList = (List<PaymentGoodsOptionVO>) paymentMap.get("paymentGoodsOptionList");
-		
-		
-		
-		return 0;
 	}
 	
 	public List<CheckAddressVO> selectAddress(List<Integer> productIdList) {
