@@ -31,7 +31,7 @@
 		</foreach>
 	</select>
 	
-	<select id="selectDetail">
+	<select id="selectDetail" resultType="com.example.vo.DetailOptionVO">
 		<![CDATA[
 			SELECT	co.detailoption_no,
 			        od.detailoption_name
@@ -60,4 +60,42 @@
 			where fp.funding_no = #{funding_no}
 		]]>
 	</select>
+	
+	<!-- 주소 가져오기 -->
+	<select id="selectAddress" resultType="com.example.vo.CheckAddressVO">
+		<![CDATA[
+			SELECT	product_no,
+					shipping_yn,
+					zipcode,
+			        address,
+			        detail_address
+			FROM product
+			WHERE product_no IN
+		]]>
+		<foreach collection="list" item="productIdList" open="(" close=")" separator=",">
+			#{productIdList}
+		</foreach>
+	</select>
+	
+	<insert id="insertpaymentList" parameterType="com.example.vo.PaymentVO" useGeneratedKeys="true" keyProperty="payment_no">
+		<![CDATA[
+			INSERT INTO payment (user_no, product_no, order_no, zipcode, address, detail_address, payment_date, payment_method, payment_status, delivery_status, payment_amount, service_type)
+			VALUES(#{user_no}, #{product_no}, #{order_no}, #{zipcode}, #{address}, #{detail_address}, NOW(), #{payment_method}, #{payment_status}, #{delivery_status}, #{payment_amount}, #{service_type})
+		]]>
+	</insert>
+	
+	<insert id="insertpaymentgoodsList" parameterType="com.example.vo.PaymentVO" useGeneratedKeys="true" keyProperty="payment_goods_no">
+		<![CDATA[
+			INSERT INTO payment_goods (payment_no, product_no, quantity)
+			VALUES(#{payment_no}, #{product_no}, #{quantity})
+		]]>
+	</insert>
+	
+	<insert id="insertpaymentgoodsoptionList" parameterType="com.example.vo.PaymentVO">
+		<![CDATA[
+			INSERT INTO payment_goods_option (payment_goods_no, detailoption_no)
+			VALUES(#{payment_goods_no}, #{detailoption_no})
+		]]>
+	</insert>
+
 </mapper>

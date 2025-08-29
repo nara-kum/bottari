@@ -7,7 +7,7 @@ public class PaymentVO {
 	private int fundingproduct_no;		//펀딩 상품 번호
 	private int product_no;				//상품 번호
 	private int order_no;				//주문번호
-	private int zipcode;				//배송지 우편번호
+	private String zipcode;				//배송지 우편번호
 	private String address;				//주소
 	private String detail_address;		//상세주소
 	private String payment_date;		//결제일
@@ -16,10 +16,13 @@ public class PaymentVO {
 	private String delivery_status;		//배송상태
 	private int payment_amount;			//결제금액
 	private String service_type;		//서비스종류(일반, 펀딩)
+	private int payment_goods_no;
+	private int quantity;
+	private int detailoption_no;
 	//editor
-	public PaymentVO(int payment_no, int user_no, int fundingproduct_no, int product_no, int order_no, int zipcode,
+	public PaymentVO(int payment_no, int user_no, int fundingproduct_no, int product_no, int order_no, String zipcode,
 			String address, String detail_address, String payment_date, String payment_method, String payment_status,
-			String delivery_status, int payment_amount, String service_type) {
+			String delivery_status, int payment_amount, String service_type, int payment_goods_no, int quantity, int detailoption_no) {
 		super();
 		this.payment_no = payment_no;
 		this.user_no = user_no;
@@ -35,6 +38,9 @@ public class PaymentVO {
 		this.delivery_status = delivery_status;
 		this.payment_amount = payment_amount;
 		this.service_type = service_type;
+		this.payment_goods_no = payment_goods_no;
+		this.quantity = quantity;
+		this.detailoption_no = detailoption_no;
 	}
 	public PaymentVO() {
 		super();
@@ -70,10 +76,10 @@ public class PaymentVO {
 	public void setOrder_no(int order_no) {
 		this.order_no = order_no;
 	}
-	public int getZipcode() {
+	public String getZipcode() {
 		return zipcode;
 	}
-	public void setZipcode(int zipcode) {
+	public void setZipcode(String zipcode) {
 		this.zipcode = zipcode;
 	}
 	public String getAddress() {
@@ -123,6 +129,24 @@ public class PaymentVO {
 	}
 	public void setService_type(String service_type) {
 		this.service_type = service_type;
+	}
+	public int getQuantity() {
+		return quantity;
+	}
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
+	}
+	public int getDetailoption_no() {
+		return detailoption_no;
+	}
+	public void setDetailoption_no(int detailoption_no) {
+		this.detailoption_no = detailoption_no;
+	}
+	public int getPayment_goods_no() {
+		return payment_goods_no;
+	}
+	public void setPayment_goods_no(int payment_goods_no) {
+		this.payment_goods_no = payment_goods_no;
 	}
 	//method normal
 	@Override

@@ -1,9 +1,7 @@
 package com.example.controller;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -132,8 +130,6 @@ public class PaymentController {
         int user_no = authuser.getUserNo();
         
         List<PaymentVO> paymentList = new ArrayList<>();
-        List<PaymentGoodsVO> paymentGoodsList = new ArrayList<>();
-        List<PaymentGoodsOptionVO> paymentGoodsOptionList = new ArrayList<>();
         
         for(int i = 0 ; i < product_no.length ; i++) {
         	PaymentVO paymentvo = new PaymentVO();
@@ -144,42 +140,20 @@ public class PaymentController {
         	paymentvo.setPayment_status("완료");
         	paymentvo.setDelivery_status("준비중");
         	paymentvo.setPayment_amount(item_total[i]);
-        	paymentvo.setService_type("normal(cashreceipt:" + cashReceiptRequested + ")");
+        	paymentvo.setService_type("n(" + cashReceiptRequested + ")");
+        	paymentvo.setQuantity(quantity[i]);
+        	paymentvo.setDetailoption_no(detailoption_no[i]);
+        	
         	
         	paymentList.add(paymentvo);
         }
         
-        for(int i = 0 ; i < quantity.length ; i++) {
-        	PaymentGoodsVO paymentGoods = new PaymentGoodsVO();
-        	
-        	paymentGoods.setProduct_no(product_no[i]);
-        	paymentGoods.setQuantity(quantity[i]);
-        	
-        	paymentGoodsList.add(paymentGoods);
-        }
-        
-        for(int i = 0 ; i < detailoption_no.length ; i++) {
-        	PaymentGoodsOptionVO paymentGoodsOption = new PaymentGoodsOptionVO();
-        	
-        	paymentGoodsOption.setDetailoprion_no(detailoption_no[i]);
-        	
-        	paymentGoodsOptionList.add(paymentGoodsOption);
-        }
-        
         System.out.println(paymentList);
-        System.out.println(paymentGoodsList);
-        System.out.println(paymentGoodsOptionList);
+
         
-        
-        Map<String, Object> paymentMap = new HashMap<>();
-        
-        paymentMap.put("paymentList", paymentList);
-        paymentMap.put("paymentGoodsList", paymentGoodsList);
-        paymentMap.put("paymentGoodsOptionList", paymentGoodsOptionList);
-        
-        paymentservice.exepayment(paymentMap);
+        paymentservice.exepayment(paymentList);
 		
-		return "checkout/success";
+		return "shop/success";
 	}
 	
 	

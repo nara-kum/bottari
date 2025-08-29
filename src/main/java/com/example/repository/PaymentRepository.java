@@ -7,6 +7,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.example.vo.CheckAddressVO;
 import com.example.vo.CheckOutVO;
 import com.example.vo.CheckoutFundingVO;
 import com.example.vo.DetailOptionVO;
@@ -54,6 +55,7 @@ public class PaymentRepository {
 	}
 	
 	public int savePayments(Map<String, Object> paymentMap) {
+		System.out.println("PaymentRepository.savePayments()");
 		
 		List<PaymentVO> paymentList = (List<PaymentVO>) paymentMap.get("paymentList");
 		List<PaymentGoodsVO> paymentGoodsList = (List<PaymentGoodsVO>) paymentMap.get("paymentGoodsList");
@@ -62,5 +64,40 @@ public class PaymentRepository {
 		
 		
 		return 0;
+	}
+	
+	public List<CheckAddressVO> selectAddress(List<Integer> productIdList) {
+		System.out.println("PaymentRepository.selectAddress()");
+		
+		List<CheckAddressVO> addressList = sqlsession.selectList("checkout.selectAddress", productIdList);
+		
+		return addressList;
+	}
+	
+	public PaymentVO insertPaymentTable(PaymentVO vo) {
+		System.out.println("PaymentRepository.insertPaymentTable()");
+		
+		System.out.println(vo);
+		
+		sqlsession.insert("checkout.insertpaymentList", vo);
+		
+		
+		return vo;
+	}
+	
+	public PaymentVO insertPaymentgoodsTable(PaymentVO vo) {
+		System.out.println("PaymentRepository.insertPaymentgoodsTable()");
+		
+		sqlsession.insert("checkout.insertpaymentgoodsList", vo);
+		
+		return vo;
+	}
+	
+	public PaymentVO insertPaymentGoodsOptionTable(PaymentVO vo) {
+		System.out.println("PaymentRepository.insertPaymentGoodsOptionTable()");
+		
+		sqlsession.insert("checkout.insertpaymentgoodsoptionList", vo);
+		
+		return vo;
 	}
 }

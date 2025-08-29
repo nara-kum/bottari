@@ -102,7 +102,7 @@
 						<!-- 현금 영수증 여부 -->
 						<input type="hidden" name="cashReceiptRequested" id="hiddenCashReceipt" value="false">
 						<!-- 최종 결제 가격 -->
-						<input type="hidden" name="totalAmount" value="${final_amount}">
+						<input type="hidden" name="totalAmount" value="${total_amount + shipping_cost}">
 						<!-- 총 갯수 (오타 수정: totalQuantitiy -> totalQuantity) -->
 						<input type="hidden" name="totalQuantity" value="${total_quantity}">
 						<!-- 배달요금 -->
@@ -117,7 +117,7 @@
 						</c:forEach>
 						
                     	<button type="submit" id="paymentButton" class="btn-basic btn-orange size-large text-16 right-align">
-                    		<fmt:formatNumber value="${total_amount}" type="currency" currencySymbol="" />원 결제하기
+                    		<fmt:formatNumber value="${total_amount + shipping_cost}" type="currency" currencySymbol="" />원 결제하기
                     	</button>
 					</form>
                 </div>
