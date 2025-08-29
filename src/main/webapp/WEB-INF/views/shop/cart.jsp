@@ -37,7 +37,7 @@
 										<div class="column-flex-box column-align size-normal">
 											<input type="checkbox" id="select-${vo.cart_no}" class="cart-checkbox">
 										</div>
-										<img class="list-img-100" src="${vo.itemimg}" alt="상품 이미지">
+										<img class="list-img-100" src="${pageContext.request.contextPath}/upload/${vo.itemimg}" alt="상품 이미지">
 										<div class="column-flex-box gap-10 margin-5">
 											<p class="text-16">${vo.brand}</p>
 											<p class="item-name">${vo.title}</p>
@@ -100,8 +100,8 @@
 						<div class="text-18 bold">총 결제금액: <span id="final-total"><fmt:formatNumber value="${total_price + shipping_cost}" type="currency" currencySymbol="" /></span>원</div>
 					</div>
 
-					<div class="buy-button" id="purchase-btn">
-						<button>구매하기</button>
+					<div class="buy-button">
+						<button id="purchase-btn">구매하기</button>
 					</div>
 				</div>
 		</div>

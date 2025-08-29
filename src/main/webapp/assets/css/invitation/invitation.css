@@ -112,7 +112,7 @@
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  background: #ef5124;
+  background: #ef5327;
   color: #fff;
   font-weight: 500;
   display: flex;
@@ -122,8 +122,8 @@
 .gift-cta{
   width: 100%;
   appearance: none;
-  border: 1px solid #ef5124;
-  background: #ef5124;
+  border: 1px solid #ef5327;
+  background: #ef5327;
   color: #fff;
   border-radius: 999px;
   padding: 12px 14px;
@@ -201,10 +201,10 @@
 /* gift-icon 전역 버튼 효과 제거 */
 .gift-panel .gift-icon{
   appearance: none;
-  border: 1px solid #ef5124;
+  border: 1px solid #ef5327;
   width: 48px; height: 48px; border-radius: 50%;
   display: inline-flex; align-items: center; justify-content: center;
-  background: #ef5124; color: #fff; font-weight: 700; cursor: pointer;
+  background: #ef5327; color: #fff; font-weight: 700; cursor: pointer;
 
   /* 전역 효과 끄기 */
   transition: none; transform: none; box-shadow: none; outline: none;

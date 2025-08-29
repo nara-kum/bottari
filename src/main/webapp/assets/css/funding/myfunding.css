@@ -85,7 +85,7 @@
   width:200px; height:10px; background:#929292;
   border-radius:5px; overflow:hidden;
 }
-.progress-fill{ height:100%; background:#EF5124; transition:width .3s ease; }
+.progress-fill{ height:100%; background:#ef5327; transition:width .3s ease; }
 
 .percent{
   width:48px;

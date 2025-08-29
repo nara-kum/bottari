@@ -16,8 +16,8 @@
 
 .create-button{
   appearance:none;
-  border:1px solid #EF5124;
-  background:#EF5124;
+  border:1px solid #ef5327;
+  background:#ef5327;
   color:#fff;
   padding:10px 14px;
   border-radius:8px;
@@ -26,7 +26,7 @@
 }
 .create-button:hover{ filter:brightness(.96); }
 .create-button:focus-visible{
-  outline:2px solid #EF5124;
+  outline:2px solid #ef5327;
   outline-offset:2px;
 }
 
@@ -68,7 +68,7 @@
   padding:4px 8px;
   border-radius:999px;
   background:#ffedd5;
-  color:#ef5124;
+  color:#ef5327;
   font-weight:700;
   font-size:12px;
 }
@@ -123,7 +123,7 @@
   cursor:pointer;
 }
 .inv-btn[disabled]{ opacity:.45; cursor:default; }
-.inv-btn--primary{ background:#ef5124; color:#fff; border-color:#ef5124; }
+.inv-btn--primary{ background:#ef5327; color:#fff; border-color:#ef5124; }
 .inv-btn--ghost{ background:#f6f4ee; border-color:#e7e3db; }
 
 .inv-more{
