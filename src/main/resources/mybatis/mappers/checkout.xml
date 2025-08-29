@@ -31,6 +31,7 @@
 		</foreach>
 	</select>
 	
+	<!-- 디테일 옵션 조회 -->
 	<select id="selectDetail" resultType="com.example.vo.DetailOptionVO">
 		<![CDATA[
 			SELECT	co.detailoption_no,
@@ -80,6 +81,14 @@
 		<foreach collection="list" item="productIdList" open="(" close=")" separator=",">
 			#{productIdList}
 		</foreach>
+	</select>
+	
+	<select id="selectFundingOption" resultType="com.example.vo.FundingOptionViewVO">
+		<![CDATA[
+			SELECT	detailoption_no
+			FROM funding_option
+			WHERE funding_no = #{funding_no}
+		]]>
 	</select>
 	
 	<insert id="insertpaymentList" parameterType="com.example.vo.PaymentVO" useGeneratedKeys="true" keyProperty="payment_no">

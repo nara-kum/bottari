@@ -267,7 +267,7 @@
 				// 구매 페이지로 이동 (선택된 아이템들의 정보와 함께)
 				const form = document.createElement('form');
 				form.method = 'GET';
-				form.action = '/checkout';
+				form.action = '/payment/checkout';
 				
 				selectedItems.forEach(function(cartNo) {
 					const input = document.createElement('input');

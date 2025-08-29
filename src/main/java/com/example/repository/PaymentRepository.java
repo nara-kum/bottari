@@ -10,6 +10,7 @@ import com.example.vo.CheckAddressVO;
 import com.example.vo.CheckOutVO;
 import com.example.vo.CheckoutFundingVO;
 import com.example.vo.DetailOptionVO;
+import com.example.vo.FundingOptionViewVO;
 import com.example.vo.PaymentVO;
 
 @Repository
@@ -52,6 +53,25 @@ public class PaymentRepository {
 		return checkoutFundingList;
 	}
 	
+	// 상품 주소 단일로 가져오기
+	public List<CheckAddressVO> selectProductAddress(List<Integer> productNoList) {
+		System.out.println("PaymentRepository.selectProductAddress()");
+		
+		List<CheckAddressVO> addressList  = sqlsession.selectList("checkout.selectAddress", productNoList);
+		
+		return addressList;
+	}
+	
+	// 펀딩옵션 가져오기
+	public List<FundingOptionViewVO> selectDetailList(int funding_no) {
+		System.out.println("PaymentRepository.selectDetailList()");
+		
+		List<FundingOptionViewVO> fundingOptionList = sqlsession.selectList("checkout.selectFundingOption", funding_no);
+		
+		return fundingOptionList;
+	}
+	
+	// 상품 주소정보 뭉탱이로 가져오기
 	public List<CheckAddressVO> selectAddress(List<Integer> productIdList) {
 		System.out.println("PaymentRepository.selectAddress()");
 		
@@ -60,6 +80,7 @@ public class PaymentRepository {
 		return addressList;
 	}
 	
+	// 데이터베이스에 저장
 	public PaymentVO insertPaymentTable(PaymentVO vo) {
 		System.out.println("PaymentRepository.insertPaymentTable()");
 		
