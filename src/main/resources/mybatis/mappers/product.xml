@@ -122,12 +122,23 @@
 	
 	
 	
-	<!-- 펀딩상세페이지 
-	<select id = "selectOneFunding" parameterType="int" resultType="com.example.vo.WishlistVO">
+	<!-- 펀딩상세페이지 -->
+	<select id = "selectOneFunding" parameterType="int" resultType="com.example.vo.FundingProductVO">
 		<![CDATA[
+			select 	 fp.funding_no
+					,fp.user_no
+		            ,fp.event_no
+		            ,fp.wishlist_no
+		            ,fp.product_no
+		            ,fp.percent
+		            ,fp.amount
+		            ,fp.funding_status
+		            ,fp.funding_date
+			from funding_product fp
+			where fp.funding_no = #{fundingNo}
 		]]>	
 	</select>
-	-->
+	
 	
 	
 

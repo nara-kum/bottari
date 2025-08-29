@@ -18,6 +18,7 @@ import com.example.vo.CartDetailOptionVO;
 import com.example.vo.CartVO;
 import com.example.vo.DetailedImageVO;
 import com.example.vo.FundingOptionViewVO;
+import com.example.vo.FundingProductVO;
 import com.example.vo.ProductOptionDetailVO;
 import com.example.vo.ProductOptionVO;
 import com.example.vo.ProductVO;
@@ -233,13 +234,18 @@ public class ShopService {
 		
 		//펀딩번호를 알고있다 fundingNo
 		//펀딩프로덕트VO 가져오기
+		FundingProductVO fundingProductVO = shopRepository.FundingProductSelectOne(fundingNo);
+		System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~");
+		System.out.println("지금여기확인:" + fundingNo);
+		System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~");
+		
 		
 		
 		//펀딩번호(상품) 오션명들(옵션)
 		// 사이즈-데   용량-2G   칼라-빨강
 
 		List<FundingOptionViewVO> fundingOptionList = shopRepository.fundingOptionSelectList(fundingNo);
-		System.out.println("******여기확인:" + fundingOptionList);
+		System.out.println(fundingOptionList);
 		
 		//지금까지 결재액
 		int fundingTotalPay = shopRepository.fundingTotalPay(fundingNo);

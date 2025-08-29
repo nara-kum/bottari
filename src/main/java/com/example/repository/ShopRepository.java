@@ -10,6 +10,7 @@ import com.example.vo.CartDetailOptionVO;
 import com.example.vo.CartVO;
 import com.example.vo.DetailedImageVO;
 import com.example.vo.FundingOptionViewVO;
+import com.example.vo.FundingProductVO;
 import com.example.vo.ProductOptionDetailVO;
 import com.example.vo.ProductOptionVO;
 import com.example.vo.ProductVO;
@@ -91,7 +92,18 @@ public class ShopRepository {
 	
 	
 	
+	//펀딩번호
+	public FundingProductVO FundingProductSelectOne(int fundingNo) {
+		System.out.println("ShopRepository.FundingProductSelectOne");
+		
+		FundingProductVO fundingProductVO = sqlSession.selectOne("product.selectOneFunding", fundingNo);
+		
+		return fundingProductVO;	
+	}
 	
+	
+	
+	//펀딩상품의 옵션 조회
 	public List<FundingOptionViewVO> fundingOptionSelectList(int fundingNo){
 		System.out.println("ShopRepository.fundingOptionSelectList");
 		System.out.println("조회할 펀딩번호: " + fundingNo);
@@ -105,16 +117,16 @@ public class ShopRepository {
 	}
 	
 	
+	//펀딩별 현재 총결제액
 	public int fundingTotalPay(int fundingNo){
 		System.out.println("ShopRepository.fundingTotalPay");
 
 		int fundingTotalPay = sqlSession.selectOne("product.selectTotalPayForFundingNo", fundingNo);
+		System.out.println("@@@@@@@@" + fundingTotalPay);
 		return fundingTotalPay;
 	}
 	
-	
-	
-	
+
 	
 	
 	
