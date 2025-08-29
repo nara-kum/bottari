@@ -61,8 +61,8 @@ public class PaymentVO {
 	public int getFunding_no() {
 		return funding_no;
 	}
-	public void setFunding_no(int fundingproduct_no) {
-		this.funding_no = fundingproduct_no;
+	public void setFunding_no(int funding_no) {
+		this.funding_no = funding_no;
 	}
 	public int getProduct_no() {
 		return product_no;
@@ -151,7 +151,7 @@ public class PaymentVO {
 	//method normal
 	@Override
 	public String toString() {
-		return "PaymentVO [payment_no=" + payment_no + ", user_no=" + user_no + ", fundingproduct_no="
+		return "PaymentVO [payment_no=" + payment_no + ", user_no=" + user_no + ", funding_no="
 				+ funding_no + ", product_no=" + product_no + ", order_no=" + order_no + ", zipcode=" + zipcode
 				+ ", address=" + address + ", detail_address=" + detail_address + ", payment_date=" + payment_date
 				+ ", payment_method=" + payment_method + ", payment_status=" + payment_status + ", delivery_status="

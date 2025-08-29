@@ -191,7 +191,7 @@
 				console.log('결제 데이터:', paymentData);
 				
 				// AJAX 결제 요청
-				fetch('/funding/payment', {
+				fetch('/payment/checkout/api/funding', {
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json' // 수정: 올바른 Content-Type

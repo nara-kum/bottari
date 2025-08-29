@@ -8,7 +8,7 @@
 </head>
 <body>
 	성공했습니다
-	<a href="/shop/shoppingMall">
+	<a href="/shop/bottarimall">
 	쇼핑몰로 돌아가기
 	</a>
 </body>
