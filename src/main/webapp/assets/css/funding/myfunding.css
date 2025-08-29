@@ -130,3 +130,54 @@
   display:flex;
   justify-content:flex-end;
 }
+
+/* 공통 패딩 동기화(헤더/본문 우측 끝 정렬 맞춤) */
+.card-box{ --pad-x:30px; }
+.product-header{ padding:15px var(--pad-x) 7px var(--pad-x); }
+.product-body{   padding:10px var(--pad-x); }
+
+/* 본문을 5열로: [LEFT | 진행바(200) | % (48) | 금액(120) | 버튼(160)] */
+.mf-body{
+  display:grid;
+  grid-template-columns: minmax(360px, 1fr) 200px 48px 120px 160px;
+  align-items:center;
+  column-gap:16px;
+}
+
+/* 왼쪽(위시리스트와 동일 레이아웃) */
+.mf-left .mf-row{
+  display:grid;
+  grid-template-columns: 100px 1fr; /* 썸네일 | 정보 */
+  gap:12px;
+  align-items:stretch;
+  min-height:100px;                  /* 썸네일 높이와 동일 */
+}
+
+/* 오른쪽 고정폭 블록들 정렬 */
+.left-price-right-price{ width:200px; }
+.progress-bar{ width:200px; height:10px; background:#929292; border-radius:5px; overflow:hidden; }
+.progress-fill{ height:100%; background:#ef5327; }
+
+.percent{ width:48px; text-align:right; font-weight:700; }
+.price-participation{ width:120px; text-align:right; font-weight:700; white-space:nowrap; }
+
+.funding-action-wrapper{
+  width:160px; padding-right:0; display:flex; justify-content:flex-end;
+}
+.action-buttons{ display:flex; flex-direction:column; gap:8px; align-items:flex-end; }
+
+/* 반응형(필요 시): 좁아지면 오른쪽 4개를 아래로 내림 */
+@media (max-width: 880px){
+  .mf-body{
+    grid-template-columns: 1fr;       /* 한 칼럼으로 쌓기 */
+    row-gap:10px;
+  }
+  .left-price-right-price,
+  .percent,
+  .price-participation,
+  .funding-action-wrapper{
+    width:auto;
+    justify-self:end;                 /* 우측 정렬 유지 */
+  }
+  .action-buttons{ flex-direction:row; }
+}
