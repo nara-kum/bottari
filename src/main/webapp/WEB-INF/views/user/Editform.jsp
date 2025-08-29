@@ -32,7 +32,7 @@
 						<main class="signup-container">
 							<p class="subtitle">회원정보 수정</p>
 
-							<form class="signup-form" action="${pageContext.request.contextPath}/edit" method="get">
+							<form class="signup-form" action="${pageContext.request.contextPath}/user/edit" method="get">
 								<div class="form-group with-button">
 									<label>아이디</label>
 									<div class="input-row">

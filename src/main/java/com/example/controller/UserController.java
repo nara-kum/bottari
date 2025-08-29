@@ -13,6 +13,7 @@ import com.example.vo.UserVO;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
+@RequestMapping(value = "/user")
 public class UserController {
 
 
@@ -83,7 +84,7 @@ public class UserController {
 		// 전부 날림
 		session.invalidate();
 
-		return "redirect:/loginForm";
+		return "redirect:/user/loginForm";
 	}
 
 	// 회원정보 수정폼 2025-08-26 오후 3:36 확인 했을때는 화면 잘 보임 

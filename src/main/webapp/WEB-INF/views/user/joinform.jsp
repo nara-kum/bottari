@@ -32,7 +32,7 @@
 			<main class="signup-container">
 				<p class="subtitle">회원이 되어 다양한 혜택을 경험해 보세요!</p>
 
-				<form class="signup-form" action="${pageContext.request.contextPath}/join" method="get">
+				<form class="signup-form" action="${pageContext.request.contextPath}/user/join" method="get">
 					<div class="form-group with-button">
 						<label>아이디</label>
 						<div class="input-row">

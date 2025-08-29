@@ -32,7 +32,7 @@
 							<h2>회원가입을 축하합니다.</h2>
 							<h2>이제 로그인하여 다양한 서비스를 이용해보세요.</h2>
 							<button type="submit" class="login-btn">
-								<a href="${pageContext.request.contextPath}/loginForm">로그인</a>
+								<a href="${pageContext.request.contextPath}/user/loginForm">로그인</a>
 							</button>
 							<button type="submit" class="home-btn">
 								<a href="${pageContext.request.contextPath}/shop/shoppingMall">홈으로</a>

@@ -30,7 +30,7 @@
 				<div class="login-wrapper">
 					<div class="login-box">
 						<img src="${pageContext.request.contextPath}/assets/icon/Logo_colored.svg" alt="로고" class="login-logo" />
-						<form class="form-box" action="${pageContext.request.contextPath}/login" method="get">
+						<form class="form-box" action="${pageContext.request.contextPath}/user/login" method="get">
 							<div class="input-group">
 								<input type="text" placeholder="아이디" name="id" value="">
 							</div>
