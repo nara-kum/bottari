@@ -58,7 +58,7 @@
 			        p.title,
 			        p.brand,
 			        p.price,
-			        p.itemimg,
+			        p.itemimg
 			FROM funding_product fp
 			LEFT JOIN funding_option fo ON fp.funding_no = fo.funding_no
 			LEFT JOIN option_detail od ON fo.detailoption_no = od.detailoption_no

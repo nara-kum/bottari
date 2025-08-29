@@ -26,7 +26,7 @@ public class CartController {
 	// method normal
 
 	// 장바구니리스트
-	@RequestMapping(value = "/cart", method = { RequestMethod.GET, RequestMethod.POST })
+	@RequestMapping(value = "/shop/cart", method = { RequestMethod.GET, RequestMethod.POST })
 	public String list(HttpSession session, Model model) {
 		System.out.println("CartController.list()");
 
