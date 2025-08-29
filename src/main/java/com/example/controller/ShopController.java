@@ -174,7 +174,7 @@ public class ShopController {
     
 
 	// 상세페이지
-	@RequestMapping(value = "shop/productPage", method = { RequestMethod.GET, RequestMethod.POST })
+	@RequestMapping(value = "/shop/productPage", method = { RequestMethod.GET, RequestMethod.POST })
 	public String productDetail(@RequestParam(required = false) Integer productNo, Model model) {
 		System.out.println("ShopController.productDetail");
 		System.out.println("상품번호: " + productNo);
@@ -210,7 +210,7 @@ public class ShopController {
     
 	
 	//펀딩상세페이지
-	@RequestMapping(value = "shop/productPage2", method = { RequestMethod.GET, RequestMethod.POST })
+	@RequestMapping(value = "/shop/productPage2", method = { RequestMethod.GET, RequestMethod.POST })
 	public String fundingproductDetail(@RequestParam(value="productNo", required = false) Integer productNo, 
 									   @RequestParam(value="fundingNo", required = false) Integer fundingNo,
 			                           Model model) {
@@ -239,7 +239,7 @@ public class ShopController {
 
 
 	//장바구니등록 
-	@RequestMapping(value="cart/cartadd", method= {RequestMethod.GET, RequestMethod.POST})
+	@RequestMapping(value="/cart/cartadd", method= {RequestMethod.GET, RequestMethod.POST})
 	public String insertCart(@RequestParam(value="productNo", required=false) Integer productNo,
 			 				 @RequestParam(value="categoryNo", required=false) Integer categoryNo,
 	                         @RequestParam(value="quantity", required=false) Integer quantity,
@@ -338,7 +338,7 @@ public class ShopController {
 	
 	
 	//위시리스트 등록 - 수정된 버전
-	@RequestMapping(value="whishlist/wishlistadd", method= {RequestMethod.GET, RequestMethod.POST})
+	@RequestMapping(value="/whishlist/wishlistadd", method= {RequestMethod.GET, RequestMethod.POST})
 	public String insertWishlist(@RequestParam(value="productNo", required=false) Integer productNo,
 	                            @RequestParam(value="quantity", required=false) Integer quantity,
 	                            @RequestParam(value="selectedOptions", required=false) String selectedOptionsJson, // 옵션 정보 추가

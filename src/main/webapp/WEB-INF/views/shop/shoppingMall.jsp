@@ -6,9 +6,9 @@
 
 <head>
 	<meta charset="utf-8">
-	<link rel="stylesheet" href="../../../assets/css/reset.css">
-    <link rel="stylesheet" href="../../../assets/css/Global.css">
-    <link rel="stylesheet" href="../../../assets/css/shop/shoppingMall.css">
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/reset.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/Global.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/shop/shoppingMall.css">
 </head>
 
 <body class="family">
@@ -47,7 +47,7 @@
 		</div>
 		<div class="search-area">
 			<input name="search" class="rectangle-2" type="text" placeholder="검색어를 입력하세요"> 
-			<img class="icon-search" src="../../../assets/icon/icon-search.svg">
+			<img class="icon-search" src="${pageContext.request.contextPath}/assets/icon/icon-search.svg">
 		</div>
 	</div>
 	
@@ -56,7 +56,7 @@
 		<c:choose>
 			<c:when test="${not empty productList}">
 				<c:forEach var="product" items="${productList}">
-					<div class="goods-wrap" onclick="location.href='${pageContext.request.contextPath}/productPage?productNo=${product.product_no}'" style="cursor: pointer;">
+					<div class="goods-wrap" onclick="location.href='${pageContext.request.contextPath}/shop/productPage?productNo=${product.product_no}'" style="cursor: pointer;">
 						<div class="goods-img">
 							<c:choose>
 							<c:when test="${not empty product.itemimg}">

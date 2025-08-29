@@ -150,7 +150,7 @@
 
 
 						<!-- 장바구니 폼 수정 -->
-						<form action="${pageContext.request.contextPath}/cartadd"
+						<form action="${pageContext.request.contextPath}/cart/cartadd"
 							method="get" id="cartForm">
 							<input type="hidden" name="productNo" value="${productViewVO.product_no}">
 							<input type="hidden" name="categoryNo" value="${productViewVO.category_no}"> 
@@ -166,7 +166,7 @@
 						<div class="action-buttons">
 						
 							<!-- 위시리스트 폼 추가 -->
-							<form action="${pageContext.request.contextPath}/wishlistadd"
+							<form action="${pageContext.request.contextPath}/wishlist/wishlistadd"
 								method="get" id="wishlistForm" style="display: inline;">
 								<input type="hidden" name="productNo" value="${productViewVO.product_no}"> 
 								<input type="hidden" name="quantity" id="wishlistQuantity" value="1">
@@ -175,8 +175,10 @@
 								<button type="button" class="wishlist-btn"
 									    onclick="submitWishlist()">♡ 찜 등록하기</button>
 							</form>
-
+							
+							<form action="${pageContext.request.contextPath}/payment/checkout">
 							<button class="funding-btn">구매하기</button>
+							</form>
 						</div>
 					</div>
 				</div>

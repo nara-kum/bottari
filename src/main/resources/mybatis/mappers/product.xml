@@ -164,7 +164,7 @@
 		<![CDATA[
 			select ifnull(sum(p.payment_amount),0) totalpay
 			from payment p
-			where p.fundingproduct_no =  #{fundingNo}
+			where p.funding_no =  #{fundingNo}
 		]]>
 	</select>
 	
