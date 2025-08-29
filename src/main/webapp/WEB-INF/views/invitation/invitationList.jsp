@@ -164,15 +164,15 @@
   // 라우팅
   $(document)
     .on("click", ".create-button", function(){
-      location.href = CTX + "/invitationForm";
+      location.href = CTX + "invitation/form";
     })
     .on("click", ".inv-card .btn-edit", function(){
       var id = $(this).closest(".inv-card").data("id") || "";
-      location.href = CTX + "/invitationForm" + (id ? ("?no=" + id) : "");
+      location.href = CTX + "/invitation/form" + (id ? ("?no=" + id) : "");
     })
     .on("click", ".inv-card .inv-thumb", function(){
       var id = $(this).closest(".inv-card").data("id") || "";
-      location.href = CTX + "/invitation" + (id ? ("?no=" + id) : "");
+      location.href = CTX + "invitation/invitation" + (id ? ("?no=" + id) : "");
     });
 
   // 시작!

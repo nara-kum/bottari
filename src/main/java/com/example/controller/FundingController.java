@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class FundingController {
 
 	// 펀딩리스트
-	@RequestMapping(value = "/myfunding", method = { RequestMethod.GET, RequestMethod.POST })
+	@RequestMapping(value = "funding/my", method = { RequestMethod.GET, RequestMethod.POST })
 	public String myfunding() {
 		System.out.println("fundingController.myfunding");
 
@@ -16,7 +16,7 @@ public class FundingController {
 	}
 
 	// 친펀딩리스트
-	@RequestMapping(value = "/friendfunding", method = { RequestMethod.GET, RequestMethod.POST })
+	@RequestMapping(value = "funding/friend", method = { RequestMethod.GET, RequestMethod.POST })
 	public String friendFunding() {
 		System.out.println("fundingController.myfunding");
 

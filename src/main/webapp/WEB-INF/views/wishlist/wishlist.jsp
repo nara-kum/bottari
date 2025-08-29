@@ -383,7 +383,7 @@ function startFunding(){
     if (json && json.result === 'success') {
       sessionStorage.setItem('NEW_FUNDING_ITEMS', JSON.stringify(items));
       alert('펀딩이 생성되었습니다.');
-      location.href = window.CTX + '/myfunding';
+      location.href = window.CTX + 'funding/my';
     } else {
       alert('처리에 실패했습니다. 잠시 후 다시 시도해주세요.');
     }

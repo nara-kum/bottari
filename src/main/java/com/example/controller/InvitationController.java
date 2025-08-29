@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class InvitationController {
 	
 	//초대장 리스트
-	@RequestMapping(value="/invitationList", method= {RequestMethod.GET, RequestMethod.POST})
+	@RequestMapping(value="invitation/list", method= {RequestMethod.GET, RequestMethod.POST})
 	public String InvitationList(){
 		System.out.println("InvitationController.InvitationList()");
 		
@@ -18,7 +18,7 @@ public class InvitationController {
 	}
 	
 	//초대장 전체보기
-	@RequestMapping(value="/invitation", method= {RequestMethod.GET, RequestMethod.POST})
+	@RequestMapping(value="invitation/invitation", method= {RequestMethod.GET, RequestMethod.POST})
 	public String Invitation(){
 		System.out.println("InvitationController.Invitation()");
 		
@@ -28,7 +28,7 @@ public class InvitationController {
 	}
 	
 	//초대장 등록폼
-	@RequestMapping(value="/invitationForm", method= {RequestMethod.GET, RequestMethod.POST})
+	@RequestMapping(value="invitation/form", method= {RequestMethod.GET, RequestMethod.POST})
 	public String InvitationForm(){
 		System.out.println("InvitationController.InvitationForm()");
 		
