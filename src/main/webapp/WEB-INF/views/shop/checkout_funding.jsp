@@ -174,21 +174,38 @@
 					return;
 				}
 				
-				// 상품 번호 수접
+				// AJAX로 전송할 데이터
+				cosnt paymentData = {
+					funding_no: '${param.funding_no}',
+					product_no: ${product_no},
+					payment_method: paymentMethod,
+					payment_amount: ${total_amount},
+					quantity: '${param.count}',
+					service_type: 'funding(' + cashReceiptSelected + ')',
+				}
 				
-				// 폼 데이터 설정 (오타 수정: hiddenPaymentmethod -> hiddenPaymentMethod)
-				document.getElementById('hiddenPaymentMethod').value = paymentMethod;
-				document.getElementById('hiddenCashReceipt').value = (count % 2 !== 0) ? 'true' : 'false';
+				console.log('결제 데이터:', paymentData);
 				
-				// 설정 후 값 확인
-				console.log('=== 값 설정 후 ===');
-				console.log('hiddenPaymentMethod.value:', document.getElementById('hiddenPaymentMethod').value);
-				console.log('hiddenCashReceipt.value:', document.getElementById('hiddenCashReceipt').value);
-				
-				// 폼 전송
-				this.submit();
-				
-				return false;
+				// AJAX 결제 요청
+				fetch('/funding/payment', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'checkout/api/funding'
+					},
+					body: JSON.stringify(paymentData)
+				})
+				.then(response => response.json())
+				.then(data => {
+					if (data.success) {
+						window.location.href = '/shop/success';
+					} else {
+						window.location.href = '/shop/error';
+					}
+				})
+				.catch(error => {
+					console.error('Error:', error);
+					window.location.href = '/shop/error';
+				});
 			}
 			
 			// check.svg 가 클릭 되었을 때의 함수

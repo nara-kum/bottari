@@ -26,7 +26,7 @@ public class CalenderController {
 	// method normal
 
 	// 캘린더 리스트
-	@RequestMapping(value = "/calender", method = { RequestMethod.GET, RequestMethod.POST })
+	@RequestMapping(value = "/calendar/calendar", method = { RequestMethod.GET, RequestMethod.POST })
 	public String calenderList(Model model, HttpSession session) {
 		System.out.println("CalenderController.calenderList()");
 

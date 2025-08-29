@@ -4,7 +4,7 @@ public class PaymentVO {
 	//field
 	private int payment_no;				//결제 내역 번호
 	private int user_no;				//회원 번호
-	private int fundingproduct_no;		//펀딩 상품 번호
+	private int funding_no;		//펀딩 상품 번호
 	private int product_no;				//상품 번호
 	private int order_no;				//주문번호
 	private String zipcode;				//배송지 우편번호
@@ -20,13 +20,13 @@ public class PaymentVO {
 	private int quantity;
 	private int detailoption_no;
 	//editor
-	public PaymentVO(int payment_no, int user_no, int fundingproduct_no, int product_no, int order_no, String zipcode,
+	public PaymentVO(int payment_no, int user_no, int funding_no, int product_no, int order_no, String zipcode,
 			String address, String detail_address, String payment_date, String payment_method, String payment_status,
 			String delivery_status, int payment_amount, String service_type, int payment_goods_no, int quantity, int detailoption_no) {
 		super();
 		this.payment_no = payment_no;
 		this.user_no = user_no;
-		this.fundingproduct_no = fundingproduct_no;
+		this.funding_no = funding_no;
 		this.product_no = product_no;
 		this.order_no = order_no;
 		this.zipcode = zipcode;
@@ -58,11 +58,11 @@ public class PaymentVO {
 	public void setUser_no(int user_no) {
 		this.user_no = user_no;
 	}
-	public int getFundingproduct_no() {
-		return fundingproduct_no;
+	public int getFunding_no() {
+		return funding_no;
 	}
-	public void setFundingproduct_no(int fundingproduct_no) {
-		this.fundingproduct_no = fundingproduct_no;
+	public void setFunding_no(int fundingproduct_no) {
+		this.funding_no = fundingproduct_no;
 	}
 	public int getProduct_no() {
 		return product_no;
@@ -152,7 +152,7 @@ public class PaymentVO {
 	@Override
 	public String toString() {
 		return "PaymentVO [payment_no=" + payment_no + ", user_no=" + user_no + ", fundingproduct_no="
-				+ fundingproduct_no + ", product_no=" + product_no + ", order_no=" + order_no + ", zipcode=" + zipcode
+				+ funding_no + ", product_no=" + product_no + ", order_no=" + order_no + ", zipcode=" + zipcode
 				+ ", address=" + address + ", detail_address=" + detail_address + ", payment_date=" + payment_date
 				+ ", payment_method=" + payment_method + ", payment_status=" + payment_status + ", delivery_status="
 				+ delivery_status + ", payment_amount=" + payment_amount + ", service_type=" + service_type + "]";

@@ -29,7 +29,7 @@
 					<div class="column-flex-box row-align align-center gap-10">
 						<div class="banner-text">아직 담은 선물이 없어요</div>
 						<div class="banner-subtext">소중한 마음을 담아 선물을 골라보세요</div>
-						<a href="bottarimall"><button class="btn-basic btn-orange size-normal">장바구니 담으러 가기</button></a>
+						<a href="/shop/bottarimall"><button class="btn-basic btn-orange size-normal">장바구니 담으러 가기</button></a>
 					</div>
 				</section>
 

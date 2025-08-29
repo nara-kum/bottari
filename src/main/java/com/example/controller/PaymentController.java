@@ -30,7 +30,7 @@ public class PaymentController {
 	//method normal
 	
 	//일반 구매일 때
-	@RequestMapping(value = "/checkout", method = { RequestMethod.GET, RequestMethod.POST })
+	@RequestMapping(value = "/payment/checkout", method = { RequestMethod.GET, RequestMethod.POST })
 	public String checkOutList(@RequestParam("cart_no") List<Integer> cartNos,
 								Model model, HttpSession session) {
 		System.out.println("PaymentController.checkOutList() 진입");
@@ -41,7 +41,7 @@ public class PaymentController {
         
         
         if(authuser == null)
-			return "/loginForm";
+			return "/user/loginForm";
 		else {
 			int user_no = authuser.getUserNo();
 			
@@ -61,7 +61,7 @@ public class PaymentController {
         			model.addAttribute("shipping_cost", firstItem.getShipping_cost());
         		}
         		
-        		return "/shop/checkout";
+        		return "/payment/checkout";
         	} else {
         		return "/shop/error";
         	}
@@ -71,7 +71,7 @@ public class PaymentController {
 	
 	
 	// 펀딩 결제일 때 리스트 조회 함수
-	@RequestMapping(value = "/checkout_funding", method = {RequestMethod.GET,RequestMethod.POST})
+	@RequestMapping(value = "/payment/checkout_funding", method = {RequestMethod.GET,RequestMethod.POST})
 	public String checkoutFundingList(@RequestParam("funding_no") int funding_no,
 									  @RequestParam("count") int count, 
 									  Model model) {
@@ -88,7 +88,7 @@ public class PaymentController {
 			model.addAttribute("total_percent", total_percent);
 			model.addAttribute("total_amount", count*checkoutFundingList.get(0).getAmount());
 			
-			return "/shop/checkout_funding";
+			return "/shep/checkout_funding";
 		} else {
 			
 			return "/shop/error";
@@ -97,7 +97,7 @@ public class PaymentController {
 	}
 	
 	// 결제버튼을 클릭했을 때
-	@RequestMapping(value = "/checkout/payment", method = {RequestMethod.GET,RequestMethod.POST})
+	@RequestMapping(value = "/payment/checkout/proccessing", method = {RequestMethod.GET,RequestMethod.POST})
 	public String checkoutPayment(
 			@RequestParam("cart_no") int cart_no[],
 			@RequestParam String paymentMethod,

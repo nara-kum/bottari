@@ -11,7 +11,7 @@
 				<a href="${pageContext.request.contextPath}/shop/bottarimall">쇼핑</a>
 			</h1>
 			<h1 class="header-menu">
-				<a href="${pageContext.request.contextPath}/calender">캘린더</a>
+				<a href="${pageContext.request.contextPath}/calendar/calendar">캘린더</a>
 			</h1>
 			<h1 class="header-menu">
 				<a href="${pageContext.request.contextPath}/funding/wish">펀딩</a>
@@ -20,7 +20,7 @@
 				<a href="${pageContext.request.contextPath}/invitation/list">초대장</a>
 			</h1>
 			<h1 class="header-menu">
-				<a href="${pageContext.request.contextPath}/history">구매내역</a>
+				<a href="${pageContext.request.contextPath}/history/list">구매내역</a>
 			</h1>
 		</div>
 		<div class="right-side">
