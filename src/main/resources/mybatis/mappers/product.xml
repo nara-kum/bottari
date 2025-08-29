@@ -162,15 +162,13 @@
 	<!-- 펀딩별 현재 총결제액 -->
 	<select id="selectTotalPayForFundingNo" parameterType="int" resultType="int">
 		<![CDATA[
-			select sum(p.payment_amount) totalpay
+			select ifnull(sum(p.payment_amount),0) totalpay
 			from payment p
 			where p.fundingproduct_no =  #{fundingNo}
 		]]>
 	</select>
 	
-	
-	
-	
+
 	
 	
 	<!-- 장바구니 등록 -->

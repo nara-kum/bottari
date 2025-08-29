@@ -235,21 +235,15 @@ public class ShopService {
 		//펀딩번호를 알고있다 fundingNo
 		//펀딩프로덕트VO 가져오기
 		FundingProductVO fundingProductVO = shopRepository.FundingProductSelectOne(fundingNo);
-		System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~");
-		System.out.println("지금여기확인:" + fundingNo);
-		System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~");
-		
 		
 		
 		//펀딩번호(상품) 오션명들(옵션)
 		// 사이즈-데   용량-2G   칼라-빨강
 
 		List<FundingOptionViewVO> fundingOptionList = shopRepository.fundingOptionSelectList(fundingNo);
-		System.out.println(fundingOptionList);
 		
 		//지금까지 결재액
 		int fundingTotalPay = shopRepository.fundingTotalPay(fundingNo);
-		System.out.println("fundingTotalPay-->" + fundingTotalPay );
 		
 		
 	
@@ -257,9 +251,9 @@ public class ShopService {
 		Map<String, Object> fundingProductDetailMap = new HashMap<String, Object>();
 		
 		fundingProductDetailMap.put("productViewVO", productViewVO);
+		fundingProductDetailMap.put("fundingProductVO", fundingProductVO);
 		fundingProductDetailMap.put("fundingOptionList", fundingOptionList);
 		fundingProductDetailMap.put("fundingTotalPay", fundingTotalPay);
-		
 		
 		return fundingProductDetailMap;
 	}
