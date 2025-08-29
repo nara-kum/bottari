@@ -34,7 +34,7 @@
 					<div class="form-group with-button">
 						<label>아이디</label>
 						<div class="input-row">
-							<input type="text" placeholder="아이디 입력(6~20자)" name="id" id="input-id" value="">
+							<input type="text" placeholder="아이디 입력(6~20자)" name="id" id="input-id" required>
 							<button type="button" value="중복 확인" id="duplicate-check">중복확인</button>
 						</div>
 						<p id="id-check-message"></p>
@@ -42,15 +42,16 @@
 					</div>
 
 					<div class="form-group">
-						<label>비밀번호</label> <input type="password" placeholder="비밀번호 입력 (문자, 숫자, 특수문자 포함 8~20자)" />
+						<label>비밀번호</label> 
+						<input type="password" placeholder="비밀번호 입력 (문자, 숫자, 특수문자 포함 8~20자)" name="password" required>
 					</div>
 
 					<div class="form-group">
-						<label>비밀번호 확인</label> <input type="password" placeholder="비밀번호 재입력" />
+						<label>비밀번호 확인</label> <input type="password" placeholder="비밀번호 재입력" name="password" required>
 					</div>
 
 					<div class="form-group">
-						<label>이름</label> <input type="text" placeholder="이름을 입력해주세요" />
+						<label>이름</label> <input type="text" placeholder="이름을 입력해주세요" name="name" required>
 					</div>
 
 					<div class="form-group">
@@ -159,6 +160,33 @@
 	<!-- ---------------------------------------------------- -->
 
 	<script>
+	document.addEventListener('DOMContentLoaded', function() {
+	    const form = document.querySelector('.signup-form');
+	    const idInput = document.getElementById('input-id');
+	    const passwordInput = document.querySelector('input[type="password"]'); // 첫 번째 비밀번호
+	    const nameInput = document.querySelector('input[placeholder="이름을 입력해주세요"]');
+
+	    form.addEventListener('submit', function(e) {
+	        if (!idInput.value.trim()) {
+	            alert("아이디를 입력해주세요.");
+	            idInput.focus();
+	            e.preventDefault();
+	            return;
+	        }
+	        if (!passwordInput.value.trim()) {
+	            alert("비밀번호를 입력해주세요.");
+	            passwordInput.focus();
+	            e.preventDefault();
+	            return;
+	        }
+	        if (!nameInput.value.trim()) {
+	            alert("이름을 입력해주세요.");
+	            nameInput.focus();
+	            e.preventDefault();
+	            return;
+	        }
+	    });
+		
 		function checkDuplicateID(id) {
 			const existingIDs = [ '0603skfk', 'ahreum', 'sujin', 'nerunaru',
 					'sunny', 'aaaaaaaa', 'idksbhkbdh', 'rrrr', 'bbbbbb',
@@ -196,6 +224,7 @@
 				}
 			});
 		});
+	});	
 	</script>
 </body>
 
