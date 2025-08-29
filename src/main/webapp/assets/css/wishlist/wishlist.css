@@ -1,204 +1,161 @@
 @charset "UTF-8";
 
-/* ======================
-   레이아웃 공통
-====================== */
-.sec-content-main {
-	display: flex;
+/* ===== 레이아웃 ===== */
+.sec-content-main { display:flex; }
+.left-main  { padding-right:20px; box-sizing:border-box; }
+.right-main { border-left:1px solid #e9e9e9; padding-left:20px; box-sizing:border-box; }
+#sec-content .left-main { width:850px; }
+
+/* 탭 */
+.sec-sub-title .header-sub { padding-right:20px; color:#ddd; }
+.sec-sub-title .header-sub:has(> a[aria-current="page"]) { color:#000; }
+.tab-row { display:flex; gap:16px; align-items:flex-end; }
+
+/* ===== 위시리스트 컨테이너 ===== */
+#wListArea { min-height:420px; }
+#wListArea.is-empty { min-height:420px; }
+#wListArea .empty{
+  display:flex; align-items:center; justify-content:center;
+  height:260px; width:100%;
+  border:1px dashed #e5e7eb; border-radius:10px; background:#fafafa;
+  color:#8a8a8a; font-size:14px;
 }
 
-.left-main {
-	padding-right: 20px;
-	box-sizing: border-box;
-}
+/* ===== 카드 한 줄 ===== */
+/* 구조: [체크박스 | 썸네일(100) | 정보] */
+.a-product{ padding:12px 0; border-bottom:1px solid #eee; }
+.a-product:last-child{ border-bottom:0; }
 
-.right-main {
-	border-left: 1px solid #e9e9e9;
-	padding-left: 20px;
-	box-sizing: border-box;
-}
+/* 전역에서 image-row 폭을 강제했다면 무력화 */
+#wListArea .image-row{ width:auto; }
 
-#sec-content .left-main {
-	width: 850px;
-}
-
-.sec-sub-title .header-sub {
-	padding-right: 20px;
-	color: #ddd;
-}
-
-.sec-sub-title .header-sub:has(>a[aria-current="page"]) {
-	color: #000;
-}
-
-.tab-row {
-	display: flex;
-	gap: 16px;
-	align-items: flex-end;
-}
-
-/* ======================
-   위시리스트 컨테이너
-====================== */
-#wListArea {
-	min-height: 420px;
-}
-
-#wListArea.is-empty {
-	min-height: 420px;
-}
-
-#wListArea .empty {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	height: 260px;
-	width: 100%;
-	border: 1px dashed #e5e7eb;
-	border-radius: 10px;
-	background: #fafafa;
-	color: #8a8a8a;
-	font-size: 14px;
-}
-
-/* ======================
-   카드 한 줄 레이아웃
-   [체크 | 썸네일(100) | 정보 | 버튼]
-====================== */
-#wListArea .a-product {
-	padding: 12px 0;
-	border-bottom: 1px solid #eee;
-}
-
-#wListArea .a-product:last-child {
-	border-bottom: 0;
-}
-
-/* 다른 CSS가 image-row 폭을 건드려도 무력화 */
-#wListArea .image-row {
-	width: auto;
-}
-
-#wListArea .a-product>.image-row {
-	display: grid;
-	grid-template-columns: 24px 100px 1fr 120px;
-	gap: 12px;
-	align-items: stretch; /* 행 높이를 썸네일에 맞춤 */
-	min-height: 100px;
+.a-product > .image-row{
+  display:grid;
+  grid-template-columns: 20px 100px 1fr;
+  gap:12px;
+  align-items:stretch;          /* 썸네일 높이에 맞춰 동일 높이 */
+  min-height:100px;
 }
 
 /* 체크박스 */
-#wListArea .product-checkbox {
-	align-self: center;
-	width: 14px;
-	height: 14px;
+.product-checkbox{ align-self:center; width:14px; height:14px; }
+
+/* ===== 썸네일(100x100) ===== */
+.thumbbox{
+  position:relative;            /* 오버레이 기준점 */
+  width:100px; height:100px;
+  overflow:hidden; border-radius:6px; background:#eee;
+  padding:0;                    /* 전역 padding 방지 */
+}
+.product-image{ width:100%; height:100%; object-fit:cover; display:block; }
+.img-ph{ width:100%; height:100%; background:#f2f2f2; }
+
+/* ===== 썸네일 안 오른쪽 세로 버튼 =====
+   overlay 박스를 썸네일 전체(inset:0)로 깔고, 내부를 오른쪽 정렬 */
+.thumb-actions{
+  position:absolute; inset:0;          /* top:0; right:0; bottom:0; left:0 */
+  display:flex; flex-direction:column;
+  justify-content:center;              /* 세로 가운데 */
+  align-items:flex-end;                /* 가로 오른쪽 */
+  gap:6px;
+  padding-right:6px;                   /* 오른쪽 여백 */
+  z-index:2;                           /* 이미지 위로 */
+  pointer-events:auto;
+}
+
+.btn-thumb{
+  display:inline-flex; align-items:center; justify-content:center;
+  width:auto; max-width:78px;          /* 100px 폭에서 여백 고려 */
+  padding:6px 8px;
+  font-size:11px; line-height:1; font-weight:600;
+  border-radius:6px; border:1px solid #ddd;
+  background:rgba(255,255,255,.95); color:#333;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  cursor:pointer;
+}
+.btn-thumb.btn-cart-add{ background:#666; border-color:#666; color:#fff; }
+
+/* ===== 정보영역 ===== */
+.product-info{ display:flex; flex-direction:column; min-width:0; }
+.buy{ color:#929292; font-size:12px; margin:4px 0; white-space:nowrap; }
+.product-row{ display:flex; flex-wrap:wrap; align-items:baseline; column-gap:6px; row-gap:2px; }
+.name{ font-weight:700; font-size:14px; margin:4px 0; }
+.opt-sep, .option-name{ color:#666; font-size:13px; white-space:nowrap; }
+
+/* 가격 = 정보영역 바닥 → 이미지 하단선과 정렬 */
+.product-price{ margin-top:auto; margin-bottom:5px; font-weight:700; color:#111; font-size:15px; white-space:nowrap; }
+
+/* ===== 우측 패널(선택한 펀딩) ===== */
+.sec-content-main .left-main .top-text,
+.sec-content-main .right-main .top-text{ font-weight:700; font-size:18px; margin-top:15px; }
+
+.funding-controls{ display:flex; align-items:center; gap:12px; }
+#funding-table{ margin-top:15px; font-size:14px; padding:10px; border-radius:8px; border:1px solid #ccc; }
+#btnStartFunding{ margin-left:auto; }
+.btn-funding1{
+  appearance:none; border:1px solid #EF5124; background:#EF5124; color:#fff;
+  padding:10px 14px; border-radius:8px; font-weight:700; cursor:pointer;
+}
+.btn-funding1:disabled{ opacity:.5; cursor:not-allowed; }
+
+.selected-list{ margin-top:12px; display:flex; flex-direction:column; gap:10px; }
+.selected-item{ display:flex; gap:12px; align-items:center; border:1px solid #e5e5e5; border-radius:10px; padding:10px; background:#fff; }
+.selected-thumb{ width:60px; height:60px; object-fit:cover; border-radius:8px; }
+.selected-meta{ flex:1; }
+.selected-brand{ color:#929292; font-size:14px; white-space:nowrap; margin-bottom:4px; }
+.selected-title{ margin-bottom:4px; }
+.selected-price{ font-size:13px; color:#666; }
+.selected-remove{ border:1px solid #ddd; background:#fff; border-radius:8px; padding:6px 10px; cursor:pointer; }
+
+.sel-amount{ margin-top:6px; display:flex; align-items:center; gap:10px; }
+.sel-amount label{ display:flex; align-items:center; gap:4px; font-size:13px; }
+.selected-amount{ margin-left:140px; font-size:15px; }
+.selected-amount b{ margin-left:10px; font-weight:700; }
+
+/* 우측 미니 이미지 */
+.right-product-box{ display:flex; flex-direction:column; align-items:flex-start; margin-bottom:20px; }
+.right-product-box .right-image{ display:flex; align-items:center; gap:10px; }
+.right-image img{ width:50px; height:50px; object-fit:cover; border-radius:10px; }
+.right-image .product-info{ font-size:14px; }
+
+/* ===== 반응형 ===== */
+@media (max-width:520px){
+  .a-product > .image-row{ grid-template-columns:20px 100px 1fr; }
+}
+/* === Wishlist 행: [체크 | 썸네일 | 정보 | 버튼] === */
+#wListArea .a-product > .image-row{
+  display:grid;
+  grid-template-columns: 24px 100px 1fr 120px;  /* 마지막 칼럼이 버튼 영역 */
+  gap:12px;
+  align-items:stretch;
+  min-height:100px;
+  width:auto !important; /* 전역 width:15px 같은 규칙 무력화 */
 }
 
 /* 썸네일 100x100 고정 */
-#wListArea .thumbbox {
-	width: 100px;
-	height: 100px;
-	overflow: hidden;
-	border-radius: 6px;
-	background: #eee;
-}
+#wListArea .thumbbox{ width:100px; height:100px; border-radius:6px; overflow:hidden; background:#eee; }
+#wListArea .product-image{ width:100%; height:100%; object-fit:cover; display:block; }
 
-#wListArea .product-image {
-	width: 100%;
-	height: 100%;
-	object-fit: cover;
-	display: block;
-}
-
-#wListArea .img-ph {
-	width: 100%;
-	height: 100%;
-	background: #f2f2f2;
-}
-
-/* 정보영역 (가격은 바닥 고정) */
-#wListArea .product-info {
-	display: flex;
-	flex-direction: column;
-	min-width: 0;
-}
-
-#wListArea .buy {
-	color: #929292;
-	font-size: 12px;
-	margin: 4px 0;
-	white-space: nowrap;
-}
-
-#wListArea .product-row {
-	display: flex;
-	flex-wrap: wrap;
-	align-items: baseline;
-	column-gap: 6px;
-	row-gap: 2px;
-}
-
-#wListArea .name {
-	font-weight: 700;
-	font-size: 14px;
-	margin: 4px 0;
-}
-
-#wListArea .opt-sep, #wListArea .option-name {
-	color: #666;
-	font-size: 13px;
-	white-space: nowrap;
-}
-
-#wListArea .product-price {
-	margin-top: auto;
-	font-weight: 700;
-	color: #111;
-	font-size: 15px;
-	white-space: nowrap;
-}
+/* 정보영역: 가격을 바닥으로 */
+#wListArea .product-info{ display:flex; flex-direction:column; min-width:0; }
+#wListArea .product-price{ margin-top:auto; font-weight:700; font-size:15px; }
 
 /* 오른쪽 버튼 칼럼(세로 두 개) */
-#wListArea .product-actions {
-	display: flex;
-	flex-direction: column;
-	gap: 8px;
-	align-self: stretch;
-	justify-content: center;
+#wListArea .product-actions{
+  display:flex; flex-direction:column; gap:8px;
+  align-self:stretch; justify-content:center;
+}
+#wListArea .product-actions .cart-btn{
+  width:100%; padding:10px 12px;
+  background:#666; color:#fff; border:0; border-radius:6px; font-weight:600; cursor:pointer;
+}
+#wListArea .product-actions .wishlist-btn{
+  width:100%; padding:10px 12px;
+  background:#fff; color:#333; border:1px solid #ddd; border-radius:6px; font-weight:600; cursor:pointer;
 }
 
-#wListArea .product-actions .cart-btn {
-	width: 100%;
-	padding: 10px 12px;
-	background: #666;
-	color: #fff;
-	border: 0;
-	border-radius: 6px;
-	font-weight: 600;
-	cursor: pointer;
-}
-
-#wListArea .product-actions .wishlist-btn {
-	width: 100%;
-	padding: 10px 12px;
-	background: #fff;
-	color: #333;
-	border: 1px solid #ddd;
-	border-radius: 6px;
-	font-weight: 600;
-	cursor: pointer;
-}
-
-/* ======================
-   반응형
-====================== */
-@media ( max-width :520px) {
-	#wListArea .a-product>.image-row {
-		grid-template-columns: 24px 100px 1fr;
-	}
-	#wListArea .product-actions {
-		grid-column: 3/4;
-		flex-direction: row;
-		justify-content: flex-end;
-	}
+/* (선택) 작은 화면에서는 버튼을 정보 밑으로 */
+@media (max-width:520px){
+  #wListArea .a-product > .image-row{ grid-template-columns:24px 100px 1fr; }
+  #wListArea .product-actions{ grid-column: 3 / 4; flex-direction:row; justify-content:flex-end; }
 }
