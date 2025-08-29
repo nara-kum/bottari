@@ -45,54 +45,57 @@
                 	</c:forEach>
                 </div>
                 <div class="right-main content-height">
-                    <div class="payment-method-box column-flex-box">
-                        <div class="text-18 bold">결제수단</div>
-                        <div class="list-basic between-flex-box">
-                            <div class="row-flex-box">
-                                <img class="button-icon" src="/assets/icon/icon-insert-credit-card.svg">
-                                <div class="text-14 column-align">신용/체크카드 결제</div>
+                    <!-- 결제 폼 추가 -->
+                    <form id="paymentForm">
+                        <div class="payment-method-box column-flex-box">
+                            <div class="text-18 bold">결제수단</div>
+                            <div class="list-basic between-flex-box">
+                                <div class="row-flex-box">
+                                    <img class="button-icon" src="/assets/icon/icon-insert-credit-card.svg">
+                                    <div class="text-14 column-align">신용/체크카드 결제</div>
+                                </div>
+                                <img id="creditCard" class="button-icon" src="/assets/icon/icon-check.svg">
                             </div>
-                            <img id="creditCard" class="button-icon" src="/assets/icon/icon-check.svg">
-                        </div>
-                        <div class="list-basic between-flex-box">
-                            <div class="row-flex-box">
-                                <img class="button-icon" src="/assets/icon/icon-mobile-hand.svg">
-                                <div class="text-14 column-align">휴대폰 결제</div>
+                            <div class="list-basic between-flex-box">
+                                <div class="row-flex-box">
+                                    <img class="button-icon" src="/assets/icon/icon-mobile-hand.svg">
+                                    <div class="text-14 column-align">휴대폰 결제</div>
+                                </div>
+                                <img id="phone" class="button-icon" src="/assets/icon/icon-check.svg">
                             </div>
-                            <img id="phone" class="button-icon" src="/assets/icon/icon-check.svg">
-                        </div>
-                        <div class="list-basic between-flex-box">
-                            <div class="row-flex-box">
-                                <img class="button-icon" src="/assets/icon/icon-money-from-bracket.svg">
-                                <div class="text-14 column-align">무통장 입금</div>
+                            <div class="list-basic between-flex-box">
+                                <div class="row-flex-box">
+                                    <img class="button-icon" src="/assets/icon/icon-money-from-bracket.svg">
+                                    <div class="text-14 column-align">무통장 입금</div>
+                                </div>
+                                <img id="deposit" class="button-icon" src="/assets/icon/icon-check.svg">
                             </div>
-                            <img id="deposit" class="button-icon" src="/assets/icon/icon-check.svg">
                         </div>
-                    </div>
-                    <div class="payment-method-box column-flex-box">
-                    	<div class="between-flex-box">
-                        	<div class="text-18 bold">현금영수증 신청</div>
-                            	<img id="cashReceipt" class="button-icon" src="/assets/icon/icon-check.svg">
+                        <div class="payment-method-box column-flex-box">
+                        	<div class="between-flex-box">
+                            	<div class="text-18 bold">현금영수증 신청</div>
+                                	<img id="cashReceipt" class="button-icon" src="/assets/icon/icon-check.svg">
+                                </div>
+                            <div class="list-basic between-flex-box">
+                                <div class="row-flex-box">
+                                    <div class="text-14 column-align">개인 소득공제(휴대폰)</div>
+                                </div>
+                                <div class="text-14 column-align">휴대폰번호</div>
                             </div>
-                        <div class="list-basic between-flex-box">
-                            <div class="row-flex-box">
-                                <div class="text-14 column-align">개인 소득공제(휴대폰)</div>
+                            <div class="text-12 row-align"> 현금 영수증은 무통장입금, 현금성 포인트와 같은 현금성 결제 수단을 이용한 거래에 한 해 결제가 완료된 시점의 최신
+                                정보를 기반으로 발행되요.</div>
+                        </div>
+                        <div class="payment-method-box">
+                            <div class="text-18 bold margin-10">결제정보</div>
+                            <div class="between-flex-box margin-10 row-align">
+                                <div class="text-14">총 상품금액(${total_percent}%)</div>
+                                <div class="text-14"><fmt:formatNumber value="${total_amount}" type="currency" currencySymbol="" />원</div>
                             </div>
-                            <div class="text-14 column-align">휴대폰번호</div>
                         </div>
-                        <div class="text-12 row-align"> 현금 영수증은 무통장입금, 현금성 포인트와 같은 현금성 결제 수단을 이용한 거래에 한 해 결제가 완료된 시점의 최신
-                            정보를 기반으로 발행되요.</div>
-                    </div>
-                    <div class="payment-method-box">
-                        <div class="text-18 bold margin-10">결제정보</div>
-                        <div class="between-flex-box margin-10 row-align">
-                            <div class="text-14">총 상품금액(${total_percent}%)</div>
-                            <div class="text-14"><fmt:formatNumber value="${total_amount}" type="currency" currencySymbol="" />원</div>
-                        </div>
-                    </div>
-                    <div class="text-16 margin-10">최종 결제금액</div>
+                        <div class="text-16 margin-10">최종 결제금액</div>
 
-                    <button id="paymentButton" class="btn-basic btn-orange size-large text-16 right-align"><fmt:formatNumber value="${total_amount}" type="currency" currencySymbol="" />원 결제하기</button>
+                        <button type="submit" id="paymentButton" class="btn-basic btn-orange size-large text-16 right-align"><fmt:formatNumber value="${total_amount}" type="currency" currencySymbol="" />원 결제하기</button>
+                    </form>
                 </div>
             </div>
 
@@ -110,6 +113,7 @@
 			let paymentMethod = null;
 			let prevButton = null;
 			let count = 0;
+			let cashReceiptSelected = false; // 현금영수증 선택 여부
 			
 			// 결제 방식 Id 배열
 			const paymentButtons = ['creditCard', 'phone', 'deposit'];
@@ -146,38 +150,38 @@
 			
 			// 현금영수증 버튼이 클릭 되었을 때
 			document.getElementById('cashReceipt').onclick = function() {
-				console.log('deteced cashReceipt button clicked');
+				console.log('detected cashReceipt button clicked');
 				
-				count ++;
+				count++;
 				
-				paymentMethod = 'cashReceipt';
-				
-				if(count%2 != 0) {
-					clickedButton();
+				if(count % 2 != 0) {
+					// 현금영수증 선택됨
+					cashReceiptSelected = true;
+					document.getElementById('cashReceipt').src = "/assets/icon/icon-check-confirm.jpg";
 				} else {
-					const cash = document.getElementById('cashReceipt');
-					cash.src = "assets/icon/icon-check.svg"
+					// 현금영수증 선택 해제됨
+					cashReceiptSelected = false;
+					document.getElementById('cashReceipt').src = "/assets/icon/icon-check.svg";
 				}
-				
 			}
 			
 			
 			//결제하기 버튼이 클릭 되었을 때
 			document.getElementById('paymentForm').onsubmit = function(e) {
+				e.preventDefault(); // 기본 폼 제출 방지
 				
 				console.log('결제버튼 클릭');
 				
-				
 				// 결제 방식 선택 확인
-				if(!paymentMethod || paymentMethod === 'cashReceipt') {
+				if(!paymentMethod) {
 					alert('결제 방식을 선택해주세요');
-					return;
+					return false;
 				}
 				
 				// AJAX로 전송할 데이터
-				cosnt paymentData = {
+				const paymentData = {
 					funding_no: '${param.funding_no}',
-					product_no: ${product_no},
+					product_no: '${requestScope.product_no}', // 수정: requestScope에서 가져오기
 					payment_method: paymentMethod,
 					payment_amount: ${total_amount},
 					quantity: '${param.count}',
@@ -190,20 +194,28 @@
 				fetch('/funding/payment', {
 					method: 'POST',
 					headers: {
-						'Content-Type': 'checkout/api/funding'
+						'Content-Type': 'application/json' // 수정: 올바른 Content-Type
 					},
 					body: JSON.stringify(paymentData)
 				})
-				.then(response => response.json())
+				.then(response => {
+					if (!response.ok) {
+						throw new Error('Network response was not ok');
+					}
+					return response.json();
+				})
 				.then(data => {
 					if (data.success) {
+						alert('결제가 완료되었습니다.');
 						window.location.href = '/shop/success';
 					} else {
+						alert('결제 처리 중 오류가 발생했습니다: ' + (data.message || '알 수 없는 오류'));
 						window.location.href = '/shop/error';
 					}
 				})
 				.catch(error => {
 					console.error('Error:', error);
+					alert('결제 처리 중 오류가 발생했습니다.');
 					window.location.href = '/shop/error';
 				});
 			}

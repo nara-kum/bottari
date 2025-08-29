@@ -34,21 +34,6 @@ public class PaymentService {
 
 		List<CheckOutVO> checkoutList = paymentrepository.checkoutList(cartNos);
 
-		System.out.println("PaymentService.execheckoutList() 재진입 => detailoption_name 찾으러 출발");
-
-		List<DetailOptionVO> detailOptionList = paymentrepository.detailList(cartNos);
-
-		System.out.println("PaymentService.execheckoutList() 재진입");
-
-		Map<Integer, String> detailMap = detailOptionList.stream()
-				.collect(Collectors.toMap(DetailOptionVO::getDetailoption_no, DetailOptionVO::getDetailoption_name));
-
-		for (CheckOutVO checkout : checkoutList) {
-			if (detailMap.containsKey(checkout.getDetailoption_no())) {
-				checkout.setDetailoption_name(detailMap.get(checkout.getDetailoption_no()));
-			}
-		}
-
 		return checkoutList;
 	}
 
@@ -186,15 +171,22 @@ public class PaymentService {
 			for (int j = 0; j < addressList.size(); j++) {
 				int sub = addressList.get(j).getProduct_no();
 				if (main == sub) {
+					String shipping_yn = addressList.get(j).getShipping_yn();
 					String zipcode = addressList.get(j).getZipcode();
 					String address = addressList.get(j).getAddress();
 					String detailAddress = addressList.get(j).getDetail_address();
-
-					paymentList.get(i).setZipcode(zipcode);
-					paymentList.get(i).setAddress(address);
-					paymentList.get(i).setDetail_address(detailAddress);
-
-					break;
+					
+					if(shipping_yn.equals("n")) {
+						zipcode = null;
+						address = null;
+						detailAddress = null;
+					} else {
+						paymentList.get(i).setZipcode(zipcode);
+						paymentList.get(i).setAddress(address);
+						paymentList.get(i).setDetail_address(detailAddress);
+						
+						break;
+					}
 				}
 			}
 		}
