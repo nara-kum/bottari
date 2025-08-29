@@ -87,7 +87,7 @@ public class UserController {
 		return "redirect:/user/loginForm";
 	}
 
-	// 회원정보 수정폼 2025-08-26 오후 3:36 확인 했을때는 화면 잘 보임 
+	// 회원정보 수정폼
 	@RequestMapping(value = "/editform", method = { RequestMethod.GET, RequestMethod.POST })
 	public String editForm(HttpSession session, Model model) {
 		System.out.println("UserController.editForm()");
