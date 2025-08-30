@@ -1,6 +1,8 @@
 package com.example.repository;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,15 +26,44 @@ public class ShopRepository {
 	@Autowired
 	private SqlSession sqlSession;
 
-	// 쇼핑몰리스트
+	// 쇼핑몰 상품리스트 - 페이징 + 검색 (강의와 동일한 방식)
+	public List<ProductVO> selectProductList(Map<String, Object> limitMap) {
+		System.out.println("ShopRepository.selectProductList - 페이징");
+		System.out.println("파라미터: " + limitMap);
+
+		// MyBatis를 통해 페이징 쿼리 실행 (강의와 동일한 쿼리 id 사용)
+		List<ProductVO> productList = sqlSession.selectList("product.selectListWithPaging", limitMap);
+		System.out.println("조회된 상품 수: " + productList.size());
+
+		return productList;
+	}
+	
+	// 전체 상품 개수 조회 - 검색 조건 포함 (강의와 동일한 방식)
+	public int selectTotalCountByKwd(String kwd, int categoryNo) {
+		System.out.println("ShopRepository.selectTotalCountByKwd");
+		System.out.println("검색키워드: " + kwd);
+		System.out.println("카테고리: " + categoryNo);
+
+		// 파라미터를 Map으로 묶어서 전달 (강의와 동일한 방식)
+		Map<String, Object> paramMap = new HashMap<>();
+		paramMap.put("kwd", kwd);
+		paramMap.put("categoryNo", categoryNo);
+		
+		// MyBatis를 통해 전체 개수 조회 (강의와 동일한 쿼리 id 사용)
+		int totalCount = sqlSession.selectOne("product.selectTotalCountByKwd", paramMap);
+		System.out.println("전체 상품 수: " + totalCount);
+
+		return totalCount;
+	}
+
+	// 기존 쇼핑몰리스트 (페이징 없음) - 호환성을 위해 유지
 	public List<ProductVO> selectList(ProductVO productVO) {
-		System.out.println("ShopRepository.selectList");// ㅇㅋ
+		System.out.println("ShopRepository.selectList - 페이징 없음");
 
 		List<ProductVO> productList = sqlSession.selectList("product.selectList");
 		System.out.println("나는 되돌아오는 레파지토리");
 
 		return productList;
-
 	}
 
 	// 상품등록
@@ -61,23 +92,16 @@ public class ShopRepository {
 		System.out.println(productOptionVO);
 		System.out.println("*=======================================");
 		
-		
 		int count = sqlSession.insert("product.productOptionInsert", productOptionVO);
 		return count;
-
 	}
 
 	// 디테일옵션등록
 	public int detailOptionInsert(ProductOptionVO optionDetailVO) {
 		System.out.println("ShopRepository.detailOptionInsert");
-//
-//		System.out.println("*=======================================");
-//		System.out.println(optionDetailVO);
-//		System.out.println("*=======================================");
 
 		int count = sqlSession.insert("product.detailOptionInsert", optionDetailVO);
 		return count;
-
 	}
 
 	// 상품 상세 조회
@@ -85,12 +109,9 @@ public class ShopRepository {
 		System.out.println("ShopRepository.ProductSelectOne");
 		System.out.println("조회할 상품번호: " + productNo);
 
-	
 		ProductViewVO productViewVO = sqlSession.selectOne("product.selectOne", productNo);
 		return productViewVO;
 	}
-	
-	
 	
 	//펀딩번호
 	public FundingProductVO FundingProductSelectOne(int fundingNo) {
@@ -100,8 +121,6 @@ public class ShopRepository {
 		
 		return fundingProductVO;	
 	}
-	
-	
 	
 	//펀딩상품의 옵션 조회
 	public List<FundingOptionViewVO> fundingOptionSelectList(int fundingNo){
@@ -116,7 +135,6 @@ public class ShopRepository {
 		return fundingOptionList;
 	}
 	
-	
 	//펀딩별 현재 총결제액
 	public int fundingTotalPay(int fundingNo){
 		System.out.println("ShopRepository.fundingTotalPay");
@@ -125,11 +143,7 @@ public class ShopRepository {
 		System.out.println("@@@@@@@@" + fundingTotalPay);
 		return fundingTotalPay;
 	}
-	
 
-	
-	
-	
 	// 상품상세 이미지
 	public List<DetailedImageVO> ImageselectList(int productNo) {
 		System.out.println("ShopRepository.selectimageList");
@@ -137,7 +151,6 @@ public class ShopRepository {
 		List<DetailedImageVO> detailedImageList = sqlSession.selectList("product.selectImageList", productNo);
 
 		return detailedImageList;
-
 	}
 	
 	// 옵션제목
@@ -147,7 +160,6 @@ public class ShopRepository {
 		List<ProductOptionVO> productOptionList = sqlSession.selectList("product.selectOptionList", productNo);
 
 		return productOptionList;
-
 	}
 	
 	// 옵션디테일(아이템)
@@ -157,7 +169,6 @@ public class ShopRepository {
 		List<ProductOptionDetailVO> productOptionDetailList = sqlSession.selectList("product.selectOptionDetailList", optionNo);
 
 		return productOptionDetailList;
-
 	}
 		
 	//장바구니등록
@@ -173,7 +184,6 @@ public class ShopRepository {
 	    return count;
 	}
 	
-	
 	//장바구니 옵션 저장 메소드 (CartDetailOption 사용)
 	public int cartDetailOptionInsert(CartDetailOptionVO cartDetailOptionVO) {
 	    System.out.println("ShopRepository.cartDetailOptionInsert");
@@ -184,7 +194,6 @@ public class ShopRepository {
 	    System.out.println("옵션 저장 완료! 영향받은 행 수: " + count);
 	    return count;
 	}
-	
 	
 	//위시리스트 등록
 	public int wishlistInsert(WishlistVO wishlistVO) {
@@ -197,11 +206,9 @@ public class ShopRepository {
 	    return count;
 	}
 	
-	
 	//위시리스트 옵션 저장
 	public int wishlistOptionInsert(WishlistOptionVO wishlistOptionVO) {
 	    System.out.println("ShopRepository.wishlistOptionInsert");
 	    return sqlSession.insert("product.wishlistOptionInsert", wishlistOptionVO);
 	}
-	
 }

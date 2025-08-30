@@ -28,68 +28,55 @@ import com.example.vo.WishlistVO;
 
 import jakarta.servlet.http.HttpSession;
 
-
-
-
 @Controller
 public class ShopController {
  
 	// 파일 업로드 경로 설정
-	private static final String UPLOAD_PATH = "C:\\upload\\products\\"; // 실제 경로로 변경 필요
-	private static final String WEB_PATH = "/upload/products/"; // 웹에서 접근할 경로
+	private static final String UPLOAD_PATH = "C:\\upload\\products\\"; 
+	private static final String WEB_PATH = "/upload/products/"; 
 
 	@Autowired
 	private ShopService shopService;
 	
-	
-	
-	//쇼핑몰리스트
+	// 쇼핑몰리스트 (페이징 + 검색 기능)
 	@RequestMapping(value="/shop/bottarimall", method= {RequestMethod.GET, RequestMethod.POST})
-	public String list(ProductVO productVO,Model model) {	
-		System.out.println("ShopController.list");
+	public String list(@RequestParam(value="crtpage", required = false, defaultValue = "1")int crtPage, // 현재 페이지 (기본값 1)
+	                   @RequestParam(value="kwd", required = false, defaultValue = "") String kwd, // 검색 키워드 (기본값 빈문자열)
+	                   @RequestParam(value="categoryNo", required = false, defaultValue = "0") int categoryNo, // 카테고리 번호 (기본값 0=전체)
+	                   Model model) {	
 		
+		System.out.println("ShopController.list - 페이징");
+		System.out.println("현재페이지: " + crtPage);
+		System.out.println("검색키워드: " + kwd);
+		System.out.println("카테고리: " + categoryNo + (categoryNo == 0 ? "(전체)" : ""));
 		
-
-		List<ProductVO> productList = shopService.exeProductList(productVO);
-		model.addAttribute("productList", productList);
-
+		// 서비스에서 페이징된 데이터와 페이징 정보가 담긴 Map을 받아온다
+		Map<String, Object> pMap = shopService.exeProductList(crtPage, kwd, categoryNo);
+		
+		// 받아온 Map을 모델에 담아서 뷰로 전달
+		model.addAttribute("pMap", pMap);
+		
+		// 검색 조건들을 다시 화면에 전달 (검색 폼 유지를 위해)
+		model.addAttribute("kwd", kwd);
+		model.addAttribute("categoryNo", categoryNo);
+		
+		System.out.println("전달할 pMap: " + pMap);
 		
 		return "shop/shoppingMall";	
 	}
 	
-	
-	
-	
-	
-	//상품등록폼
+	// 상품등록폼
 	@RequestMapping(value="/shop/productform", method= {RequestMethod.GET, RequestMethod.POST})
 	public String shopform() {	
 		System.out.println("ShopController.shopform");
-		
 		return "shop/shopform";	
 	}
-	
 
-
-	//상품등록
+	// 상품등록
     @RequestMapping(value = "/shop/register", method = RequestMethod.POST)
     public String insert(@ModelAttribute ProductVO productVO, Model model) {
-
         System.out.println("ShopController.register");
         System.out.println(productVO);
-        
-     //        
-//       System.out.println("받은 데이터: " + productVO);
-//      System.out.println("받은 파일: " + productVO.getProductImage().getOriginalFilename());
-//
-//        for(int i=0; i<productVO.getDetailImages().length; i++) {
-//        	 System.out.println("상품상세이미지: " + productVO.getDetailImages()[i].getOriginalFilename());
-//        }
-//                
-//        for(int i=0; i<productVO.getOptionItems().length; i++) {
-//        	 System.out.println(productVO.getOptionItems()[i]);
-//        }
-        
         
         shopService.exeProductadd(productVO);
         
@@ -97,52 +84,10 @@ public class ShopController {
         model.addAttribute("productTitle", productVO.getTitle());
         model.addAttribute("productVO", productVO);
         
-        
-        /*
-        // 필수 필드 검증
-        if (productVO.getTitle() == null || productVO.getTitle().trim().isEmpty()) {
-            System.out.println("상품명이 비어있습니다!");
-            model.addAttribute("errorMessage", "상품명을 입력해주세요.");
-            return "shop/shopform";
-        }
-        
-        if (productVO.getPrice() <= 0) {
-            System.out.println("가격이 올바르지 않습니다!");
-            model.addAttribute("errorMessage", "올바른 가격을 입력해주세요.");
-            return "shop/shopform";
-        }
-        
-        // 파일 업로드 처리
-        if (!file.isEmpty()) {
-            try {
-                String savedImagePath = saveUploadedFile(file);
-                productVO.setItemimg(savedImagePath);
-                System.out.println("이미지 저장 완료: " + savedImagePath);
-            } catch (IOException e) {
-                System.out.println("파일 업로드 실패: " + e.getMessage());
-                model.addAttribute("errorMessage", "이미지 업로드에 실패했습니다.");
-                return "shop/shopform";
-            }
-        } else {
-            System.out.println("업로드된 파일이 없습니다.");
-            // 기본 이미지 설정 (선택사항)
-            productVO.setItemimg("/assets/images/default-product.jpg");
-        }
-        
-
-  
-        */
-        
-        
         return "shop/shopSuccess";
-   
     }
     
-    
-
-    /**
-     * 업로드된 파일을 저장하고 웹 경로를 반환
-     */
+    // 업로드된 파일을 저장하고 웹 경로를 반환하는 메소드
     private String saveUploadedFile(MultipartFile file) throws IOException {
         // 업로드 디렉토리 생성
         File uploadDir = new File(UPLOAD_PATH);
@@ -169,9 +114,6 @@ public class ShopController {
         // 웹에서 접근 가능한 경로 반환
         return WEB_PATH + savedFilename;
     }
-	
-    
-    
 
 	// 상세페이지
 	@RequestMapping(value = "/shop/productPage", method = { RequestMethod.GET, RequestMethod.POST })
@@ -194,8 +136,7 @@ public class ShopController {
 		return "shop/productPage";
 	}
     
-    // 옵션상세(아이템) 리스트
-
+    // 옵션상세(아이템) 리스트 - Ajax 응답
 	@ResponseBody
 	@RequestMapping(value = "/api/optiondetail", method = { RequestMethod.GET, RequestMethod.POST })
 	public List<ProductOptionDetailVO> optionDetail(@RequestParam(value="optionNo") int optionNo) {
@@ -207,9 +148,7 @@ public class ShopController {
 		return productOptionDetailList;
 	}
 	
-    
-	
-	//펀딩상세페이지
+	// 펀딩상세페이지
 	@RequestMapping(value = "/shop/productPage2", method = { RequestMethod.GET, RequestMethod.POST })
 	public String fundingproductDetail(@RequestParam(value="productNo", required = false) Integer productNo, 
 									   @RequestParam(value="fundingNo", required = false) Integer fundingNo,
@@ -232,18 +171,13 @@ public class ShopController {
 		
 		return "shop/productPage_funding";
 	}
-	
-	
-	
-	
 
-
-	//장바구니등록 
+	// 장바구니등록 
 	@RequestMapping(value="/cart/cartadd", method= {RequestMethod.GET, RequestMethod.POST})
 	public String insertCart(@RequestParam(value="productNo", required=false) Integer productNo,
 			 				 @RequestParam(value="categoryNo", required=false) Integer categoryNo,
 	                         @RequestParam(value="quantity", required=false) Integer quantity,
-	                         @RequestParam(value="selectedOptions", required=false) String selectedOptionsJson, // 옵션 정보 추가
+	                         @RequestParam(value="selectedOptions", required=false) String selectedOptionsJson, 
 	                         HttpSession session) {
 	    
 	    System.out.println("===== 장바구니 등록 시작 =====");
@@ -291,7 +225,6 @@ public class ShopController {
 	            System.out.println("옵션 정보 처리 시작");
 	            
 	            // JSON 형태의 옵션 정보를 파싱 (간단하게 처리)
-	            // 예: "[1,2,3]" -> ["1","2","3"]
 	            String[] optionIds = selectedOptionsJson
 	                .replace("[", "")
 	                .replace("]", "")
@@ -326,7 +259,7 @@ public class ShopController {
 	        }
 	        
 	        System.out.println("===== 장바구니 등록 완료 =====");
-	        return "redirect:cart/cart";
+	        return "redirect:/shop/cart";
 	        
 	    } catch (Exception e) {
 	        System.out.println("장바구니 등록 중 오류 발생: " + e.getMessage());
@@ -335,13 +268,11 @@ public class ShopController {
 	    }
 	}
 
-	
-	
-	//위시리스트 등록 - 수정된 버전
+	// 위시리스트 등록
 	@RequestMapping(value="/whishlist/wishlistadd", method= {RequestMethod.GET, RequestMethod.POST})
 	public String insertWishlist(@RequestParam(value="productNo", required=false) Integer productNo,
 	                            @RequestParam(value="quantity", required=false) Integer quantity,
-	                            @RequestParam(value="selectedOptions", required=false) String selectedOptionsJson, // 옵션 정보 추가
+	                            @RequestParam(value="selectedOptions", required=false) String selectedOptionsJson, 
 	                            HttpSession session) {
 	    
 	    System.out.println("===== 위시리스트 등록 시작 =====");
@@ -349,7 +280,7 @@ public class ShopController {
 	    System.out.println("받은 quantity: " + quantity);
 	    System.out.println("받은 selectedOptions: " + selectedOptionsJson);
 	    
-	    // 로그인 체크 - 디버깅 추가
+	    // 로그인 체크 
 	    System.out.println("세션 확인 중...");
 	    UserVO authUser = (UserVO) session.getAttribute("authUser");
 	    System.out.println("세션에서 가져온 authUser: " + authUser);
@@ -388,11 +319,6 @@ public class ShopController {
 	        System.out.println("생성된 wishlist_no: " + wishlistNo);
 	        
 	        // 2단계: 선택된 옵션들이 있으면 위시리스트 옵션 테이블에도 등록
-	        System.out.println("selectedOptionsJson 원본: '" + selectedOptionsJson + "'");
-	        System.out.println("selectedOptionsJson이 null인가? " + (selectedOptionsJson == null));
-	        System.out.println("selectedOptionsJson이 비어있나? " + (selectedOptionsJson != null && selectedOptionsJson.trim().isEmpty()));
-	        System.out.println("selectedOptionsJson이 []인가? " + (selectedOptionsJson != null && selectedOptionsJson.equals("[]")));
-	        
 	        if (selectedOptionsJson != null && !selectedOptionsJson.trim().isEmpty() 
 	            && !selectedOptionsJson.equals("[]")) {
 	            
@@ -441,5 +367,4 @@ public class ShopController {
 	        return "오류가 발생했습니다";
 	    }
 	}
-	
 }

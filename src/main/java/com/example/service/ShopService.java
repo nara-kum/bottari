@@ -31,24 +31,90 @@ public class ShopService {
 
 	@Autowired
 	private ShopRepository shopRepository;
-	private DetailedImageVO detailedImageVO;
 
-	// 쇼핑몰 리스트
-	public List<ProductVO> exeProductList(ProductVO productVO) {
-
-		System.out.println("ShopService.exeProductList");// ㅇㅋ
-		List<ProductVO> productList = shopRepository.selectList(productVO);
-
-		System.out.println("나눈 서비수");
-
+	// 쇼핑몰 리스트 - 페이징 + 검색 기능 (강의 로직과 동일하게 구현)
+	public Map<String, Object> exeProductList(int crtPage, String kwd, int categoryNo) {
+		System.out.println("ShopService.exeProductList - 페이징");
+		System.out.println("현재페이지: " + crtPage);
+		System.out.println("검색키워드: " + kwd);
+		System.out.println("카테고리: " + categoryNo);
 		
-		return productList;
+		///리스트가져오기///
+		// 한페이지 출력갯수 (16개 고정)
+		int listCnt = 16;
+		
+		// 시작번호 계산 (강의와 동일한 로직)
+		int startRowNo = (crtPage - 1) * listCnt;
+		
+		// Repository에 전달할 파라미터들을 Map으로 묶기
+		Map<String, Object> limitMap = new HashMap<String, Object>();
+		limitMap.put("startRowNo", startRowNo);      // LIMIT에서 사용할 시작 번호
+		limitMap.put("listCnt", listCnt);           // LIMIT에서 사용할 개수
+		limitMap.put("kwd", kwd);                   // 검색 키워드
+		limitMap.put("categoryNo", categoryNo);     // 카테고리 번호
+		
+		// 묶은 파라미터를 Repository에 보내서 상품 리스트 가져오기
+		List<ProductVO> productList = shopRepository.selectProductList(limitMap);
+		
+		/////////////////////////////////////////////
+		//// 페이징버튼 (하단버튼) - 강의와 동일한 로직
+		/////////////////////////////////////////////
+		
+		// 페이지당 버튼갯수 (1~5까지 5개씩 표시)
+		int pageBtnCount = 5;
+		
+		// 마지막번호버튼 계산 (강의와 동일한 공식)
+		// Math.ceil을 사용해서 올림처리 (예: 1페이지면 5, 6페이지면 10)
+		int endPageBtnNo = ((int)Math.ceil(crtPage/((double)pageBtnCount))) * pageBtnCount;
+		
+		// 시작버튼번호 계산		
+		int startPageBtnNo = (endPageBtnNo - pageBtnCount) + 1;
 
+		// 전체 글 갯수 조회 (검색 조건 포함)
+		int totalCount = shopRepository.selectTotalCountByKwd(kwd, categoryNo);
+		
+		// 다음 화살표 유무 계산 (next)
+		boolean next = false;
+		// 현재 페이지 그룹의 마지막 버튼이 실제로 표시할 수 있는 페이지보다 작으면 다음 화살표 표시
+		if(listCnt * endPageBtnNo < totalCount) {
+			next = true;
+		} else {
+			// 다음화살표가 false일때 마지막 버튼 번호를 다시 계산해야한다
+			// 실제 마지막 페이지 번호로 수정
+			endPageBtnNo = (int)Math.ceil(totalCount/((double)listCnt));    
+		}
+		
+		// 이전 화살표 유무 계산 (prev)
+		boolean prev = false;
+		// 시작 버튼이 1이 아니면 이전 화살표 표시
+		if(startPageBtnNo != 1) {
+			prev = true;
+		}
+		
+		// 모든 데이터를 묶어서 컨트롤러에 리턴해준다 --> Map 사용
+		Map<String, Object> pMap = new HashMap<String, Object>();
+		pMap.put("productList", productList);           // 상품 리스트
+		pMap.put("prev", prev);                         // 이전버튼 유무
+		pMap.put("next", next);                         // 다음버튼 유무
+		pMap.put("startPageBtnNo", startPageBtnNo);     // 시작버튼 번호
+		pMap.put("endPageBtnNo", endPageBtnNo);         // 마지막버튼 번호
+		pMap.put("crtPage", crtPage);                   // 현재 페이지
+		pMap.put("totalCount", totalCount);             // 전체 상품 수
+		
+		System.out.println("=== 페이징 정보 ===");
+		System.out.println("전체상품수: " + totalCount);
+		System.out.println("현재페이지: " + crtPage);
+		System.out.println("시작버튼: " + startPageBtnNo);
+		System.out.println("마지막버튼: " + endPageBtnNo);
+		System.out.println("이전화살표: " + prev);
+		System.out.println("다음화살표: " + next);
+		
+		return pMap;
 	}
 
-	// 상품등록
+	// 상품등록 (기존 로직 유지)
 	public int exeProductadd(ProductVO productVO) {
-		System.out.println("ShopService.exeProductadd"); // ㅇㅋ
+		System.out.println("ShopService.exeProductadd");
 		System.out.println(productVO);
 		System.out.println(productVO.getOptionItems().toString());
 		System.out.println("-------------------------------------------------------");
@@ -127,7 +193,6 @@ public class ShopService {
 			//저장할VO
 			DetailedImageVO detailedImageVO = new DetailedImageVO(productVO.getProduct_no(), detailSaveName, i);
 			
-			
 			//레파지토리 vo넘겨서 저장
 			shopRepository.detailImageInsert(detailedImageVO);
 			
@@ -144,9 +209,7 @@ public class ShopService {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			
 		}
-		
 		
 		///////////////////////////////////////////////////////////////
 		//옵션저장
@@ -162,7 +225,6 @@ public class ShopService {
 			//상품옵션구분 저장
 		    shopRepository.productOptionInsert(productOptionVO);
 			
-			
 			//디테일리스트 반복
 			for(int j=0; j<productVO.getOptionItems()[i].size(); j++) {
 				
@@ -173,30 +235,15 @@ public class ShopService {
 				
 			    //디테일 옵션구분 저장
 			    shopRepository.detailOptionInsert(optionDetailVO);
-				
 			}
-			
-			
-			
 		}
 		
-		// 기본정보 입력
-		// productVO.setItemimg("대표이미지 경로");
-		// int count = shopRepository.ProductInsert(productVO);
-
-		// 상세이미지 처리
-
-		// 상품옵션구분(반복문)
-		// 상품디테일옵션(반복문)
-
 		return 1;
-
 	}
 
-	// 상품 상세페이지
+	// 상품 상세페이지 (기존 로직 유지)
 	public ProductViewVO exeProductDetail(int productNo) {
 		System.out.println("ShopService.exeProductDetail");
-		
 		
 		//상품기본정보
 		ProductViewVO productViewVO = shopRepository.ProductSelectOne(productNo);
@@ -212,12 +259,8 @@ public class ShopService {
 
 		return productViewVO;
 	}
-	
-	
-	
 
-	
-	// 펀딩상세페이지
+	// 펀딩상세페이지 (기존 로직 유지)
 	public Map<String, Object> exefungdingProductDetail(int productNo, int fundingNo) {
 		System.out.println("ShopService.exefungdingProductDetail");
 
@@ -227,26 +270,19 @@ public class ShopService {
 		// 상품상세이미지 리스트
 		List<DetailedImageVO> detailedImageList = shopRepository.ImageselectList(productViewVO.getProduct_no());
 
-		
 		// 상품기본정보+이미지리스트
 		productViewVO.setDetailedImageList(detailedImageList);
-		
 		
 		//펀딩번호를 알고있다 fundingNo
 		//펀딩프로덕트VO 가져오기
 		FundingProductVO fundingProductVO = shopRepository.FundingProductSelectOne(fundingNo);
 		
-		
 		//펀딩번호(상품) 오션명들(옵션)
-		// 사이즈-데   용량-2G   칼라-빨강
-
 		List<FundingOptionViewVO> fundingOptionList = shopRepository.fundingOptionSelectList(fundingNo);
 		
 		//지금까지 결재액
 		int fundingTotalPay = shopRepository.fundingTotalPay(fundingNo);
 		
-		
-	
 		//모두묶어서 화면으로 보낸다
 		Map<String, Object> fundingProductDetailMap = new HashMap<String, Object>();
 		
@@ -257,12 +293,7 @@ public class ShopService {
 		
 		return fundingProductDetailMap;
 	}
-		
-	
-	
 
-	
-	
 	// 옵션디테일(아이템)
 	public List<ProductOptionDetailVO> exeOptionDetail(int optionNo) {
 		System.out.println("ShopRepository.exeOptionDetail");
@@ -270,10 +301,8 @@ public class ShopService {
 		List<ProductOptionDetailVO> productOptionDetailList = shopRepository.optionDetailSelectList(optionNo);
 
 		return productOptionDetailList;
-
 	}
 
-	
 	//장바구니 등록(데이터넘기기)
 	public void exeCartAdd(CartVO cartVO) {
 	    System.out.println("ShopService.exeCartAdd");
@@ -281,7 +310,6 @@ public class ShopService {
 	    
 	    shopRepository.cartInsert(cartVO);
 	}
-	
 	
 	//장바구니 옵션 등록 (CartDetailOption 사용)
 	public void exeCartDetailOptionAdd(CartDetailOptionVO cartDetailOptionVO) {
@@ -292,8 +320,6 @@ public class ShopService {
 	    System.out.println("장바구니 옵션 저장 완료");
 	}
 	
-	
-	
 	//위시리스트 등록
 	public void exeWishlistAdd(WishlistVO wishlistVO) {
 	    System.out.println("ShopService.exeWishlistAdd");
@@ -301,7 +327,6 @@ public class ShopService {
 	    
 	    shopRepository.wishlistInsert(wishlistVO);
 	}
-	
 	
 	//위시리스트 옵션 등록
 	public void exeWishlistOptionAdd(WishlistOptionVO wishlistOptionVO) {
