@@ -3,9 +3,7 @@ package com.example.service;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,7 +12,6 @@ import com.example.repository.PaymentRepository;
 import com.example.vo.CheckAddressVO;
 import com.example.vo.CheckOutVO;
 import com.example.vo.CheckoutFundingVO;
-import com.example.vo.DetailOptionVO;
 import com.example.vo.FundingOptionViewVO;
 import com.example.vo.PaymentVO;
 
@@ -34,21 +31,6 @@ public class PaymentService {
 
 		List<CheckOutVO> checkoutList = paymentrepository.checkoutList(cartNos);
 
-		System.out.println("PaymentService.execheckoutList() 재진입 => detailoption_name 찾으러 출발");
-
-		List<DetailOptionVO> detailOptionList = paymentrepository.detailList(cartNos);
-
-		System.out.println("PaymentService.execheckoutList() 재진입");
-
-		Map<Integer, String> detailMap = detailOptionList.stream()
-				.collect(Collectors.toMap(DetailOptionVO::getDetailoption_no, DetailOptionVO::getDetailoption_name));
-
-		for (CheckOutVO checkout : checkoutList) {
-			if (detailMap.containsKey(checkout.getDetailoption_no())) {
-				checkout.setDetailoption_name(detailMap.get(checkout.getDetailoption_no()));
-			}
-		}
-
 		return checkoutList;
 	}
 
@@ -65,13 +47,22 @@ public class PaymentService {
 	public PaymentVO exeprocessFundingPayment(PaymentVO request) {
 		System.out.println("PaymentService.exeprocessFundingPayment()");
 
-		int product_no = request.getProduct_no();
-
+		int funding_no = request.getFunding_no();
+		System.out.println(funding_no);
+		
+		List<CheckoutFundingVO> fundingList = paymentrepository.checkoutFundingList(funding_no);
+		
+		int product_no = fundingList.get(0).getProduct_no();
+		
 		List<Integer> productNoList = new ArrayList<>();
 		productNoList.add(product_no);
 
 		System.out.println(productNoList);
 		List<PaymentVO> paymentList = new ArrayList<>();
+		
+		if (paymentList.isEmpty()) {
+		    paymentList.add(new PaymentVO());
+		}
 
 		// order_no 생성 (int 범위 내)
 		System.out.println("order_no 생성 시작");
@@ -90,42 +81,91 @@ public class PaymentService {
 		
 		// 주소 가져오기
 		List<CheckAddressVO> addressList = paymentrepository.selectProductAddress(productNoList);
+		
 		System.out.println("addressList: " + addressList);
 		String address = addressList.get(0).getAddress();
 		String detailAddress = addressList.get(0).getDetail_address();
 		String zipcode = addressList.get(0).getZipcode();
+		String shipping_yn = addressList.get(0).getShipping_yn();
 		request.setPayment_status("완료");
 		
-		// 펀딩 옵션 가져오기
-		List<FundingOptionViewVO> fundingOptionList = paymentrepository.selectDetailList(request.getFunding_no());
-		int detailOption = fundingOptionList.get(0).getDetailoption_no();
-		
-		paymentList.get(0).setFunding_no(request.getFunding_no());
-		paymentList.get(0).setUser_no(request.getUser_no());
-		paymentList.get(0).setFunding_no(request.getFunding_no());
-		paymentList.get(0).setProduct_no(request.getProduct_no());
-		paymentList.get(0).setOrder_no(order_no);
-		paymentList.get(0).setAddress(address);
-		paymentList.get(0).setDetail_address(detailAddress);
-		paymentList.get(0).setZipcode(zipcode);
-		paymentList.get(0).setPayment_method(request.getPayment_method());
-		paymentList.get(0).setPayment_status(request.getPayment_status());
-		paymentList.get(0).setPayment_amount(request.getPayment_amount());
-		paymentList.get(0).setService_type(request.getService_type());
-		paymentList.get(0).setQuantity(request.getQuantity());
-		paymentList.get(0).setDetailoption_no(detailOption);
-		
-		System.out.println(paymentList);
-		
-		PaymentVO vo =paymentList.get(0);
-		paymentrepository.insertPaymentTable(vo);
-		System.out.println(vo.getPayment_no());
-		paymentrepository.insertPaymentgoodsTable(vo);
-		System.out.println(vo.getPayment_goods_no());
-		paymentrepository.insertPaymentGoodsOptionTable(vo);
-		System.out.println(vo);
+		if(shipping_yn.equals("n")) {
+			System.out.println("shipping_yn == n");
+			zipcode = null;
+			address = null;
+			detailAddress = null;
+			System.out.println("zipcode: " + zipcode + ", address: " + address + ", detailAddress: " + detailAddress);
+			
+			// 펀딩 옵션 가져오기
+			List<FundingOptionViewVO> fundingOptionList = paymentrepository.selectDetailList(request.getFunding_no());
+			int detailOption = fundingOptionList.get(0).getDetailoption_no();
+			System.out.println("detailOption: " + detailOption);
+			
+			// 첫 번째 객체 가져오기
+			PaymentVO payment = paymentList.get(0);
 
-		return request;
+			// 값 세팅
+			payment.setFunding_no(request.getFunding_no());
+			payment.setUser_no(request.getUser_no());
+			payment.setProduct_no(product_no);
+			payment.setOrder_no(order_no);
+			payment.setAddress(address);
+			payment.setDetail_address(detailAddress);
+			payment.setZipcode(zipcode);
+			payment.setPayment_method(request.getPayment_method());
+			payment.setPayment_status(request.getPayment_status());
+			payment.setPayment_amount(request.getPayment_amount());
+			payment.setService_type(request.getService_type());
+			payment.setQuantity(request.getQuantity());
+			payment.setDetailoption_no(detailOption);
+			
+			System.out.println(paymentList);
+			
+			PaymentVO vo =paymentList.get(0);
+			paymentrepository.insertPaymentTable(vo);
+			System.out.println(vo.getPayment_no());
+			paymentrepository.insertPaymentgoodsTable(vo);
+			System.out.println(vo.getPayment_goods_no());
+			paymentrepository.insertPaymentGoodsOptionTable(vo);
+			System.out.println(vo);
+
+			return request;
+		} else {
+			// 펀딩 옵션 가져오기
+			List<FundingOptionViewVO> fundingOptionList = paymentrepository.selectDetailList(request.getFunding_no());
+			int detailOption = fundingOptionList.get(0).getDetailoption_no();
+			
+			// 첫 번째 객체 가져오기
+			PaymentVO payment = paymentList.get(0);
+
+			// 값 세팅
+			payment.setFunding_no(request.getFunding_no());
+			payment.setUser_no(request.getUser_no());
+			payment.setProduct_no(product_no);
+			payment.setOrder_no(order_no);
+			payment.setAddress(address);
+			payment.setDetail_address(detailAddress);
+			payment.setZipcode(zipcode);
+			payment.setPayment_method(request.getPayment_method());
+			payment.setPayment_status(request.getPayment_status());
+			payment.setPayment_amount(request.getPayment_amount());
+			payment.setService_type(request.getService_type());
+			payment.setQuantity(request.getQuantity());
+			payment.setDetailoption_no(detailOption);
+			
+			System.out.println(paymentList);
+			
+			PaymentVO vo =paymentList.get(0);
+			paymentrepository.insertPaymentTable(vo);
+			System.out.println(vo.getPayment_no());
+			paymentrepository.insertPaymentgoodsTable(vo);
+			System.out.println(vo.getPayment_goods_no());
+			paymentrepository.insertPaymentGoodsOptionTable(vo);
+			System.out.println(vo);
+			
+			return request;
+		}
+		
 	}
 
 	// 일반결제 결제버튼 클릭했을 때
@@ -186,15 +226,22 @@ public class PaymentService {
 			for (int j = 0; j < addressList.size(); j++) {
 				int sub = addressList.get(j).getProduct_no();
 				if (main == sub) {
+					String shipping_yn = addressList.get(j).getShipping_yn();
 					String zipcode = addressList.get(j).getZipcode();
 					String address = addressList.get(j).getAddress();
 					String detailAddress = addressList.get(j).getDetail_address();
-
-					paymentList.get(i).setZipcode(zipcode);
-					paymentList.get(i).setAddress(address);
-					paymentList.get(i).setDetail_address(detailAddress);
-
-					break;
+					
+					if(shipping_yn.equals("n")) {
+						zipcode = null;
+						address = null;
+						detailAddress = null;
+					} else {
+						paymentList.get(i).setZipcode(zipcode);
+						paymentList.get(i).setAddress(address);
+						paymentList.get(i).setDetail_address(detailAddress);
+						
+						break;
+					}
 				}
 			}
 		}

@@ -77,6 +77,9 @@ public class PaymentRepository {
 		
 		List<CheckAddressVO> addressList = sqlsession.selectList("checkout.selectAddress", productIdList);
 		
+		System.out.println(addressList);
+		
+		
 		return addressList;
 	}
 	

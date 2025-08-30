@@ -96,7 +96,7 @@
                         </div>
                     </div>
                     <div class="text-16 margin-10">최종 결제금액</div>
-					<form id="paymentForm" action="${pageContext.request.contextPath}/checkout/payment" method="post">
+					<form id="paymentForm" action="${pageContext.request.contextPath}/payment/checkout/proccessing" method="post">
 						<!-- 결제 수단 -->
 						<input type="hidden" name="paymentMethod" id="hiddenPaymentMethod">
 						<!-- 현금 영수증 여부 -->

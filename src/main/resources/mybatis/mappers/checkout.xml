@@ -17,6 +17,7 @@
 			        p.shipping_cost,
 			        po.option_no,
 			        po.option_name,
+                    od.detailoption_name,
 			        (p.price * c.quantity) AS total_price,
 			        SUM(c.quantity) OVER(PARTITION BY c.user_no) AS total_quantity,
 			        SUM(c.quantity * p.price) OVER(PARTITION BY c.user_no) AS total_amount
@@ -24,6 +25,7 @@
 			LEFT JOIN cart_option co ON c.cart_no = co.cart_no
 			LEFT JOIN product p ON c.product_no = p.product_no
 			LEFT JOIN product_option po ON c.product_no = po.product_no
+            LEFT JOIN option_detail od ON co.detailoption_no = od.detailoption_no
 			WHERE c.cart_no IN
 		]]>
 		<foreach collection="list" item="cartNos" open="(" close=")" separator=",">
@@ -63,7 +65,7 @@
 			LEFT JOIN funding_option fo ON fp.funding_no = fo.funding_no
 			LEFT JOIN option_detail od ON fo.detailoption_no = od.detailoption_no
 			LEFT JOIN product p ON fp.product_no = p.product_no
-			WHERE funding_no = #{funding_no}
+			WHERE fp.funding_no = #{funding_no}
 		]]>
 	</select>
 	

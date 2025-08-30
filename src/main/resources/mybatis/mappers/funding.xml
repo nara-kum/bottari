@@ -18,6 +18,7 @@
         , p.title               AS title
         , p.price               AS price
         , p.itemimg             AS image
+        , po.option_name        AS optionName
         , od.detailoption_name  AS detailoptionName
 		, c.event_name          AS eventName
       FROM funding_product fp
@@ -27,6 +28,8 @@
         ON fo.funding_no = fp.funding_no
       LEFT JOIN option_detail od
         ON od.detailoption_no = fo.detailoption_no
+      LEFT JOIN product_option po
+        ON po.option_no = od.option_no
       LEFT JOIN calender c
 		ON c.event_no = fp.event_no
       WHERE fp.user_no = #{value}

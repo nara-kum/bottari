@@ -61,7 +61,7 @@ public class PaymentController {
         			model.addAttribute("shipping_cost", firstItem.getShipping_cost());
         		}
         		
-        		return "/payment/checkout";
+        		return "/shop/checkout";
         	} else {
         		return "/shop/error";
         	}
@@ -88,7 +88,7 @@ public class PaymentController {
 			model.addAttribute("total_percent", total_percent);
 			model.addAttribute("total_amount", count*checkoutFundingList.get(0).getAmount());
 			
-			return "/shep/checkout_funding";
+			return "/shop/checkout_funding";
 		} else {
 			
 			return "/shop/error";

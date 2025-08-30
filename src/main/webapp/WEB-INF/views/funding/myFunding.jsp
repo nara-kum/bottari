@@ -95,46 +95,56 @@
 
   /* ---------- 카드 렌더 ---------- */
   function renderCard(vo){
-    const fundingNo     = Number(vo.fundingNo)||0;
-    const fundingDate   = vo.fundingDate || '';
-    const brand         = vo.brand || '';
-    const title         = vo.title || '';
-    const price         = Number(vo.price)||0;
-    const amount        = Number(vo.amount)||0;
-    const percent       = Math.max(0, Math.min(100, Number(vo.percent)||0));
-    const status        = (vo.fundingStatus || 'O').toUpperCase();
-    const statusText    = (status === 'O') ? '펀딩진행중' : '펀딩완료';
+  const fundingNo     = Number(vo.fundingNo)||0;
+  const fundingDate   = vo.fundingDate || '';
+  const brand         = vo.brand || '';
+  const title         = vo.title || '';
+  const optionName       = vo.optionName       ?? vo.option_name       ?? '';
+  const detailOptionName = vo.detailOptionName ?? vo.detail_option_name ?? vo.detailoptionName ?? '';
+  const price         = Number(vo.price)||0;
+  const amount        = Number(vo.amount)||0;
+  const percent       = Math.max(0, Math.min(100, Number(vo.percent)||0));
+  const status        = (vo.fundingStatus || 'O').toUpperCase();
+  const statusText    = (status === 'O') ? '펀딩진행중' : '펀딩완료';
+  const imgUrl        = resolveImage(vo);
 
-    const imgUrl        = resolveImage(vo);
-
-    return [
-      '<div class="card-box" data-funding-no="', fundingNo, '">',
-        '<div class="product-header">',
-          '<div class="left-side"><span class="sub-title">', escapeHtml(fundingDate), '</span></div>',
-          '<div class="right-side"><span class="', (status==='O'?'funding-ing':'funding-done'), '">', statusText, '</span></div>',
-        '</div>',
-        '<div class="product-body">',
-          '<div class="product-image"><img src="', imgUrl, '" alt="상품 이미지" onerror="this.src=\'', CTX, '/assets/images/eki.jpg\'"></div>',
-          '<div class="product-details">',
-            '<div class="product-brand">', escapeHtml(brand), '</div>',
-            '<div class="product-description">', escapeHtml(title), '</div>',
-            '<div class="price">', fmtKRW(price), '</div>',
+  return [
+    '<div class="card-box" data-funding-no="', fundingNo, '">',
+      '<div class="product-header">',
+        '<div class="left-side"><span class="sub-title">', escapeHtml(fundingDate), '</span></div>',
+        '<div class="right-side"><span class="', (status==='O'?'funding-ing':'funding-done'), '">', statusText, '</span></div>',
+      '</div>',
+      '<div class="product-body">',
+        '<div class="mf-left"><div class="mf-row">',
+          '<div class="thumbbox">',
+            '<img class="product-image" src="', imgUrl, '" alt="" onerror="this.src=\'', CTX, '/assets/images/eki.jpg\'">',
           '</div>',
-          '<div class="left-price-right-price">',
-            '<div class="progress-bar"><div class="progress-fill" style="width:', percent, '%;"></div></div>',
-          '</div>',
-          '<div class="percent">', percent, '%</div>',
-          '<div class="price-participation">', fmtKRW(amount), '</div>',
-          '<div class="funding-action-wrapper">',
-            '<div class="action-buttons">',
-              '<button class="btn-funding2 btn-cancel"  data-funding-no="', fundingNo, '">펀딩환불</button>',
-              '<button class="btn-funding2 btn-complete" data-funding-no="', fundingNo, '">펀딩완료</button>',
+          '<div class="product-info">',
+            '<div class="buy">', escapeHtml(brand), '</div>',
+            '<div class="product-row">',
+              '<span class="name">', escapeHtml(title), '</span>',
+              '<span class="opt-sep"> / </span><span class="option-name">', escapeHtml(optionName), '</span>',
+              '<span class="opt-sep"> / </span><span class="option-name">', escapeHtml(detailOptionName), '</span>',
             '</div>',
+            '<div class="product-price">', fmtKRW(price), '</div>',
+          '</div>',
+        '</div></div>',
+        '<div class="left-price-right-price">',
+          '<div class="progress-bar"><div class="progress-fill" style="width:', percent, '%;"></div></div>',
+        '</div>',
+        '<div class="percent">', percent, '%</div>',
+        '<div class="price-participation">', fmtKRW(amount), '</div>',
+        '<div class="funding-action-wrapper">',
+          '<div class="action-buttons">',
+            '<button class="btn-funding2 btn-cancel"  data-funding-no="', fundingNo, '">펀딩환불</button>',
+            '<button class="btn-funding2 btn-complete" data-funding-no="', fundingNo, '">펀딩완료</button>',
           '</div>',
         '</div>',
-      '</div>'
-    ].join('');
-  }
+      '</div>',
+    '</div>'
+  ].join('');
+}
+
 
   /* ---------- 목록 로드 ---------- */
   function loadMyFunding(){
