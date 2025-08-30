@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="product">
 
-	<!-- 쇼핑몰상품리스트 -->
+	<!-- 기존 쇼핑몰상품리스트 (페이징 없음) - 호환성을 위해 유지 -->
 	<select id="selectList" resultType="com.example.vo.ProductVO">
 	<![CDATA[
 		select	product_no,
@@ -16,6 +16,54 @@
 	]]>
 	</select>
 
+	<!-- 페이징 + 검색이 적용된 상품 리스트 조회 (강의와 동일한 로직) -->
+	<select id="selectListWithPaging" parameterType="map" resultType="com.example.vo.ProductVO">
+	<![CDATA[
+		select	product_no,
+				category_no,
+	            title,
+	            price,
+	            brand,
+	            itemimg
+		from product
+		where 1=1
+	]]>
+		<!-- 카테고리 필터 조건 (categoryNo가 있을 때만 적용) -->
+		<if test="categoryNo != null and categoryNo != 0">
+			and category_no = #{categoryNo}
+		</if>
+		
+		<!-- 검색어 필터 조건 (kwd가 있고 비어있지 않을 때만 적용) -->
+		<if test="kwd != null and kwd != ''">
+			and (title like concat('%', #{kwd}, '%') 
+			  or brand like concat('%', #{kwd}, '%'))
+		</if>
+		
+	<![CDATA[
+		order by product_no desc
+		limit #{startRowNo}, #{listCnt}
+	]]>
+	</select>
+
+	<!-- 전체 상품 개수 조회 - 검색 조건 포함 (강의와 동일한 로직) -->
+	<select id="selectTotalCountByKwd" parameterType="map" resultType="int">
+	<![CDATA[
+		select count(*) count
+		from product
+		where 1=1
+	]]>
+		<!-- 카테고리 필터 조건 -->
+		<if test="categoryNo != null and categoryNo != 0">
+			and category_no = #{categoryNo}
+		</if>
+		
+		<!-- 검색어 필터 조건 -->
+		<if test="kwd != null and kwd != ''">
+			and (title like concat('%', #{kwd}, '%') 
+			  or brand like concat('%', #{kwd}, '%'))
+		</if>
+	</select>
+
 	<!-- 상품 등록 -->
 	<insert id="insert" parameterType="com.example.vo.ProductVO">
     <![CDATA[
@@ -24,6 +72,7 @@
         values (#{category_no}, #{title}, #{price}, #{brand}, #{itemimg},
                 #{shipping_yn}, #{shipping_cost}, #{zipcode}, #{address}, #{detail_address})
     ]]>
+    <!-- auto_increment로 생성된 product_no를 VO에 설정 -->
     <selectKey keyProperty="product_no" resultType="int" order="AFTER">	
 	     <![CDATA[
 			select last_insert_id()
@@ -45,6 +94,7 @@
 			insert into product_option 
 			values(null, #{product_no}, #{option_name})
 		]]>
+		<!-- auto_increment로 생성된 option_no를 VO에 설정 -->
 		<selectKey keyProperty="option_no" resultType="int" order="AFTER">	
 	     <![CDATA[
 			select last_insert_id()
@@ -59,7 +109,6 @@
 			values(null, #{option_no}, #{detailOPtion_name})
 		]]>
 	</insert>
-
 
 	<!-- 상품 상세 조회 -->
 	<select id="selectOne" parameterType="int" resultType="com.example.vo.ProductViewVO">
@@ -79,8 +128,6 @@
 			where p.product_no = #{productNo}
 	    ]]>
 	</select>
-
-
 
 	<!--상품 상세 이미지들 -->
 	<select id="selectImageList" parameterType="int" resultType="com.example.vo.DetailedImageVO">
@@ -107,7 +154,6 @@
 		]]>
 	</select>
 
-
 	<!-- 옵션상세(아이템) 리스트 -->
 	<select id="selectOptionDetailList" parameterType="int" resultType="com.example.vo.ProductOptionDetailVO">
 		<![CDATA[
@@ -118,9 +164,6 @@
     		where option_no = #{optionNo}
 		]]>
 	</select>
-	
-	
-	
 	
 	<!-- 펀딩상세페이지 -->
 	<select id = "selectOneFunding" parameterType="int" resultType="com.example.vo.FundingProductVO">
@@ -138,9 +181,6 @@
 			where fp.funding_no = #{fundingNo}
 		]]>	
 	</select>
-	
-	
-	
 
 	<!-- 선택한 펀딩 옵션과 옵션제목들 -->
 	<select id="selectListFundingOption" parameterType="int" resultType="com.example.vo.FundingOptionViewVO">
@@ -158,7 +198,6 @@
 		]]>
 	</select>
 	
-	
 	<!-- 펀딩별 현재 총결제액 -->
 	<select id="selectTotalPayForFundingNo" parameterType="int" resultType="int">
 		<![CDATA[
@@ -167,26 +206,20 @@
 			where p.funding_no =  #{fundingNo}
 		]]>
 	</select>
-	
 
-	
-	
 	<!-- 장바구니 등록 -->
-
 	<insert id="cartInsert" parameterType="com.example.vo.CartVO">
 		<![CDATA[
 			insert into cart (cart_no, user_no, product_no, category_no, Registration_date, quantity)
 			values(null, #{user_no},#{product_no}, #{category_no},now(),#{quantity})
 		]]>
+		<!-- auto_increment로 생성된 cart_no를 VO에 설정 -->
 		<selectKey keyProperty="cart_no" resultType="int" order="AFTER">	
         	<![CDATA[
             	select last_insert_id()
         	]]>        
     </selectKey>
-	
 	</insert>
-
-
 
 	<!-- 장바구니 옵션 저장 -->
 	<insert id="cartDetailOptionInsert" parameterType="com.example.vo.CartDetailOptionVO">
@@ -195,13 +228,10 @@
         values ( #{cart_no}, #{detailoption_no})
     ]]>
 		<!-- auto_increment로 생성된 cartoption_no를 VO에 설정 -->
-		<selectKey keyProperty="cartoption_no" resultType="int"
-			order="AFTER">
+		<selectKey keyProperty="cartoption_no" resultType="int" order="AFTER">
 			SELECT LAST_INSERT_ID()
 		</selectKey>
 	</insert>
-
-
 
 	<!-- 위시리스트 등록 -->
 	<insert id="wishlistInsert" parameterType="com.example.vo.WishlistVO">
@@ -209,14 +239,11 @@
 	        insert into wishlist(wishlist_no, user_no, product_no, quantity, date)
 	        values(null, #{userNo}, #{productNo}, #{quantity}, now())
 	    ]]>
-	<selectKey keyProperty="wishlistNo" resultType="int"
-		order="AFTER">
-		SELECT LAST_INSERT_ID()
-	</selectKey>
-
+		<!-- auto_increment로 생성된 wishlist_no를 VO에 설정 -->
+		<selectKey keyProperty="wishlistNo" resultType="int" order="AFTER">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
 	</insert>
-
-
 
 	<!-- 위시리스트 옵션 저장 -->
 	<insert id="wishlistOptionInsert" parameterType="com.example.vo.WishlistOptionVO">
@@ -224,12 +251,10 @@
         insert into wishlist_option (wishlist_no, detailoption_no)
         values (#{wishlistNo}, #{detailoptionNo})
     ]]>
-		<selectKey keyProperty="wishlistoptionNo" resultType="int"
-			order="AFTER">
+		<!-- auto_increment로 생성된 wishlistoption_no를 VO에 설정 -->
+		<selectKey keyProperty="wishlistoptionNo" resultType="int" order="AFTER">
 			SELECT LAST_INSERT_ID()
 		</selectKey>
 	</insert>
-	
-	
 
 </mapper>
