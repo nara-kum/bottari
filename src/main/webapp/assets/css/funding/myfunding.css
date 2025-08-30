@@ -95,7 +95,7 @@
   /* 1행: bar, 2행: goal | achv */
   grid-template-rows: auto auto;
   /* 2행은 고정 너비로 나눠서 흔들림 방지 */
-  grid-template-columns: 244px 112px; /* ← 합 356 + gap(12) = 368 느낌으로 맞춤 */
+  grid-template-columns: 200px 100px; /* ← 합 356 + gap(12) = 368 느낌으로 맞춤 */
   column-gap: 12px;
   row-gap: 6px;
   align-items: center;

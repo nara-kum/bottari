@@ -29,6 +29,9 @@
 		<div class="sec-content-main">
 			<main class="main">
 				<div class="container">
+					<div class="cart-toolbar">
+						<button type="button" id="cart-bulk-delete" class="btn-bulk-delete">선택 삭제</button>
+					</div>
 					<div class="column-flex-box gap-10">
 						<c:forEach items="${requestScope.cList}" var="vo">
 							<div class="list-basic list-1280" data-cart-no="${vo.cart_no}">
@@ -84,9 +87,6 @@
 												<option>돌잔치</option>
 											</select>
 										</div>
-
-										<button class="btn-basic size-normal btn-orange column-align delete-btn" 
-												data-cart-no="${vo.cart_no}">삭제</button>
 									</div>
 								</div>
 							</div>

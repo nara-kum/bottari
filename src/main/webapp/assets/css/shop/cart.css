@@ -1,113 +1,181 @@
 @charset "UTF-8";
 
+/* ===== 공통 간격 유틸(기존 유지) ===== */
+.gap-10 { gap: 1px; }
+.margin-5 { margin: 5px; }
 
-.gap-10 {
-	gap: 10px;
+/* ===== 컨테이너 / 페이지 ===== */
+.container{
+  width:1280px; margin:0 auto;
+}
+.main{
+  background:#fdfdfd; padding:20px 0;
 }
 
-.margin-5 {
-	margin: 5px;
+/* =========================================================================
+   🎨 MyFunding 스킨 - 장바구니 카드
+   - HTML은 그대로 사용 (동작 변경 없음)
+   - .list-basic.list-1280 1장을 '카드'처럼 보이게
+   - 내부 레이아웃: [왼쪽(체크+썸네일+정보)] | [오른쪽(옵션/수량/기념일) | 삭제버튼]
+========================================================================= */
+
+/* 카드 프레임 */
+.list-basic.list-1280{
+  background:#fcfcfc;
+  border:1px solid #e0e0e0;
+  border-radius:12px;
+  box-shadow:0 4px 12px rgba(0,0,0,.05);
 }
 
-/* 기본 세팅 */
-.container {
-  width: 1280px;
-  margin: 0 auto;
+/* 카드 내부 2분할 (좌: 콘텐츠 / 우: 조작) */
+.list-basic.list-1280 > .between-flex-box{
+  display:grid;
+  grid-template-columns: minmax(480px, 1fr) 468px; /* 우측 고정폭으로 흔들림 방지 */
+  column-gap:16px;
+  align-items:center;
+  padding:10px 20px;
 }
 
-/* 본문 */
-.main {
-  background-color: #fdfdfd;
-  padding: 60px 0;
+/* ---------------- 좌측: 체크박스 + 썸네일 + 정보 ---------------- */
+.list-basic.list-1280 > .between-flex-box > .row-flex-box:first-child{
+  display:grid;
+  grid-template-columns: 28px 100px 1fr; /* 체크 | 썸네일 | 정보 */
+  column-gap:12px;
+  align-items:center;
+  min-height:100px;
 }
 
-.cart-box {
-  background-color: #fcf8f3;
-  border-radius: 12px;
-  padding: 30px;
+/* 체크박스 정렬 */
+.list-basic.list-1280 .column-align{ display:flex; align-items:center; justify-content:center; }
+
+/* 썸네일(100x100) */
+.list-img-100{
+  width:100px; height:100px; object-fit:cover; border-radius:10px; display:block;
 }
 
-.section-title {
-  font-size: 18px;
-  font-weight: bold;
-  margin-bottom: 20px;
+/* 브랜드/이름/가격 */
+.list-basic.list-1280 .column-flex-box.gap-10.margin-5{ min-width:0; }
+.item-name{
+  font-size:16px; line-height:1.35;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  color:#222;
+}
+.text-16{ font-size:14px; color:#666; }
+.text-16.bold{ font-weight:700; color:#111; }
+
+/* ---------------- 우측: 옵션/수량/기념일 | 삭제 ---------------- */
+.list-basic.list-1280 > .between-flex-box > .row-flex-box:last-child{
+  display:grid;
+  column-gap:8px; align-items:center; justify-items:end;
 }
 
-.cart-item {
-  display: flex;
-  align-items: center;
-  padding: 20px 0;
-  border-top: 1px solid #eee;
-  gap: 20px;
+/* 옵션/수량/기념일 묶음 */
+.list-basic.list-1280 .optionContainer{ margin-bottom:8px; }
+.list-basic.list-1280 .optionContainer .row-flex-box{
+  display:flex; flex-wrap:wrap; gap:8px 10px; align-items:center;
 }
 
-.cart-item:first-of-type {
-  border-top: none;
+/* 옵션 셀렉트 스타일 */
+.list-basic.list-1280 .optionContainer label{
+  font-size:12px; color:#777; margin-right:6px;
+}
+.list-basic.list-1280 .option-select{
+  min-width:160px;
+  height:34px; padding:0 10px;
+  border:1px solid #ddd; border-radius:8px; background:#fff;
+  font-size:13px;
 }
 
-.cart-item img {
-  width: 80px;
-  height: 80px;
-  object-fit: cover;
-  border-radius: 8px;
+/* 수량 컨트롤 (고정폭) */
+.quantity-container{ display:flex; align-items:center; gap:6px; }
+.quantity-btn{
+  width:28px; height:28px; border:1px solid #ddd; border-radius:999px;
+  background:#fff; font-size:16px; line-height:26px; cursor:pointer;
+}
+.quantity-display{
+  width:64px; text-align:center; font-weight:700; color:#111;
 }
 
-.item-info {
-  flex-grow: 1;
+/* 기념일 셀렉트(우측 묶음 안) */
+.btn-basic.size-normal{
+  height:34px; padding:0 12px;
+  border:1px solid #ddd; border-radius:8px; background:#fff;
+  font-size:13px;
 }
 
-.item-name {
-  font-size: 14px;
-  margin-bottom: 10px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  width: 550px;
+/* 삭제 버튼 – MyFunding 스타일(아웃라인) */
+.delete-btn{
+  width:110px; height:36px;
+  border:1px solid #ddd; border-radius:10px; background:#fff;
+  color:#333; font-weight:600; cursor:pointer;
+}
+.delete-btn:hover{ border-color:#bbb; }
+
+/* ---------------- 합계/구매 영역 ---------------- */
+.summary{
+  margin:18px 0 6px; padding:0 4px;
+  text-align:right;
+}
+.summary .text-16{ font-size:14px; color:#555; }
+.summary .text-18{ font-size:16px; }
+
+.buy-button{ text-align:center; margin-top:14px; }
+.buy-button #purchase-btn{
+  background:#ef5327; color:#fff; border:none;
+  padding:12px 28px; font-size:16px; border-radius:8px; cursor:pointer;
+}
+.buy-button #purchase-btn:hover{ filter:brightness(.98); }
+
+/* ---------------- 반응형(좁은 화면) ---------------- */
+@media (max-width: 980px){
+  .list-basic.list-1280 > .between-flex-box{
+    grid-template-columns: 1fr;
+    row-gap:12px;
+  }
+  .list-basic.list-1280 > .between-flex-box > .row-flex-box:last-child{
+    grid-template-columns: 1fr; justify-items:stretch;
+  }
+  .delete-btn{ width:100%; }
+}
+.main .container > .column-flex-box.gap-10{
+  gap: 16px;   /* 원하는 카드 간격으로 숫자만 바꾸면 됨 */
+
+}
+.main .container .list-basic.list-1280 { padding: 0; }
+
+#sec-content .list-basic.list-1280{
+  width: 100% !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  box-sizing: border-box;
+}
+/* 제목줄을 우측 버튼 넣을 수 있게 */
+.cart-subtitle{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
 }
 
-.qty-select {
-  padding: 6px 10px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
+/* 우측 도구영역 */
+.cart-toolbar{
+  display:flex;
+  justify-content: flex-end;
+  align-items:center;
+  gap:10px;
+  margin:  0 0 20px 0;
 }
 
-.delete-btn {
-  background: none;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  padding: 6px 12px;
-  cursor: pointer;
-}
-
-/* 결제 요약 */
-.summary {
-  margin-top: 30px;
-  text-align: right;
-}
-
-.summary-row {
-  margin-bottom: 8px;
-  font-size: 14px;
-}
-
-.summary-row.total {
-  font-weight: bold;
-  font-size: 16px;
-}
-
-/* 구매 버튼 */
-.buy-button {
-  margin-top: 20px;
-  text-align: center;
-}
-
-.buy-button button {
-  background-color: #ef5327;
+/* 초대장 ‘만들기’ 버튼 느낌의 오렌지 솔리드 버튼 */
+.btn-bulk-delete{
+  appearance: none;
+  border: 1px solid #ef5327;
+  background: #ef5327;
   color: #fff;
-  border: none;
-  padding: 12px 30px;
-  font-size: 16px;
-  border-radius: 6px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-weight: 700;
   cursor: pointer;
 }
-
+.btn-bulk-delete:hover{ filter:brightness(1.05); }
+.btn-bulk-delete:active{ transform:translateY(1px); }
