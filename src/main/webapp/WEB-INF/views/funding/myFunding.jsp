@@ -11,7 +11,9 @@
   <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/Global.css">
   <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/funding/myfunding.css">
   <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/wishlist/wishlist.css">
-  <script src="${pageContext.request.contextPath}/assets/js/jquery/jquery-3.7.1.js"></script>
+  <script src="${pageContext.request.contextPath}/assets/js/jquery/jquery-3.7.1.js">
+
+  </script>
 </head>
 
 <body class="family">
@@ -68,9 +70,7 @@
     return [];
   }
 
-  // ✅ 상품 이미지 경로 해결: itemimg/saveName 등 파일명 → /upload/<파일명>
   function resolveImage(vo){
-    // 백엔드가 어떤 키로 보내든 최대한 커버
     let raw = vo.image || vo.imageUrl || vo.image_url ||
               vo.itemimg || vo.itemImg ||
               vo.saveName || vo.save_name ||
@@ -104,15 +104,18 @@
   const price         = Number(vo.price)||0;
   const amount        = Number(vo.amount)||0;
   const percent       = Math.max(0, Math.min(100, Number(vo.percent)||0));
-  const status        = (vo.fundingStatus || 'O').toUpperCase();
-  const statusText    = (status === 'O') ? '펀딩진행중' : '펀딩완료';
+  const statusRaw   = String(vo.fundingStatus ?? 'ing').toLowerCase();
+  const isIng       = ['ing','o','open','ongoing','progress'].includes(statusRaw); // 백엔드 표기 다양성 커버
+  const statusText  = isIng ? '펀딩진행중' : '펀딩완료';
+  const statusClass = isIng ? 'funding-ing' : 'funding-done';
   const imgUrl        = resolveImage(vo);
 
   return [
     '<div class="card-box" data-funding-no="', fundingNo, '">',
       '<div class="product-header">',
         '<div class="left-side"><span class="sub-title">', escapeHtml(fundingDate), '</span></div>',
-        '<div class="right-side"><span class="', (status==='O'?'funding-ing':'funding-done'), '">', statusText, '</span></div>',
+      '<div class="right-side"><span class="funding-badge ', statusClass, '">', statusText, '</span></div>',
+
       '</div>',
       '<div class="product-body">',
         '<div class="mf-left"><div class="mf-row">',
@@ -129,11 +132,18 @@
             '<div class="product-price">', fmtKRW(price), '</div>',
           '</div>',
         '</div></div>',
-        '<div class="left-price-right-price">',
-          '<div class="progress-bar"><div class="progress-fill" style="width:', percent, '%;"></div></div>',
-        '</div>',
-        '<div class="percent">', percent, '%</div>',
-        '<div class="price-participation">', fmtKRW(amount), '</div>',
+// 초대장 스타일의 바 영역
+'<div class="mf-meter with-goal">',
+  '<div class="bar"><div class="fill" style="width:', percent, '%;"></div></div>',
+  '<div class="goal">',
+    '<span class="curr">', fmtKRW(amount), '</span>',
+    '<span class="sep"> / </span>',
+    '<span class="total">', fmtKRW(price), '</span>',
+  '</div>',
+  '<div class="achv"><span class="pct">', percent, '% 달성</span></div>',
+'</div>',
+
+
         '<div class="funding-action-wrapper">',
           '<div class="action-buttons">',
             '<button class="btn-funding2 btn-cancel"  data-funding-no="', fundingNo, '">펀딩환불</button>',
