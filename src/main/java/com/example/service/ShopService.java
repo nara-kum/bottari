@@ -32,12 +32,13 @@ public class ShopService {
 	@Autowired
 	private ShopRepository shopRepository;
 
-	// 쇼핑몰 리스트 - 페이징 + 검색 기능 (강의 로직과 동일하게 구현)
-	public Map<String, Object> exeProductList(int crtPage, String kwd, int categoryNo) {
+	// Service 메소드 수정
+	public Map<String, Object> exeProductList(int crtPage, String kwd, int categoryNo, int priceRange) {
 		System.out.println("ShopService.exeProductList - 페이징");
 		System.out.println("현재페이지: " + crtPage);
 		System.out.println("검색키워드: " + kwd);
 		System.out.println("카테고리: " + categoryNo);
+		System.out.println("가격대: " + priceRange);
 		
 		///리스트가져오기///
 		// 한페이지 출력갯수 (16개 고정)
@@ -52,6 +53,7 @@ public class ShopService {
 		limitMap.put("listCnt", listCnt);           // LIMIT에서 사용할 개수
 		limitMap.put("kwd", kwd);                   // 검색 키워드
 		limitMap.put("categoryNo", categoryNo);     // 카테고리 번호
+		limitMap.put("priceRange", priceRange);     // 가격대 필터
 		
 		// 묶은 파라미터를 Repository에 보내서 상품 리스트 가져오기
 		List<ProductVO> productList = shopRepository.selectProductList(limitMap);
@@ -70,8 +72,8 @@ public class ShopService {
 		// 시작버튼번호 계산		
 		int startPageBtnNo = (endPageBtnNo - pageBtnCount) + 1;
 
-		// 전체 글 갯수 조회 (검색 조건 포함)
-		int totalCount = shopRepository.selectTotalCountByKwd(kwd, categoryNo);
+		// 전체 글 갯수 조회 (검색 조건 + 가격 조건 포함)
+		int totalCount = shopRepository.selectTotalCountByKwd(kwd, categoryNo, priceRange);
 		
 		// 다음 화살표 유무 계산 (next)
 		boolean next = false;

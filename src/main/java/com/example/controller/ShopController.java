@@ -38,20 +38,22 @@ public class ShopController {
 	@Autowired
 	private ShopService shopService;
 	
-	// 쇼핑몰리스트 (페이징 + 검색 기능)
+	// 쇼핑몰리스트 (페이징 + 검색 + 가격필터 기능)
 	@RequestMapping(value="/shop/bottarimall", method= {RequestMethod.GET, RequestMethod.POST})
 	public String list(@RequestParam(value="crtpage", required = false, defaultValue = "1")int crtPage, // 현재 페이지 (기본값 1)
 	                   @RequestParam(value="kwd", required = false, defaultValue = "") String kwd, // 검색 키워드 (기본값 빈문자열)
 	                   @RequestParam(value="categoryNo", required = false, defaultValue = "0") int categoryNo, // 카테고리 번호 (기본값 0=전체)
+	                   @RequestParam(value="priceRange", required = false, defaultValue = "0") int priceRange, // 가격대 (기본값 0=전체)
 	                   Model model) {	
 		
 		System.out.println("ShopController.list - 페이징");
 		System.out.println("현재페이지: " + crtPage);
 		System.out.println("검색키워드: " + kwd);
 		System.out.println("카테고리: " + categoryNo + (categoryNo == 0 ? "(전체)" : ""));
+		System.out.println("가격대: " + priceRange + (priceRange == 0 ? "(전체)" : ""));
 		
 		// 서비스에서 페이징된 데이터와 페이징 정보가 담긴 Map을 받아온다
-		Map<String, Object> pMap = shopService.exeProductList(crtPage, kwd, categoryNo);
+		Map<String, Object> pMap = shopService.exeProductList(crtPage, kwd, categoryNo, priceRange);
 		
 		// 받아온 Map을 모델에 담아서 뷰로 전달
 		model.addAttribute("pMap", pMap);
@@ -59,11 +61,13 @@ public class ShopController {
 		// 검색 조건들을 다시 화면에 전달 (검색 폼 유지를 위해)
 		model.addAttribute("kwd", kwd);
 		model.addAttribute("categoryNo", categoryNo);
+		model.addAttribute("priceRange", priceRange);
 		
 		System.out.println("전달할 pMap: " + pMap);
 		
 		return "shop/shoppingMall";	
 	}
+	
 	
 	// 상품등록폼
 	@RequestMapping(value="/shop/productform", method= {RequestMethod.GET, RequestMethod.POST})

@@ -38,6 +38,32 @@
 			and (title like concat('%', #{kwd}, '%') 
 			  or brand like concat('%', #{kwd}, '%'))
 		</if>
+
+
+	<!-- 가격 필터 조건 -->
+	<if test="priceRange != null and priceRange != 0">
+		<choose>
+			<when test="priceRange == 1">
+				<!-- 2만원 미만 -->
+				and price &lt; 20000
+			</when>
+			<when test="priceRange == 2">
+				<!-- 2만원대 (20000~29999) -->
+				and price &gt;= 20000 and price &lt; 30000
+			</when>
+			<when test="priceRange == 3">
+				<!-- 3만원대 (30000~39999) -->
+				and price &gt;= 30000 and price &lt; 40000
+			</when>
+			<when test="priceRange == 4">
+				<!-- 5만원대 (50000~59999) -->
+				and price &gt;= 50000 and price &lt; 60000
+			</when>
+		</choose>
+	</if>
+		
+		
+		
 		
 	<![CDATA[
 		order by product_no desc

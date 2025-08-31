@@ -37,19 +37,21 @@ public class ShopRepository {
 
 		return productList;
 	}
-	
-	// 전체 상품 개수 조회 - 검색 조건 포함 (강의와 동일한 방식)
-	public int selectTotalCountByKwd(String kwd, int categoryNo) {
+
+	// 전체 상품 개수 조회 - 검색 조건 + 가격 조건 포함
+	public int selectTotalCountByKwd(String kwd, int categoryNo, int priceRange) {
 		System.out.println("ShopRepository.selectTotalCountByKwd");
 		System.out.println("검색키워드: " + kwd);
 		System.out.println("카테고리: " + categoryNo);
+		System.out.println("가격대: " + priceRange);
 
-		// 파라미터를 Map으로 묶어서 전달 (강의와 동일한 방식)
+		// 파라미터를 Map으로 묶어서 전달
 		Map<String, Object> paramMap = new HashMap<>();
 		paramMap.put("kwd", kwd);
 		paramMap.put("categoryNo", categoryNo);
+		paramMap.put("priceRange", priceRange);
 		
-		// MyBatis를 통해 전체 개수 조회 (강의와 동일한 쿼리 id 사용)
+		// MyBatis를 통해 전체 개수 조회
 		int totalCount = sqlSession.selectOne("product.selectTotalCountByKwd", paramMap);
 		System.out.println("전체 상품 수: " + totalCount);
 
