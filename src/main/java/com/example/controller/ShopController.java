@@ -269,7 +269,7 @@ public class ShopController {
 	}
 
 	// 위시리스트 등록
-	@RequestMapping(value="/whishlist/wishlistadd", method= {RequestMethod.GET, RequestMethod.POST})
+	@RequestMapping(value="/wishlist/wishlistadd", method= {RequestMethod.GET, RequestMethod.POST})
 	public String insertWishlist(@RequestParam(value="productNo", required=false) Integer productNo,
 	                            @RequestParam(value="quantity", required=false) Integer quantity,
 	                            @RequestParam(value="selectedOptions", required=false) String selectedOptionsJson, 
@@ -359,7 +359,7 @@ public class ShopController {
 	        }
 	        
 	        System.out.println("===== 위시리스트 등록 완료 =====");
-	        return "redirect:wishlist/wishlist";
+	        return "redirect:/funding/wish";
 	        
 	    } catch (Exception e) {
 	        System.out.println("위시리스트 등록 중 오류 발생: " + e.getMessage());
