@@ -25,121 +25,101 @@ import jakarta.servlet.http.HttpSession;
 @RestController
 public class InvitationApiController {
 
-	@Autowired
-	private InvitationService invitationService;
+    @Autowired
+    private InvitationService invitationService;
 
-	// 초대장 등록
-	@PostMapping("/api/invtreg")
-	public JsonResult invtReg(@RequestBody InvitationVO invitationVO, HttpSession session) {
-		System.out.println("InvitationApiController.invtReg()");
-		System.out.println(invitationVO);
+    // 초대장 등록
+    @PostMapping("/api/invtreg")
+    public JsonResult invtReg(@RequestBody InvitationVO invitationVO, HttpSession session) {
+        System.out.println("InvitationApiController.invtReg()");
 
-		UserVO authUser = (UserVO) session.getAttribute("authUser");
-		if (authUser == null) {
-			return JsonResult.fail("로그인이 필요합니다.");
-		}
+        UserVO authUser = (UserVO) session.getAttribute("authUser");
+        if (authUser == null) return JsonResult.fail("로그인이 필요합니다.");
 
-		invitationVO.setUserNo(authUser.getUserNo());
+        invitationVO.setUserNo(authUser.getUserNo());
 
-		// 필수값 검증
-		if (invitationVO.getCategoryNo() == 0 || invitationVO.getEventNo() == 0
-				|| invitationVO.getCelebrateDate() == null || invitationVO.getCelebrateDate().isBlank()) {
-			return JsonResult.fail("필수 항목을 확인해주세요.");
-		}
+        // 필수값 검증
+        if (invitationVO.getCategoryNo() == 0 ||
+            invitationVO.getEventNo() == 0 ||
+            invitationVO.getCelebrateDate() == null ||
+            invitationVO.getCelebrateDate().isBlank()) {
+            return JsonResult.fail("필수 항목을 확인해주세요.");
+        }
 
-		int cnt = invitationService.exeInvtReg(invitationVO);
+        int cnt = invitationService.exeInvtReg(invitationVO);
+        return (cnt > 0) ? JsonResult.success(invitationVO)
+                         : JsonResult.fail("초대장 등록에 실패했습니다.");
+    }
 
-		if (cnt > 0) {
-			return JsonResult.success(invitationVO);
-		}
-		return JsonResult.fail("초대장 등록에 실패했습니다.");
-	}
+    // 이미지 업로드
+    @PostMapping("/api/upload")
+    public JsonResult upload(@RequestParam("file") MultipartFile file, HttpSession session) {
+        System.out.println("InvitationApiController.upload()");
 
-	// 이미지 업로드
-	@PostMapping("/api/upload")
-	public JsonResult upload(@RequestParam("file") MultipartFile file, HttpSession session) {
-		System.out.println("InvitationApiController.upload()");
+        UserVO authUser = (UserVO) session.getAttribute("authUser");
+        if (authUser == null) return JsonResult.fail("로그인이 필요합니다.");
+        if (file == null || file.isEmpty()) return JsonResult.fail("파일이 없습니다.");
 
-		UserVO authUser = (UserVO) session.getAttribute("authUser");
-		if (authUser == null) {
-			return JsonResult.fail("로그인이 필요합니다.");
-		}
-		if (file == null || file.isEmpty()) {
-			return JsonResult.fail("파일이 없습니다.");
-		}
+        String url = invitationService.save(file);
+        Map<String, Object> data = new HashMap<>();
+        data.put("url", url);
+        return JsonResult.success(data);
+    }
 
-		String url = invitationService.save(file);
-		Map<String, Object> data = new HashMap<>();
-		data.put("url", url);
+    // 내 초대장 목록
+    @GetMapping("/api/invtlist")
+    public JsonResult invtList(HttpSession session) {
+        System.out.println("InvitationApiController.invtList()");
 
-		return JsonResult.success(data);
-	}
+        UserVO authUser = (UserVO) session.getAttribute("authUser");
+        if (authUser == null) return JsonResult.fail("로그인이 필요합니다.");
 
-	// 내 초대장 목록
-	@GetMapping("/api/invtlist")
-	public JsonResult invtList(HttpSession session) {
-		System.out.println("InvitationApiController.invtList()");
+        List<InvitationVO> list = invitationService.exeInvtList(authUser.getUserNo());
+        if (list == null) list = Collections.emptyList();
+        return JsonResult.success(list);
+    }
 
-		UserVO authUser = (UserVO) session.getAttribute("authUser");
-		if (authUser == null) {
-			return JsonResult.fail("로그인이 필요합니다.");
-		}
+    // (관리/수정) 상세: 소유자 검증 포함
+    @GetMapping("/api/invtdetail")
+    public JsonResult detail(@RequestParam("no") int invitationNo, HttpSession session) {
+        UserVO auth = (UserVO) session.getAttribute("authUser");
+        if (auth == null) return JsonResult.fail("로그인이 필요합니다.");
 
-		List<InvitationVO> list = invitationService.exeInvtList(authUser.getUserNo());
-		if (list == null)
-			list = Collections.emptyList();
-		return JsonResult.success(list);
-	}
+        Map<String, Object> detail = invitationService.getInvitationDetail(invitationNo, auth.getUserNo());
+        if (detail == null) return JsonResult.fail("존재하지 않거나 권한이 없습니다.");
+        return JsonResult.success(detail);
+    }
 
-	// 초대장 내용 가져오기
-	@GetMapping("/api/invtdetail")
-	public JsonResult detail(@RequestParam("no") int invitationNo, HttpSession session) {
-		UserVO auth = (UserVO) session.getAttribute("authUser");
-		if (auth == null)
-			return JsonResult.fail("로그인이 필요합니다.");
-		Map<String, Object> detail = invitationService.getInvitationDetail(invitationNo, auth.getUserNo());
-		if (detail == null)
-			return JsonResult.fail("존재하지 않거나 권한이 없습니다.");
-		return JsonResult.success(detail);
-	}
+    // 초대장 수정 저장 (PUT 대신 POST)
+    @PostMapping("/api/invt/update")
+    public JsonResult update(@RequestBody InvitationVO vo, HttpSession session) {
+        UserVO auth = (UserVO) session.getAttribute("authUser");
+        if (auth == null) return JsonResult.fail("로그인이 필요합니다.");
+        if (vo.getInvitationNo() == 0) return JsonResult.fail("invitationNo 누락");
 
-	//초대장 수정 저장
-	@PostMapping("/api/invt/update") // PUT 대신 POST로 간단히
-	public JsonResult update(@RequestBody InvitationVO vo, HttpSession session) {
-		UserVO auth = (UserVO) session.getAttribute("authUser");
-		if (auth == null)
-			return JsonResult.fail("로그인이 필요합니다.");
-		if (vo.getInvitationNo() == 0)
-			return JsonResult.fail("invitationNo 누락");
-		vo.setUserNo(auth.getUserNo());
-		int cnt = invitationService.updateInvitation(vo);
-		return (cnt > 0) ? JsonResult.success(vo) : JsonResult.fail("수정 실패");
-	}
+        vo.setUserNo(auth.getUserNo());
+        int cnt = invitationService.updateInvitation(vo);
+        return (cnt > 0) ? JsonResult.success(vo) : JsonResult.fail("수정 실패");
+    }
 
-	//초대장 삭제
-	@DeleteMapping("/api/invt/{no}")
-	public JsonResult delete(@PathVariable("no") int invitationNo, HttpSession session) {
-		UserVO auth = (UserVO) session.getAttribute("authUser");
-		if (auth == null)
-			return JsonResult.fail("로그인이 필요합니다.");
-		int cnt = invitationService.deleteInvitation(invitationNo, auth.getUserNo());
-		return (cnt > 0) ? JsonResult.success(cnt) : JsonResult.fail("삭제 실패");
-	}
+    // 초대장 삭제
+    @DeleteMapping("/api/invt/{no}")
+    public JsonResult delete(@PathVariable("no") int invitationNo, HttpSession session) {
+        UserVO auth = (UserVO) session.getAttribute("authUser");
+        if (auth == null) return JsonResult.fail("로그인이 필요합니다.");
 
-	// 초대장 전체보기(불러오기)
-	@GetMapping("/api/invtview")
-	public JsonResult view(@RequestParam("no") int invitationNo, HttpSession session) {
-		UserVO authUser = (UserVO) session.getAttribute("authUser");
-		if (authUser == null)
-			return JsonResult.fail("로그인이 필요합니다.");
+        int cnt = invitationService.deleteInvitation(invitationNo, auth.getUserNo());
+        return (cnt > 0) ? JsonResult.success(cnt) : JsonResult.fail("삭제 실패");
+    }
 
-		Map<String, Object> bundle = invitationService.getInvitationViewBundle(invitationNo, authUser.getUserNo());
+    // (보기/공유) 초대장 + 펀딩카드(그래프)
+    @GetMapping("/api/invtview")
+    public JsonResult view(@RequestParam("no") int invitationNo, HttpSession session) {
+        UserVO authUser = (UserVO) session.getAttribute("authUser");
+        if (authUser == null) return JsonResult.fail("로그인이 필요합니다.");
 
-		if (bundle == null) {
-			return JsonResult.fail("존재하지 않거나 권한이 없습니다.");
-		}
-
-		return JsonResult.success(bundle);
-	}
-
+        Map<String, Object> bundle = invitationService.getInvitationViewBundle(invitationNo, authUser.getUserNo());
+        if (bundle == null) return JsonResult.fail("존재하지 않거나 권한이 없습니다.");
+        return JsonResult.success(bundle);
+    }
 }
