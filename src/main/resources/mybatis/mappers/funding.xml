@@ -2,40 +2,62 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="funding">
 
-<!-- 내 펀딩 목록 -->
-  <select id="selectMyFundingList" parameterType="int" resultType="com.example.vo.WishlistVO">
-    <![CDATA[
-      SELECT
-          fp.funding_no         AS fundingNo
-        , fp.event_no           AS eventNo
-        , fp.user_no            AS userNo
-        , fp.product_no         AS productNo
-        , fp.percent            AS percent
-        , fp.amount             AS amount
-        , fp.funding_status     AS fundingStatus
-        , CONCAT(DATE_FORMAT(fp.funding_date, '%Y.%m.%d'), ' | ', IFNULL(c.event_name,'')) AS fundingDate
-        , p.brand               AS brand
-        , p.title               AS title
-        , p.price               AS price
-        , p.itemimg             AS image
-        , po.option_name        AS optionName
-        , od.detailoption_name  AS detailoptionName
-		, c.event_name          AS eventName
-      FROM funding_product fp
-      JOIN product p
-        ON p.product_no = fp.product_no
-      LEFT JOIN funding_option fo
-        ON fo.funding_no = fp.funding_no
-      LEFT JOIN option_detail od
-        ON od.detailoption_no = fo.detailoption_no
-      LEFT JOIN product_option po
-        ON po.option_no = od.option_no
-      LEFT JOIN calender c
-		ON c.event_no = fp.event_no
-      WHERE fp.user_no = #{value}
-      ORDER BY fp.funding_no DESC
-    ]]>
-  </select>
-
-
+	<!-- 내 펀딩 목록 -->
+	<select id="selectMyFundingList" parameterType="long"
+		resultType="com.example.vo.WishlistVO">
+		  <![CDATA[
+		  SELECT
+		      fp.funding_no         AS fundingNo
+		    , fp.event_no           AS eventNo
+		    , fp.user_no            AS userNo
+		    , fp.product_no         AS productNo
+		    , fp.percent            AS percent
+		    , fp.amount             AS amount
+		    , fp.funding_status     AS fundingStatus
+		    , CONCAT(DATE_FORMAT(fp.funding_date, '%Y.%m.%d'), ' | ', IFNULL(c.event_name,'')) AS fundingDate
+		    , p.brand               AS brand
+		    , p.title               AS title
+		    , p.price               AS price
+		    , p.itemimg             AS image
+		    , po.option_no        AS optionNo
+		    , od.detailoption_no  AS detailoptionNo
+		    , po.option_name        AS optionName
+		    , od.detailoption_name  AS detailoptionName
+		    , c.event_name          AS eventName
+		
+		    /* ▼ 결제 집계: 총/내/남 */
+		    , COALESCE(pay.total_paid, 0) AS paidAmount          -- 총 모금(나+남)
+		    , COALESCE(pay.paid_me,   0) AS myPaidAmount         -- 내가 낸 금액(세션 user)
+		    , GREATEST(COALESCE(pay.total_paid,0) - COALESCE(pay.paid_me,0), 0) AS othersAmount  -- 남들이 낸 금액
+		  FROM funding_product fp
+		  JOIN product p
+		    ON p.product_no = fp.product_no
+		  LEFT JOIN funding_option fo
+		    ON fo.funding_no = fp.funding_no
+		  LEFT JOIN option_detail od
+		    ON od.detailoption_no = fo.detailoption_no
+		  LEFT JOIN product_option po
+		    ON po.option_no = od.option_no
+		  LEFT JOIN calender c
+		    ON c.event_no = fp.event_no
+		  LEFT JOIN (
+		    SELECT
+		      pm.funding_no,
+		      SUM(CASE
+		            WHEN pm.payment_status IN ('완료')
+		             AND pm.service_type = 'funding(true)'
+		            THEN pm.payment_amount ELSE 0 END) AS total_paid,
+		      SUM(CASE
+		            WHEN pm.payment_status IN ('완료')
+		             AND pm.service_type = 'funding(true)'
+		             AND pm.user_no = #{value}
+		            THEN pm.payment_amount ELSE 0 END) AS paid_me
+		    FROM payment pm
+		    GROUP BY pm.funding_no
+		  ) pay ON pay.funding_no = fp.funding_no
+		
+		  WHERE fp.user_no = #{value}
+		  ORDER BY fp.funding_no DESC
+		  ]]>
+	</select>
 </mapper>

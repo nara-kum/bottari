@@ -1,64 +1,51 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+  pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
-<meta charset="UTF-8">
-<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/reset.css">
-<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/Global.css">
-<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/funding/myfunding.css">
-<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/wishlist/wishlist.css">
-<script src="${pageContext.request.contextPath}/assets/js/jquery/jquery-3.7.1.js"></script>
+  <meta charset="UTF-8">
+  <title>마이 펀딩</title>
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/reset.css">
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/Global.css">
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/funding/myfunding.css">
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/wishlist/wishlist.css">
+  <script src="${pageContext.request.contextPath}/assets/js/jquery/jquery-3.7.1.js">
 
-<title>마이 펀딩</title>
+  </script>
 </head>
 
 <body class="family">
 
-	<!------------------------ Header호출 ----------------------->
-	<c:import url="/WEB-INF/views/include/Header.jsp"></c:import>
-	<!-- ---------------------------------------------------- -->
-	
-	<content class="controller">
-	<div id="sec-content" class="sector">
-		<div class="sec-sub-title">
-			<div class="tab-row" role="navigation">
-				<!-- 펀딩 관리 -->
-				<h2 class="header-sub">
-					<a href="${pageContext.request.contextPath}/funding/wish">
-					펀딩 관리
-					</a>
-				</h2>
+  <!-- Header -->
+  <c:import url="/WEB-INF/views/include/Header.jsp"></c:import>
 
-				<!-- 마이 펀딩 -->
-				<h2 class="header-sub">
-				<a href="${pageContext.request.contextPath}/funding/my">
-					마이 펀딩
-				</a>
-				</h2>
+  <content class="controller">
+  <div id="sec-content" class="sector">
+    <div class="sec-sub-title">
+      <div class="tab-row" role="navigation">
+        <h2 class="header-sub">
+          <a href="${pageContext.request.contextPath}/funding/wish">펀딩 관리</a>
+        </h2>
+        <h2 class="header-sub is-active">
+          <a href="${pageContext.request.contextPath}/funding/my" aria-current="page">마이 펀딩</a>
+        </h2>
+        <h2 class="header-sub">
+          <a href="${pageContext.request.contextPath}/funding/friend">친구 펀딩</a>
+        </h2>
+      </div>
+    </div>
 
-				<!-- 친구 펀딩 -->
-				<h2 class="header-sub is-active">
-					<a href="${pageContext.request.contextPath}/funding/friend" aria-current="page">
-					친구 펀딩
-					</a>
-				</h2>
-			</div>
-		</div>
+    <div class="sec-content-main">
+      <div id="myFundingList" class="content"></div>
+    </div>
+  </div>
+  </content>
 
-		<div class="sec-content-main">
-			<div id="myFundingList" class="content"></div>
-		  </div>
-	  
-		</div>
-		</content>
-	  
-		<!------------------------ Footer ------------------------>
-		<c:import url="/WEB-INF/views/include/Footer.jsp"></c:import>
-		<!------------------------------------------------------->
-	  
+  <!-- Footer -->
+  <c:import url="/WEB-INF/views/include/Footer.jsp"></c:import>
+
 <script>
 (function(){
   const CTX = "${pageContext.request.contextPath}";
@@ -108,24 +95,27 @@
 
   /* ---------- 카드 렌더 ---------- */
   function renderCard(vo){
-  const fundingNo     = Number(vo.fundingNo)||0;
-  const fundingDate   = vo.fundingDate || '';
-  const brand         = vo.brand || '';
-  const title         = vo.title || '';
-  const optionName       = vo.optionName       ?? vo.option_name       ?? '';
-  const detailOptionName = vo.detailOptionName ?? vo.detail_option_name ?? vo.detailoptionName ?? '';
-  const price         = Number(vo.price)||0;
-  const amount        = Number(vo.amount)||0;
-  const percent       = Math.max(0, Math.min(100, Number(vo.percent)||0));
-  const status        = (vo.fundingStatus || 'O').toUpperCase();
-  const statusText    = (status === 'O') ? '펀딩진행중' : '펀딩완료';
-  const imgUrl        = resolveImage(vo);
+  const fundingNo   = Number(vo.fundingNo)||0;
+  const fundingDate = vo.fundingDate || '';
+  const brand       = vo.brand || '';
+  const title       = vo.title || '';
+  const optionName  = vo.optionName ?? vo.option_name ?? '';
+  const detailoptionName = vo.detailoptionName ?? vo.detail_option_name ?? '';
+  const price       = Number(vo.price)||0;                             // 분모
+  const paidAmount  = Number(vo.paidAmount ?? vo.paymentAmount ?? 0);  // ✅ 분자(결제 합계)
+  const percentCalc = price > 0 ? Math.min(100, Math.round(paidAmount/price*100)) : 0;
+
+  const statusRaw   = String(vo.fundingStatus ?? 'ing').toLowerCase();
+  const isIng       = ['ing','o','open','ongoing','progress'].includes(statusRaw);
+  const statusText  = isIng ? '펀딩진행중' : '펀딩완료';
+  const statusClass = isIng ? 'funding-ing' : 'funding-done';
+  const imgUrl      = resolveImage(vo);
 
   return [
     '<div class="card-box" data-funding-no="', fundingNo, '">',
       '<div class="product-header">',
         '<div class="left-side"><span class="sub-title">', escapeHtml(fundingDate), '</span></div>',
-        '<div class="right-side"><span class="', (status==='O'?'funding-ing':'funding-done'), '">', statusText, '</span></div>',
+        '<div class="right-side"><span class="funding-badge ', statusClass, '">', statusText, '</span></div>',
       '</div>',
       '<div class="product-body">',
         '<div class="mf-left"><div class="mf-row">',
@@ -137,16 +127,22 @@
             '<div class="product-row">',
               '<span class="name">', escapeHtml(title), '</span>',
               '<span class="opt-sep"> / </span><span class="option-name">', escapeHtml(optionName), '</span>',
-              '<span class="opt-sep"> / </span><span class="option-name">', escapeHtml(detailOptionName), '</span>',
+              '<span class="opt-sep"> / </span><span class="option-name">', escapeHtml(detailoptionName), '</span>',
             '</div>',
             '<div class="product-price">', fmtKRW(price), '</div>',
           '</div>',
         '</div></div>',
-        '<div class="left-price-right-price">',
-          '<div class="progress-bar"><div class="progress-fill" style="width:', percent, '%;"></div></div>',
+
+        '<div class="mf-meter with-goal">',
+          '<div class="bar"><div class="fill" style="width:', percentCalc, '%;"></div></div>',
+          '<div class="goal">',
+            '<span class="curr">', fmtKRW(paidAmount), '</span>',
+            '<span class="sep"> / </span>',
+            '<span class="total">', fmtKRW(price), '</span>',
+          '</div>',
+          '<div class="achv"><span class="pct">', percentCalc, '% 달성</span></div>',
         '</div>',
-        '<div class="percent">', percent, '%</div>',
-        '<div class="price-participation">', fmtKRW(amount), '</div>',
+
         '<div class="funding-action-wrapper">',
           '<div class="action-buttons">',
             '<button class="btn-funding2 btn-cancel"  data-funding-no="', fundingNo, '">펀딩환불</button>',
@@ -157,6 +153,7 @@
     '</div>'
   ].join('');
 }
+
 
 
   /* ---------- 목록 로드 ---------- */

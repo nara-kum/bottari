@@ -427,6 +427,11 @@
 	font-weight: 600;
 	cursor: pointer;
 }
+.product-actions .cart-btn[disabled],
+.product-actions .wishlist-btn[disabled]{
+  opacity: .45;
+  cursor: not-allowed;
+}
 
 /* (선택) 작은 화면에서는 버튼을 정보 밑으로 */
 @media ( max-width :520px) {

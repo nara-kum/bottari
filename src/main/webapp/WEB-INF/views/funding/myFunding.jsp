@@ -95,27 +95,27 @@
 
   /* ---------- 카드 렌더 ---------- */
   function renderCard(vo){
-  const fundingNo     = Number(vo.fundingNo)||0;
-  const fundingDate   = vo.fundingDate || '';
-  const brand         = vo.brand || '';
-  const title         = vo.title || '';
-  const optionName       = vo.optionName       ?? vo.option_name       ?? '';
-  const detailOptionName = vo.detailOptionName ?? vo.detail_option_name ?? vo.detailoptionName ?? '';
-  const price         = Number(vo.price)||0;
-  const amount        = Number(vo.amount)||0;
-  const percent       = Math.max(0, Math.min(100, Number(vo.percent)||0));
+  const fundingNo   = Number(vo.fundingNo)||0;
+  const fundingDate = vo.fundingDate || '';
+  const brand       = vo.brand || '';
+  const title       = vo.title || '';
+  const optionName  = vo.optionName ?? vo.option_name ?? '';
+  const detailoptionName = vo.detailoptionName ?? vo.detail_option_name ?? '';
+  const price       = Number(vo.price)||0;                             // 분모
+  const paidAmount  = Number(vo.paidAmount ?? vo.paymentAmount ?? 0);  // ✅ 분자(결제 합계)
+  const percentCalc = price > 0 ? Math.min(100, Math.round(paidAmount/price*100)) : 0;
+
   const statusRaw   = String(vo.fundingStatus ?? 'ing').toLowerCase();
-  const isIng       = ['ing','o','open','ongoing','progress'].includes(statusRaw); // 백엔드 표기 다양성 커버
+  const isIng       = ['ing','o','open','ongoing','progress'].includes(statusRaw);
   const statusText  = isIng ? '펀딩진행중' : '펀딩완료';
   const statusClass = isIng ? 'funding-ing' : 'funding-done';
-  const imgUrl        = resolveImage(vo);
+  const imgUrl      = resolveImage(vo);
 
   return [
     '<div class="card-box" data-funding-no="', fundingNo, '">',
       '<div class="product-header">',
         '<div class="left-side"><span class="sub-title">', escapeHtml(fundingDate), '</span></div>',
-      '<div class="right-side"><span class="funding-badge ', statusClass, '">', statusText, '</span></div>',
-
+        '<div class="right-side"><span class="funding-badge ', statusClass, '">', statusText, '</span></div>',
       '</div>',
       '<div class="product-body">',
         '<div class="mf-left"><div class="mf-row">',
@@ -127,22 +127,22 @@
             '<div class="product-row">',
               '<span class="name">', escapeHtml(title), '</span>',
               '<span class="opt-sep"> / </span><span class="option-name">', escapeHtml(optionName), '</span>',
-              '<span class="opt-sep"> / </span><span class="option-name">', escapeHtml(detailOptionName), '</span>',
+              '<span class="opt-sep"> / </span><span class="option-name">', escapeHtml(detailoptionName), '</span>',
             '</div>',
             '<div class="product-price">', fmtKRW(price), '</div>',
           '</div>',
         '</div></div>',
-// 초대장 스타일의 바 영역
-'<div class="mf-meter with-goal">',
-  '<div class="bar"><div class="fill" style="width:', percent, '%;"></div></div>',
-  '<div class="goal">',
-    '<span class="curr">', fmtKRW(amount), '</span>',
-    '<span class="sep"> / </span>',
-    '<span class="total">', fmtKRW(price), '</span>',
-  '</div>',
-  '<div class="achv"><span class="pct">', percent, '% 달성</span></div>',
-'</div>',
 
+        // ✅ 바/금액표시: curr=paidAmount, total=price, percent=paid/price
+        '<div class="mf-meter with-goal">',
+          '<div class="bar"><div class="fill" style="width:', percentCalc, '%;"></div></div>',
+          '<div class="goal">',
+            '<span class="curr">', fmtKRW(paidAmount), '</span>',
+            '<span class="sep"> / </span>',
+            '<span class="total">', fmtKRW(price), '</span>',
+          '</div>',
+          '<div class="achv"><span class="pct">', percentCalc, '% 달성</span></div>',
+        '</div>',
 
         '<div class="funding-action-wrapper">',
           '<div class="action-buttons">',
@@ -154,6 +154,7 @@
     '</div>'
   ].join('');
 }
+
 
 
   /* ---------- 목록 로드 ---------- */

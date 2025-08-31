@@ -223,6 +223,18 @@ public class WishlistVO {
 				+ amount + ", fundingStatus=" + fundingStatus + ", fundingDate=" + fundingDate + ", categoryNo=" + categoryNo+ "]";
 	}
 
+	// 금액 합계 표시용
+	private Integer paidAmount;     // 총 모금(나+남)
+	private Integer myPaidAmount;   // 내가 낸 금액
+	private Integer othersAmount;   // 남들이 낸 금액
 
+	public Integer getPaidAmount() { return paidAmount; }
+	public void setPaidAmount(Integer paidAmount) { this.paidAmount = paidAmount; }
+
+	public Integer getMyPaidAmount() { return myPaidAmount; }
+	public void setMyPaidAmount(Integer myPaidAmount) { this.myPaidAmount = myPaidAmount; }
+
+	public Integer getOthersAmount() { return othersAmount; }
+	public void setOthersAmount(Integer othersAmount) { this.othersAmount = othersAmount; }
 
 }

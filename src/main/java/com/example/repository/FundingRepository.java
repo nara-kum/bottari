@@ -1,26 +1,30 @@
 package com.example.repository;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-
-import com.example.vo.WishlistVO;
 
 @Repository
 public class FundingRepository {
 
-	@Autowired
-	private SqlSession sqlSession;	
-	
-	//위시리스트
-	public List<WishlistVO> selectMyFundingList(int no){
-		System.out.println("FundingRepository.selectMyFundingList()");
-		List<WishlistVO> sList = sqlSession.selectList("funding.selectMyFundingList", no);
-		System.out.println("sList" +sList);
-		
-		return sList;
+	private final SqlSession sqlSession;
+
+	public FundingRepository(SqlSession sqlSession) {
+		this.sqlSession = sqlSession;
 	}
-	
+
+	/** 마이펀딩 리스트 조회 */
+	public List<Map<String, Object>> selectMyFundingList(Long userNo) {
+		System.out.println("FundingRepository.selectMyFundingList(userNo=" + userNo + ")");
+		return sqlSession.selectList("funding.selectMyFundingList", userNo);
+	}
+
+	// com.example.repository.FundingRepository
+	public List<Map<String, Object>> selectFriendFundingList(Long userNo) {
+		System.out.println("FundingRepository.selectFriendFundingList(userNo=" + userNo + ")");
+		return sqlSession.selectList("funding.selectFriendFundingList", userNo);
+	}
+
 }

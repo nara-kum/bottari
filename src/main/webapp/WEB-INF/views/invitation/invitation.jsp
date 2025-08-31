@@ -9,10 +9,10 @@
   <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/Global.css">
   <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/invitation/invitation.css">
   <script src="${pageContext.request.contextPath}/assets/js/jquery/jquery-3.7.1.js"></script>
+  <!-- Kakao SDK -->
   <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js" crossorigin="anonymous"></script>
-
 </head>
-<body class="family">
+<body class="family" data-logged-in="${not empty sessionScope.authUser}">
 
   <c:import url="/WEB-INF/views/include/Header.jsp"></c:import>
 
@@ -42,7 +42,6 @@
             <!-- 선물 보내기 -->
             <div class="gift-panel" id="gift-panel">
               <div class="gift-title">축하 선물 보내기</div>
-              <!-- 여러 개가 쌓여 들어갑니다 -->
               <div id="giftPreview" class="gift-preview"></div>
               <div class="gift-note">부담 없는 금액으로 마음을 전할 수 있는 보따리의 ‘펀딩’ 서비스예요.</div>
             </div>
@@ -62,77 +61,44 @@
   <c:import url="/WEB-INF/views/include/Footer.jsp"></c:import>
 
 <script>
-  $(document).ajaxError(function (e, xhr, settings, err) {
+$(document).ajaxError(function (e, xhr, settings, err) {
   console.error('[INV][AJAX ERROR]', settings.url, xhr.status, err, (xhr.responseText || '').slice(0,200));
-});
-(function () {
-  // 👉 콘솔의 JavaScript 키로 교체
-  const KAKAO_JS_KEY = '098b00475c9ea44ee38fafb6b5f39880';
-
-  // 페이지 contextPath (JSP 변수와 동일하게 사용)
-  const CTX = "${pageContext.request.contextPath}".replace(/\/+$/, "");
-
-  // SDK init
-  if (window.Kakao && !Kakao.isInitialized()) {
-    Kakao.init(KAKAO_JS_KEY);
-  }
-
-  // 상대/루트경로 -> 절대 URL
-  function absUrl(u) {
-    if (!u) return "";
-    if (/^https?:\/\//i.test(u)) return u;
-    // "/..." 형태면 도메인만 붙여줌
-    if (u.startsWith("/")) return location.origin + u;
-    // 상대경로면 CTX 기준
-    return location.origin + CTX + "/" + u.replace(/^\/+/, "");
-  }
-
-  // 클릭 시 공유
-  // (페이지 상단 IIFE 안) 공유 버튼 클릭
-$('#btn-kakao').off('click').on('click', function () {
-  if (!(window.Kakao && Kakao.isInitialized())) {
-    alert('Kakao SDK 초기화에 실패했습니다. JavaScript 키와 도메인 등록을 확인해주세요.');
-    return;
-  }
-
-  const shareUrl = location.href;
-  const title = ($('#v-names').text().trim() || '초대합니다');
-  const desc  = ($('#v-dateplace').text().trim() || '초대장 보기');
-  var imgEl   = document.querySelector('#hero img');
-  var heroImg = (imgEl && imgEl.src) ? imgEl.src : (CTX + '/assets/icon/Logo_colored.svg');
-
-  Kakao.Share.sendDefault({
-    objectType: 'feed',
-    content: {
-      title: title,
-      description: desc,
-      imageUrl: absUrl(heroImg), // 절대 URL이어야 함
-      link: { mobileWebUrl: shareUrl, webUrl: shareUrl }
-    },
-    buttons: [
-      { title: '초대장 보기', link: { mobileWebUrl: shareUrl, webUrl: shareUrl } }
-    ]
-  });
-});
-
-})();
-
-(function(){
-  /* ========= 기본 ========= */
   var CTX = "${pageContext.request.contextPath}".replace(/\/+$/,"");
-  var FALLBACK_IMG = CTX + "/assets/icon/Logo_colored.svg";
+  var returnUrl = location.pathname + location.search;
+  alert('로그인이 필요합니다.');
+  location.replace(CTX + "/user/loginForm?reason=auth&returnUrl=" + encodeURIComponent(returnUrl));
+});
+
+(function () {
+  /* ===== 상수/유틸 ===== */
+  const CTX = "${pageContext.request.contextPath}".replace(/\/+$/,"");
+  const IS_LOGGED_IN = (document.body.dataset.loggedIn === 'true');
+  const FALLBACK_IMG = CTX + "/assets/icon/Logo_colored.svg";
+  const KAKAO_JS_KEY = "098b00475c9ea44ee38fafb6b5f39880"; // 실제 키
+
+  if (window.Kakao && !Kakao.isInitialized()) Kakao.init(KAKAO_JS_KEY);
 
   function getQuery(k){ return new URLSearchParams(location.search).get(k); }
   function pickPayload(res){ if(!res) return null; return res.apiData || res.data || res; }
   function escapeHtml(s){
     return String(s==null?"":s)
       .replaceAll("&","&amp;").replaceAll("<","&lt;")
-      .replaceAll(">","&gt;").replaceAll('"',"&quot;")
-      .replaceAll("'","&#039;");
+      .replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;");
   }
   function fmtKRW(n){ return (Number(n)||0).toLocaleString("ko-KR") + "원"; }
+  function fmtDateYMD(s){ return s ? String(s).slice(0,10).replaceAll("-", ".") : ""; }
 
-  // 파일명/상대경로를 /upload/ 로 치환
+  // 절대/루트/상대 → 절대 URL
+  function absUrl(u){
+    if (!u) return null;
+    const s = String(u);
+    if (/^https?:\/\//i.test(s)) return s;
+    if (s.startsWith(CTX + "/"))  return location.origin + s;
+    if (s.startsWith("/"))        return location.origin + s;
+    return location.origin + CTX + (s.startsWith("/") ? s : ("/" + s));
+  }
+
+  // 업로드/상품 이미지 경로 정규화
   function resolveImage(vo){
     var raw = vo && (vo.image || vo.imageUrl || vo.image_url ||
                      vo.itemimg || vo.itemImg ||
@@ -140,54 +106,87 @@ $('#btn-kakao').off('click').on('click', function () {
                      vo.thumbnail || vo.thumb) || "";
     raw = String(raw).trim();
     if(!raw) return FALLBACK_IMG;
-    if(/^https?:\/\//i.test(raw)) return raw;
-    if(raw.startsWith(CTX + "/"))  return raw;
-    if(raw.startsWith("/"))        return CTX + raw;
-    return CTX + "/upload/" + raw;
+    return absUrl(raw.startsWith("/") ? raw : ("/upload/" + raw));
   }
 
+ /* ===== 선물 미니카드 (마이펀딩 규칙으로 계산만 변경) =====*/
 function renderGiftCard(vo){
-  const brand   = escapeHtml(vo.brand || '');
-  const title   = escapeHtml(vo.title || '');
-  const optionName       = escapeHtml(vo.optionName || '');
-  const detailOptionName = escapeHtml(vo.detailoptionName || '');
+  const brand  = escapeHtml(vo.brand || '');
+  const title  = escapeHtml(vo.title || '');
+  const optionName = escapeHtml(vo.optionName || vo.option_name || '');
+  const detailoptionName = escapeHtml(vo.detailoptionName || vo.detail_option_name || vo.detailoptionName || '');
+  const price  = Number(vo.price)||0;
 
-  const price   = Number(vo.price)||0;
-  const amount  = Number(vo.amount)||0;
-  const percent = Math.max(0, Math.min(100,
-                    (vo.percent!=null ? Number(vo.percent)
-                     : (price>0 ? Math.round(amount*100/price) : 0))
-                  ));
-  const imgUrl  = resolveImage(vo);
+  // 총 모금(진행률 기준) 우선순위
+  let totalPaid = null;
+  if (vo.paidAmount != null) totalPaid = Number(vo.paidAmount);
+  else if (vo.total_paid != null) totalPaid = Number(vo.total_paid);
+  else if (vo.paidTotal  != null) totalPaid = Number(vo.paidTotal);
 
-  // 상세 이동에 필요한 키
-  const productNo = (vo.productNo ?? vo.product_no ?? vo.prodNo ?? vo.itemNo ?? '');
-  const fundingNo = (vo.fundingNo ?? vo.funding_no ?? vo.fundNo ?? '');
+  // 내가 낸 금액
+  let myPaid = null;
+  if (vo.myPaidAmount != null) myPaid = Number(vo.myPaidAmount);
+  else if (vo.paid_me != null) myPaid = Number(vo.paid_me);
+
+  // 남들이 낸 금액(others) 우선 사용, 없으면 totalPaid - myPaid, 그래도 없으면 amount 사용
+  let othersAmount = null;
+  if (vo.othersAmount != null) {
+    othersAmount = Number(vo.othersAmount);
+  } else if (vo.amount != null && myPaid == null && totalPaid == null) {
+    // 구형: amount만 내려오는 경우(의미를 '남들 금액'으로 해석)
+    othersAmount = Number(vo.amount);
+  }
+
+  // totalPaid 못 구했으면 유추
+  if (totalPaid == null) {
+    if (myPaid != null && vo.amount != null) totalPaid = Number(vo.amount) + Number(myPaid);
+    else if (vo.amount != null) totalPaid = Number(vo.amount);
+    else totalPaid = 0;
+  }
+  // othersAmount 못 구했으면 totalPaid - myPaid
+  if (othersAmount == null) {
+    othersAmount = Math.max(0, Number(totalPaid) - Number(myPaid || 0));
+  }
+
+  const percent = price>0 ? Math.min(100, Math.round((Number(totalPaid)/price)*100)) : 0;
+
+  const imgUrl    = resolveImage(vo);
+  const productNo = (vo.productNo ?? vo.product_no ?? '');
+  const fundingNo = (vo.fundingNo ?? vo.funding_no ?? '');
+
+  // 기존 코드와 동일한 링크 로직 유지 (로그인 여부는 인터셉터/전역 ajaxError에서 처리)
+  const detailUrl  = CTX + "/shop/productPage2?" + $.param({ productNo, fundingNo });
+  const returnPath = location.pathname + location.search;
+  const loginUrl   = CTX + "/user/loginForm?returnUrl=" + encodeURIComponent(returnPath);
+  const href       = (document.body.dataset.loggedIn === 'true') ? detailUrl : loginUrl;
 
   return [
     '<div class="mf-mini">',
       '<div class="summary">',
         '<div class="left">',
-          // ▼ 이미지가 바로 링크가 되도록
-          '<a href="#" class="go-detail" data-product-no="', productNo, '" data-funding-no="', fundingNo, '">',
-            '<div class="thumbbox"><img src="', imgUrl, '" alt="" onerror="this.src=\'', CTX, '/assets/images/eki.jpg\'"></div>',
+          '<a class="inv-go" href="', href ,'" rel="noopener">',
+            '<div class="thumbbox"><img src="', imgUrl, '" alt="" onerror="this.src=\'', CTX, '/assets/icon/Logo_colored.svg', '\'"></div>',
           '</a>',
           '<div class="info">',
             '<div class="brand">', brand, '</div>',
             '<div class="row">',
               '<span class="name">', title, '</span>',
-              '<span class="opt-sep"> / </span><span class="opt">', optionName, '</span>',
-              '<span class="opt-sep"> / </span><span class="opt">', detailOptionName, '</span>',
+              (optionName ? '<span class="opt-sep"> / </span><span class="opt">'+optionName+'</span>' : ''),
+              (detailoptionName ? '<span class="opt-sep"> / </span><span class="opt">'+detailoptionName+'</span>' : ''),
             '</div>',
             '<div class="price">', fmtKRW(price), '</div>',
           '</div>',
         '</div>',
       '</div>',
 
+      // ✅ 바/금액표시: curr=남들 금액, total=가격, percent=총 모금/가격
       '<div class="mf-meter with-goal">',
         '<div class="bar"><div class="fill" style="width:', percent, '%;"></div></div>',
-        '<div class="goal"><span class="curr">', fmtKRW(amount), '</span>',
-          '<span class="sep"> / </span><span class="total">', fmtKRW(price), '</span></div>',
+        '<div class="goal">',
+          '<span class="curr">', fmtKRW(othersAmount), '</span>',
+          '<span class="sep"> / </span>',
+          '<span class="total">', fmtKRW(price), '</span>',
+        '</div>',
         '<div class="achv"><span class="pct">', percent, '% 달성</span></div>',
       '</div>',
     '</div>'
@@ -195,99 +194,54 @@ function renderGiftCard(vo){
 }
 
 
+  function renderGiftList(list){
+    const html = (list || []).map(renderGiftCard).join('');
+    $('#giftPreview').html(html || '<div class="gift-empty">연결된 펀딩이 없습니다.</div>');
+  }
 
-
-/* ========= 선물 미니카드: 리스트 렌더 ========= */
-function renderGiftList(list){
-  const html = (list || []).map(renderGiftCard).join('');
-  $('#giftPreview').html(html || '<div class="gift-empty">연결된 펀딩이 없습니다.</div>');
-}
-
-
-  /* ========= eventNo 기준으로 펀딩 조회(백엔드 지원 여부에 따라 필터) ========= */
-  function fetchGiftsByEvent(eventNo){
-  console.log("[INV] fetchGiftsByEvent() called with eventNo:", eventNo);
-  return $.ajax({
-    url: CTX + "/api/myfunding",
-    type: "GET",
-    dataType: "json",
-    data: $.extend({ _t: Date.now() }, eventNo ? { eventNo: eventNo } : {}) // 캐시 무력화
-  })
-  .done(function(json){
-    console.log("[INV] /api/myfunding OK → raw:", json);
-    let list = Array.isArray(json) ? json : (json.data || json.apiData || json.list || []);
-    if (eventNo) list = list.filter(x => Number(x.eventNo||x.event_no) === Number(eventNo));
-    console.log("[INV] /api/myfunding parsed list len:", list.length);
-    renderGiftList(list);
-  })
-  .fail(function(xhr){
-    console.error("[INV] /api/myfunding FAIL:", xhr.status, (xhr.responseText||"").slice(0,200));
-    renderGiftList([]);
-  });
-}
-
-
-  /* ========= 초대장 본문 렌더 ========= */
+  /* ===== 본문 렌더 (서버 gifts만 사용) ===== */
   function render(detail, gifts){
-  detail = detail || {};
+    detail = detail || {};
+    window.__INV_DETAIL__ = detail; // 공유 버튼에서 사용
 
-  console.log('[INV] render()', {
-    giftsLen: Array.isArray(gifts) ? gifts.length : 0,
-    eventNo: (detail.eventNo || detail.event_no || null)
-  });
+    // 대표 이미지
+    var $hero = $("#hero").empty();
+    var photoUrl = (detail.photoUrl || "").trim();
+    if (photoUrl && photoUrl.startsWith("/upload/")){
+      $hero.append($('<img>', { src: absUrl(photoUrl), alt: "대표 이미지" })
+        .on("error", function(){ this.src = FALLBACK_IMG; }));
+    } else {
+      $hero.append('<div class="ph" aria-hidden="true"></div>');
+    }
 
-  // ── 대표 이미지
-  var $hero = $("#hero").empty();
-  var photoUrl = (detail.photoUrl || "").trim();
-  if (photoUrl && photoUrl.startsWith("/upload/")){
-    $hero.append($('<img>', { src: CTX + photoUrl, alt: "대표 이미지" })
-      .on("error", function(){ this.src = FALLBACK_IMG; }));
-  } else {
-    $hero.append('<div class="ph" aria-hidden="true"></div>');
+    // 이름/타이틀
+    var groom = (detail.groomName || "").trim();
+    var bride = (detail.brideName || "").trim();
+    var baby  = (detail.babyName  || "").trim();
+    var eventName = (detail.eventName || detail.event_name || ("이벤트 #" + (detail.eventNo||""))).trim();
+    var namesText = groom && bride ? (groom + "  &  " + bride)
+                  : baby          ? baby
+                  : (groom || bride || eventName || "초대합니다");
+    var $names = $("#v-names").removeClass("inv-names--duo inv-names--single");
+    $names.text(namesText).addClass((groom && bride) ? "inv-names--duo" : "inv-names--single");
+
+    // 날짜 · 장소
+    var dateTxt = fmtDateYMD(detail.celebrateDate);
+    var timeTxt = (detail.celebrateTime ? String(detail.celebrateTime).slice(0,5) : "");
+    var place   = (detail.place || "").trim();
+    $("#v-dateplace").text([[dateTxt, timeTxt].filter(Boolean).join(" "), place].filter(Boolean).join(" · "));
+
+    // 모시는 글
+    $("#v-greeting").text((detail.greeting || "").trim());
+
+    // 선물 (서버 값 그대로)
+    renderGiftList(Array.isArray(gifts) ? gifts : []);
   }
 
-  // ── 이름
-  var groom = (detail.groomName || "").trim();
-  var bride = (detail.brideName || "").trim();
-  var baby  = (detail.babyName  || "").trim();
-  var eventName = (detail.eventName || detail.event_name || ("이벤트 #" + (detail.eventNo||""))).trim();
-  var $names = $("#v-names").removeClass("inv-names--duo inv-names--single");
-  var namesText = groom && bride ? (groom + "  &  " + bride)
-                : baby          ? baby
-                : (groom || bride || eventName || "초대합니다");
-  $names.text(namesText).addClass((groom && bride) ? "inv-names--duo" : "inv-names--single");
-
-  // ── 날짜 · 장소
-  var dateTxt = detail.celebrateDate ? String(detail.celebrateDate).slice(0,10).replaceAll("-", " . ") : "";
-  var timeTxt = detail.celebrateTime ? String(detail.celebrateTime).slice(0,5) : "";
-  var place   = (detail.place || "").trim();
-  $("#v-dateplace").text([[dateTxt, timeTxt].filter(Boolean).join(" "), place].filter(Boolean).join(" · "));
-
-  // ── 모시는 글
-  $("#v-greeting").text((detail.greeting || "").trim());
-
-  // ── 선물(미니카드)
-  // 1) 서버에서 gifts가 내려왔으면 "먼저" 그려서 초기 화면 즉시 표시
-  try{
-    const preLen = Array.isArray(gifts) ? gifts.length : 0;
-    console.log('[INV] pre-render gifts len:', preLen);
-    if (preLen) renderGiftList(gifts);
-  }catch(e){
-    console.warn('[INV] pre-render error:', e);
-  }
-
-  // 2) 그리고 항상 /api/myfunding 재호출해서 최신 데이터로 갱신
-  const evNo = detail.eventNo || detail.event_no || null;
-  console.log('[INV] now calling /api/myfunding with eventNo =', evNo);
-  fetchGiftsByEvent(evNo);
-}
-
-
-  /* ========= 초대장 조회 ========= */
+  /* ===== 초대장 조회 ===== */
   function loadView(){
     var no = parseInt(getQuery("no"), 10);
     if (!no){ alert("잘못된 접근입니다. (no 파라미터 없음)"); return; }
-
     $.ajax({
       url: CTX + "/api/invtview",
       type: "GET",
@@ -295,11 +249,15 @@ function renderGiftList(list){
       data: { no: no }
     })
     .done(function(res){
-  console.log('[INV] /api/invtview OK:', res);
       if (!res || res.result === "fail"){
-        alert((res && res.message) || "불러오지 못했습니다."); return;
-      }
-      var payload = pickPayload(res);                 // { detail:{...}, gifts:[...] } 기대
+    var CTX = "${pageContext.request.contextPath}".replace(/\/+$/,"");
+    var returnUrl = location.pathname + location.search;
+    var msg = (res && res.message) || "로그인이 필요합니다.";
+    alert(msg);
+    location.href = CTX + "/user/loginForm?returnUrl=" + encodeURIComponent(returnUrl);
+    return;
+  }
+      var payload = pickPayload(res); // { detail:{...}, gifts:[...] } 기대
       var detail  = (payload && payload.detail) || payload || {};
       var gifts   = (payload && (payload.gifts || payload.fundings)) || [];
       render(detail, gifts);
@@ -310,46 +268,53 @@ function renderGiftList(list){
     });
   }
 
+  /* ===== 카카오 공유 (제목=이벤트명, 썸네일=대표 이미지) ===== */
+  $('#btn-kakao').off('click').on('click', function () {
+    if (!(window.Kakao && Kakao.isInitialized())) {
+      alert('Kakao SDK 초기화에 실패했습니다. JavaScript 키와 도메인 등록을 확인해주세요.');
+      return;
+    }
+    const d = window.__INV_DETAIL__ || {};
+    const eventName = d.eventName || d.event_name || '';
+    const title = (eventName && eventName.trim()) ? eventName.trim() : ($('#v-names').text().trim() || '초대합니다');
 
-// 상품 이미지(링크) 클릭 → 상세로
-$(document)
-  .off('click.invGo', '.go-detail')
-  .on('click.invGo', '.go-detail', function(e){
-    e.preventDefault();
-    var productNo = $(this).data('productNo') || $(this).data('product-no');
-    var fundingNo = $(this).data('fundingNo') || $(this).data('funding-no');
-    if (!productNo || !fundingNo) return;
+    const dateTxt = fmtDateYMD(d.celebrateDate);
+    const timeTxt = (d.celebrateTime||'').slice(0,5);
+    const place   = (d.place||'').trim();
+    const desc    = [ [dateTxt, timeTxt].filter(Boolean).join(' '), place ].filter(Boolean).join(' · ');
 
-    var LOGIN_URL = CTX + "/user/loginform";
+    const heroImgEl = document.querySelector('#hero img');
+    const heroImg   = heroImgEl && heroImgEl.src ? heroImgEl.src : FALLBACK_IMG;
 
-    $.ajax({
-      url: CTX + "/api/invtlist",
-      type: "GET",
-      dataType: "json"
-    })
-    .done(function(res){
-      var loggedIn = res && res.result === "success";
-      var qs = $.param({ productNo: productNo, fundingNo: fundingNo });
-      location.href = loggedIn ? (CTX + "/shop/productPage2?" + qs) : LOGIN_URL;
-    })
-    .fail(function(){
-      var qs = $.param({ productNo: productNo, fundingNo: fundingNo });
-      location.href = CTX + "/shop/productPage2?" + qs;
+    const linkUrl = location.href;
+
+    Kakao.Share.sendDefault({
+      objectType: 'feed',
+      content: {
+        title: title,
+        description: desc || '초대장 보기',
+        imageUrl: absUrl(heroImg),
+        link: { webUrl: linkUrl, mobileWebUrl: linkUrl }
+      },
+      buttons: [
+        { title: '초대장 열기', link: { webUrl: linkUrl, mobileWebUrl: linkUrl } }
+      ]
     });
   });
 
-
-  /* ========= 공유 ========= */
-  $("#btn-copy").on("click", function(){
-    var url = location.href;
-    (navigator.clipboard?.writeText(url) || Promise.reject())
-      .then(function(){ alert("링크가 복사되었습니다."); })
-      .catch(function(){ alert("클립보드 복사에 실패했습니다."); });
-  });
+  // ★ 다른 스크립트가 .go-detail 을 가로채더라도, 우리는 'inv-go' 만 사용하므로 영향 X
+  //    (추가 바인딩 없음)
 
   $(function(){ loadView(); });
 })();
 
+/* ===== 링크 복사 ===== */
+$("#btn-copy").on("click", function(){
+  var url = location.href;
+  (navigator.clipboard?.writeText(url) || Promise.reject())
+    .then(function(){ alert("링크가 복사되었습니다."); })
+    .catch(function(){ alert("클립보드 복사에 실패했습니다."); });
+});
 </script>
 
 </body>

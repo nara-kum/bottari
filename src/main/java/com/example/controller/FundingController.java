@@ -15,12 +15,11 @@ public class FundingController {
 		return "funding/myFunding";
 	}
 
-	// 친펀딩리스트
-	@RequestMapping(value = "funding/friend", method = { RequestMethod.GET, RequestMethod.POST })
-	public String friendFunding() {
-		System.out.println("fundingController.myfunding");
-
-		return "funding/friendFunding";
+	// 친구 펀딩 리스트
+	@RequestMapping(value = "/funding/friend",method = { RequestMethod.GET, RequestMethod.POST })
+	public String friendFundingPage() {
+		System.out.println("fundingController.friendFundingPage");
+		return "funding/friendFunding"; // 아래 JSP 파일명과 일치
 	}
 
 }
