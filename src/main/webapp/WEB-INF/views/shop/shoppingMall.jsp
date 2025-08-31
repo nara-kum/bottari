@@ -37,21 +37,22 @@
 	</div>
 	
 	<!-- 검색 폼 (강의와 동일한 방식) -->
-	<div class="search-price-field">
-		<div class="price-filter">
-			<div class="price">
-				<a>전체</a>
+		<div class="search-price-field">
+			<div class="price-filter">
+				<div class="price ${empty priceRange || priceRange == 0 ? 'active' : ''}" onclick="selectPriceRange(0)">
+					<a>전체</a>
+				</div>
+				<div class="price ${priceRange == 1 ? 'active' : ''}" onclick="selectPriceRange(1)">2만원 미만</div>
+				<div class="price ${priceRange == 2 ? 'active' : ''}" onclick="selectPriceRange(2)">2만원대</div>
+				<div class="price ${priceRange == 3 ? 'active' : ''}" onclick="selectPriceRange(3)">3만원대</div>
+				<div class="price ${priceRange == 4 ? 'active' : ''}" onclick="selectPriceRange(4)">5만원대</div>
 			</div>
-			<div class="price">2만원 미만</div>
-			<div class="price">2만원대</div>
-			<div class="price">3만원대</div>
-			<div class="price">5만원대</div>
-		</div>
 		
 		<!-- 검색 영역 - 강의와 동일한 방식으로 폼 구성 -->
 		<form action="${pageContext.request.contextPath}/shop/bottarimall" method="get">
 			<!-- 현재 카테고리 유지를 위한 hidden input -->
 			<input type="hidden" name="categoryNo" value="${categoryNo}">
+			<input type="hidden" name="priceRange" value="${priceRange}">
 			<!-- 검색시 페이지를 1로 리셋 -->
 			<input type="hidden" name="crtpage" value="1">
 			
@@ -160,32 +161,46 @@
 	<!-- ---------------------------------------------------- -->
 
 	<script>
-		// 카테고리 선택 함수
-		function selectCategory(element, categoryName, categoryNo) {
-			// 모든 버튼의 active 클래스 제거
-			document.querySelectorAll('.sub-title-menu').forEach(btn => {
-				btn.classList.remove('active');
-			});
-			
-			// 클릭된 버튼에 active 클래스 추가
-			element.classList.add('active');
-			
-			// 제목 변경
-			document.querySelector('.select-this').textContent = categoryName;
-			
-			// 카테고리 변경시 페이지를 1로 리셋하고 이동
-			location.href = '${pageContext.request.contextPath}/shop/bottarimall?categoryNo=' + categoryNo + '&crtpage=1&kwd=${kwd}';
-		}
+	// 카테고리 선택 함수 (기존 함수 수정)
+	function selectCategory(element, categoryName, categoryNo) {
+		// 모든 버튼의 active 클래스 제거
+		document.querySelectorAll('.sub-title-menu').forEach(btn => {
+			btn.classList.remove('active');
+		});
 		
-		// 페이지 로드시 카테고리 제목 설정
-		window.onload = function() {
-			const categoryButtons = document.querySelectorAll('.sub-title-menu');
-			categoryButtons.forEach(button => {
-				if(button.classList.contains('active')) {
-					document.querySelector('.select-this').textContent = button.textContent;
-				}
-			});
-		};
+		// 클릭된 버튼에 active 클래스 추가
+		element.classList.add('active');
+		
+		// 제목 변경
+		document.querySelector('.select-this').textContent = categoryName;
+		
+		// 카테고리 변경시 페이지를 1로 리셋하고 이동 (현재 가격대와 검색어 유지)
+		location.href = '${pageContext.request.contextPath}/shop/bottarimall?categoryNo=' + categoryNo + '&crtpage=1&kwd=${kwd}&priceRange=${priceRange}';
+	}
+	
+	// 가격대 선택 함수 (새로 추가)
+	function selectPriceRange(priceRange) {
+		// 모든 가격 버튼의 active 클래스 제거
+		document.querySelectorAll('.price').forEach(btn => {
+			btn.classList.remove('active');
+		});
+		
+		// 클릭된 버튼에 active 클래스 추가
+		event.target.closest('.price').classList.add('active');
+		
+		// 가격대 변경시 페이지를 1로 리셋하고 이동 (현재 카테고리와 검색어 유지)
+		location.href = '${pageContext.request.contextPath}/shop/bottarimall?priceRange=' + priceRange + '&crtpage=1&kwd=${kwd}&categoryNo=${categoryNo}';
+	}
+	
+	// 페이지 로드시 카테고리 제목 설정 (기존 함수 유지)
+	window.onload = function() {
+		const categoryButtons = document.querySelectorAll('.sub-title-menu');
+		categoryButtons.forEach(button => {
+			if(button.classList.contains('active')) {
+				document.querySelector('.select-this').textContent = button.textContent;
+			}
+		});
+	};
 	</script>
 
 </body>
