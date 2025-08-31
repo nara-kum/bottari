@@ -42,10 +42,10 @@
 				<div class="price ${empty priceRange || priceRange == 0 ? 'active' : ''}" onclick="selectPriceRange(0)">
 					<a>전체</a>
 				</div>
-				<div class="price ${priceRange == 1 ? 'active' : ''}" onclick="selectPriceRange(1)">2만원 미만</div>
-				<div class="price ${priceRange == 2 ? 'active' : ''}" onclick="selectPriceRange(2)">2만원대</div>
-				<div class="price ${priceRange == 3 ? 'active' : ''}" onclick="selectPriceRange(3)">3만원대</div>
-				<div class="price ${priceRange == 4 ? 'active' : ''}" onclick="selectPriceRange(4)">5만원대</div>
+				<div class="price ${priceRange == 1 ? 'active' : ''}" onclick="selectPriceRange(1)">3만원 미만</div>
+				<div class="price ${priceRange == 2 ? 'active' : ''}" onclick="selectPriceRange(2)">3~5만원대</div>
+				<div class="price ${priceRange == 3 ? 'active' : ''}" onclick="selectPriceRange(3)">6~9만원대</div>
+				<div class="price ${priceRange == 4 ? 'active' : ''}" onclick="selectPriceRange(4)">10만원 이상</div>
 			</div>
 		
 		<!-- 검색 영역 - 강의와 동일한 방식으로 폼 구성 -->
@@ -123,13 +123,13 @@
 		</c:choose>
 	</div>
 	
-	<!-- 페이징 네비게이션 (강의와 동일한 방식) -->
+	<!-- 페이징 네비게이션 (수정됨: priceRange 파라미터 추가) -->
 	<c:if test="${pMap.totalCount > 0}">
 		<div id="paging">
 			<ul>
 				<!-- 이전 화살표 (첫페이지 그룹이 아닐때만 표시) -->
 				<c:if test="${pMap.prev}">
-					<li><a href="${pageContext.request.contextPath}/shop/bottarimall?crtpage=${pMap.startPageBtnNo-1}&kwd=${kwd}&categoryNo=${categoryNo}">◀</a></li>
+					<li><a href="${pageContext.request.contextPath}/shop/bottarimall?crtpage=${pMap.startPageBtnNo-1}&kwd=${kwd}&categoryNo=${categoryNo}&priceRange=${priceRange}">◀</a></li>
 				</c:if>
 				
 				<!-- 페이지 번호들 (1~5 또는 6~10 이런식으로 5개씩 표시) -->
@@ -140,15 +140,15 @@
 							<li class="active">${page}</li>
 						</c:when>
 						<c:otherwise>
-							<!-- 다른 페이지는 링크 표시 -->
-							<li><a href="${pageContext.request.contextPath}/shop/bottarimall?crtpage=${page}&kwd=${kwd}&categoryNo=${categoryNo}">${page}</a></li>
+							<!-- 다른 페이지는 링크 표시 (수정됨: priceRange 파라미터 추가) -->
+							<li><a href="${pageContext.request.contextPath}/shop/bottarimall?crtpage=${page}&kwd=${kwd}&categoryNo=${categoryNo}&priceRange=${priceRange}">${page}</a></li>
 						</c:otherwise>
 					</c:choose>
 				</c:forEach>
 				
 				<!-- 다음 화살표 (마지막 페이지 그룹이 아닐때만 표시) -->
 				<c:if test="${pMap.next}">
-					<li><a href="${pageContext.request.contextPath}/shop/bottarimall?crtpage=${pMap.endPageBtnNo+1}&kwd=${kwd}&categoryNo=${categoryNo}">▶</a></li>
+					<li><a href="${pageContext.request.contextPath}/shop/bottarimall?crtpage=${pMap.endPageBtnNo+1}&kwd=${kwd}&categoryNo=${categoryNo}&priceRange=${priceRange}">▶</a></li>
 				</c:if>
 			</ul>
 		</div>
@@ -178,7 +178,7 @@
 		location.href = '${pageContext.request.contextPath}/shop/bottarimall?categoryNo=' + categoryNo + '&crtpage=1&kwd=${kwd}&priceRange=${priceRange}';
 	}
 	
-	// 가격대 선택 함수 (새로 추가)
+	// 가격대 선택 함수 (수정됨: event.target 처리 개선)
 	function selectPriceRange(priceRange) {
 		// 모든 가격 버튼의 active 클래스 제거
 		document.querySelectorAll('.price').forEach(btn => {
