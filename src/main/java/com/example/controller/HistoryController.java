@@ -9,7 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.example.service.HistoryService;
-import com.example.vo.HistoryVO;
+import com.example.vo.HistoryListVO;
+import com.example.vo.HistoryProductDetailVO;
 import com.example.vo.UserVO;
 
 import jakarta.servlet.http.HttpSession;
@@ -32,7 +33,7 @@ public class HistoryController {
 		
 		int user_no = authuser.getUserNo();
 		
-		List<HistoryVO> historyList = historyservice.exeHistoryList(user_no);
+		List<HistoryListVO> historyPaymentList = historyservice.exeHistoryList(user_no);
 		
 		return "history/history_mine";
 	}

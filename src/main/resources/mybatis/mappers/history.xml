@@ -1,27 +1,55 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="history">
-	<select id="addList" resultType="com.example.vo.HistoryVO">
+	<select id="searchPaymentList" resultType="com.example.vo.HistoryListVO">
 		<![CDATA[
-		  SELECT	pm.payment_date,
-					pm.product_no,
-					pm.fundingproduct_no,
+			SELECT	pm.payment_no,
 					pm.order_no,
-					pm.payment_amount,
-					pg.quantity,
-			    
-					pr.title,
-					pr.brand,
-					pr.price,
-			    
-					fp.percent,
-					fp.amount
+			        pm.funding_no,
+			        pm.payment_date,
+			        SUM(payment_amount) OVER(PARTITION BY pm.order_no) AS final_amount,
+			        pm.delivery_status,
+			        pm.service_type
 			FROM payment pm
-			LEFT JOIN product pr ON pm.product_no = pr.product_no
-			LEFT JOIN funding_product fp ON pm.fundingproduct_no = fp.funding_no
-			LEFT JOIN payment_goods pg ON pm.payment_no = pg.payment_no
-			where pm.user_no = #{user_no}
+			WHERE pm.user_no = #{user_no}
 		]]>
+	</select>
+
+	<select id="searchDetailList" resultType="com.example.vo.HistoryProductDetailVO">
+		<![CDATA[
+		  SELECT	pm.payment_no,
+					p.brand,
+					p.title,
+			        p.price,
+			        pg.quantity,
+			        od.detailoption_name,
+			        po.option_name,
+			        SUM(p.price * pg.quantity) OVER(PARTITION BY pm.payment_no) AS total_amount
+			FROM payment pm
+			LEFT JOIN product p ON pm.product_no = p.product_no
+			LEFT JOIN payment_goods pg ON pm.payment_no = pg.payment_no
+			LEFT JOIN payment_goods_option pgo ON pg.payment_goods_no = pgo.payment_goods_no
+			LEFT JOIN option_detail od ON pgo.detailoption_no = od.detailoption_no
+			LEFT JOIN product_option po ON od.option_no = po.option_no
+			WHERE pm.payment_no =
+		]]>
+		<foreach collection="list" item="paymentNoList" open="(" close=")" separator=",">
+			#{paymentNoList}
+		</foreach>
+	</select>
+	
+	<select id="searchFundingDetail" resultType="con.example.vo.HistoryFundingDetailVO">
+		<![CDATA[
+			SELECT	fp.funding_no,
+					fp.percent,
+					fp.amount,
+			        fp.funding_status
+			FROM funding_product fp
+			WHERE fp.funding_no = #{funding_no}
+		]]>
+		<foreach collection="list" item="fundingNoList" open="(" close=")" separator=",">
+			#{fundingNoList}
+		</foreach>
 	</select>
 
 </mapper>
