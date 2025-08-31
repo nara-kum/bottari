@@ -10,9 +10,9 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reset-css@4.0.1/reset.min.css" />
     <!-- 난 외부링크 못 믿겠다! 하시는 분은 CDN을 삭제 or 주석처리 후 아래의 css링크 주석 해제 후 사용할것 -->
     <!-- <link rel="stylesheet" href="../Global_css/reset.css"> -->
-    <link rel="stylesheet" href="assets/css/Global.css"> <!-- 본인 파일의 경로에 맞게 수정해야함 -->
-    <link rel="stylesheet" href="assets/css/history.css">
-    <link rel="stylesheet" href="assets/css/moduler.css">
+    <link rel="stylesheet" href="/assets/css/Global.css"> <!-- 본인 파일의 경로에 맞게 수정해야함 -->
+    <link rel="stylesheet" href="/assets/css/history.css">
+    <link rel="stylesheet" href="/assets/css/moduler.css">
 </head>
 
 <body class="family">
@@ -39,27 +39,31 @@
                     <input id="filter-name" class="search-name" type="text">
                     <img class="icon-small more-detail" src="/assets/icon/icon-search.svg">
                 </div>
-                <div class="purchase-by-date">
-                    <div class="date">
-                        2025 . 07 . 31
-                    </div>
-                    <div class="list-basic list-1200 between-flex-box">
-                        <div class="row-flex-box">
-                            <img class="list-img-100" src="../임시.JPG">
-                            <div class="column-flex-box">
-                                <div class="text-14 detail">르라보</div>
-                                <div class="text-14 detail">“단독 선출시” [NEW] 퍼퓨밍 핸드 크림 30ML</div>
-                                <div class="text-14 detail">38,000원</div>
-                                <div class="text-16 bold detail">38,000원</div>
-                            </div>
-                        </div>
-                        <div class="column-flex-box">
-                            <div class="show-detail text-align-right">주문번호: 000123123</div>
-                            <div class="show-detail text-align-right">임시 펀딩정보</div>
-                            <div class="show-detail text-align-right detail"><a href="">상세보기></a></div>
-                        </div>
-                    </div>
-                </div>
+                <c:forEach items="${requestScope.hList}" var="main">
+	                <div class="purchase-by-date">
+	                    <div class="date">
+	                        ${main.payment_date}
+	                    </div>
+	                    <c:forEach items="${main.productDetailList}" var="product">
+		                    <div class="list-basic list-1200 between-flex-box">
+		                        <div class="row-flex-box">
+		                            <img class="list-img-100" src="../임시.JPG">
+		                            <div class="column-flex-box">
+		                                <div class="text-14 detail">${product.brand}</div>
+		                                <div class="text-14 detail">${product.title}</div>
+		                                <div class="text-14 detail">38,000원</div>
+		                                <div class="text-16 bold detail">38,000원</div>
+		                            </div>
+		                        </div>
+		                        <div class="column-flex-box">
+		                            <div class="show-detail text-align-right">주문번호: 000123123</div>
+		                            <div class="show-detail text-align-right">임시 펀딩정보</div>
+		                            <div class="show-detail text-align-right detail"><a href="">상세보기></a></div>
+		                        </div>
+		                    </div>
+	                    </c:forEach>
+	                </div>
+                </c:forEach>
                 <div class="purchase-by-date">
                     <div class="date">
                         2025 . 06 . 20
@@ -74,7 +78,7 @@
                             </div>
                         </div>
                         <div class="column-flex-box">
-                            <div class="show-detail text-align-right">주문번호: 000123123</div>
+                            <div class="show-detail text-align-right">주문번호: ${main.order_no}</div>
                             <div class="show-detail text-align-right">임시 펀딩정보</div>
                             <div class="show-detail text-align-right detail"><a href="">상세보기></a></div>
                         </div>

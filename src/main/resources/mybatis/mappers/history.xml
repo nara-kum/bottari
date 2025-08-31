@@ -31,7 +31,7 @@
 			LEFT JOIN payment_goods_option pgo ON pg.payment_goods_no = pgo.payment_goods_no
 			LEFT JOIN option_detail od ON pgo.detailoption_no = od.detailoption_no
 			LEFT JOIN product_option po ON od.option_no = po.option_no
-			WHERE pm.payment_no =
+			WHERE pm.payment_no IN
 		]]>
 		<foreach collection="list" item="paymentNoList" open="(" close=")" separator=",">
 			#{paymentNoList}
@@ -45,7 +45,7 @@
 					fp.amount,
 			        fp.funding_status
 			FROM funding_product fp
-			WHERE fp.funding_no = #{funding_no}
+			WHERE fp.funding_no IN
 		]]>
 		<foreach collection="list" item="fundingNoList" open="(" close=")" separator=",">
 			#{fundingNoList}
