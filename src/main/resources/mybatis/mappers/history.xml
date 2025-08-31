@@ -38,7 +38,7 @@
 		</foreach>
 	</select>
 	
-	<select id="searchFundingDetail" resultType="con.example.vo.HistoryFundingDetailVO">
+	<select id="searchFundingDetail" resultType="com.example.vo.HistoryFundingDetailVO">
 		<![CDATA[
 			SELECT	fp.funding_no,
 					fp.percent,
