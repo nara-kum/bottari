@@ -65,7 +65,9 @@
    공통: 경로/유틸
 ========================= */
 window.CTX = "${pageContext.request.contextPath}";
+const CART_PAGE = window.CTX + "/shop/cart";  // 장바구니 화면 경로(필요시 수정)
 
+/* 숫자/가격 유틸 */
 function toInt(v){
   const n = Number(String(v ?? '').replace(/[^\d-]/g,'')); return Number.isFinite(n) ? n : 0;
 }
@@ -77,27 +79,19 @@ function escapeHtml(str){
     .replaceAll('"',"&quot;").replaceAll("'","&#039;");
 }
 
-/* 이미지 URL 정규화(플레이스홀더 경로 없음!)
-   - http(s)면 그대로
-   - "/upload/..." 처럼 루트 기준이면 CTX 붙임
-   - 상대경로면 CTX + '/' + 경로
-   - 없으면 null 반환(렌더링에서 회색 박스 표시)
-*/
+/* 이미지 URL 정규화 */
 function ensureUrl(u){
   if (!u) return null;
   let s = String(u).trim();
   if (!s) return null;
   if (/^https?:\/\//i.test(s)) return s;              // http(s)
-  if (s.startsWith(window.CTX + "/")) return s;        // CTX포함
-  if (s.startsWith("/")) return window.CTX + s;        // 루트 경로
-  if (!s.includes("/")) s = "/upload/" + s;         // ▼ 맨 파일명(슬래시 없음) → /upload/ 접두사 붙임
-
+  if (s.startsWith(window.CTX + "/")) return s;        // CTX 포함
+  if (s.startsWith("/")) return window.CTX + s;        // 루트
+  if (!s.includes("/")) s = "/upload/" + s;            // 파일명만 온 경우 업로드 프리픽스
   return window.CTX + s;
 }
 
-/* =========================
-   리스트 추출: 응답 형태 무엇이 와도 배열만 뽑기
-========================= */
+/* 리스트 추출(응답 형태 방어) */
 function extractList(json){
   if (Array.isArray(json)) return json;
   if (!json || typeof json !== 'object') return [];
@@ -115,9 +109,7 @@ function extractList(json){
   return [];
 }
 
-/* =========================
-   서버 응답 → 프론트 모델
-========================= */
+/* 서버 → 프론트 모델 정규화 */
 function normalizeWish(w){
   let productNo  = toInt(w.productNo ?? w.product_no);
   let wishlistNo = toInt(w.wishlistNo ?? w.wishlist_no);
@@ -128,11 +120,12 @@ function normalizeWish(w){
   return {
     productNo,
     wishlistNo,
+    categoryNo: toInt(w.categoryNo ?? w.category_no),
     brand:  w.brand || '',
     title:  w.title || '',
     priceNum,
     priceText: priceNum.toLocaleString('ko-KR') + ' 원',
-    img: ensureUrl(rawImg),  // 없으면 null
+    img: ensureUrl(rawImg),
 
     wishlistOptionNo: toInt(w.wishlistoptionNo ?? w.wishlist_option_no),
     detailOptionNo:   toInt(w.detailoptionNo   ?? w.detail_option_no),
@@ -142,7 +135,7 @@ function normalizeWish(w){
 }
 
 /* =========================
-   위시리스트 로드
+   위시리스트 로드 & 렌더
 ========================= */
 function fetchList(){
   $.ajax({
@@ -162,6 +155,7 @@ function fetchList(){
       for (let i=0; i<listRaw.length; i++){
         renderCard(listRaw[i]);
       }
+      toggleActionsBySelection();
     },
     error: function(xhr, status, err){
       console.error("[wishlist] ajax error:", status, err, xhr.status, (xhr.responseText||'').slice(0,200));
@@ -170,9 +164,6 @@ function fetchList(){
   });
 }
 
-/* =========================
-   카드 렌더 (이미지 없거나 에러면 회색 박스)
-========================= */
 function renderCard(wishVO){
   const w = normalizeWish(wishVO);
   if (!w.productNo || !w.wishlistNo) return;
@@ -187,18 +178,15 @@ function renderCard(wishVO){
   str += '<div class="a-product"'
       +  ' data-wishlist-no="' + w.wishlistNo + '"'
       +  ' data-product-no="'  + w.productNo  + '"'
+      +  ' data-category-no="' + (w.categoryNo || 0) + '"'
       +  ' data-wishlist-option-no="' + (w.wishlistOptionNo || '') + '"'
       +  ' data-detail-option-no="'   + (w.detailOptionNo   || '') + '"'
       +  ' data-option-name="'        + (w.optionName       || '') + '"'
       +  ' data-detail-option-name="' + (w.detailOptionName || '') + '">';
 
-  // 한 줄 레이아웃
   str += '  <div class="image-row">';
-
-  // 체크박스
   str += '    <input type="checkbox" class="product-checkbox">';
 
-  // 썸네일 (100x100)
   str += '    <div class="thumbbox">';
   if (hasImg){
     str += '      <img class="product-image" src="' + w.img + '" alt=""'
@@ -210,7 +198,6 @@ function renderCard(wishVO){
   }
   str += '    </div>';
 
-  // 상품 정보 (가격은 바닥 고정)
   str += '    <div class="product-info">';
   str += '      <div class="buy">' + escapeHtml(w.brand) + '</div>';
   str += '      <div class="product-row">';
@@ -227,12 +214,19 @@ function renderCard(wishVO){
   str += '      <button type="button" class="wishlist-btn">찜 해제</button>';
   str += '    </div>';
 
-  str += '  </div>'; // .image-row
-  str += '</div>';   // .a-product
+  str += '  </div>';
+  str += '</div>';
 
   $('#wListArea').append(str);
 }
 
+/* 카드/선택 제거 헬퍼 */
+function removeCardByWishlistNo(wishlistNo){
+  $('#wListArea .a-product[data-wishlist-no="'+ wishlistNo +'"]').remove();
+  removeSelected(wishlistNo);
+  toggleActionsBySelection();
+  updateStartButtonState();
+}
 
 /* =========================
    기념일 옵션 로드
@@ -267,24 +261,20 @@ function loadAnniversaryOptions(){
 }
 
 /* =========================
-   선택 목록
+   선택 목록(우측)
 ========================= */
 function addSelected({
   wishlistNo, productNo, brand, title, priceText, priceNum, img,
   wishlistOptionNo, detailOptionNo, optionName, detailOptionName
 }){
-  // 중복 방지
-  if (
-    $('#selectedList .selected-item').filter(function(){
-      return Number($(this).attr('data-wishlist-no')) === Number(wishlistNo);
-    }).length
-  ) return;
+  if ($('#selectedList .selected-item').filter(function(){
+    return Number($(this).attr('data-wishlist-no')) === Number(wishlistNo);
+  }).length) return;
 
   const pid    = Number(productNo) || 0;
   const pprice = Number(priceNum)  || 0;
-  const u      = ensureUrl(img); // 있으면 URL, 없으면 null
+  const u      = ensureUrl(img);
 
-  // 옵션 문자열(있을 때만 출력)
   const optParts = [];
   if (optionName)       optParts.push(escapeHtml(optionName));
   if (detailOptionName) optParts.push(escapeHtml(detailOptionName));
@@ -300,11 +290,11 @@ function addSelected({
     +   ' data-option-name="'        + (optionName       || '') + '"'
     +   ' data-detail-option-name="' + (detailOptionName || '') + '">'
 
-    +     (u
-            ? '<img class="selected-thumb" src="' + u + '"'
-              + ' onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'block\';">'
-            : '<img class="selected-thumb" src="" style="display:none;">'
-          )
+    +   (u
+         ? '<img class="selected-thumb" src="' + u + '"'
+           + ' onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'block\';">'
+         : '<img class="selected-thumb" src="" style="display:none;">'
+       )
 
     +   '<div class="selected-meta">'
     +     '<div class="selected-brand">' + escapeHtml(brand) + '</div>'
@@ -324,12 +314,9 @@ function addSelected({
 
   $('#selectedList').append(html);
 }
-
-
 function removeSelected(wishlistNo){
   $('#selectedList .selected-item[data-wishlist-no="' + wishlistNo + '"]').remove();
 }
-
 function updateStartButtonState(){
   const hasSelected = $('#selectedList .selected-item').length > 0;
   const hasEvent    = !!$('#funding-table').val();
@@ -337,7 +324,20 @@ function updateStartButtonState(){
 }
 
 /* =========================
-   펀딩 시작 (POST)
+   API: 위시 → 장바구니 추가 (그리고 위시에서 제거)
+========================= */
+function apiAddCartFromWishlist(items){
+  return $.ajax({
+    url: window.CTX + "/api/cart/addFromWishlist",
+    type: "POST",
+    contentType: "application/json; charset=utf-8",
+    dataType: "json",
+    data: JSON.stringify(items)
+  });
+}
+
+/* =========================
+   펀딩 시작
 ========================= */
 function startFunding(){
   const eventNo = Number($('#funding-table').val()) || 0;
@@ -396,13 +396,13 @@ function startFunding(){
 }
 
 /* =========================
-   DOM Ready
+   DOM Ready + 이벤트 바인딩
 ========================= */
 $(function(){
   fetchList();
   loadAnniversaryOptions();
 
-  // 좌측 체크 → 우측 추가/제거
+  // 좌측 체크 → 우측 선택목록 추가/제거
   $('#wListArea').on('change', '.product-checkbox', function(){
     const $card  = $(this).closest('.a-product');
 
@@ -413,10 +413,7 @@ $(function(){
     const title  = $card.find('.name').text().trim();
     const priceText = $card.find('.product-price').text().trim();
     const priceNum  = toPrice(priceText);
-
-    // 현재 카드의 썸네일 url(이미 ensureUrl 반영 완료)
-    const imgEl = $card.find('img.product-image')[0];
-    const img   = (imgEl && imgEl.src) ? imgEl.src : null;
+    const img   = ($card.find('img.product-image')[0]?.src) || null;
 
     const wishlistOptionNo = $card.attr('data-wishlist-option-no') || null;
     const detailOptionNo   = $card.attr('data-detail-option-no')   || null;
@@ -437,6 +434,8 @@ $(function(){
       removeSelected(wishlistNo);
     }
     updateStartButtonState();
+    toggleActionsBySelection();
+
   });
 
   // 전액/5% 표시만 갱신
@@ -453,6 +452,96 @@ $(function(){
 
   // 펀딩 시작
   $('#btnStartFunding').on('click', startFunding);
+
+  /* ============== 신규: 장바구니 버튼 ============== */
+  $('#wListArea').on('click', '.cart-btn', function(){
+  const $card = $(this).closest('.a-product');
+
+  const wishlistNo = toInt($card.attr('data-wishlist-no'));
+  const productNo  = toInt($card.attr('data-product-no'));
+  const detailOptionNo = toInt($card.attr('data-detail-option-no')); // 옵션 있으면
+
+  if (!wishlistNo || !productNo){
+    alert('상품 정보를 불러오지 못했습니다.');
+    return;
+  }
+
+  const payload = [{
+    wishlistNo:      wishlistNo,
+    productNo:       productNo,
+    quantity:        1,
+    detailoptionNo:  detailOptionNo
+  }];
+
+  $.ajax({
+    url: window.CTX + '/api/cart/addFromWishlist',
+    type: 'POST',
+    contentType: 'application/json; charset=utf-8',
+    data: JSON.stringify(payload)
+  })
+  .done(function(json){
+    if (json && json.result === 'success'){
+      if (confirm('장바구니에 담겼습니다. 이동하시겠습니까?')){
+        location.href = window.CTX + '/shop/cart';
+      } else {
+        $card.remove(); // 위시에선 제거
+        fetchList();
+      }
+    } else {
+      alert(json && json.message ? json.message : '처리에 실패했습니다.');
+    }
+  })
+  .fail(function(xhr){
+    console.error('addFromWishlist fail:', xhr.status, (xhr.responseText||'').slice(0,200));
+    alert('장바구니 담기에 실패했습니다.');
+  });
+});
+
+// 단건 찜 해제
+$('#wListArea').on('click', '.wishlist-btn', function(){
+  const $card = $(this).closest('.a-product');
+  const id = Number($card.data('wishlist-no')) || 0;
+  if (!id) { alert('상품 정보를 찾을 수 없어요.'); return; }
+
+  if (!confirm('이 상품을 찜 해제할까요?')) return;
+
+  const payload = [{ wishlistNo: id }];
+
+  const $btn = $(this).prop('disabled', true);
+  $.ajax({
+    url: CTX + '/api/wishlist/remove',
+    type: 'POST',
+    contentType: 'application/json; charset=UTF-8',
+    data: JSON.stringify(payload),
+    dataType: 'json'
+  })
+  .done(function(res){
+    if (res && res.result === 'success') {
+      // 좌측 목록에서 제거
+      $card.remove();
+      // 우측 선택목록에 있었다면 같이 제거
+      if (typeof removeSelected === 'function') removeSelected(id);
+      if (typeof updateStartButtonState === 'function') updateStartButtonState();
+      fetchList();
+    } else {
+      alert((res && res.message) || '찜 해제에 실패했습니다.');
+    }
+  })
+  .fail(function(xhr){
+    console.error('[wishlist/remove] fail:', xhr.status, (xhr.responseText||'').slice(0,200));
+    alert('찜 해제에 실패했습니다. 잠시 후 다시 시도해주세요.');
+  })
+  .always(function(){ $btn.prop('disabled', false); });
+});
+
+// 체크 선택 중이면 모든 카드의 액션 버튼 비활성화
+function toggleActionsBySelection(){
+  const anyChecked = $('#wListArea .product-checkbox:checked').length > 0;
+  $('#wListArea .cart-btn, #wListArea .wishlist-btn')
+    .prop('disabled', anyChecked)
+    .attr('aria-disabled', anyChecked ? 'true' : 'false');
+}
+
 });
 </script>
 

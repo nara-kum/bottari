@@ -15,32 +15,34 @@ public class WishlistService {
 
 	@Autowired
 	private WishlistRepository wishlistRepository;
-	
-	//위시리스트
+
+	// 위시리스트
 	public List<WishlistVO> exeWishList(int no) {
 		System.out.println("WishService.exeWishList()");
 		List<WishlistVO> wList = wishlistRepository.selectWishList(no);
 		return wList;
 	}
-	
-	//기념일리스트
+
+	// 기념일리스트
 	public List<CalenderVO> exeEventList(int no) {
 		System.out.println("WishService.exeEventList()");
 		List<CalenderVO> eList = wishlistRepository.selectEventList(no);
 		return eList;
 	}
-	
-	//펀딩 생성시 펀딩테이블에 인서트 하고, 위시리스트 삭제
+
+	// 펀딩 생성시 펀딩테이블에 인서트 하고, 위시리스트 삭제
 	@Transactional
 	public int exeFunding(List<WishlistVO> wishlistVO) {
 		System.out.println("WishService.exeFunding()");
-		if (wishlistVO == null || wishlistVO.isEmpty()) return 0;
+		if (wishlistVO == null || wishlistVO.isEmpty())
+			return 0;
 
 		// 동일 이벤트로 묶여 온다는 전제
 		int eventNum = wishlistVO.get(0).getEventNo();
 
 		for (WishlistVO vo : wishlistVO) {
-			if (vo == null) continue;
+			if (vo == null)
+				continue;
 
 			// 1) funding_product 단건 insert → vo.fundingNo 채워짐 (useGeneratedKeys)
 			wishlistRepository.insertFundingOne(vo);
@@ -55,5 +57,16 @@ public class WishlistService {
 		// 3) 위시리스트 삭제 (eventNo 기준)
 		int count = wishlistRepository.deleteWishlist(eventNum);
 		return count;
+	}
+
+	// 위시리스트 삭제
+	@Transactional
+	public int deleteWishlistByIds(int userNo, List<Integer> ids) {
+		if (ids == null || ids.isEmpty())
+			return 0;
+		// 옵션 테이블을 먼저 지우고(외래키 미설정시를 대비),
+		// 본문 테이블에서 삭제
+		int del = wishlistRepository.deleteWishlistByIds(userNo, ids);
+		return del;
 	}
 }

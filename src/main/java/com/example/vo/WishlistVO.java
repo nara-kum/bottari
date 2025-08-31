@@ -23,6 +23,8 @@ public class WishlistVO {
 	private int amount;
 	private String fundingStatus;
 	private String fundingDate;
+	//장바구니
+	private int categoryNo;
 
 	
 	// 생성자
@@ -32,7 +34,7 @@ public class WishlistVO {
 
 	public WishlistVO(int userNo, int wishlistNo, String image, String brand, String title, int price, int quantity,
 			int wishlistoptionNo, int detailoptionNo, String optionName, String detailoptionName, int fundingNo, int eventNo,
-			int productNo, int percent, int amount, String fundingStatus, String fundingDate) {
+			int productNo, int percent, int amount, String fundingStatus, String fundingDate, int categoryNo) {
 		super();
 		this.userNo = userNo;
 		this.wishlistNo = wishlistNo;
@@ -52,6 +54,7 @@ public class WishlistVO {
 		this.amount = amount;
 		this.fundingStatus = fundingStatus;
 		this.fundingDate = fundingDate;
+		this.categoryNo = categoryNo;
 	}
 
 	
@@ -201,6 +204,14 @@ public class WishlistVO {
 		this.fundingDate = fundingDate;
 	}
 
+	public int getCategoryNo() {
+		return categoryNo;
+	}
+
+	public void setCategoryNo(int categoryNo) {
+		this.categoryNo = categoryNo;
+	}
+
 	
 	//메소드일반
 	@Override
@@ -209,7 +220,7 @@ public class WishlistVO {
 				+ ", price=" + price + ", quantity=" + quantity + ", wishlistoptionNo=" + wishlistoptionNo
 				+ ", detailoptionNo=" + detailoptionNo + ", optionName=" + optionName + ", detailoptionName=" + detailoptionName + ", fundingNo="
 				+ fundingNo + ", eventNo=" + eventNo + ", productNo=" + productNo + ", percent=" + percent + ", amount="
-				+ amount + ", fundingStatus=" + fundingStatus + ", fundingDate=" + fundingDate + "]";
+				+ amount + ", fundingStatus=" + fundingStatus + ", fundingDate=" + fundingDate + ", categoryNo=" + categoryNo+ "]";
 	}
 
 
