@@ -41,7 +41,7 @@
                 </div>
                 <div class="column-flex-box gap-10 align-center">
                 	<div class="text-16"> 이런 구매내역이 비어있어요! </div>
-                	<a href="/shop/bottarimall"><button type="button" class="button-basic button-orange size-normal">쇼핑몰 가기</button></a>
+                	<a href="/shop/bottarimall"><button type="button" class="btn-basic btn-orange size-normal">쇼핑몰 가기</button></a>
                 </div>
             </div>
         </div>

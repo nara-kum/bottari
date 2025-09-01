@@ -7,6 +7,7 @@ import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.repository.PaymentRepository;
 import com.example.vo.CheckAddressVO;
@@ -259,6 +260,19 @@ public class PaymentService {
 			System.out.println(vo);
 		}
 
+		return 0;
+	}
+	
+	public int exeDeleteCart(List<Integer> cartNos) {
+		System.out.println("PaymentService.exeDeleteCart()");
+		
+		int count = paymentrepository.deleteCart(cartNos);
+		
+		if(count == 1) {
+			System.out.println("장바구니 삭제 완료");
+			paymentrepository.deleteCartDetail(cartNos);
+		}
+		
 		return 0;
 	}
 }

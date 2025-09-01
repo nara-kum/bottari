@@ -75,7 +75,7 @@
                 <div class="list-basic list-1200 column-flex-box detail">
                     <div class="between-flex-box box-line">
                         <div class="text-16 bold">배송상품 취소 및 교환/환불 안내</div>
-                        <img class="popup-icon" src="">
+                        <img class="popup-icon" src="/assts/icon/icon-edit.svg">
                     </div>
                     <div class="text-12">구매하신 배송상품의 취소/환불 또는 교환/반품을 원하실 경우에는 다음 내용을 참고해 주세요.
                         > 물품 배송 전 청약 철회 (취소/환불)상품(재화)을 판매자가 배송하기 이전에는 취소 및 환불 가능유효기간 이내에 배송지를 입력하지 않을 경우 자동 취소/환불 절차 진행*

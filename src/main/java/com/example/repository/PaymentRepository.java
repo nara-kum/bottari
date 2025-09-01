@@ -110,4 +110,21 @@ public class PaymentRepository {
 		
 		return vo;
 	}
+	
+	public int deleteCart(List<Integer> cartNos) {
+		System.out.println("PaymentRepository.deleteCart()");
+		
+		int count = sqlsession.delete("checkout.deleteCart", cartNos);
+		
+		
+		return count;
+	}
+	
+	public int deleteCartDetail(List<Integer> cartNos) {
+		System.out.println("PaymentRepository.deleteCartDetail()");
+		
+		int count = sqlsession.delete("checkout.deleteCartDetail", cartNos);
+		
+		return count;
+	}
 }

@@ -154,10 +154,22 @@ public class PaymentController {
 
         
         paymentservice.exepayment(paymentList);
+        
+        // 결제 완료 후 장바구니 삭제하기
+        List<Integer> cartNos = new ArrayList<>();
+        for(int i = 0 ; i<cart_no.length ; i++) {
+        	cartNos.add(cart_no[i]);
+        }
+        
+        int count = paymentservice.exeDeleteCart(cartNos);
 		
 		return "shop/success";
 	}
 	
-	
+	// ajax로 보내면 이것도 만들어야 되네;;
+	@RequestMapping(value = "/shop/success", method = {RequestMethod.GET,RequestMethod.POST})
+	public String success() {
+		return "shop/success";
+	}
 	
 }
