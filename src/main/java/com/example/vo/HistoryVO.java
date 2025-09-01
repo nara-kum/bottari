@@ -4,6 +4,7 @@ public class HistoryVO {
 	//field
 	// payment_section
 	private int order_no;
+	private int funding_no;
 	private int product_no;
 	private String zip_code;
 	private String address;
@@ -21,12 +22,15 @@ public class HistoryVO {
 	private int price;
 	private String itemimg;
 	private int shipping_cost;
+	// total section
+	private int total_percent;
 	//editor
-	public HistoryVO(int order_no, int product_no, String zip_code, String address, String detail_address,
+	public HistoryVO(int order_no, int funding_no, int product_no, String zip_code, String address, String detail_address,
 			String payment_date, String payment_method, String payment_status, String delivery_status,
-			int payment_amount, int quantity, String title, String brand, int price, String itemimg, int shipping_cost) {
+			int payment_amount, int quantity, String title, String brand, int price, String itemimg, int shipping_cost, int total_percent) {
 		super();
 		this.order_no = order_no;
+		this.funding_no = funding_no;
 		this.product_no = product_no;
 		this.zip_code = zip_code;
 		this.address = address;
@@ -42,6 +46,7 @@ public class HistoryVO {
 		this.price = price;
 		this.itemimg = itemimg;
 		this.shipping_cost = shipping_cost;
+		this.total_percent = total_percent;
 	}
 	public HistoryVO() {
 		super();
@@ -52,6 +57,12 @@ public class HistoryVO {
 	}
 	public void setOrder_no(int order_no) {
 		this.order_no = order_no;
+	}
+	public int getFunding_no() {
+		return funding_no;
+	}
+	public void setFunding_no(int funding_no) {
+		this.funding_no = funding_no;
 	}
 	public int getProduct_no() {
 		return product_no;
@@ -143,14 +154,20 @@ public class HistoryVO {
 	public void setShipping_cost(int shipping_cost) {
 		this.shipping_cost = shipping_cost;
 	}
+	public int getTotal_percent() {
+		return total_percent;
+	}
+	public void setTotal_percent(int total_percent) {
+		this.total_percent = total_percent;
+	}
 	//method normal
 	@Override
 	public String toString() {
-		return "HistoryVO [order_no=" + order_no + ", product_no=" + product_no + ", zip_code=" + zip_code
-				+ ", address=" + address + ", detail_address=" + detail_address + ", payment_date=" + payment_date
-				+ ", payment_method=" + payment_method + ", payment_status=" + payment_status + ", delivery_status="
-				+ delivery_status + ", payment_amount=" + payment_amount + ", quantity=" + quantity + ", title=" + title
-				+ ", brand=" + brand + ", price=" + price + ", itemimg=" + itemimg + ", shipping_cost=" + shipping_cost
-				+ "]";
+		return "HistoryVO [order_no=" + order_no + ", funding_no=" + funding_no + ", product_no=" + product_no
+				+ ", zip_code=" + zip_code + ", address=" + address + ", detail_address=" + detail_address
+				+ ", payment_date=" + payment_date + ", payment_method=" + payment_method + ", payment_status="
+				+ payment_status + ", delivery_status=" + delivery_status + ", payment_amount=" + payment_amount
+				+ ", quantity=" + quantity + ", title=" + title + ", brand=" + brand + ", price=" + price + ", itemimg="
+				+ itemimg + ", shipping_cost=" + shipping_cost + ", total_percent=" + total_percent + "]";
 	}
 }

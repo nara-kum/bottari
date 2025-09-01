@@ -56,6 +56,7 @@
 	<select id="selectHistoryDetail" resultType="com.example.vo.HistoryVO">
 		<![CDATA[
 			SELECT	pm.order_no,
+					pm.funding_no,
 					pm.product_no,
 			        pm.zipcode,
 			        pm.address,
@@ -74,6 +75,19 @@
 			LEFT JOIN payment_goods pg ON pm.payment_no = pg.payment_no
 			LEFT JOIN product p ON pm.product_no = p.product_no
 			WHERE pm.order_no = #{order_no}
+		]]>
+	</select>
+	
+	<select id="selectfundingPercent" resultType="com.example.vo.HistoryFundingCheckVO">
+		<![CDATA[
+			select	fp.funding_no,
+					fp.percent,
+			        pg.quantity,
+			        SUM(fp.percent * pg.quantity) OVER(partition by fp.funding_no) AS total_percent
+			from funding_product fp
+			left join payment p on fp.funding_no = p.funding_no
+			left join payment_goods pg on p.payment_no = pg.payment_no
+			where fp.funding_no = #{funding_no}
 		]]>
 	</select>
 

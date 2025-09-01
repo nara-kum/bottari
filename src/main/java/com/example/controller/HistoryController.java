@@ -89,6 +89,12 @@ public class HistoryController {
 		
 		System.out.println("totalQuantity: " + totalQuantity + ", totalAmount: " + totalAmount + ", totalPrice: " + totalPrice);
 		
+		int funding_no = historyDetailList.get(0).getFunding_no();
+		
+		if(funding_no != 0) {
+//			return checkFundingData(historyDetailList, funding_no, model);
+		}
+		
 		model.addAttribute("hList", historyDetailList);
 		model.addAttribute("total_quantity", totalQuantity);
 		model.addAttribute("total_amount", totalAmount);
@@ -99,4 +105,13 @@ public class HistoryController {
 		
 		return "history/history_detail";
 	}
+	
+//	public String checkFundingData(List<HistoryVO> historyDetailList, int funding_no,
+//			Model model) {
+//		System.out.println("HistoryController.checkFundingData()");
+//		
+//		List<HistoryFundingCheckVO> percentList = historyservice.exe
+//		
+//		return "";
+//	}
 }

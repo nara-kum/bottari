@@ -39,7 +39,7 @@
             </c:forEach>
                 <div class="list-basic list-1200 between-flex-box detail">
                     <div class="row-flex-box align-center">
-                        <div>주문번호 | </div>
+                        <div>주문번호 |&nbsp;</div>
                         <div>${param.order_no}</div>
                     </div>
                     <button type="button" class="btn-basic btn-gray size-small">영수증 보기</button>

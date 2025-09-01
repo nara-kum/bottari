@@ -2,6 +2,7 @@ package com.example.service;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.repository.HistoryRepository;
+import com.example.vo.HistoryFundingCheckVO;
 import com.example.vo.HistoryFundingDetailVO;
 import com.example.vo.HistoryListVO;
 import com.example.vo.HistoryProductDetailVO;
@@ -87,6 +89,18 @@ public class HistoryService {
 		List<HistoryVO> historyDetailList = historyrepository.historyDetailAdd(order_no);
 		System.out.println("HistoryService.exeHistoryDetail()");
 		System.out.println("repository에서 데이터 전달 받음");
+
+		int funding_no = historyDetailList.get(0).getFunding_no();
+		System.out.println("funding_no: " +funding_no);
+		
+		if(funding_no != 0) {
+			List<HistoryFundingCheckVO> percentList = historyrepository.selectFundingPercent(funding_no);
+			int total_percent = percentList.get(0).getTotal_percent();
+			System.out.println("total_percent: " + total_percent);
+			
+			historyDetailList.get(0).setTotal_percent(total_percent);
+			System.out.println(historyDetailList);
+		}
 		
 		return historyDetailList;
 	}
