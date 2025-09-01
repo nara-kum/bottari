@@ -1,5 +1,6 @@
 package com.example.controller;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.service.HistoryService;
+import com.example.vo.HistoryFundingCheckVO;
 import com.example.vo.HistoryListVO;
 import com.example.vo.HistoryVO;
 import com.example.vo.UserVO;
@@ -70,6 +72,7 @@ public class HistoryController {
 		
 		List<HistoryVO> historyDetailList = historyservice.exeHistoryDetail(order_no);
 		System.out.println("HistoryController.historyDetail()");
+		System.out.println("service에서 데이터 받아오기 성공");
 		
 		int totalPrice = 0;
 		int totalQuantity = 0;
@@ -92,7 +95,7 @@ public class HistoryController {
 		int funding_no = historyDetailList.get(0).getFunding_no();
 		
 		if(funding_no != 0) {
-//			return checkFundingData(historyDetailList, funding_no, model);
+			return checkFundingData(historyDetailList, funding_no, model);
 		}
 		
 		model.addAttribute("hList", historyDetailList);
@@ -106,12 +109,22 @@ public class HistoryController {
 		return "history/history_detail";
 	}
 	
-//	public String checkFundingData(List<HistoryVO> historyDetailList, int funding_no,
-//			Model model) {
-//		System.out.println("HistoryController.checkFundingData()");
-//		
-//		List<HistoryFundingCheckVO> percentList = historyservice.exe
-//		
-//		return "";
-//	}
+	@RequestMapping(value="/history/detail/funding", method= {RequestMethod.GET, RequestMethod.POST})
+	public String checkFundingData(List<HistoryVO> historyDetailList, int funding_no,
+			Model model) {
+		System.out.println("HistoryController.checkFundingData()");
+		
+		List<HistoryFundingCheckVO> percentList = historyservice.execheckFundingData(funding_no);
+		System.out.println("HistoryController.checkFundingData()");
+		System.out.println("service에서 데이터 받아오기 성공");
+		System.out.println("percentList: " + percentList);
+		
+		System.out.println(historyDetailList);
+		System.out.println(percentList);
+		
+		model.addAttribute("hList", historyDetailList);
+		model.addAttribute("pList", percentList);
+		
+		return "history/history_detail_funding";
+	}
 }
