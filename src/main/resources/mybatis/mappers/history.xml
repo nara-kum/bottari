@@ -3,34 +3,35 @@
 <mapper namespace="history">
 	<select id="searchPaymentList" resultType="com.example.vo.HistoryListVO">
 		<![CDATA[
-			SELECT	pm.payment_no,
-					pm.order_no,
-			        pm.funding_no,
-			        pm.payment_date,
-			        SUM(payment_amount) OVER(PARTITION BY pm.order_no) AS final_amount,
-			        pm.delivery_status,
-			        pm.service_type
-			FROM payment pm
-			WHERE pm.user_no = #{user_no}
+			SELECT	DATE(payment_date) AS payment_date,
+					payment_no,
+					funding_no,
+					user_no
+					FROM payment
+			WHERE user_no = #{user_no}
+			ORDER BY payment_date desc, payment_no DESC
 		]]>
 	</select>
 
 	<select id="searchDetailList" resultType="com.example.vo.HistoryProductDetailVO">
 		<![CDATA[
 		  SELECT	pm.payment_no,
-					p.brand,
-					p.title,
-			        p.price,
+					pm.order_no,
+			        pm.product_no,
+			        pm.funding_no,
+			        DATE(pm.payment_date) AS payment_date,
+			        pm.delivery_status,
+			        pm.payment_amount,
+			        pm.service_type,
 			        pg.quantity,
-			        od.detailoption_name,
-			        po.option_name,
-			        SUM(p.price * pg.quantity) OVER(PARTITION BY pm.payment_no) AS total_amount
+			        p.brand,
+			        p.title,
+			        p.price,
+			        p.itemimg,
+			        p.shipping_cost
 			FROM payment pm
 			LEFT JOIN product p ON pm.product_no = p.product_no
 			LEFT JOIN payment_goods pg ON pm.payment_no = pg.payment_no
-			LEFT JOIN payment_goods_option pgo ON pg.payment_goods_no = pgo.payment_goods_no
-			LEFT JOIN option_detail od ON pgo.detailoption_no = od.detailoption_no
-			LEFT JOIN product_option po ON od.option_no = po.option_no
 			WHERE pm.payment_no IN
 		]]>
 		<foreach collection="list" item="paymentNoList" open="(" close=")" separator=",">
@@ -50,6 +51,30 @@
 		<foreach collection="list" item="fundingNoList" open="(" close=")" separator=",">
 			#{fundingNoList}
 		</foreach>
+	</select>
+	
+	<select id="selectHistoryDetail" resultType="com.example.vo.HistoryVO">
+		<![CDATA[
+			SELECT	pm.order_no,
+					pm.product_no,
+			        pm.zipcode,
+			        pm.address,
+			        pm.detail_address,
+			        pm.payment_date,
+			        pm.payment_method,
+			        pm.payment_status,
+			        pm.delivery_status,
+			        pm.payment_amount,
+			        pg.quantity,
+			        p.title,
+			        p.brand,
+			        p.price,
+			        p.itemimg
+			FROM payment pm
+			LEFT JOIN payment_goods pg ON pm.payment_no = pg.payment_no
+			LEFT JOIN product p ON pm.product_no = p.product_no
+			WHERE pm.order_no = #{order_no}
+		]]>
 	</select>
 
 </mapper>

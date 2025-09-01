@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
 <html lang="ko">
 
@@ -39,74 +40,67 @@
                     <input id="filter-name" class="search-name" type="text">
                     <img class="icon-small more-detail" src="/assets/icon/icon-search.svg">
                 </div>
-                <c:forEach items="${requestScope.hList}" var="main">
+                <c:forEach items="${hMap}" var="entry">
 	                <div class="purchase-by-date">
 	                    <div class="date">
-	                        ${main.payment_date}
+	                        ${entry.key}
 	                    </div>
-	                    <c:forEach items="${main.productDetailList}" var="product">
-		                    <div class="list-basic list-1200 between-flex-box">
-		                        <div class="row-flex-box">
-		                            <img class="list-img-100" src="../임시.JPG">
-		                            <div class="column-flex-box">
-		                                <div class="text-14 detail">${product.brand}</div>
-		                                <div class="text-14 detail">${product.title}</div>
-		                                <div class="text-14 detail">38,000원</div>
-		                                <div class="text-16 bold detail">38,000원</div>
-		                            </div>
-		                        </div>
-		                        <div class="column-flex-box">
-		                            <div class="show-detail text-align-right">주문번호: 000123123</div>
-		                            <div class="show-detail text-align-right">임시 펀딩정보</div>
-		                            <div class="show-detail text-align-right detail"><a href="">상세보기></a></div>
-		                        </div>
-		                    </div>
-	                    </c:forEach>
+	                    <div class="column-flex-box gap-10">
+		                    <c:forEach items="${entry.value}" var="main">
+		                    	<c:forEach items="${main.productDetailList}" var="product">
+		                    		<c:choose>
+		                    			<c:when test="${product.funding_no != 0}">
+		                    				<c:forEach items="${main.fundingDetailList}" var="funding">
+		                    					<c:if test="${product.funding_no == funding.funding_no}">
+								                    <div class="list-basic list-1200 between-flex-box">
+								                        <div class="row-flex-box">
+								                            <img class="list-img-100" src="${product.itemimg}">
+								                            <div class="column-flex-box">
+								                                <div class="text-14 detail">${product.brand}</div>
+								                                <div class="text-14 detail">${product.title}</div>
+								                                <div class="text-14 detail"><fmt:formatNumber value="${product.price}" type="currency" currencySymbol="" />원 | 비율: ${product.quantity * funding.percent}%</div>
+								                                <div class="text-16 bold detail"><fmt:formatNumber value="${product.payment_amount}" type="currency" currencySymbol="" />원</div>
+								                            </div>
+								                        </div>
+								                        <div class="column-flex-box">
+								                            <div class="show-detail text-align-right">주문번호: ${product.order_no}</div>
+								                            <div class="show-detail text-align-right">
+																<c:if test="${funding.funding_status == 'O'}">
+																	펀딩 진행중
+																</c:if>
+																<c:if test="${funding.funding_status != 'O'}">
+																	펀딩 완료됨
+																</c:if>
+															</div>
+								                            <div class="show-detail text-align-right detail"><a href="/history/detail?order_no=${product.order_no}">상세보기></a></div>
+								                        </div>
+								                    </div>
+		                    					</c:if>
+						                    </c:forEach>
+		                    			</c:when>
+		                    			<c:otherwise>
+						                    <div class="list-basic list-1200 between-flex-box">
+						                        <div class="row-flex-box">
+						                            <img class="list-img-100" src="${product.itemimg}">
+						                            <div class="column-flex-box">
+						                                <div class="text-14 detail">${product.brand}</div>
+						                                <div class="text-14 detail">${product.title}</div>
+						                                <div class="text-14 detail"><fmt:formatNumber value="${product.price}" type="currency" currencySymbol="" />원 | 수량: ${product.quantity}개</div>
+						                                <div class="text-16 bold detail">결제금액: <fmt:formatNumber value="${product.payment_amount}" type="currency" currencySymbol="" />원</div>
+						                            </div>
+						                        </div>
+						                        <div class="column-flex-box">
+						                            <div class="show-detail text-align-right">주문번호: ${product.order_no}</div>
+						                            <div class="show-detail text-align-right detail"><a href="/history/detail?order_no=${product.order_no}">상세보기></a></div>
+						                        </div>
+						                    </div>
+		                    			</c:otherwise>
+		                    		</c:choose>
+		                    	</c:forEach>
+		                    </c:forEach>
+	                    </div>
 	                </div>
                 </c:forEach>
-                <div class="purchase-by-date">
-                    <div class="date">
-                        2025 . 06 . 20
-                    </div>
-                    <div class="list-basic list-1200 between-flex-box">
-                        <div class="row-flex-box">
-                            <img class="list-img-100" src="../임시.JPG">
-                            <div class="column-flex-box">
-                                <div class="text-14 detail">맥(MAC)</div>
-                                <div class="text-14 detail">“단하루 루비우 증정” [단독/각인] 맥 BEST 립밤 (=미니립)</div>
-                                <div class="text-16 bold detail">38,000원</div>
-                            </div>
-                        </div>
-                        <div class="column-flex-box">
-                            <div class="show-detail text-align-right">주문번호: ${main.order_no}</div>
-                            <div class="show-detail text-align-right">임시 펀딩정보</div>
-                            <div class="show-detail text-align-right detail"><a href="">상세보기></a></div>
-                        </div>
-                    </div>
-
-                    <!-- 여러상품 버전 -->
-                    <div class="goods-list list-basic list-1200">
-                        <div class="left-side row-flex-box">
-                            <div class="multi-goods-img">
-                                <img class="img" src="../임시.JPG">
-                                <img class="img" src="../임시2.JPG">
-                                <img class="img" src="">
-                                <img class="img" src="">
-                            </div>
-                            <div class="column-flex-box">
-                                <div class="text-14 detail">맥(MAC)</div>
-                                <div class="text-14 detail">“단하루 루비우 증정” [단독/각인] 맥 BEST 립밤 (=미니립)</div>
-                                <div class="text-16 bold detail">38,000원</div>
-                            </div>
-                        </div>
-                        <div class="column-flex-box">
-                            <div class="show-detail text-align-right">주문번호: 000123123</div>
-                            <div class="show-detail text-align-right">임시 펀딩정보</div>
-                            <div class="show-detail text-align-right detail"><a href="">상세보기></a></div>
-                        </div>
-                    </div>
-                </div>
-                
             </div>
         </div>
     </content>

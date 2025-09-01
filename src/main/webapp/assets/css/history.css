@@ -1,5 +1,9 @@
 @charset "utf-8";
 
+.gap-10 {
+	gap: 10px;
+}
+
 /* global.css 변형 */
 .sec-content-main {
     flex-direction: column;

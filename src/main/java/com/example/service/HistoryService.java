@@ -1,6 +1,7 @@
 package com.example.service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -13,6 +14,7 @@ import com.example.repository.HistoryRepository;
 import com.example.vo.HistoryFundingDetailVO;
 import com.example.vo.HistoryListVO;
 import com.example.vo.HistoryProductDetailVO;
+import com.example.vo.HistoryVO;
 
 @Service
 public class HistoryService {
@@ -24,7 +26,7 @@ public class HistoryService {
 	// method g/s
 
 	// method normal
-	public List<HistoryListVO> exeHistoryList(int user_no) {
+	public Map<String, List<HistoryListVO>> exeHistoryList(int user_no) {
 		System.out.println("HistoryService.exeHistoryList()");
 
 		List<HistoryListVO> historyPaymentList = historyrepository.historyaddList(user_no);
@@ -32,7 +34,7 @@ public class HistoryService {
 		System.out.println("historyPaymentList: " + historyPaymentList);
 
 		if (historyPaymentList.isEmpty()) {
-			return historyPaymentList;
+			return Collections.emptyMap();
 		} else {
 			// 일반 결제 데이터 처리
 			List<Integer> paymentNoList = historyPaymentList.stream().map(HistoryListVO::getPayment_no)
@@ -72,9 +74,20 @@ public class HistoryService {
 					history.setFundingDetailList(new ArrayList<>());
 				}
 			}
-
 		}
+		Map<String, List<HistoryListVO>> groupedByDate = historyPaymentList.stream()
+				.collect(Collectors.groupingBy(h -> h.getPayment_date().substring(0, 10)));
 
-		return historyPaymentList;
+		return groupedByDate;
+	}
+	
+	public List<HistoryVO> exeHistoryDetail(int order_no){
+		System.out.println("HistoryService.exeHistoryDetail()");
+		
+		List<HistoryVO> historyDetailList = historyrepository.historyDetailAdd(order_no);
+		System.out.println("HistoryService.exeHistoryDetail()");
+		System.out.println("repository에서 데이터 전달 받음");
+		
+		return historyDetailList;
 	}
 }

@@ -95,8 +95,8 @@
 	
 	<insert id="insertpaymentList" parameterType="com.example.vo.PaymentVO" useGeneratedKeys="true" keyProperty="payment_no">
 		<![CDATA[
-			INSERT INTO payment (user_no, product_no, order_no, zipcode, address, detail_address, payment_date, payment_method, payment_status, delivery_status, payment_amount, service_type)
-			VALUES(#{user_no}, #{product_no}, #{order_no}, #{zipcode}, #{address}, #{detail_address}, NOW(), #{payment_method}, #{payment_status}, #{delivery_status}, #{payment_amount}, #{service_type})
+			INSERT INTO payment (user_no, product_no, funding_no, order_no, zipcode, address, detail_address, payment_date, payment_method, payment_status, delivery_status, payment_amount, service_type)
+			VALUES(#{user_no}, #{product_no}, #{funding_no}, #{order_no}, #{zipcode}, #{address}, #{detail_address}, NOW(), #{payment_method}, #{payment_status}, #{delivery_status}, #{payment_amount}, #{service_type})
 		]]>
 	</insert>
 	

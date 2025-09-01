@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import com.example.vo.HistoryFundingDetailVO;
 import com.example.vo.HistoryListVO;
 import com.example.vo.HistoryProductDetailVO;
+import com.example.vo.HistoryVO;
 
 @Repository
 public class HistoryRepository {
@@ -46,5 +47,15 @@ public class HistoryRepository {
 		System.out.println("mybatis(searchFundingDetail) 조회 완료");
 		
 		return fundingDetailList;
+	}
+	
+	public List<HistoryVO> historyDetailAdd(int order_no) {
+		System.out.println("HistoryRepository.historyDetailAdd()");
+		
+		List<HistoryVO> historyDetailList = sqlsession.selectList("history.selectHistoryDetail", order_no);
+		System.out.println("HistoryRepository.historyDetailAdd()");
+		System.out.println("Mybatis에서 데이터 조회 성공)");
+		
+		return historyDetailList;
 	}
 }

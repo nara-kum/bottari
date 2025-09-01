@@ -7,11 +7,13 @@ public class HistoryProductDetailVO {
 	private int order_no;
 	private int product_no;
 	private int funding_no;
-	private int payment_date;
-	private String detlivery_status;
+	private String payment_date;
+	private String delivery_status;
 	private int payment_amount;
 	private int final_amount;
 	private String service_type;
+	// payment_goods section
+	private int quantity;
 	// product_section
 	private String brand;
 	private String title;
@@ -19,8 +21,8 @@ public class HistoryProductDetailVO {
 	private String itemimg;
 	private int shipping_cost;
 	//editor
-	public HistoryProductDetailVO(int payment_no, int order_no, int product_no, int funding_no, int payment_date,
-			String detlivery_status, int payment_amount, int final_amount, String service_type, String brand,
+	public HistoryProductDetailVO(int payment_no, int order_no, int product_no, int funding_no, String payment_date,
+			String delivery_status, int payment_amount, int final_amount, String service_type, int quantity, String brand,
 			String title, int price, String itemimg, int shipping_cost) {
 		super();
 		this.payment_no = payment_no;
@@ -28,10 +30,11 @@ public class HistoryProductDetailVO {
 		this.product_no = product_no;
 		this.funding_no = funding_no;
 		this.payment_date = payment_date;
-		this.detlivery_status = detlivery_status;
+		this.delivery_status = delivery_status;
 		this.payment_amount = payment_amount;
 		this.final_amount = final_amount;
 		this.service_type = service_type;
+		this.quantity = quantity;
 		this.brand = brand;
 		this.title = title;
 		this.price = price;
@@ -66,17 +69,17 @@ public class HistoryProductDetailVO {
 	public void setFunding_no(int funding_no) {
 		this.funding_no = funding_no;
 	}
-	public int getPayment_date() {
+	public String getPayment_date() {
 		return payment_date;
 	}
-	public void setPayment_date(int payment_date) {
+	public void setPayment_date(String payment_date) {
 		this.payment_date = payment_date;
 	}
-	public String getDetlivery_status() {
-		return detlivery_status;
+	public String getDelivery_status() {
+		return delivery_status;
 	}
-	public void setDetlivery_status(String detlivery_status) {
-		this.detlivery_status = detlivery_status;
+	public void setDelivery_status(String detlivery_status) {
+		this.delivery_status = detlivery_status;
 	}
 	public int getPayment_amount() {
 		return payment_amount;
@@ -126,12 +129,18 @@ public class HistoryProductDetailVO {
 	public void setShipping_cost(int shipping_cost) {
 		this.shipping_cost = shipping_cost;
 	}
+	public int getQuantity() {
+		return quantity;
+	}
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
+	}
 	//method normal
 	@Override
 	public String toString() {
 		return "HistoryProductDetailVO [payment_no=" + payment_no + ", order_no=" + order_no + ", product_no="
-				+ product_no + ", funding_no=" + funding_no + ", payment_date=" + payment_date + ", detlivery_status="
-				+ detlivery_status + ", payment_amount=" + payment_amount + ", final_amount=" + final_amount
+				+ product_no + ", funding_no=" + funding_no + ", payment_date=" + payment_date + ", delivery_status="
+				+ delivery_status + ", payment_amount=" + payment_amount + ", final_amount=" + final_amount
 				+ ", service_type=" + service_type + ", brand=" + brand + ", title=" + title + ", price=" + price
 				+ ", itemimg=" + itemimg + ", shipping_cost=" + shipping_cost + "]";
 	}

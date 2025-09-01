@@ -2,42 +2,56 @@ package com.example.vo;
 
 public class HistoryVO {
 	//field
-	private String payment_date;
-	private int product_no;
-	private int fundingproduct_no;
+	// payment_section
 	private int order_no;
+	private int product_no;
+	private String zip_code;
+	private String address;
+	private String detail_address;
+	private String payment_date;
+	private String payment_method;
+	private String payment_status;
+	private String delivery_status;
 	private int payment_amount;
+	// payment_goods section
 	private int quantity;
+	// product_section
 	private String title;
 	private String brand;
 	private int price;
-	private int percent;
-	private int amount;
+	private String itemimg;
+	private int shipping_cost;
 	//editor
-	public HistoryVO(String payment_date, int product_no, int fundingproduct_no, int order_no, int payment_amount,
-			int quantity, String title, String brand, int price, int percent, int amount) {
+	public HistoryVO(int order_no, int product_no, String zip_code, String address, String detail_address,
+			String payment_date, String payment_method, String payment_status, String delivery_status,
+			int payment_amount, int quantity, String title, String brand, int price, String itemimg, int shipping_cost) {
 		super();
-		this.payment_date = payment_date;
-		this.product_no = product_no;
-		this.fundingproduct_no = fundingproduct_no;
 		this.order_no = order_no;
+		this.product_no = product_no;
+		this.zip_code = zip_code;
+		this.address = address;
+		this.detail_address = detail_address;
+		this.payment_date = payment_date;
+		this.payment_method = payment_method;
+		this.payment_status = payment_status;
+		this.delivery_status = delivery_status;
 		this.payment_amount = payment_amount;
 		this.quantity = quantity;
 		this.title = title;
 		this.brand = brand;
 		this.price = price;
-		this.percent = percent;
-		this.amount = amount;
+		this.itemimg = itemimg;
+		this.shipping_cost = shipping_cost;
 	}
 	public HistoryVO() {
 		super();
 	}
 	//method g/s
-	public String getPayment_date() {
-		return payment_date;
+	public int getOrder_no() {
+		return order_no;
 	}
-	public void setPayment_date(String payment_date) {
-		this.payment_date = payment_date;
+	public void setOrder_no(int order_no) {
+		this.order_no = order_no;
 	}
 	public int getProduct_no() {
 		return product_no;
@@ -45,17 +59,47 @@ public class HistoryVO {
 	public void setProduct_no(int product_no) {
 		this.product_no = product_no;
 	}
-	public int getFundingproduct_no() {
-		return fundingproduct_no;
+	public String getZip_code() {
+		return zip_code;
 	}
-	public void setFundingproduct_no(int fundingproduct_no) {
-		this.fundingproduct_no = fundingproduct_no;
+	public void setZip_code(String zip_code) {
+		this.zip_code = zip_code;
 	}
-	public int getOrder_no() {
-		return order_no;
+	public String getAddress() {
+		return address;
 	}
-	public void setOrder_no(int order_no) {
-		this.order_no = order_no;
+	public void setAddress(String address) {
+		this.address = address;
+	}
+	public String getDetail_address() {
+		return detail_address;
+	}
+	public void setDetail_address(String detail_address) {
+		this.detail_address = detail_address;
+	}
+	public String getPayment_date() {
+		return payment_date;
+	}
+	public void setPayment_date(String payment_date) {
+		this.payment_date = payment_date;
+	}
+	public String getPayment_method() {
+		return payment_method;
+	}
+	public void setPayment_method(String payment_method) {
+		this.payment_method = payment_method;
+	}
+	public String getPayment_status() {
+		return payment_status;
+	}
+	public void setPayment_status(String payment_status) {
+		this.payment_status = payment_status;
+	}
+	public String getDelivery_status() {
+		return delivery_status;
+	}
+	public void setDelivery_status(String delivery_status) {
+		this.delivery_status = delivery_status;
 	}
 	public int getPayment_amount() {
 		return payment_amount;
@@ -87,24 +131,26 @@ public class HistoryVO {
 	public void setPrice(int price) {
 		this.price = price;
 	}
-	public int getPercent() {
-		return percent;
+	public String getItemimg() {
+		return itemimg;
 	}
-	public void setPercent(int percent) {
-		this.percent = percent;
+	public void setItemimg(String itemimg) {
+		this.itemimg = itemimg;
 	}
-	public int getAmount() {
-		return amount;
+	public int getShipping_cost() {
+		return shipping_cost;
 	}
-	public void setAmount(int amount) {
-		this.amount = amount;
+	public void setShipping_cost(int shipping_cost) {
+		this.shipping_cost = shipping_cost;
 	}
 	//method normal
 	@Override
 	public String toString() {
-		return "HistoryVO [payment_date=" + payment_date + ", product_no=" + product_no + ", fundingproduct_no="
-				+ fundingproduct_no + ", order_no=" + order_no + ", payment_amount=" + payment_amount + ", quantity="
-				+ quantity + ", title=" + title + ", brand=" + brand + ", price=" + price + ", percent=" + percent
-				+ ", amount=" + amount + "]";
+		return "HistoryVO [order_no=" + order_no + ", product_no=" + product_no + ", zip_code=" + zip_code
+				+ ", address=" + address + ", detail_address=" + detail_address + ", payment_date=" + payment_date
+				+ ", payment_method=" + payment_method + ", payment_status=" + payment_status + ", delivery_status="
+				+ delivery_status + ", payment_amount=" + payment_amount + ", quantity=" + quantity + ", title=" + title
+				+ ", brand=" + brand + ", price=" + price + ", itemimg=" + itemimg + ", shipping_cost=" + shipping_cost
+				+ "]";
 	}
 }
