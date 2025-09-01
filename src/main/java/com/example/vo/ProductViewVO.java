@@ -22,6 +22,7 @@ public class ProductViewVO {
 
 	private List<DetailedImageVO> detailedImageList; // 상품상세 이미지 리스트
 	private List<ProductOptionVO> productOptionList; // 옵션제목 리스트
+	
 
 	// 생성자
 	public ProductViewVO() {

@@ -1,5 +1,7 @@
 package com.example.vo;
 
+import java.util.List;
+
 public class ProductOptionVO {
 	
 	//필드
@@ -8,7 +10,6 @@ public class ProductOptionVO {
 	private int detailOPtion_no;
 	private String option_name;
 	private String detailOPtion_name;
-	
 	
 	//생성자
 	public ProductOptionVO() {

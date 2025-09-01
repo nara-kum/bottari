@@ -1,10 +1,7 @@
 package com.example.controller;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.example.service.ShopService;
 import com.example.vo.CartDetailOptionVO;
@@ -30,10 +26,6 @@ import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class ShopController {
- 
-	// 파일 업로드 경로 설정
-	private static final String UPLOAD_PATH = "C:\\upload\\products\\"; 
-	private static final String WEB_PATH = "/upload/products/"; 
 
 	@Autowired
 	private ShopService shopService;
@@ -80,7 +72,6 @@ public class ShopController {
     @RequestMapping(value = "/shop/register", method = RequestMethod.POST)
     public String insert(@ModelAttribute ProductVO productVO, Model model) {
         System.out.println("ShopController.register");
-        System.out.println(productVO);
         
         shopService.exeProductadd(productVO);
         
@@ -92,32 +83,32 @@ public class ShopController {
     }
     
     // 업로드된 파일을 저장하고 웹 경로를 반환하는 메소드
-    private String saveUploadedFile(MultipartFile file) throws IOException {
-        // 업로드 디렉토리 생성
-        File uploadDir = new File(UPLOAD_PATH);
-        if (!uploadDir.exists()) {
-            uploadDir.mkdirs();
-        }
-        
-        // 원본 파일명
-        String originalFilename = file.getOriginalFilename();
-        
-        // 파일 확장자 추출
-        String extension = "";
-        if (originalFilename != null && originalFilename.contains(".")) {
-            extension = originalFilename.substring(originalFilename.lastIndexOf("."));
-        }
-        
-        // UUID를 사용하여 고유한 파일명 생성
-        String savedFilename = UUID.randomUUID().toString() + extension;
-        
-        // 파일 저장
-        File savedFile = new File(uploadDir, savedFilename);
-        file.transferTo(savedFile);
-        
-        // 웹에서 접근 가능한 경로 반환
-        return WEB_PATH + savedFilename;
-    }
+//    private String saveUploadedFile(MultipartFile file) throws IOException {
+//        // 업로드 디렉토리 생성
+//        File uploadDir = new File(UPLOAD_PATH);
+//        if (!uploadDir.exists()) {
+//            uploadDir.mkdirs();
+//        }
+//        
+//        // 원본 파일명
+//        String originalFilename = file.getOriginalFilename();
+//        
+//        // 파일 확장자 추출
+//        String extension = "";
+//        if (originalFilename != null && originalFilename.contains(".")) {
+//            extension = originalFilename.substring(originalFilename.lastIndexOf("."));
+//        }
+//        
+//        // UUID를 사용하여 고유한 파일명 생성
+//        String savedFilename = UUID.randomUUID().toString() + extension;
+//        
+//        // 파일 저장
+//        File savedFile = new File(uploadDir, savedFilename);
+//        file.transferTo(savedFile);
+//        
+//        // 웹에서 접근 가능한 경로 반환
+//        return WEB_PATH + savedFilename;
+//    }
 
 	// 상세페이지
 	@RequestMapping(value = "/shop/productPage", method = { RequestMethod.GET, RequestMethod.POST })
@@ -142,7 +133,7 @@ public class ShopController {
     
     // 옵션상세(아이템) 리스트 - Ajax 응답
 	@ResponseBody
-	@RequestMapping(value = "/api/optiondetail", method = { RequestMethod.GET, RequestMethod.POST })
+	@RequestMapping(value = "/shop/api/optiondetail", method = { RequestMethod.GET, RequestMethod.POST })
 	public List<ProductOptionDetailVO> optionDetail(@RequestParam(value="optionNo") int optionNo) {
 		System.out.println("ShopController.optionDetail");
 		System.out.println(optionNo);
@@ -169,7 +160,7 @@ public class ShopController {
 		Map<String, Object> fundingProductDetailMap = shopService.exefungdingProductDetail(productNo, fundingNo);
 		model.addAttribute("fundingProductDetailMap", fundingProductDetailMap);
 		
-		System.out.println("---------------------------------");
+		System.out.println("-------------3--------------------");
 		System.out.println(fundingProductDetailMap);
 		System.out.println("---------------------------------");
 		

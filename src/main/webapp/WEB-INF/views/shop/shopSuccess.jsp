@@ -1,14 +1,15 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 
 <!DOCTYPE html>
 <html lang="ko">
 
 <head>
-	<meta charset="utf-8">
-	<link rel="stylesheet" href="../../../assets/css/reset.css">
-	<link rel="stylesheet" href="../../../assets/css/Global.css">
-	<link rel="stylesheet" href="../../../assets/css/shop/shopSuccess.css">
+	<meta charset="UTF-8">
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/reset.css">
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/Global.css">
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/shop/shopSuccess.css">
 	
 	<script src="${pageContext.request.contextPath}/assets/js/jquery/jquery-3.7.1.js"></script>
 </head>

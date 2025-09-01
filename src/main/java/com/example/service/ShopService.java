@@ -149,7 +149,6 @@ public class ShopService {
 
 		// product 테이블에 정보저장
 		int count = shopRepository.productInsert(productVO);
-		System.out.println(productVO);
 
 		// 대표이미지 복사
 		try {
@@ -240,7 +239,7 @@ public class ShopService {
 			}
 		}
 		
-		return 1;
+		return count;
 	}
 
 	// 상품 상세페이지 (기존 로직 유지)
@@ -256,6 +255,8 @@ public class ShopService {
 		//상품옵션리스트 -- 옵션들
 		List<ProductOptionVO> productOptionList = shopRepository.OptionselectList(productViewVO.getProduct_no());
 
+		//상세옵션은 상품옴션을 클릭했을때 ajax로 가져옴
+		
 		productViewVO.setDetailedImageList(detailedImageList);
 		productViewVO.setProductOptionList(productOptionList);
 
@@ -272,7 +273,7 @@ public class ShopService {
 		// 상품상세이미지 리스트
 		List<DetailedImageVO> detailedImageList = shopRepository.ImageselectList(productViewVO.getProduct_no());
 
-		// 상품기본정보+이미지리스트
+		// 상품기본정보vo에 이미지리스트 추가
 		productViewVO.setDetailedImageList(detailedImageList);
 		
 		//펀딩번호를 알고있다 fundingNo

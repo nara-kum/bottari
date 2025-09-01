@@ -21,11 +21,26 @@ body {
 	padding: 40px 0;
 }
 
-.product-section {
+
+.product-order-box{
 	display: flex;
-	gap: 40px;
-	height: 453px;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: flex-start;
 }
+
+.product-section {
+	width: 980px;
+}
+
+.product-section .img-info-box{
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: flex-start;
+	padding-right: 40px;
+}
+
 
 /* 상품 이미지 영역 */
 .product-images {
@@ -95,7 +110,7 @@ body {
 	width: 16px;
 	height: 16px;
 	display: inline-block;
-	margin-right: 6px;
+	margin-right: 0px;
 }
 
 .service-info {
@@ -115,24 +130,21 @@ body {
 }
 
 
-
-
 /* 주문 영역 */
 .order-section {
-	position: sticky;
-	flex: 0 0 300px;
+	width: 300px;
 	background-color: #f9f9f9;
 	border: 1px solid #ddd;
 	border-radius: 8px;
 	padding: 20px;
-	height: 600px;
 }
+
 
 .order-title {
 	font-size: 16px;
 	font-weight: 600;
 	color: #333;
-	margin-bottom: 15px;
+	padding-bottom: 15px;
 }
 
 .option-select {
@@ -140,7 +152,7 @@ body {
 	padding: 10px;
 	border: 1px solid #ddd;
 	border-radius: 4px;
-	margin-bottom: 10px;
+	padding-bottom: 10px;
 	background-color: white;
 }
 
@@ -148,12 +160,12 @@ body {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	margin-bottom: 15px;
+	padding-bottom: 15px;
 }
 
 .quantity-input {
 	text-align: center;
-	width: 180px;
+	width: 160px;
 	padding: 8px;
 	border: 1px solid #ddd;
 	border-radius: 4px;
@@ -163,13 +175,9 @@ body {
 	background-color: white;
 	border: 1px solid #ddd;
 	width: 30px;
-	height: 30px;
+	height: 33px;
 	cursor: pointer;
 	border-radius: 4px;
-}
-
-.total-order{
-	margin: 200px 0px 0px 0px;
 }
 
 
@@ -178,7 +186,7 @@ body {
 	font-weight: 700;
 	color: #333;
 	text-align: right;
-	margin-bottom: 15px;
+	padding-bottom: 15px;
 }
 
 .cart-btn {
@@ -215,9 +223,9 @@ body {
 }
 
 .funding-btn {
+	width: 135px;
 	background-color: #ff6b35;
 	color: white;
-	border-color: #ff6b35;
 }
 
 /* 추천 상품 */
