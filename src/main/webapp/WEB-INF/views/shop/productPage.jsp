@@ -224,7 +224,7 @@
 										id="wishlistSelectedOptions" value="">
 		
 									<button type="button" class="wishlist-btn"
-										onclick="submitWishlist()">♡ 찜 등록하기</button>
+										onclick="submitWishlist()">찜 등록하기</button>
 								</form>
 		
 								<form
@@ -621,7 +621,7 @@
 	    const alertHtml = `
 	        <div id="wishlistConfirmAlert" class="wishlist-confirm-overlay">
 	            <div class="wishlist-confirm-box">
-	                <div class="confirm-icon">💝</div>
+	                <div class="confirm-icon">🧡</div>
 	                <div class="confirm-title">위시리스트 등록 완료</div>
 	                <div class="confirm-message">위시리스트에 등록되었습니다.<br>위시리스트로 이동하시겠습니까?</div>
 	                <div class="confirm-buttons">

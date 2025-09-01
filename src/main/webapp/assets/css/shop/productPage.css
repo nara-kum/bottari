@@ -206,7 +206,7 @@ line-height: 1.6;
 
 .action-buttons {
 	display: flex;
-	gap: 10px;
+	gap: 8px;
 }
 
 .wishlist-btn, .funding-btn {
@@ -220,14 +220,18 @@ line-height: 1.6;
 }
 
 .wishlist-btn {
+	width: 125px;
 	background-color: white;
 	color: #333;
 }
 
 
 
-
-
+.funding-btn {
+	width: 125px;
+	background-color: #ff6b35;
+	color: white;
+}
 
 
 /* 위시리스트 확인 알림창 스타일 */
@@ -333,12 +337,6 @@ line-height: 1.6;
 }
 
 
-
-.funding-btn {
-	width: 135px;
-	background-color: #ff6b35;
-	color: white;
-}
 
 /* 추천 상품 */
 .recommendation-section {
@@ -516,5 +514,3 @@ line-height: 1.6;
 .alert-close-btn:active {
     transform: translateY(1px);
 }
-
-
