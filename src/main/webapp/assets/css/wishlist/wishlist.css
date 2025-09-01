@@ -247,11 +247,6 @@
 	cursor: pointer;
 }
 
-.btn-funding1:disabled {
-	opacity: .5;
-	cursor: not-allowed;
-}
-
 .selected-list {
 	margin-top: 12px;
 	display: flex;
