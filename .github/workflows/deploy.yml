@@ -1,8 +1,8 @@
 name: Deploy WAR to EC2 Tomcat  # 자동화 작업 흐름 이름 (워크플로)
 
 on:
-  push:
-    branches: [ "master" ]  # master 브랜치에 push 될 때 실행됨
+  #push:
+    #branches: [ "master" ]  # master 브랜치에 push 될 때 실행됨
 
   workflow_dispatch:        # 👉 GitHub 화면에서 수동으로 버튼 눌러 실행할 수 있게 해줌
   # 위 설정을 넣으면 GitHub Actions 탭에서 버튼 클릭하여 이 워크플로를 수동 실행 가능함
