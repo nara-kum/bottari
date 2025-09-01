@@ -52,5 +52,13 @@ public class FundingApiController {
 		System.out.println("API /api/myfunding size=" + (list == null ? 0 : list.size()));
 		return JsonResult.success(list != null ? list : Collections.emptyList());
 	}
+	
+	//펀딩중단-펀딩프로덕트 펀딩넘 읽어서 펀딩스테이터스 stop으로 변경,페이먼트 펀딩넘 읽어서 삭제
+	
+	
+	//펀딩완료-펀딩 상세 화면으로 가서 최대로 올린 후 전부 결제하면 됨
+	
+	
+	//펀딩취소-페이먼트에 가서 내가 낸 펀딩넘 삭제
 
 }

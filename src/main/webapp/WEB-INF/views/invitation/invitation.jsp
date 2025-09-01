@@ -12,6 +12,12 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/funding/myfunding.css">
 <script src="${pageContext.request.contextPath}/assets/js/jquery/jquery-3.7.1.js"></script>
 <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js" crossorigin="anonymous"></script>
+<style>
+  /* 초대장 영역에서 진행바 가리는 오버레이/유틸을 비활성화 */
+  #giftPreview .mf-meter .bar::before,
+  #giftPreview .mf-meter .bar::after { display:none !important; }
+  #giftPreview .mf-meter .bar .fill { flex:0 0 auto !important; min-width:0 !important; }
+</style>
 </head>
 <body class="family">
 
@@ -134,63 +140,82 @@ $(document).ajaxError(function (e, xhr, settings, err) {
     return CTX + "/upload/" + raw;
   }
 
-  function numLike(v){
-    if (v == null) return 0;
-    if (typeof v === 'number') return isFinite(v) ? v : 0;
-    var s = String(v).replace(/[^\d.\-]/g,'').trim();
-    var n = Number(s);
-    return isFinite(n) ? n : 0;
-  }
+ function numLike(v){
+  if (v == null) return 0;
+  var n = Number(String(v).replace(/[^\d.-]/g, ''));  // 쉼표/원 문자 제거
+  return Number.isFinite(n) ? n : 0;
+}
 
-  function renderGiftCard(vo){
-    const brand   = escapeHtml(vo.brand || '');
-    const title   = escapeHtml(vo.title || '');
-    const optionName       = escapeHtml(vo.optionName ?? vo.option_name ?? '');
-    const detailOptionName = escapeHtml(vo.detailoptionName ?? vo.detail_option_name ?? '');
+  // ✂️ 이걸로 완전히 교체
+function renderGiftCard(vo){
+  const brand   = escapeHtml(vo.brand || '');
+  const title   = escapeHtml(vo.title || '');
+  const optionName       = escapeHtml(vo.optionName ?? vo.option_name ?? '');
+  const detailOptionName = escapeHtml(vo.detailoptionName ?? vo.detail_option_name ?? '');
 
-    const totalPrice = numLike(vo.price ?? vo.totalPrice ?? vo.total_price ?? 0);
-    const paidAmount = numLike(vo.paidAmount ?? vo.paymentAmount ?? 0);
+  // ⬇️ price/paidAmount를 문자까지 안전 변환 + alias 넓게
+  const price = numLike(
+    vo.price ?? vo.totalPrice ?? vo.total_price ?? vo.productPrice ?? vo.targetPrice ?? vo.goalAmount ?? vo.goal
+  );
+  const paidAmount = numLike(
+    vo.paidAmount ?? vo.paymentAmount ?? vo.totalPaid ?? vo.total_paid ?? vo.collectedAmount ?? vo.currentAmount ?? vo.amount
+  );
 
-    let percent = (totalPrice > 0) ? Math.round((paidAmount / totalPrice) * 100) : 0;
-    percent = Math.max(0, Math.min(100, percent));
+  const percentCalc = price > 0 ? Math.min(100, Math.round((paidAmount / price) * 100)) : 0;
 
-    const imgUrl  = resolveImage(vo);
-    const productNo = (vo.productNo ?? vo.product_no ?? vo.prodNo ?? vo.itemNo ?? '');
-    const fundingNo = (vo.fundingNo ?? vo.funding_no ?? vo.fundNo ?? '');
+  const imgUrl    = resolveImage(vo);
+  const productNo = (vo.productNo ?? vo.product_no ?? vo.prodNo ?? vo.itemNo ?? '');
+  const fundingNo = (vo.fundingNo ?? vo.funding_no ?? vo.fundNo ?? '');
 
-    return [
-      '<div class="mf-mini">',
-        '<div class="summary">',
-          '<div class="left">',
-            '<a href="#" class="go-detail" data-product-no="', productNo, '" data-funding-no="', fundingNo, '">',
-              '<div class="thumbbox"><img src="', imgUrl, '" alt="" onerror="this.src=\'', CTX, '/assets/images/eki.jpg\'"></div>',
-            '</a>',
-            '<div class="info">',
-              '<div class="brand">', brand, '</div>',
-              '<div class="row">',
-                '<span class="name">', title, '</span>',
-                '<span class="opt-sep"> / </span><span class="opt">', optionName, '</span>',
-                '<span class="opt-sep"> / </span><span class="opt">', detailOptionName, '</span>',
-              '</div>',
-              '<div class="price">', fmtKRW(totalPrice), '</div>',
-            '</div>',
+  return [
+    '<div class="mf-mini" data-price="', price, '" data-paid="', paidAmount, '" data-pct="', percentCalc, '">',
+      '<div class="summary"><div class="left">',
+        '<a href="#" class="go-detail" data-product-no="', productNo, '" data-funding-no="', fundingNo, '">',
+          '<div class="thumbbox"><img src="', imgUrl, '" alt="" onerror="this.src=\'', CTX, '/assets/images/eki.jpg\'"></div>',
+        '</a>',
+        '<div class="info">',
+          '<div class="brand">', brand, '</div>',
+          '<div class="row">',
+            '<span class="name">', title, '</span>',
+            (optionName ? '<span class="opt-sep"> / </span><span class="opt">'+optionName+'</span>' : ''),
+            (detailOptionName ? '<span class="opt-sep"> / </span><span class="opt">'+detailOptionName+'</span>' : ''),
           '</div>',
+          '<div class="price">', fmtKRW(price), '</div>',
         '</div>',
+      '</div></div>',
 
-        '<div class="mf-meter with-goal" data-total="', totalPrice, '" data-paid="', paidAmount, '" data-pct="', percent, '">',
-          '<div class="bar"><div class="fill" style="width:', String(percent), '%;"></div></div>',
-          '<div class="goal"><span class="curr">', fmtKRW(paidAmount), '</span>',
-            '<span class="sep"> / </span><span class="total">', fmtKRW(totalPrice), '</span></div>',
-          '<div class="achv"><span class="pct">', percent, '% 달성</span></div>',
-        '</div>',
-      '</div>'
-    ].join('');
-  }
+      // ⬇️ 전역 .fill 충돌 무력화: !important + flex 고정
+      '<div class="mf-meter with-goal">',
+        '<div class="bar"><div class="fill" style="width:', percentCalc, '% !important; flex:0 0 auto !important; min-width:0 !important;"></div></div>',
+        '<div class="goal"><span class="curr">', fmtKRW(paidAmount), '</span><span class="sep"> / </span><span class="total">', fmtKRW(price), '</span></div>',
+        '<div class="achv"><span class="pct">', percentCalc, '% 달성</span></div>',
+      '</div>',
+    '</div>'
+  ].join('');
+}
 
-  function renderGiftList(list){
-    const html = (list || []).map(renderGiftCard).join('');
-    $('#giftPreview').html(html || '<div class="gift-empty">연결된 펀딩이 없습니다.</div>');
+
+// ✂️ 이것도 교체 (여기서 percentCalc를 건드리면 안 됨!)
+function renderGiftList(list){
+  const $host = $('#giftPreview');
+  if (!Array.isArray(list) || list.length === 0){
+    $host.html('<div class="gift-empty">연결된 펀딩이 없습니다.</div>');
+    return;
   }
+  let html = '';
+  for (let i = 0; i < list.length; i++){
+    try { html += renderGiftCard(list[i] || {}); }
+    catch (e){ console.error('[INV] renderGiftCard error:', e, list[i]); }
+  }
+  $host.html(html);
+
+  // 카드별 실제 계산값 확인(잠깐 켜서 숫자 확인)
+  $('#giftPreview .mf-mini').each(function(idx){
+    const d = this.dataset;
+    console.log('[INV card]', idx, 'price=', d.price, 'paid=', d.paid, 'pct=', d.pct);
+  });
+}
+
 
   function fetchGiftsByEvent(eventNo){
     console.log("[INV] fetchGiftsByEvent() called with eventNo:", eventNo);
