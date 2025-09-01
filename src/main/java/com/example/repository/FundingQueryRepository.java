@@ -15,24 +15,43 @@ public class FundingQueryRepository {
     private SqlSession sqlSession;
     private static final String NS = "funding.";
 
-//    public FundingQueryRepository(SqlSession sqlSession) {
-//        this.sqlSession = sqlSession;
-//    }
+    // 마이펀딩 
 
+    public List<Map<String,Object>> selectMyFundingCards(int userNo){
+        return sqlSession.selectList(NS + "selectMyFundingCards", userNo);
+    }
+
+    public int updateFundingStatusStop(int userNo, int fundingNo){
+        return sqlSession.update(NS + "updateFundingStatusStop",
+                Map.of("userNo", userNo, "fundingNo", fundingNo));
+    }
+
+    public int updateFundingStatusDone(int userNo, int fundingNo){
+        return sqlSession.update(NS + "updateFundingStatusDone",
+                Map.of("userNo", userNo, "fundingNo", fundingNo));
+    }
+    //친구펀딩
+    public List<Map<String,Object>> selectFriendFundingCards(int userNo){
+        return sqlSession.selectList(NS + "selectFriendFundingCards", userNo);
+    }
+    
+    // 펀딩(취소)
+    public int updateMyPaymentsByFunding(int userNo, int fundingNo){
+        return sqlSession.delete(NS + "updateMyPaymentsByFunding",
+                Map.of("userNo", userNo, "fundingNo", fundingNo));
+    }
+    
+    //초대장
     public Integer selectEventNoByInvitationNo(int invitationNo){
-        return sqlSession.selectOne(NS + "selectEventNoByInvitationNo",
-                                    Map.of("invitationNo", invitationNo));
+        return sqlSession.selectOne(NS + "selectEventNoByInvitationNo", invitationNo);
     }
     public List<Map<String,Object>> selectGiftsPublicByEvent(int eventNo){
-        return sqlSession.selectList(NS + "selectGiftsPublicByEvent",
-                                     Map.of("eventNo", eventNo));
+        return sqlSession.selectList(NS + "selectGiftsPublicByEvent", eventNo);
     }
     public List<Map<String,Object>> selectGiftsPublicByFunding(int fundingNo){
-        return sqlSession.selectList(NS + "selectGiftsPublicByFunding",
-                                     Map.of("fundingNo", fundingNo));
+        return sqlSession.selectList(NS + "selectGiftsPublicByFunding", fundingNo);
     }
     public Integer selectTotalPaidByFunding(int fundingNo){
-        return sqlSession.selectOne(NS + "selectTotalPaidByFunding",
-                                    Map.of("fundingNo", fundingNo));
+        return sqlSession.selectOne(NS + "selectTotalPaidByFunding", fundingNo);
     }
 }

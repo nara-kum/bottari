@@ -113,25 +113,21 @@ $(document).ajaxError(function (e, xhr, settings, err) {
     return CTX + "/upload/" + raw;
   }
 
-function extractGoal(vo){
-  // 분모: targetAmount 우선 → amount → 그 외(가격은 최후 fallback)
-  const keys = ['targetAmount','amount','goalAmount','targetPrice','goal','totalPrice','total_price','price','productPrice'];
-  for(const k of keys){
-    if (vo[k] != null) {
-      const n = numLike(vo[k]);
-      if (n > 0) return n;
-    }
-  }
-  return 0;
+  function extractPrice(vo){
+  // price, productPrice → 없으면(0) targetAmount/amount로 보완
+  const numLike = v => Number(String(v ?? '').replace(/[^\d.-]/g,'')) || 0;
+  const price = numLike(vo.price ?? vo.productPrice);
+  if (price > 0) return price;
+  const backup = numLike(vo.targetAmount ?? vo.amount);
+  return backup; // 없으면 0
 }
 
-function extractTotalPaid(vo){
-  // 분자: paidAmount 우선 (API에서 합계를 넣어줌)
-  const keys = ['paidAmount','totalPaid','total_paid','collectedAmount','currentAmount'];
-  for(const k of keys){
-    if (vo[k] != null) return numLike(vo[k]);
-  }
-  return null;
+function extractPaid(vo){
+  const numLike = v => Number(String(v ?? '').replace(/[^\d.-]/g,'')) || 0;
+  // paidAmount → (호환필드) totalPaid/total_paid/collectedAmount/currentAmount
+  return numLike(
+    vo.paidAmount ?? vo.totalPaid ?? vo.total_paid ?? vo.collectedAmount ?? vo.currentAmount
+  );
 }
 
 // ↓↓↓ 새로 추가 (중복 행을 펀딩번호 단위로 1장으로 합침) ↓↓↓
@@ -186,25 +182,23 @@ function groupByFunding(rows){
 
 
   /* 카드 */
-  // ↓↓↓ 기존 renderGiftCard 를 이걸로 교체 ↓↓↓
-function renderGiftCard(vo){
+  function renderGiftCard(vo){
   const brand = esc(vo.brand||'');
   const title = esc(vo.title||'');
   const optionName = esc(vo.optionName ?? vo.option_name ?? '');
   const detailOptionName = esc(vo.detailoptionName ?? vo.detail_option_name ?? '');
 
-  // 진행률 분모/분자
-  const price = extractGoal(vo);               // targetAmount/amount 우선
-  const apiPaid = extractTotalPaid(vo);        // paidAmount 우선
-  const paid = (apiPaid != null ? apiPaid : 0);
-  const pct = price > 0 ? Math.round(paid / price * 100) : 0;
+  // ✅ 분모/분자: "상품가격(price)"와 "결제합계(paidAmount)"
+  const price = extractPrice(vo);          // ← 분모 (상품가격)
+  const paid  = extractPaid(vo);           // ← 분자 (누적 결제합계)
+  const pct   = price > 0 ? Math.min(100, Math.round(paid / price * 100)) : 0;
 
   const imgUrl = resolveImage(vo);
   const productNo = (vo.productNo ?? vo.product_no ?? vo.prodNo ?? vo.itemNo ?? '');
   const fundingNo = (vo.fundingNo ?? vo.funding_no ?? vo.fundNo ?? '');
 
   return [
-    '<div class="mf-mini" data-price="',price,'" data-paid="',paid,'" data-pct="',pct,'" data-paid-source="',(apiPaid!=null?'api-total':'unknown'),'">',
+    '<div class="mf-mini" data-price="',price,'" data-paid="',paid,'" data-pct="',pct,'" data-paid-source="api-or-fallback">',
       '<div class="summary"><div class="left">',
         '<a href="#" class="go-detail" data-product-no="',productNo,'" data-funding-no="',fundingNo,'">',
           '<div class="thumbbox"><img src="',imgUrl,'" alt="" onerror="this.src=\'',CTX,'/assets/images/eki.jpg\'"></div>',
@@ -215,9 +209,11 @@ function renderGiftCard(vo){
             (optionName?'<span class="opt-sep"> / </span><span class="opt">'+optionName+'</span>':''),
             (detailOptionName?'<span class="opt-sep"> / </span><span class="opt">'+detailOptionName+'</span>':''),
           '</div>',
+          // ✅ 상품명 아래는 "상품 가격" 표시
           '<div class="price">',fmtKRW(price),'</div>',
         '</div>',
       '</div></div>',
+      // ✅ 그래프: (결제합계 / 상품가격)
       '<div class="mf-meter with-goal">',
         '<div class="bar"><div class="fill" style="width:',pct,'% !important; flex:0 0 auto !important; min-width:0 !important;"></div></div>',
         '<div class="goal"><span class="curr">',fmtKRW(paid),'</span><span class="sep"> / </span><span class="total">',fmtKRW(price),'</span></div>',
@@ -226,6 +222,7 @@ function renderGiftCard(vo){
     '</div>'
   ].join('');
 }
+
 
 
   function updateMiniMeter($mini, price, paid){
@@ -263,13 +260,21 @@ function renderGiftList(list){
 
   /* 데이터 fetch: 앵커 → 초대장id → (없으면 빈 화면) */
   function fetchByAnchor(fundingNo){
-    return $.getJSON(CTX+'/api/inv/funding/cards-by-anchor',{ fundingNo })
-      .done(res=>renderGiftList(res?.data||[]))
+  return $.getJSON(CTX+'/api/inv/funding/cards-by-anchor',{ fundingNo })
+    .done(res=>{
+       const payload = pickPayload(res);   // <-- 통일
+       console.log('[INV][anchor] payload:', payload);
+       renderGiftList(payload || []);
+     })
       .fail(xhr=>{ console.error('[INV] /cards-by-anchor FAIL', xhr.status); renderGiftList([]); });
   }
   function fetchByInvitationNo(invNo){
-    return $.getJSON(CTX+'/api/inv/funding/cards-by-inv',{ no: invNo })
-      .done(res=>renderGiftList(res?.data||[]))
+   return $.getJSON(CTX+'/api/inv/funding/cards-by-inv',{ no: invNo })
+     .done(res=>{
+       const payload = pickPayload(res);   // <-- 통일
+       console.log('[INV][by-inv]', {invNo, payload});
+       renderGiftList(payload || []);
+     })
       .fail(xhr=>{ console.error('[INV] /cards-by-inv FAIL', xhr.status); renderGiftList([]); });
   }
 

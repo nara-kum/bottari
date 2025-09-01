@@ -37,7 +37,7 @@
 (function(){
   const CTX = "${pageContext.request.contextPath}";
 
-  function fmtKRW(n){ return (Number(n)||0).toLocaleString('ko-KR') + '원'; }
+  const fmtKRW = (n)=> (Number(n)||0).toLocaleString('ko-KR') + '원';
   function pluckList(json){
     if (Array.isArray(json)) return json;
     if (!json || typeof json !== 'object') return [];
@@ -69,26 +69,32 @@
 
   function renderCard(vo){
     const fundingNo   = Number(vo.fundingNo)||0;
+
+    // ✅ 금액 규칙: 카드 가격/분모 = product.price, 진행바 분자 = paidAmount(결제합계)
+    const price       = Number(vo.price)||0;                      // 분모/카드가격
+    const paidAmount  = Number(vo.paidAmount || 0);               // 분자(누적 결제합)
+    const percent     = price > 0 ? Math.min(100, Math.round(paidAmount / price * 100)) : 0;
+
+    // sub-title: eventName(있으면) → fundingDate(없으면)
+    const eventName   = (vo.eventName ?? vo.event_name ?? '').toString().trim();
     const fundingDate = vo.fundingDate || '';
+    const subTitle    = eventName || fundingDate;
+
     const brand       = vo.brand || '';
     const title       = vo.title || '';
     const optionName  = vo.optionName ?? vo.option_name ?? '';
     const detailOpt   = vo.detailoptionName ?? vo.detail_option_name ?? '';
-    const price       = Number(vo.price)||0;
-    const paidAmount  = Number(vo.paidAmount||0); // ← 총 결제합(모든 사람)
-    const percent     = price>0 ? Math.min(100, Math.round(paidAmount/price*100)) : 0;
+    const imgUrl      = resolveImage(vo);
+    const st          = statusView(vo, percent);
+    const esc         = s => $('<div>').text(s||'').html();
 
-    const imgUrl = resolveImage(vo);
-    const st = statusView(vo, percent);
-    const esc = s => $('<div>').text(s||'').html();
-
-    // 친구펀딩은 조작버튼 없음 (보기만)
     return [
-      '<div class="card-box" data-funding-no="', fundingNo, '">',
+      '<div class="card-box" data-funding-no="', fundingNo, '" data-price="', price, '">',
         '<div class="product-header">',
-          '<div class="left-side"><span class="sub-title">', esc(fundingDate), '</span></div>',
+          '<div class="left-side"><span class="sub-title">', esc(subTitle), '</span></div>',
           '<div class="right-side"><span class="funding-badge ', st.cls, '">', st.text, '</span></div>',
         '</div>',
+
         '<div class="product-body">',
           '<div class="mf-left"><div class="mf-row">',
             '<div class="thumbbox">',
@@ -101,10 +107,12 @@
                 (optionName ? '<span class="opt-sep"> / </span><span class="option-name">'+esc(optionName)+'</span>' : ''),
                 (detailOpt ? '<span class="opt-sep"> / </span><span class="option-name">'+esc(detailOpt)+'</span>' : ''),
               '</div>',
+              // ✅ 제품명 아래는 항상 "상품가격(price)"
               '<div class="product-price">', fmtKRW(price), '</div>',
             '</div>',
           '</div></div>',
 
+          // ✅ 진행바: paidAmount(분자) / price(분모)
           '<div class="mf-meter with-goal">',
             '<div class="bar"><div class="fill" style="width:', percent, '%;"></div></div>',
             '<div class="goal">',
@@ -117,7 +125,7 @@
 
           '<div class="funding-action-wrapper">',
             '<div class="action-buttons">',
-              '<a class="btn-funding2" href="', CTX, '/shop/productPage2?productNo=', (vo.productNo||''), '&fundingNo=', fundingNo, '">상세보기</a>',
+              '<button class="btn-funding2 btn-cancel-friend" data-funding-no="', fundingNo, '">펀딩 취소</button>',
             '</div>',
           '</div>',
         '</div>',
@@ -125,13 +133,51 @@
     ].join('');
   }
 
-  function loadFriendFunding(){
-    $.ajax({ url: CTX + "/api/friendfunding", type: "GET", dataType: "json" })
-    .done(function(json){
-      const list = pluckList(json);
-      const $area = $("#friendFundingList").empty();
-      if (!list.length){ $area.html('<div class="empty">내가 참여한 펀딩이 없습니다.</div>'); return; }
-      $area.html(list.map(v=>renderCard(v||{})).join(''));
+  function drawList(json){
+    const list = pluckList(json);
+    const $area = $("#friendFundingList").empty();
+    if (!Array.isArray(list) || list.length===0){
+      $area.html('<div class="empty">내가 참여한 펀딩이 없습니다.</div>');
+      return;
+    }
+    $area.html(list.map(v=>renderCard(v||{})).join(''));
+  }
+
+  function reloadList(){
+    $.ajax({ url: CTX + "/api/funding/friend-list", type: "GET", dataType: "json" })
+      .done(drawList)
+      .fail(function(xhr){
+        if (xhr.status === 401){
+          const returnUrl = location.pathname + location.search;
+          alert('로그인이 필요합니다.');
+          location.href = CTX + "/user/loginForm?reason=auth&returnUrl=" + encodeURIComponent(returnUrl);
+          return;
+        }
+        console.error('GET /api/funding/friend-list fail:', xhr.status, (xhr.responseText||'').slice(0,200));
+        $("#friendFundingList").html('<div class="empty">목록을 불러오지 못했습니다.</div>');
+      });
+  }
+
+  $(function(){ reloadList(); });
+
+  // (옵션) 펀딩 취소 – 서버에 맞춰 엔드포인트 조정 가능
+  $(document).on('click', '.btn-cancel-friend', function(){
+    const fundingNo = Number($(this).data('fundingNo'))||0;
+    if (!fundingNo){ alert('펀딩 번호가 없습니다.'); return; }
+    if (!confirm('펀딩을 취소하시겠습니까?')) return;
+
+    $.ajax({
+      url: CTX + "/api/funding/friend/cancel",   // 필요 시 서버 엔드포인트에 맞춰 변경
+      type: "POST",
+      dataType: "json",
+      data: { fundingNo }
+    })
+    .done(function(res){
+      if (res && res.result === 'success'){
+        reloadList();
+      } else {
+        alert((res && res.message) || '취소에 실패했습니다.');
+      }
     })
     .fail(function(xhr){
       if (xhr.status === 401){
@@ -140,12 +186,11 @@
         location.href = CTX + "/user/loginForm?reason=auth&returnUrl=" + encodeURIComponent(returnUrl);
         return;
       }
-      console.error('GET /api/friendfunding fail:', xhr.status, (xhr.responseText||'').slice(0,200));
-      $("#friendFundingList").html('<div class="empty">목록을 불러오지 못했습니다.</div>');
+      alert('처리 중 오류가 발생했습니다.');
+      console.error('[POST /api/funding/friend/cancel] fail', xhr.status, (xhr.responseText||'').slice(0,200));
     });
-  }
+  });
 
-  $(function(){ loadFriendFunding(); });
 })();
 </script>
 </body>

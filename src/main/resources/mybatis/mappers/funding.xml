@@ -2,190 +2,266 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="funding">
 
-	<!-- 내 펀딩 목록 -->
-	<select id="selectMyFundingList" parameterType="int"
-		resultType="com.example.vo.WishlistVO">
-		  <![CDATA[
-		  SELECT
-		      fp.funding_no         AS fundingNo
-		    , fp.event_no           AS eventNo
-		    , fp.user_no            AS userNo
-		    , fp.product_no         AS productNo
-		    , fp.percent            AS percent
-		    , fp.amount             AS amount
-		    , fp.funding_status     AS fundingStatus
-		    , CONCAT(DATE_FORMAT(fp.funding_date, '%Y.%m.%d'), ' | ', IFNULL(c.event_name,'')) AS fundingDate
-		    , p.brand               AS brand
-		    , p.title               AS title
-		    , p.price               AS price
-		    , p.itemimg             AS image
-		    , po.option_no        AS optionNo
-		    , od.detailoption_no  AS detailoptionNo
-		    , po.option_name        AS optionName
-		    , od.detailoption_name  AS detailoptionName
-		    , c.event_name          AS eventName
-		
-		  FROM funding_product fp
-		  JOIN product p
-		    ON p.product_no = fp.product_no
-		  LEFT JOIN funding_option fo
-		    ON fo.funding_no = fp.funding_no
-		  LEFT JOIN option_detail od
-		    ON od.detailoption_no = fo.detailoption_no
-		  LEFT JOIN product_option po
-		    ON po.option_no = od.option_no
-		  LEFT JOIN calender c
-		    ON c.event_no = fp.event_no
-
-		  WHERE fp.user_no = #{value}
-		  ORDER BY fp.funding_no DESC
-		  ]]>
+	<!-- 마이펀딩: 내가 만든 펀딩들 -->
+	<select id="selectMyFundingCards" parameterType="int"
+		resultType="map">
+  <![CDATA[
+    SELECT
+        fp.funding_no         AS fundingNo
+      , fp.user_no            AS ownerUserNo
+      , fp.event_no           AS eventNo
+      , fp.amount             AS targetAmount
+      , fp.percent            AS percent
+      , fp.funding_status     AS fundingStatus
+      , fp.funding_date       AS fundingDate
+      , p.product_no          AS productNo
+      , p.brand               AS brand
+      , p.title               AS title
+      , p.price               AS price
+      , p.itemimg             AS image
+      , c.event_name          AS eventName
+      , COALESCE(pay.sum_amount, 0) AS paidAmount
+      , opt.option_names      AS optionName
+      , opt.detail_names      AS detailoptionName
+    FROM funding_product fp
+    JOIN product p
+      ON p.product_no = fp.product_no
+    LEFT JOIN calender c
+      ON c.event_no = fp.event_no
+     AND c.user_no  = fp.user_no
+    LEFT JOIN (
+      SELECT
+          fo.funding_no,
+          GROUP_CONCAT(DISTINCT po.option_name ORDER BY po.option_no SEPARATOR ' / ')       AS option_names,
+          GROUP_CONCAT(DISTINCT od.detailoption_name ORDER BY od.detailoption_no SEPARATOR ' / ') AS detail_names
+      FROM funding_option fo
+      LEFT JOIN option_detail  od ON od.detailoption_no = fo.detailoption_no
+      LEFT JOIN product_option po ON po.option_no       = od.option_no
+      GROUP BY fo.funding_no
+    ) opt ON opt.funding_no = fp.funding_no
+    LEFT JOIN (
+      SELECT funding_no, SUM(payment_amount) AS sum_amount
+      FROM payment
+	  WHERE payment_status = 'paid'
+      GROUP BY funding_no
+    ) pay ON pay.funding_no = fp.funding_no
+    WHERE fp.user_no = #{value}
+    ORDER BY fp.funding_no DESC
+  ]]>
+	</select>
+	
+	<!-- 친구펀딩: 내가 남의 펀딩에 낸 내역 기준 -->
+	<select id="selectFriendFundingCards" parameterType="int" resultType="map">
+	  <![CDATA[
+	  SELECT
+	      fp.funding_no         AS fundingNo
+	    , fp.user_no            AS ownerUserNo
+	    , fp.event_no           AS eventNo
+	    , c.event_name          AS eventName      
+	    , fp.amount             AS targetAmount
+	    , fp.percent            AS percent
+	    , fp.funding_status     AS fundingStatus
+	    , fp.funding_date       AS fundingDate
+	    , p.product_no          AS productNo
+	    , p.brand               AS brand
+	    , p.title               AS title
+	    , p.price               AS price
+	    , p.itemimg             AS image
+	    , COALESCE(pay.sum_amount, 0) AS paidAmount 
+	    , COALESCE(myp.my_amount, 0)  AS myPaidAmount 
+	    , opt.option_names      AS optionName
+	    , opt.detail_names      AS detailoptionName
+	  FROM (
+	    SELECT funding_no, SUM(payment_amount) AS my_amount
+	    FROM payment
+	    WHERE user_no = #{value}
+	      AND payment_status = 'paid'
+	    GROUP BY funding_no
+	  ) myp
+	  JOIN funding_product fp ON fp.funding_no = myp.funding_no
+	  JOIN product p        ON p.product_no = fp.product_no
+	
+	  LEFT JOIN calender c
+	    ON c.event_no = fp.event_no
+	   AND c.user_no  = fp.user_no
+	
+	  LEFT JOIN (
+	    SELECT
+	      fo.funding_no,
+	      GROUP_CONCAT(DISTINCT po.option_name ORDER BY po.option_no SEPARATOR ' / ') AS option_names,
+	      GROUP_CONCAT(DISTINCT od.detailoption_name ORDER BY od.detailoption_no SEPARATOR ' / ') AS detail_names
+	    FROM funding_option fo
+	    LEFT JOIN option_detail od ON od.detailoption_no = fo.detailoption_no
+	    LEFT JOIN product_option po ON po.option_no = od.option_no
+	    GROUP BY fo.funding_no
+	  ) opt ON opt.funding_no = fp.funding_no
+	
+	  LEFT JOIN (
+	    SELECT funding_no, SUM(payment_amount) AS sum_amount
+	    FROM payment
+	    WHERE payment_status = 'paid'
+	    GROUP BY funding_no
+	  ) pay ON pay.funding_no = fp.funding_no
+	
+	  ORDER BY fp.funding_no DESC
+	  ]]>
 	</select>
 
-	<!-- 친구 펀딩 목록 -->
-	<select id="selectFriendFundingList" parameterType="int"
-		resultType="com.example.vo.WishlistVO">
-		  <![CDATA[
-		  SELECT
-		      fp.funding_no         AS fundingNo
-		    , fp.event_no           AS eventNo
-		    , fp.user_no            AS userNo
-		    , fp.product_no         AS productNo
-		    , fp.percent            AS percent
-		    , fp.amount             AS amount
-		    , fp.funding_status     AS fundingStatus
-		    , CONCAT(DATE_FORMAT(fp.funding_date, '%Y.%m.%d'), ' | ', IFNULL(c.event_name,'')) AS fundingDate
-		    , p.brand               AS brand
-		    , p.title               AS title
-		    , p.price               AS price
-		    , p.itemimg             AS image
-		    , po.option_no        AS optionNo
-		    , od.detailoption_no  AS detailoptionNo
-		    , po.option_name        AS optionName
-		    , od.detailoption_name  AS detailoptionName
-		    , c.event_name          AS eventName
-		
-		  FROM funding_product fp
-		  JOIN product p
-		    ON p.product_no = fp.product_no
-		  LEFT JOIN funding_option fo
-		    ON fo.funding_no = fp.funding_no
-		  LEFT JOIN option_detail od
-		    ON od.detailoption_no = fo.detailoption_no
-		  LEFT JOIN product_option po
-		    ON po.option_no = od.option_no
-		  LEFT JOIN calender c
-		    ON c.event_no = fp.event_no
-
-		  WHERE fp.funding_no = #{value}
-		  ORDER BY fp.funding_no DESC
-		  ]]>
-	</select>
-
+	
 	<select id="selectTotalPayByFundingNo" parameterType="long"
 		resultType="long">
 	  <![CDATA[
 	    SELECT IFNULL(SUM(p.payment_amount), 0) AS totalpay
 	    FROM payment p
 	    WHERE p.funding_no = #{value}
+	      AND payment_status = 'paid'
 	  ]]>
 	</select>
 
- <select id="selectEventNoByInvitationNo" parameterType="map" resultType="int">
-    SELECT event_no
-    FROM invitation
-    WHERE invitation_no = #{invitationNo}
-  </select>
+	<select id="selectEventNoByInvitationNo" parameterType="int"
+		resultType="int">
+		SELECT event_no
+		FROM invitation
+		WHERE invitation_no = #{value}
+	</select>
 
-  <!-- 이벤트별 펀딩 카드 (공개) -->
-  <select id="selectGiftsPublicByEvent" parameterType="map" resultType="map">
-    SELECT
-        fp.funding_no         AS fundingNo
-      , fp.user_no            AS userNo
-      , fp.event_no           AS eventNo
-      , fp.amount             AS targetAmount
-      , fp.percent            AS percent
-      , fp.funding_status     AS fundingStatus
-      , fp.funding_date       AS fundingDate
-      , p.product_no          AS productNo
-      , p.brand               AS brand
-      , p.title               AS title
-      , p.price               AS price
-      , p.itemimg             AS image
-      , COALESCE(pay.sum_amount, 0) AS paidAmount
-      , po.option_name        AS optionName
-      , od.detailoption_name  AS detailoptionName
-    FROM funding_product fp
-    JOIN product p
-      ON p.product_no = fp.product_no
-    LEFT JOIN funding_option fo
-      ON fo.funding_no = fp.funding_no
-    LEFT JOIN option_detail od
-      ON od.detailoption_no = fo.detailoption_no
-    LEFT JOIN product_option po
-      ON po.option_no = od.option_no
-    LEFT JOIN (
-      SELECT funding_no, SUM(payment_amount) AS sum_amount
-      FROM payment
-      GROUP BY funding_no
-    ) pay
-      ON pay.funding_no = fp.funding_no
-    WHERE fp.event_no = #{eventNo}
-    GROUP BY
-        fp.funding_no, fp.user_no, fp.event_no, fp.amount, fp.percent, fp.funding_status, fp.funding_date,
-        p.product_no, p.brand, p.title, p.price, p.itemimg, pay.sum_amount,
-        po.option_name, od.detailoption_name
-    ORDER BY fp.funding_no DESC, po.option_name, od.detailoption_name
-  </select>
+	<!-- 이벤트별 펀딩 카드 (공개) -->
+	<select id="selectGiftsPublicByEvent" parameterType="int"
+		resultType="map">
+		SELECT
+		fp.funding_no AS fundingNo
+		, fp.user_no AS userNo
+		,
+		fp.event_no AS eventNo
+		, fp.amount AS targetAmount
+		, fp.percent AS
+		percent
+		, fp.funding_status AS fundingStatus
+		, fp.funding_date AS
+		fundingDate
+		, p.product_no AS productNo
+		, p.brand AS brand
+		, p.title AS
+		title
+		, p.price AS price
+		, p.itemimg AS image
+		, COALESCE(pay.sum_amount,
+		0) AS paidAmount
+		, po.option_name AS optionName
+		, od.detailoption_name
+		AS detailoptionName
+		FROM funding_product fp
+		JOIN product p
+		ON
+		p.product_no = fp.product_no
+		LEFT JOIN funding_option fo
+		ON
+		fo.funding_no = fp.funding_no
+		LEFT JOIN option_detail od
+		ON
+		od.detailoption_no = fo.detailoption_no
+		LEFT JOIN product_option po
+		ON
+		po.option_no = od.option_no
+		LEFT JOIN (
+		SELECT funding_no,
+		SUM(payment_amount) AS sum_amount
+		FROM payment
+	    WHERE payment_status = 'paid'
+		GROUP BY funding_no
+		) pay
+		ON pay.funding_no = fp.funding_no
+		WHERE fp.event_no = #{value}
+		GROUP BY
+		fp.funding_no, fp.user_no, fp.event_no, fp.amount, fp.percent,
+		fp.funding_status,
+		fp.funding_date,
+		p.product_no, p.brand, p.title,
+		p.price, p.itemimg, pay.sum_amount,
+		po.option_name,
+		od.detailoption_name
+		ORDER BY fp.funding_no DESC, po.option_name,
+		od.detailoption_name
+	</select>
 
-  <!-- 특정 펀딩 한 건 (앵커) -->
-  <select id="selectGiftsPublicByFunding" parameterType="map" resultType="map">
-    SELECT
-        fp.funding_no         AS fundingNo
-      , fp.user_no            AS userNo
-      , fp.event_no           AS eventNo
-      , fp.amount             AS targetAmount
-      , fp.percent            AS percent
-      , fp.funding_status     AS fundingStatus
-      , fp.funding_date       AS fundingDate
-      , p.product_no          AS productNo
-      , p.brand               AS brand
-      , p.title               AS title
-      , p.price               AS price
-      , p.itemimg             AS image
-      , COALESCE(pay.sum_amount, 0) AS paidAmount
-      , po.option_name        AS optionName
-      , od.detailoption_name  AS detailoptionName
-    FROM funding_product fp
-    JOIN product p
-      ON p.product_no = fp.product_no
-    LEFT JOIN funding_option fo
-      ON fo.funding_no = fp.funding_no
-    LEFT JOIN option_detail od
-      ON od.detailoption_no = fo.detailoption_no
-    LEFT JOIN product_option po
-      ON po.option_no = od.option_no
-    LEFT JOIN (
-      SELECT funding_no, SUM(payment_amount) AS sum_amount
-      FROM payment
-      GROUP BY funding_no
-    ) pay
-      ON pay.funding_no = fp.funding_no
-    WHERE fp.funding_no = #{fundingNo}
-    GROUP BY
-        fp.funding_no, fp.user_no, fp.event_no, fp.amount, fp.percent, fp.funding_status, fp.funding_date,
-        p.product_no, p.brand, p.title, p.price, p.itemimg, pay.sum_amount,
-        po.option_name, od.detailoption_name
-    ORDER BY fp.funding_no DESC, po.option_name, od.detailoption_name
-  </select>
+	<!-- 특정 펀딩 한 건 (앵커) -->
+	<select id="selectGiftsPublicByFunding" parameterType="int"
+		resultType="map">
+		SELECT
+		fp.funding_no AS fundingNo
+		, fp.user_no AS userNo
+		,
+		fp.event_no AS eventNo
+		, fp.amount AS targetAmount
+		, fp.percent AS
+		percent
+		, fp.funding_status AS fundingStatus
+		, fp.funding_date AS
+		fundingDate
+		, p.product_no AS productNo
+		, p.brand AS brand
+		, p.title AS
+		title
+		, p.price AS price
+		, p.itemimg AS image
+		, COALESCE(pay.sum_amount,
+		0) AS paidAmount
+		, po.option_name AS optionName
+		, od.detailoption_name
+		AS detailoptionName
+		FROM funding_product fp
+		JOIN product p
+		ON
+		p.product_no = fp.product_no
+		LEFT JOIN funding_option fo
+		ON
+		fo.funding_no = fp.funding_no
+		LEFT JOIN option_detail od
+		ON
+		od.detailoption_no = fo.detailoption_no
+		LEFT JOIN product_option po
+		ON
+		po.option_no = od.option_no
+		LEFT JOIN (
+		SELECT funding_no,
+		SUM(payment_amount) AS sum_amount
+		FROM payment
+	    WHERE payment_status = 'paid'
+		GROUP BY funding_no
+		) pay
+		ON pay.funding_no = fp.funding_no
+		WHERE fp.funding_no = #{value}
+		GROUP
+		BY
+		fp.funding_no, fp.user_no, fp.event_no, fp.amount, fp.percent,
+		fp.funding_status,
+		fp.funding_date,
+		p.product_no, p.brand, p.title,
+		p.price, p.itemimg, pay.sum_amount,
+		po.option_name,
+		od.detailoption_name
+		ORDER BY fp.funding_no DESC, po.option_name,
+		od.detailoption_name
+	</select>
 
-  <!-- 결제 합계 -->
-  <select id="selectTotalPaidByFunding" parameterType="map" resultType="int">
-    SELECT COALESCE(SUM(payment_amount),0) AS totalPaid
-    FROM payment
-    WHERE funding_no = #{fundingNo}
-  </select>
+	<!-- 결제 합계 -->
+	<select id="selectTotalPaidByFunding" parameterType="int"
+		resultType="int">
+		SELECT COALESCE(SUM(payment_amount),0) AS totalPaid
+		FROM payment
+		WHERE funding_no = #{value}
+	      AND payment_status = 'paid'
+	</select>
 
-
+	<!-- 내가 참여한 특정 펀딩의 결제 내역 삭제 -->
+	<delete id="updateMyPaymentsByFunding" parameterType="map">
+	  <![CDATA[
+	    update payment
+        set payment_status = 'cancel'
+	    WHERE user_no   = #{userNo}
+	      AND funding_no = #{fundingNo}
+	      AND payment_status = 'paid'
+	  ]]>
+	</delete>
 
 </mapper>
