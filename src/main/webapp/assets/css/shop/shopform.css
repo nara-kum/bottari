@@ -7,27 +7,29 @@ body {
 }
 
 .container {
-	max-width: 900px;
+	max-width: 700px; /* 원래보다 작게 조정 */
+	width: 700px; /* 고정 너비 */
 	margin: 40px auto;
-	padding: 40px;
+	padding: 30px; /* 패딩도 줄임 */
 	background: rgb(246, 245, 241);
 	border-radius: 8px;
 	box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+	box-sizing: border-box;
 }
 
 .controller {
-	max-width: 1280px;
+	max-width: 100%; /* 최대 너비 제한 제거 */
 	margin: 0 auto;
 	width: 100%;
-	padding: 0 20px;
+	padding: 0;
 	box-sizing: border-box;
 }
 
 /* 콘텐츠 섹션 중앙 정렬 */
 .sec-content-main {
-	max-width: 1280px;
+	max-width: 100%; /* 최대 너비 제한 제거 */
 	margin: 0 auto;
-	padding: 0 20px;
+	padding: 0;
 	display: flex;
 	justify-content: center;
 }
@@ -69,6 +71,7 @@ select {
 	border: 1px solid #ddd;
 	border-radius: 4px;
 	font-size: 14px;
+	box-sizing: border-box; /* 박스 사이징 추가 */
 }
 
 .category-wrapper {
@@ -102,8 +105,7 @@ select {
 	display: none;
 }
 
-
-/* 옵션 설정 관련 스타일 */
+/* 옵션 설정 관련 스타일 - 사이즈 고정 */
 .option-header {
 	display: flex;
 	align-items: center;
@@ -140,8 +142,10 @@ select {
 	border: 1px solid #e0e0e0;
 	border-radius: 6px;
 	background: #fafafa;
-	width: calc(100% - 30px);
+	width: 100%; /* 전체 너비 사용 */
+	max-width: 100%; /* 최대 너비 제한 */
 	box-sizing: border-box;
+	overflow: hidden; /* 내용이 넘치면 숨김 */
 }
 
 .option-row {
@@ -149,6 +153,8 @@ select {
 	gap: 10px;
 	align-items: center;
 	margin-bottom: 10px;
+	width: 100%;
+	box-sizing: border-box;
 }
 
 .option-row:last-child {
@@ -156,12 +162,21 @@ select {
 }
 
 .option-row input {
-	flex: 1;
 	margin-bottom: 0;
+	box-sizing: border-box;
+	min-width: 0; /* flexbox 축소 허용 */
 }
 
+/* 옵션명 입력창 - 고정 너비 */
 .option-row input:first-child {
-	flex: 0 0 200px;
+	flex: 0 0 150px; /* 더 작게 조정 */
+	max-width: 150px;
+}
+
+/* 옵션값 입력창 - 유연한 너비 */
+.option-row input:nth-child(2) {
+	flex: 1;
+	min-width: 100px; /* 최소 너비도 줄임 */
 }
 
 .option-row.detail-only input:first-child {
@@ -178,6 +193,12 @@ select {
 	cursor: pointer;
 	padding: 5px;
 	border-radius: 3px;
+	flex-shrink: 0; /* 버튼 크기 고정 */
+	width: 30px;
+	height: 30px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 
 .add-detail-option:hover,
@@ -186,7 +207,7 @@ select {
 	background-color: #e0e0e0;
 }
 
-/* 이미지 관련 스타일 */
+/* 이미지 관련 스타일 - 사이즈 고정 */
 .image-preview {
 	display: flex;
 	align-items: center;
@@ -195,6 +216,8 @@ select {
 	border: 1px solid #ddd;
 	border-radius: 6px;
 	background: #fafafa;
+	width: 100%;
+	box-sizing: border-box;
 }
 
 .image-container {
@@ -207,6 +230,7 @@ select {
 	position: relative;
 	border-radius: 6px;
 	background: white;
+	flex-shrink: 0; /* 크기 고정 */
 }
 
 .image-container img {
@@ -237,7 +261,7 @@ select {
 	background-color: #856b51;
 }
 
-/* 상세 설명 관련 스타일 */
+/* 상세 설명 관련 스타일 - 사이즈 고정 및 스크롤 추가 */
 .description-box {
 	background: #f3f3f3;
 	padding: 20px;
@@ -245,21 +269,31 @@ select {
 	text-align: center;
 	position: relative;
 	min-height: 120px;
+	width: 100%;
+	box-sizing: border-box;
 }
 
 .detail-images-preview {
 	margin-bottom: 20px;
 	min-height: 80px;
+	max-height: 200px; /* 최대 높이 제한 */
 	display: flex;
 	flex-wrap: wrap;
 	gap: 10px;
-	justify-content: center;
-	align-items: center;
+	justify-content: flex-start; /* 왼쪽 정렬로 변경 */
+	align-items: flex-start;
+	overflow-y: auto; /* 세로 스크롤 추가 */
+	overflow-x: hidden; /* 가로 스크롤 숨김 */
 }
 
 .no-detail-images {
 	color: #6e6e6e;
 	font-style: italic;
+	width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 80px;
 }
 
 .detail-image-item {
@@ -267,25 +301,28 @@ select {
 	flex-direction: column;
 	align-items: center;
 	gap: 5px;
-	padding: 10px;
+	padding: 8px; /* 패딩 줄임 */
 	border: 1px solid #ddd;
 	border-radius: 4px;
 	background: white;
-	max-width: 150px;
+	width: 100px; /* 더 작게 조정 */
+	flex-shrink: 0; /* 크기 고정 */
 }
 
 .detail-image-item img {
-	width: 80px;
-	height: 80px;
+	width: 70px; /* 더 작게 조정 */
+	height: 70px;
 	object-fit: cover;
 	border-radius: 4px;
 }
 
 .image-name {
-	font-size: 11px;
+	font-size: 10px; /* 폰트 크기 줄임 */
 	color: #666;
 	text-align: center;
 	word-break: break-all;
+	line-height: 1.2;
+	max-width: 90px; /* 너비 줄임 */
 }
 
 .upload-btn {
@@ -367,8 +404,6 @@ label {
 .delivery-box input[type="radio"] {
 	display: none;
 }
-
-
 
 .delivery-type {
 	padding: 8px 16px;

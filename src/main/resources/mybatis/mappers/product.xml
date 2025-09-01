@@ -257,6 +257,7 @@
 		]]>
 	</select>
 	
+	
 	<!-- 펀딩별 현재 총결제액 -->
 	<select id="selectTotalPayForFundingNo" parameterType="int" resultType="int">
 		<![CDATA[
@@ -265,6 +266,7 @@
 			where p.funding_no =  #{fundingNo}
 		]]>
 	</select>
+
 
 	<!-- 장바구니 등록 -->
 	<insert id="cartInsert" parameterType="com.example.vo.CartVO">
