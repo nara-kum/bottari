@@ -14,6 +14,7 @@
 </head>
 
 <body class="family">
+  <!-- Header -->
   <c:import url="/WEB-INF/views/include/Header.jsp"></c:import>
 
   <content class="controller">
@@ -32,13 +33,15 @@
     </div>
   </content>
 
+  <!-- Footer -->
   <c:import url="/WEB-INF/views/include/Footer.jsp"></c:import>
 
 <script>
 (function(){
   const CTX = "${pageContext.request.contextPath}";
 
-  function fmtKRW(n){ return (Number(n)||0).toLocaleString('ko-KR') + '원'; }
+  /* ===== 유틸 ===== */
+  const fmtKRW = (n)=> (Number(n)||0).toLocaleString('ko-KR') + '원';
 
   function pluckList(json){
     if (Array.isArray(json)) return json;
@@ -64,13 +67,15 @@
     return CTX + "/upload/" + raw;
   }
 
-  function statusView(vo, percentCalc){
-    const raw = String((vo.fundingStatus ?? '') || '').toLowerCase();
-    if (raw === 'stop') return {text:'펀딩중단', cls:'funding-stop'};
-    if (raw === 'done' || percentCalc >= 100) return {text:'펀딩완료', cls:'funding-done'};
+  function statusView(vo, percent){
+    const s = String(vo.fundingStatus || '').toLowerCase();
+    if (s === 'stop') return {text:'펀딩중단', cls:'funding-stop'};
+    if (s === 'done' || percent >= 100) return {text:'펀딩완료', cls:'funding-done'};
     return {text:'펀딩진행중', cls:'funding-ing'};
   }
 
+  /* ===== 카드 템플릿 =====
+     ※ data-funding-no, data-price 넣어두고, 금액/퍼센트는 0으로 먼저 그림 → 이후 API로 갱신 */
   function renderCard(vo){
     const fundingNo   = Number(vo.fundingNo)||0;
     const fundingDate = vo.fundingDate || '';
@@ -79,15 +84,15 @@
     const optionName  = vo.optionName ?? vo.option_name ?? '';
     const detailOpt   = vo.detailoptionName ?? vo.detail_option_name ?? '';
     const price       = Number(vo.price)||0;
-    const paidAmount  = Number(vo.paidAmount ?? vo.paymentAmount ?? 0);
-    const percentCalc = price > 0 ? Math.min(100, Math.round(paidAmount/price*100)) : 0;
+    const initPaid    = 0;   // 초기값 0 → 뒤에서 per-card API로 갱신
+    const initPct     = 0;
 
     const imgUrl = resolveImage(vo);
-    const st = statusView(vo, percentCalc);
+    const st = statusView(vo, initPct);
     const esc = s => $('<div>').text(s||'').html();
 
     return [
-      '<div class="card-box" data-funding-no="', fundingNo, '">',
+      '<div class="card-box" data-funding-no="', fundingNo, '" data-price="', price, '">',
         '<div class="product-header">',
           '<div class="left-side"><span class="sub-title">', esc(fundingDate), '</span></div>',
           '<div class="right-side"><span class="funding-badge ', st.cls, '">', st.text, '</span></div>',
@@ -109,13 +114,13 @@
           '</div></div>',
 
           '<div class="mf-meter with-goal">',
-            '<div class="bar"><div class="fill" style="width:', percentCalc, '%;"></div></div>',
+            '<div class="bar"><div class="fill" style="width:', initPct, '%;"></div></div>',
             '<div class="goal">',
-              '<span class="curr">', fmtKRW(paidAmount), '</span>',
+              '<span class="curr">', fmtKRW(initPaid), '</span>',
               '<span class="sep"> / </span>',
               '<span class="total">', fmtKRW(price), '</span>',
             '</div>',
-            '<div class="achv"><span class="pct">', percentCalc, '% 달성</span></div>',
+            '<div class="achv"><span class="pct">', initPct, '% 달성</span></div>',
           '</div>',
 
           '<div class="funding-action-wrapper">',
@@ -129,32 +134,53 @@
     ].join('');
   }
 
-  function loadMyFunding(){
-    $.ajax({
-      url: CTX + "/api/myfunding",
-      type: "GET",
-      dataType: "json"
-    })
-    .done(function(json){
-      const list = pluckList(json);
-      const $area = $("#myFundingList").empty();
-      if (!list.length){
-        $area.html('<div class="empty">아직 등록된 펀딩이 없습니다.</div>');
-        return;
-      }
-      let html = '';
-      for (let i=0; i<list.length; i++){
-        html += renderCard(list[i]||{});
-      }
-      $area.html(html);
-    })
-    .fail(function(xhr){
-      console.error('GET /api/myfunding fail:', xhr.status, (xhr.responseText||'').slice(0,200));
-      $("#myFundingList").html('<div class="empty">목록을 불러오지 못했습니다.</div>');
-    });
+  /* ===== per-card 총 결제합 호출 & 갱신 ===== */
+  function updateCardMeter($card){
+    const fundingNo = Number($card.data('fundingNo'))||0;
+    const price     = Number($card.data('price'))||0;
+    if(!fundingNo) return;
+
+    $.getJSON(CTX + '/api/funding/total', { fundingNo })
+      .done(function(r){
+        const paid = Number(r?.data?.totalPaid ?? r?.apiData?.totalPaid ?? 0);
+        const pct  = price>0 ? Math.min(100, Math.round(paid/price*100)) : 0;
+
+        $card.find('.mf-meter .fill').css('width', pct + '%');
+        $card.find('.mf-meter .goal .curr').text(fmtKRW(paid));
+        $card.find('.mf-meter .achv .pct').text(pct + '% 달성');
+      })
+      .fail(function(xhr){
+        console.error('[GET /api/funding/total] fail', xhr.status, (xhr.responseText||'').slice(0,200));
+      });
   }
 
-  // 이벤트 바인딩
+  function refreshAllMeters(){
+    $('.card-box').each(function(){ updateCardMeter($(this)); });
+  }
+
+  /* ===== 목록 로드 ===== */
+  function loadMyFunding(){
+    $.ajax({ url: CTX + "/api/myfunding", type: "GET", dataType: "json" })
+      .done(function(json){
+        const list = pluckList(json);
+        const $area = $("#myFundingList").empty();
+        if (!list.length){
+          $area.html('<div class="empty">아직 등록된 펀딩이 없습니다.</div>');
+          return;
+        }
+        $area.html(list.map(v=>renderCard(v||{})).join(''));
+        refreshAllMeters(); // ⚡ 카드 그린 뒤 per-card 총액 반영
+      })
+      .fail(function(xhr){
+        console.error('GET /api/myfunding fail:', xhr.status, (xhr.responseText||'').slice(0,200));
+        $("#myFundingList").html('<div class="empty">목록을 불러오지 못했습니다.</div>');
+      });
+  }
+
+  /* ===== 시작 ===== */
+  $(function(){ loadMyFunding(); });
+
+  /* (옵션) 버튼 액션 – 엔드포인트 연결되어 있으면 사용 */
   $(document).on('click', '.btn-cancel', function(){
     const no = Number($(this).data('fundingNo'));
     if (!no){ alert('펀딩 번호가 없습니다.'); return; }
@@ -169,10 +195,7 @@
     .done(function(res){
       if (res && res.result === 'success'){
         const $card = $('.card-box[data-funding-no="'+no+'"]');
-        $card.find('.funding-badge')
-             .removeClass('funding-ing funding-done')
-             .addClass('funding-stop')
-             .text('펀딩중단');
+        $card.find('.funding-badge').removeClass('funding-ing funding-done').addClass('funding-stop').text('펀딩중단');
         $card.find('.action-buttons .btn-funding2').prop('disabled', true).addClass('is-disabled');
         alert('펀딩이 중단되었습니다.');
       } else {
@@ -191,29 +214,15 @@
     });
   });
 
-$("#myFundingList").on('click', '.btn-complete', function(){
-  const fundingNo = $(this).data('fundingNo');
-  if (!fundingNo) { alert('fundingNo가 없습니다.'); return; }
+  $(document).on('click', '.btn-complete', function(){
+    const fundingNo = $(this).data('fundingNo');
+    if (!fundingNo) { alert('fundingNo가 없습니다.'); return; }
+    const base = CTX + '/funding/purchase/detail';
+    const qs = $.param({ fundingNo });
+    location.href = base + '?' + qs;
+  });
 
-  // 필요 시 productNo도 함께 보내고 싶다면 버튼/카드에 data-product-no 넣어서 함께 전달 가능
-  const productNo = $(this).closest('.card-box').data('productNo');
-
-  // 👉 실제 상세 URL로 바꿔 쓰세요 (기본 예시 경로)
-  // 1순위: /funding/purchase/detail?fundingNo=...
-  // 필요하면 아래 두 줄 중 하나로 조정:
-  // const url = CTX + '/funding/purchase?fundingNo=' + encodeURIComponent(fundingNo);
-  // const url = CTX + '/funding/detail?no=' + encodeURIComponent(fundingNo);
-
-  const base = CTX + '/funding/purchase/detail';
-  const qs = $.param(productNo ? { fundingNo, productNo } : { fundingNo });
-  location.href = base + '?' + qs;
-});
-
-  // DOM 준비 후 목록 로드
-  $(function(){ loadMyFunding(); });
-
-})(); // <-- 딱 한 번만 닫음
+})();
 </script>
-
 </body>
 </html>
