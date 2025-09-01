@@ -9,6 +9,9 @@
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/reset.css">
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/Global.css">
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/shop/shopform.css">
+	
+	<!-- Daum 우편번호 API -->
+	<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 </head>
 
 <!-- js -->
@@ -77,7 +80,7 @@
 						<div class="option-header">
 							<label>옵션 설정</label>
 							<button type="button" class="add-option-group" onclick="addOptionGroup()">
-								<img class="add-logo" src="../../../assets/icon-add.svg" alt="옵션 그룹 추가">
+								<img class="add-logo" src="${pageContext.request.contextPath}/assets/icon/icon-add.svg" alt="옵션 그룹 추가">
 							</button>
 						</div>
 
@@ -89,7 +92,7 @@
 									<input type="text" name="optionItems[0]" placeholder="옵션 입력 (예: 하늘)">
 									
 									<button type="button" class="add-detail-option" onclick="addDetailOption(this)">
-										<img class="add-logo2" src="../../../assets/icon-add.svg" alt="옵션 추가">
+										<img class="add-logo2" src="${pageContext.request.contextPath}/assets/icon/icon-add.svg" alt="옵션 추가">
 									</button>
 								</div>
 							</div>
@@ -149,14 +152,14 @@
 					<div class="input-group">
 						<label for="zipcode">우편번호</label>
 						<div class="zipcode-group">
-							<input type="text" name="zipcode" id="zipcode" class="zipcode-input" placeholder="우편번호">
-							<button class="zipcode-btn" type="button">우편번호 찾기</button>
+							<input type="text" name="zipcode" id="zipcode" class="zipcode-input" placeholder="우편번호" readonly>
+							<button class="zipcode-btn" type="button" onclick="findAddress()">우편번호 찾기</button>
 						</div>
 					</div>
 
 					<div class="input-group">
 						<label for="address">출고지 주소</label> 
-						<input type="text" name="address" id="address" placeholder="출고지 주소"> 
+						<input type="text" name="address" id="address" placeholder="출고지 주소" readonly> 
 						<input type="text" name="detail_address" id="detail-address" placeholder="상세 주소">
 					</div>
 
@@ -220,6 +223,32 @@
 		const shippingCostGroup = document.querySelector('#shipping-cost').closest('.input-group');
 		shippingCostGroup.style.display = 'block';
 	});
+
+	// 우편번호 찾기 API 함수
+	function findAddress() {
+		new daum.Postcode({
+			oncomplete: function(data) {
+				// 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+
+				// 각 주소의 노출 규칙에 따라 주소를 조합한다.
+				// 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+				var addr = ''; // 주소 변수
+
+				//사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
+				if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
+					addr = data.roadAddress;
+				} else { // 사용자가 지번 주소를 선택했을 경우(J)
+					addr = data.jibunAddress;
+				}
+
+				// 우편번호와 주소 정보를 해당 필드에 넣는다.
+				document.getElementById('zipcode').value = data.zonecode;
+				document.getElementById('address').value = addr;
+				// 커서를 상세주소 필드로 이동한다.
+				document.getElementById('detail-address').focus();
+			}
+		}).open();
+	}
 
 	// 상품 이미지 파일 선택 JavaScript
 	document.getElementById('imageFile').addEventListener('change', function(event) {
@@ -286,10 +315,10 @@
 		htmlStr += '	<input type="text" name="option_names" placeholder="옵션타이틀 입력 (예: 사이즈)"> ';
 		htmlStr += '	<input type="text" name="optionItems[' + gno + ']" placeholder="옵션 입력 (예: L)"> ';
 		htmlStr += '	<button type="button" class="add-detail-option" onclick="addDetailOption(this)">';
-		htmlStr += '		<img class="add-logo2" src="../../../assets/icon-add.svg" alt="옵션 추가">';
+		htmlStr += '		<img class="add-logo2" src="${pageContext.request.contextPath}/assets/icon/icon-add.svg" alt="옵션 추가">';
 		htmlStr += '	</button>';
 		htmlStr += '	<button type="button" class="remove-option-group" onclick="removeOptionGroup(this)">';
-		htmlStr += '		<img class="remove-logo" src="../../../assets/icon-remove.svg" alt="옵션 그룹 제거">';
+		htmlStr += '		<img class="remove-logo" src="${pageContext.request.contextPath}/assets/icon/icon-minus.svg" alt="옵션 그룹 제거">';
 		htmlStr += '	</button>';
 		htmlStr += '</div>';
 		
@@ -311,10 +340,10 @@
 		htmlStr += '<input type="text" placeholder="옵션타이틀은 위와 동일">';
 		htmlStr += '<input type="text" name="optionItems['+ gno +']" placeholder="옵션 입력 (예: M)">';
 		htmlStr += '<button type="button" class="add-detail-option" onclick="addDetailOption(this)">';
-		htmlStr += '	<img class="add-logo2" src="../../../assets/icon-add.svg" alt="옵션 추가">';
+		htmlStr += '	<img class="add-logo2" src="${pageContext.request.contextPath}/assets/icon/icon-add.svg" alt="옵션 추가">';
 		htmlStr += '</button>';
 		htmlStr += '<button type="button" class="remove-detail-option" onclick="removeDetailOption(this)">';
-		htmlStr += '	<img class="remove-logo2" src="../../../assets/icon-remove.svg" alt="옵션 제거">';
+		htmlStr += '	<img class="remove-logo2" src="${pageContext.request.contextPath}/assets/icon/icon-minus.svg" alt="옵션 제거">';
 		htmlStr += '</button>';
 		htmlStr += '';
 		newRow.innerHTML = htmlStr;

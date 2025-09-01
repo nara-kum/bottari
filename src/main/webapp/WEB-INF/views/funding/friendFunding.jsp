@@ -29,10 +29,10 @@
           <a href="${pageContext.request.contextPath}/funding/wish">펀딩 관리</a>
         </h2>
         <h2 class="header-sub is-active">
-          <a href="${pageContext.request.contextPath}/funding/my" aria-current="page">마이 펀딩</a>
+          <a href="${pageContext.request.contextPath}/funding/my">마이 펀딩</a>
         </h2>
         <h2 class="header-sub">
-          <a href="${pageContext.request.contextPath}/funding/friend">친구 펀딩</a>
+          <a href="${pageContext.request.contextPath}/funding/friend" aria-current="page">친구 펀딩</a>
         </h2>
       </div>
     </div>

@@ -117,7 +117,7 @@ select {
 	background: none;
 	border: none;
 	cursor: pointer;
-	padding: 2px;
+	padding: 2px 0px 6px 2px;
 }
 
 .add-logo {
@@ -288,7 +288,6 @@ select {
 
 .no-detail-images {
 	color: #6e6e6e;
-	font-style: italic;
 	width: 100%;
 	display: flex;
 	align-items: center;
@@ -355,26 +354,23 @@ select {
 .zipcode-group {
 	display: flex;
 	gap: 10px;
-	align-items: center;
-}
-
-input[type="text"] {
-	padding: 12px;
-	border: 1px solid #ddd;
-	border-radius: 4px;
-	font-size: 14px;
-	width: 100%;
-	box-sizing: border-box;
-	height: 44px;
+	align-items: stretch; /* 모든 요소가 같은 높이가 되도록 */
 }
 
 .zipcode-input {
 	flex: 0 0 120px;
+	height: 44px; /* 명시적 높이 설정 */
+	padding: 12px;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	font-size: 14px;
+	box-sizing: border-box;
 }
 
 .zipcode-btn {
 	flex: 0 0 auto;
-	padding: 12px 16px;
+	height: 44px; /* 입력창과 정확히 같은 높이 */
+	padding: 0 16px; /* 상하 패딩 제거하고 좌우만 */
 	background-color: #c9a37e;
 	color: white;
 	border: none;
@@ -382,6 +378,11 @@ input[type="text"] {
 	cursor: pointer;
 	font-size: 14px;
 	white-space: nowrap;
+	box-sizing: border-box;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	line-height: 1; /* 라인 높이 조정 */
 }
 
 .zipcode-btn:hover {
@@ -406,6 +407,7 @@ label {
 }
 
 .delivery-type {
+	font-style: Arial;
 	padding: 8px 16px;
 	border: 1px solid #c9a37e;
 	background: white;

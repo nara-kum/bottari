@@ -33,7 +33,7 @@ public class LoginRequiredInterceptor implements HandlerInterceptor {
 		/* ✅ 장바구니 전용 가드: 공개우회보다 먼저 처리 (비로그인 → 로그인폼로) */
 		if ("/shop/cart".equals(path)) {
 			if (auth == null) {
-				 String loginUrl = ctx + "/user/loginForm?reason=auth&returnUrl=" + URLEncoder.encode(full, StandardCharsets.UTF_8);
+				String loginUrl = ctx + "/user/loginForm?reason=auth&returnUrl=" + URLEncoder.encode(full, StandardCharsets.UTF_8);
 				System.out.println("[INTC] cart not logged-in → REDIRECT " + loginUrl);
 				res.sendRedirect(loginUrl);
 				return false;
