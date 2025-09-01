@@ -70,7 +70,7 @@
 				</div>
 
 				<div class="additional-links">
-					<a href="productList.jsp" class="link">전체 상품 목록 보기</a>
+					<a href="${pageContext.request.contextPath}/shop/bottarimall" class="link">전체 상품 목록 보기</a>
 				</div>
 			</div>
 		</div>
