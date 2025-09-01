@@ -93,15 +93,17 @@ public class HistoryService {
 		int funding_no = historyDetailList.get(0).getFunding_no();
 		System.out.println("funding_no: " +funding_no);
 		
-		if(funding_no != 0) {
-			List<HistoryFundingCheckVO> percentList = historyrepository.selectFundingPercent(funding_no);
-			int total_percent = percentList.get(0).getTotal_percent();
-			System.out.println("total_percent: " + total_percent);
-			
-			historyDetailList.get(0).setTotal_percent(total_percent);
-			System.out.println(historyDetailList);
-		}
-		
 		return historyDetailList;
+	}
+	
+	public List<HistoryFundingCheckVO> execheckFundingData(int funding_no) {
+		System.out.println("HistoryService.execheckFundingData()");
+		
+		List<HistoryFundingCheckVO> percentList = historyrepository.selectFundingPercent(funding_no);
+		System.out.println("HistoryService.execheckFundingData()");
+		System.out.println("repository에서 데이터 받아오기 성공");
+		
+		
+		return percentList;
 	}
 }
