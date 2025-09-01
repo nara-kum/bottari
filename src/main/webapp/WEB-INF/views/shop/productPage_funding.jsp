@@ -290,6 +290,8 @@
 	let amount = '${fundingProductDetailMap.fundingProductVO.amount}';
 	let quantity = 1
 	
+	
+	
 	$(document).ready(function() {
 
 		//-버튼 체크
