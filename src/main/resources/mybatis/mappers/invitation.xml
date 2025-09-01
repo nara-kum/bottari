@@ -123,7 +123,7 @@
         AND i.invitation_no = #{invitationNo}
     ]]>
 	</select>
-	
+
 	<!-- 초대장 수정 -->
 	<update id="updateInvitation"
 		parameterType="com.example.vo.InvitationVO">
@@ -161,7 +161,7 @@
   ]]>
 	</update>
 
-	<!-- 초대장 삭제-->
+	<!-- 초대장 삭제 -->
 	<delete id="deleteInvitation" parameterType="map">
   <![CDATA[
     DELETE FROM invitation
@@ -193,6 +193,45 @@
         AND fp.event_no = #{eventNo}
       ORDER BY fp.funding_no DESC
     ]]>
+	</select>
+	
+	<select id="selectInvitationFullAny" parameterType="int"
+		resultType="map">
+		SELECT
+		i.invitation_no AS invitationNo,
+		i.category_no AS categoryNo,
+		i.user_no AS userNo,
+		i.event_no AS eventNo,
+		i.theme_no AS themeNo,
+
+		i.photo_url AS photoUrl,
+		i.celebrate_date AS celebrateDate,
+		i.celebrate_time AS celebrateTime,
+		i.greeting AS greeting,
+
+		i.place AS place,
+		i.address1 AS address1,
+		i.address2 AS address2,
+
+		i.groom_name AS groomName,
+		i.groom_contect AS groomContect,
+		i.groom_father_name AS groomFatherName,
+		i.groom_father_contect AS groomFatherContect,
+		i.groom_mother_name AS groomMotherName,
+		i.groom_mother_contect AS groomMotherContect,
+
+		i.bride_name AS brideName,
+		i.bride_contect AS brideContect,
+		i.bride_father_name AS brideFatherName,
+		i.bride_father_contect AS brideFatherContect,
+		i.bride_mother_name AS brideMotherName,
+		i.bride_mother_contect AS brideMotherContect,
+
+		i.baby_name AS babyName,
+
+		i.created_at AS createdAt
+		FROM invitation i
+		WHERE i.invitation_no = #{invitationNo}
 	</select>
 
 </mapper>

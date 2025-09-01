@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <!DOCTYPE html>
 <html lang="ko">
 
@@ -30,7 +30,8 @@
 			<main class="main">
 				<div class="container">
 					<div class="cart-toolbar">
-						<button type="button" id="cart-bulk-delete" class="btn-bulk-delete">선택 삭제</button>
+						<button type="button" id="cart-bulk-delete"
+							class="btn-bulk-delete">선택 삭제</button>
 					</div>
 					<div class="column-flex-box gap-10">
 						<c:forEach items="${requestScope.cList}" var="vo">
@@ -38,13 +39,20 @@
 								<div class="between-flex-box">
 									<div class="row-flex-box">
 										<div class="column-flex-box column-align size-normal">
-											<input type="checkbox" id="select-${vo.cart_no}" class="cart-checkbox">
+											<input type="checkbox" id="select-${vo.cart_no}"
+												class="cart-checkbox">
 										</div>
-										<img class="list-img-100" src="${pageContext.request.contextPath}/upload/${vo.itemimg}" alt="상품 이미지">
+										<img class="list-img-100"
+											src="${pageContext.request.contextPath}/upload/${vo.itemimg}"
+											alt="상품 이미지">
 										<div class="column-flex-box gap-10 margin-5">
 											<p class="text-16">${vo.brand}</p>
 											<p class="item-name">${vo.title}</p>
-											<p class="text-16 bold"><fmt:formatNumber value="${vo.price}" type="currency" currencySymbol="" /> 원</p>
+											<p class="text-16 bold">
+												<fmt:formatNumber value="${vo.price}" type="currency"
+													currencySymbol="" />
+												원
+											</p>
 										</div>
 									</div>
 									<div class="row-flex-box">
@@ -53,29 +61,32 @@
 											<div class="optionContainer" id="option-${vo.cart_no}">
 												<!-- 서버에서 미리 렌더링된 옵션들 -->
 												<div class="row-flex-box">
-														<c:forEach items="${vo.options}" var="option">
-															<label for="option-${option.option_no}-${vo.cart_no}">${option.option_name}</label>
-															<select id="option-${option.option_no}-${vo.cart_no}" 
-																class="option-select" 
-																data-option-no="${option.option_no}"
-																data-cart-no="${vo.cart_no}">
-																<c:forEach items="${option.detailList}" var="detail">
-																	<c:choose>
-																		<c:when
-																			test="${detail.detailoption_no == vo.detailoption_no}">
-																			<option value="${detail.detailoption_no}" selected>${detail.detailoption_name}</option>
-																		</c:when>
-																		<c:otherwise>
-																			<option value="${detail.detailoption_no}">${detail.detailoption_name}</option>
-																		</c:otherwise>
-																	</c:choose>
-																</c:forEach>
-															</select>
-														</c:forEach>
+													<c:forEach items="${vo.options}" var="option">
+														<label for="option-${option.option_no}-${vo.cart_no}">${option.option_name}</label>
+														<select id="option-${option.option_no}-${vo.cart_no}"
+															class="option-select"
+															data-option-no="${option.option_no}"
+															data-cart-no="${vo.cart_no}">
+															<c:forEach items="${option.detailList}" var="detail">
+																<c:choose>
+																	<c:when
+																		test="${detail.detailoption_no == vo.detailoption_no}">
+																		<option value="${detail.detailoption_no}" selected>${detail.detailoption_name}</option>
+																	</c:when>
+																	<c:otherwise>
+																		<option value="${detail.detailoption_no}">${detail.detailoption_name}</option>
+																	</c:otherwise>
+																</c:choose>
+															</c:forEach>
+														</select>
+													</c:forEach>
 													<div class="row-flex-box quantity-container">
-														<button type="button" class="quantity-btn subQuantity" data-cart-no="${vo.cart_no}">-</button>
-														<div class="text-16 quantity-display" data-cart-no="${vo.cart_no}">${vo.quantity} 개</div>
-														<button type="button" class="quantity-btn addQuantity" data-cart-no="${vo.cart_no}">+</button>
+														<button type="button" class="quantity-btn subQuantity"
+															data-cart-no="${vo.cart_no}">-</button>
+														<div class="text-16 quantity-display"
+															data-cart-no="${vo.cart_no}">${vo.quantity}개</div>
+														<button type="button" class="quantity-btn addQuantity"
+															data-cart-no="${vo.cart_no}">+</button>
 													</div>
 												</div>
 											</div>
@@ -95,9 +106,19 @@
 
 					<!-- 총 금액 -->
 					<div class="summary ">
-						<div class="text-16">상품금액: <span id="product-total"><fmt:formatNumber value="${total_price}" type="currency" currencySymbol="" /></span>원</div>
-						<div class="text-16">배송비: <span id="shipping-cost"><fmt:formatNumber value="${shipping_cost}" type="currency" currencySymbol="" /></span>원</div>
-						<div class="text-18 bold">총 결제금액: <span id="final-total"><fmt:formatNumber value="${total_price + shipping_cost}" type="currency" currencySymbol="" /></span>원</div>
+						<div class="text-16">
+							상품금액: <span id="product-total"><fmt:formatNumber
+									value="${total_price}" type="currency" currencySymbol="" /></span>원
+						</div>
+						<div class="text-16">
+							배송비: <span id="shipping-cost"><fmt:formatNumber
+									value="${shipping_cost}" type="currency" currencySymbol="" /></span>원
+						</div>
+						<div class="text-18 bold">
+							총 결제금액: <span id="final-total"><fmt:formatNumber
+									value="${total_price + shipping_cost}" type="currency"
+									currencySymbol="" /></span>원
+						</div>
 					</div>
 
 					<div class="buy-button">
@@ -212,43 +233,113 @@
 			});
 			
 			// 장바구니 아이템 삭제 함수
-			function deleteCartItem(cartNo) {
-				fetch('/cart/delete', {
-					method: 'POST',
-					headers: {
-						'Content-Type': 'application/x-www-form-urlencoded',
-						'X-Requested-With': 'XMLHttpRequest'
-					},
-					body: 'cart_no=' + cartNo
-				})
-				.then(response => response.json())
-				.then(data => {
-					if(data.success) {
-						if(data.isEmpty) {
-							// 빈 장바구니일 때 리다이렉트
-							window.location.href = data.redirectUrl;
-						} else {
-							// DOM에서 해당 아이템 제거
-							const cartItem = document.querySelector(`[data-cart-no="${cartNo}"]`);
-							if(cartItem) {
-								cartItem.remove();
-							}
+			// function deleteCartItem(cartNo) {
+			// 	fetch('/cart/delete', {
+			// 		method: 'POST',
+			// 		headers: {
+			// 			'Content-Type': 'application/x-www-form-urlencoded',
+			// 			'X-Requested-With': 'XMLHttpRequest'
+			// 		},
+			// 		body: 'cart_no=' + cartNo
+			// 	})
+			// 	.then(response => response.json())
+			// 	.then(data => {
+			// 		if(data.success) {
+			// 			if(data.isEmpty) {
+			// 				// 빈 장바구니일 때 리다이렉트
+			// 				window.location.href = data.redirectUrl;
+			// 			} else {
+			// 				// DOM에서 해당 아이템 제거
+			// 				const cartItem = document.querySelector(`[data-cart-no="${cartNo}"]`);
+			// 				if(cartItem) {
+			// 					cartItem.remove();
+			// 				}
 							
-							// 총액 업데이트
-							if(data.total_price !== undefined) {
-								updateTotalPrice(data.total_price, data.shipping_cost);
-							}
-						}
-					} else {
-						alert('삭제 중 오류가 발생했습니다.');
-					}
-				})
-				.catch(error => {
-					console.error('삭제 오류:', error);
-					alert('네트워크 오류가 발생했습니다.');
-				});
+			// 				// 총액 업데이트
+			// 				if(data.total_price !== undefined) {
+			// 					updateTotalPrice(data.total_price, data.shipping_cost);
+			// 				}
+			// 			}
+			// 		} else {
+			// 			alert('삭제 중 오류가 발생했습니다.');
+			// 		}
+			// 	})
+			// 	.catch(error => {
+			// 		console.error('삭제 오류:', error);
+			// 		alert('네트워크 오류가 발생했습니다.');
+			// 	});
+			// }
+			
+			// ✅ 선택된 cart_no 배열 얻기
+			function getSelectedCartNos() {
+			  const ids = [];
+			  document.querySelectorAll('.cart-checkbox:checked').forEach(cb => {
+			    const cartNo = cb.id.replace('select-', '').trim();
+			    if (cartNo) ids.push(cartNo);
+			  });
+			  return ids;
 			}
 			
+			// ✅ 대량 삭제 API 호출
+			function deleteCartItemsBulk(cartNos) {
+			  if (!cartNos.length) {
+			    alert('삭제할 상품을 선택해주세요.');
+			    return;
+			  }
+			  if (!confirm('선택한 상품을 장바구니에서 삭제하시겠습니까?')) return;
+			
+			  const params = new URLSearchParams();
+			  cartNos.forEach(no => params.append('cart_no', no));
+			
+			  fetch('/cart/delete-bulk', {
+			    method: 'POST',
+			    headers: {
+			      'Content-Type': 'application/x-www-form-urlencoded',
+			      'X-Requested-With': 'XMLHttpRequest'
+			    },
+			    body: params.toString()
+			  })
+			  .then(res => res.json())
+			  .then(data => {
+			    if (!data.success) {
+			      alert(data.message || '삭제 중 오류가 발생했습니다.');
+			      return;
+			    }
+			
+			    // DOM에서 선택 항목 제거
+			    cartNos.forEach(no => {
+			      const el = document.querySelector(`[data-cart-no="${no}"]`);
+			      if (el) el.remove();
+			    });
+			
+			    // 장바구니 비었으면 안내대로 이동
+			    if (data.isEmpty && data.redirectUrl) {
+			      window.location.href = data.redirectUrl;
+			      return;
+			    }
+			
+			    // 총액 갱신
+			    if (typeof data.total_price !== 'undefined') {
+			      updateTotalPrice(data.total_price, data.shipping_cost || 0);
+			    }
+
+				//새로고침
+				location.replace(location.pathname + location.search);
+			  })
+			  .catch(err => {
+			    console.error('bulk delete error:', err);
+			    alert('네트워크 오류가 발생했습니다.');
+			  });
+			}
+			
+			// ✅ "선택 삭제" 버튼 클릭 핸들러 등록
+			document.addEventListener('click', function(e){
+			  if (e.target && e.target.id === 'cart-bulk-delete') {
+			    const selected = getSelectedCartNos();
+			    deleteCartItemsBulk(selected);
+			  }
+			});
+
 			// 구매하기 버튼 이벤트
 			document.getElementById('purchase-btn').addEventListener('click', function() {
 				const selectedItems = [];

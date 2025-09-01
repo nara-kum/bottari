@@ -47,11 +47,11 @@ public class InvitationService {
 			if (org != null && org.lastIndexOf('.') > -1) {
 				ext = org.substring(org.lastIndexOf('.'));
 			}
-			System.out.println("org :"+org);
-			System.out.println("ext :"+ext);
+			System.out.println("org :" + org);
+			System.out.println("ext :" + ext);
 			String saveName = System.currentTimeMillis() + "_" + UUID.randomUUID().toString().replace("-", "") + ext;
 			Path target = Paths.get(baseDir, saveName);
-			System.out.println("target :"+target);
+			System.out.println("target :" + target);
 
 			try (OutputStream out = Files.newOutputStream(target)) {
 				out.write(file.getBytes());
@@ -99,6 +99,22 @@ public class InvitationService {
 		out.put("gifts", gifts);
 
 		return out;
+	}
+
+	// ✅ 공유/공개용: 소유자 제약 없이 '전체 필드' 반환
+	public Map<String, Object> getInvitationViewBundleAny(int invitationNo) {
+		Map<String, Object> detail = invitationRepository.selectInvitationFullAny(invitationNo);
+		if (detail == null || detail.isEmpty())
+			return null;
+
+		Map<String, Object> bundle = new HashMap<>();
+		bundle.put("detail", detail);
+		return bundle;
+	}
+
+	/** ✅ 공개: 이벤트별 펀딩 카드 목록 */
+	public List<Map<String, Object>> getGiftsPublicByEvent(int eventNo) {
+		return invitationRepository.selectGiftsPublicByEvent(eventNo);
 	}
 
 }

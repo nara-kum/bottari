@@ -1,57 +1,64 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <title>bottari 초대장 관리</title>
+<meta charset="UTF-8">
+<title>bottari 초대장 관리</title>
 
-  <!-- 공통 스타일 -->
-  <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/reset.css">
-  <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/Global.css">
-  <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/invitation/invitationList.css">
-  <script src="${pageContext.request.contextPath}/assets/js/jquery/jquery-3.7.1.js"></script>
+<!-- 공통 스타일 -->
+<link rel="stylesheet"
+	href="${pageContext.request.contextPath}/assets/css/reset.css">
+<link rel="stylesheet"
+	href="${pageContext.request.contextPath}/assets/css/Global.css">
+<link rel="stylesheet"
+	href="${pageContext.request.contextPath}/assets/css/invitation/invitationList.css">
+<script
+	src="${pageContext.request.contextPath}/assets/js/jquery/jquery-3.7.1.js"></script>
 </head>
 <body class="family">
 
-  <!-- Header -->
-  <c:import url="/WEB-INF/views/include/Header.jsp"></c:import>
+	<!-- Header -->
+	<c:import url="/WEB-INF/views/include/Header.jsp"></c:import>
 
-  <content class="controller">
-    <div id="sec-content" class="sector">
-      <div class="sec-sub-title">
-        <h2 class="header-sub">나의 초대장</h2>
-      </div>
+	<content class="controller">
+	<div id="sec-content" class="sector">
+		<div class="sec-sub-title">
+			<h2 class="header-sub">나의 초대장</h2>
+		</div>
 
-      <div class="sec-content-main">
-        <div class="content">
-          <div class="list-stack">
+		<div class="sec-content-main">
+			<div class="content">
+				<div class="list-stack">
 
-            <!-- 우측 상단 버튼 -->
-            <div class="section-header">
-              <button class="create-button" type="button">초대장 만들기</button>
-            </div>
+					<!-- 우측 상단 버튼 -->
+					<div class="section-header">
+						<button class="create-button" type="button">초대장 만들기</button>
+					</div>
 
-            <!-- 카드 그리드 -->
-            <div class="card-container">
-              <div class="inv-card-grid"><!-- 동적 렌더링 --></div>
-            </div>
+					<!-- 카드 그리드 -->
+					<div class="card-container">
+						<div class="inv-card-grid">
+							<!-- 동적 렌더링 -->
+						</div>
+					</div>
 
-            <!-- 더보기 자리 (필요 시) -->
-            <div class="inv-more" style="display:none;">
-              <button class="inv-btn inv-btn--ghost" type="button">더보기</button>
-            </div>
+					<!-- 더보기 자리 (필요 시) -->
+					<div class="inv-more" style="display: none;">
+						<button class="inv-btn inv-btn--ghost" type="button">더보기</button>
+					</div>
 
-          </div>
-        </div>
-      </div>
-    </div>
-  </content>
+				</div>
+			</div>
+		</div>
+	</div>
+	</content>
 
-  <!-- Footer -->
-  <c:import url="/WEB-INF/views/include/Footer.jsp"></c:import>
+	<!-- Footer -->
+	<c:import url="/WEB-INF/views/include/Footer.jsp"></c:import>
 
-<script>
+	<script>
 (function(){
   var CTX = "${pageContext.request.contextPath}";
 
@@ -65,15 +72,15 @@
   }
   function absUrl(u){
     if (!u) return "";
-    if (/^https?:\/\//i.test(u)) return u;     // 이미 절대 URL
-    if (u.startsWith("/")) return CTX + u;     // 루트 경로 → 컨텍스트 접두
+    if (/^https?:\/\//i.test(u)) return u;
+    if (u.startsWith("/")) return CTX + u;
     return CTX + (u.startsWith("/") ? u : ("/" + u));
   }
   function fmtDate(s){
     if (!s) return "";
     return String(s).substring(0,10).replace(/-/g, ".");
   }
-  // 마이펀딩과 동일한 리스트 추출 로직
+  // 공용 리스트 파서
   function pluckList(json){
     if (Array.isArray(json)) return json;
     if (!json || typeof json !== "object") return [];
@@ -84,7 +91,31 @@
     return [];
   }
 
-  /* ===== 데이터 매핑(케이스 혼용 안전 처리) ===== */
+  /* ===== 펀딩 여부 정규화 =====
+     지원 키 예시:
+     - 숫자: fundingCount / funding_count
+     - 불린: hasFunding / has_funding / isFunding
+     - Y/N:  fundingYn / funding_yn
+     - 기타: funding
+  */
+  function normalizeHasFunding(row){
+    var raw = row.fundingCount ?? row.funding_count ??
+              row.hasFunding ?? row.has_funding ??
+              row.fundingYn ?? row.funding_yn ??
+              row.isFunding ?? row.funding ?? 0;
+
+    if (raw === true) return true;
+    if (typeof raw === "number") return raw > 0;
+    if (typeof raw === "string") {
+      var v = raw.trim();
+      if (/^[Yy]$/.test(v)) return true;
+      if (/^\d+$/.test(v)) return parseInt(v, 10) > 0;
+      if (/^(true)$/i.test(v)) return true;
+    }
+    return false;
+  }
+
+  /* ===== 데이터 매핑 ===== */
   function mapRow(row){
     var id    = row.invitationNo ?? row.invitation_no ?? row.id ?? 0;
     var date  = row.celebrateDate ?? row.celebrate_date ?? row.date ?? "";
@@ -95,24 +126,31 @@
       id: Number(id) || 0,
       title: title,
       date: fmtDate(date),
-      photo: absUrl(photo)
+      photo: absUrl(photo),
+      hasFunding: normalizeHasFunding(row) // ← 뱃지 표시 플래그
     };
   }
 
-  /* ===== 카드 템플릿: 반드시 ?no= 붙여서 이동 ===== */
+  /* ===== 카드 템플릿 ===== */
   function cardTpl(row) {
     var viewHref = CTX + "/invitation/invitation" + (row.id ? ("?no=" + row.id) : "");
     var html = '';
     html += '<div class="inv-card" data-id="' + (row.id || '') + '">';
 
-    // 이미지 자체를 링크로
+    // 이미지(썸네일)
     html += '<a class="inv-link" href="' + esc(viewHref) + '">';
-    html += '  <div class="inv-thumbbox">';
+    html += '  <div class="inv-thumbbox">'; // ← 필요시 CSS에 position:relative 추가
     if (row.photo) html += '    <img class="inv-thumb" src="' + esc(row.photo) + '" alt="">';
     else html += '    <div class="inv-thumb inv-thumb--ph"></div>';
+
+    // ★ 기존 CSS(.inv-badge) 사용
+    if (row.hasFunding) {
+      html += '    <span class="inv-badge" aria-label="펀딩 있음">🎁 펀딩</span>';
+    }
     html += '  </div>';
     html += '</a>';
 
+    // 정보
     html += ' <div class="inv-info">';
     html += '   <div class="inv-title"><a class="inv-link" href="' + esc(viewHref) + '">'
          +       esc(row.title || "") + '</a></div>';
@@ -121,6 +159,7 @@
     html += '     <button class="inv-btn btn-edit" type="button">수정하기</button>';
     html += '   </div>';
     html += ' </div>';
+
     html += '</div>';
     return html;
   }
@@ -195,7 +234,7 @@
       if (id) location.href = CTX + "/invitation/invitation?no=" + id;
     });
 
-  // 시작!
+  // 시작
   $(function(){ loadList(); });
 })();
 </script>

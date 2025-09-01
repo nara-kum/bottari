@@ -395,7 +395,7 @@
       .done(function(res){
         if (res && res.result === "success"){
           alert(editNo ? "수정되었습니다." : "등록되었습니다.");
-          location.href = CTX + "invitation/list";
+          location.href = CTX + "/invitation/list";
         } else {
           throw new Error((res && res.message) || "처리에 실패했습니다.");
         }
@@ -425,7 +425,7 @@
     .done(function(res){
       if (res && res.result === "success"){
         alert("삭제되었습니다.");
-        location.href = CTX + "invitation/list";
+        location.href = CTX + "/invitation/list";
       } else {
         alert((res && res.message) || "삭제에 실패했습니다.");
       }

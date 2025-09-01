@@ -62,5 +62,22 @@
 		delete from cart
 		where cart_no = #{cart_no}
 	</delete>
-
+	
+	<!-- ✅ cart_option 선삭제 (FK/제약 대비) -->
+	<delete id="deleteCartOptionsByCartNos">
+	  DELETE FROM cart_option
+	  WHERE cart_no IN
+	  <foreach collection="list" item="cartNo" open="(" close=")" separator=",">
+	    #{cartNo}
+	  </foreach>
+	</delete>
+	
+	<!-- ✅ cart 다건 삭제 -->
+	<delete id="deleteCartItems">
+	  DELETE FROM cart
+	  WHERE cart_no IN
+	  <foreach collection="list" item="cartNo" open="(" close=")" separator=",">
+	    #{cartNo}
+	  </foreach>
+	</delete>
 </mapper>

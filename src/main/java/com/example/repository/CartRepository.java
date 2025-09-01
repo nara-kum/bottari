@@ -86,4 +86,17 @@ public class CartRepository {
 		
 		return count;
 	}
+	
+	//장바구니 다건
+	public int deleteCartItems(List<Integer> cartNos) {
+	    System.out.println("CartRepository.deleteCartItems() IN " + cartNos);
+	    return sqlsession.delete("cart.deleteCartItems", cartNos);
+	}
+
+	public int deleteCartOptionsByCartNos(List<Integer> cartNos) {
+	    System.out.println("CartRepository.deleteCartOptionsByCartNos() IN " + cartNos);
+	    return sqlsession.delete("cart.deleteCartOptionsByCartNos", cartNos);
+	}
+
+	
 }

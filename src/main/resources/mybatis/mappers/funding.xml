@@ -60,4 +60,38 @@
 		  ORDER BY fp.funding_no DESC
 		  ]]>
 	</select>
+
+	<!-- ✅ 공개: 이벤트별 펀딩 카드 목록(로그인 불필요). 핵심: user_no 조건 제거 -->
+	<select id="selectGiftsPublicByEvent" parameterType="int"
+		resultType="map">
+  <![CDATA[
+    SELECT
+        fp.funding_no     AS fundingNo,
+        fp.event_no       AS eventNo,
+        fp.product_no     AS productNo,
+        p.brand           AS brand,
+        p.title           AS title,
+        p.price           AS price,
+        p.itemimg         AS image,
+        fp.amount         AS paidAmount,
+        fp.funding_status AS fundingStatus,
+        fp.funding_date   AS fundingDate,
+
+        /* ✅ 옵션/디테일옵션 */
+        COALESCE(po.option_name, '')         AS optionName,
+        COALESCE(od.detailoption_name, '') AS detailoptionName
+    FROM funding_product fp
+    JOIN product p              
+    ON p.product_no = fp.product_no
+  LEFT JOIN funding_option fo
+    ON fo.funding_no = fp.funding_no
+    LEFT JOIN option_detail od 
+    ON od.detailoption_no = fo.detailoption_no
+  LEFT JOIN product_option po
+	ON po.option_no = od.option_no
+    WHERE fp.event_no = #{value}
+    ORDER BY fp.funding_no DESC;
+  ]]>
+	</select>
+
 </mapper>

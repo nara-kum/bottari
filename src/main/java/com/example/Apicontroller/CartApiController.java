@@ -116,14 +116,14 @@ public class CartApiController {
 				// 업데이트된 총액 계산
 				List<CartListVO> updateCartList = cartservice.exeAllinOne(user_no);
 
-				if(updateCartList.isEmpty()) {
+				if (updateCartList.isEmpty()) {
 					result.put("success", true);
 					result.put("isEmpty", true);
 					result.put("redirectUrl", "/no_cart");
 				} else {
-					
+
 					CartListVO firstItem = updateCartList.get(0);
-					
+
 					result.put("success", true);
 					result.put("cList", updateCartList);
 					result.put("total_price", firstItem.getTotal_price());
@@ -143,4 +143,57 @@ public class CartApiController {
 		return result;
 
 	}
+
+	@ResponseBody
+	@RequestMapping(value = "/delete-bulk", method = { RequestMethod.POST })
+	public Map<String, Object> deleteCartBulk(@RequestParam("cart_no") List<Integer> cartNos, HttpSession session) {
+
+		System.out.println("CartApiController.deleteCartBulk()");
+		Map<String, Object> result = new HashMap<>();
+
+		try {
+			// 로그인 확인
+			UserVO authuser = (UserVO) session.getAttribute("authUser");
+			if (authuser == null) {
+				result.put("success", false);
+				result.put("message", "로그인이 필요합니다");
+				return result;
+			}
+
+			if (cartNos == null || cartNos.isEmpty()) {
+				result.put("success", false);
+				result.put("message", "삭제할 항목이 없습니다.");
+				return result;
+			}
+
+			int user_no = authuser.getUserNo();
+
+			int deleted = cartservice.exedeleteCartItems(cartNos); // ✅ 다건 삭제 서비스
+			if (deleted <= 0) {
+				result.put("success", false);
+				result.put("message", "삭제할 아이템을 찾을 수 없습니다.");
+				return result;
+			}
+
+			// 삭제 후 합계 갱신
+			List<CartListVO> updateCartList = cartservice.exeAllinOne(user_no);
+			if (updateCartList == null || updateCartList.isEmpty()) {
+				result.put("success", true);
+				result.put("isEmpty", true);
+				result.put("redirectUrl", "/no_cart");
+			} else {
+				CartListVO firstItem = updateCartList.get(0);
+				result.put("success", true);
+				result.put("cList", updateCartList);
+				result.put("total_price", firstItem.getTotal_price());
+				result.put("total_quantity", firstItem.getTotal_quantity());
+				result.put("shipping_cost", firstItem.getShipping_cost());
+			}
+		} catch (Exception e) {
+			result.put("success", false);
+			result.put("message", e.getMessage());
+		}
+		return result;
+	}
+
 }
