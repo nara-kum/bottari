@@ -78,4 +78,10 @@ public class InvitationFundingService {
 		Integer val = fundingQueryRepository.selectTotalPaidByFunding(fundingNo);
 		return val == null ? 0 : val;
 	}
+	
+	// 총합
+	public long getTotalPaidByFundingNo(long fundingNo) {
+		Long v = fundingQueryRepository.selectTotalPayByFundingNo(fundingNo);
+		return (v == null ? 0L : v);
+	}
 }

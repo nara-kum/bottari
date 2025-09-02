@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.example.service.FundingService;
 import com.example.service.InvitationService;
 import com.example.vo.InvitationVO;
 import com.example.vo.UserVO;
@@ -28,8 +27,6 @@ public class InvitationApiController {
 
 	@Autowired
 	private InvitationService invitationService;
-	@Autowired
-	private FundingService fundingService;
 
 	// 초대장 등록
 	@PostMapping("/api/invtreg")

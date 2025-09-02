@@ -5,27 +5,28 @@
 	<!-- 일반 구매일 때 -->
 	<select id="selectList" resultType="com.example.vo.CheckOutVO">
 		<![CDATA[
-			SELECT	c.cart_no,
-					c.user_no,
-			        c.product_no,
-			        c.quantity,
-			        co.detailoption_no,
-			        p.title,
-			        p.price,
-			        p.brand,
-			        p.itemimg,
-			        p.shipping_cost,
-			        po.option_no,
-			        po.option_name,
-                    od.detailoption_name,
-			        (p.price * c.quantity) AS total_price,
-			        SUM(c.quantity) OVER(PARTITION BY c.user_no) AS total_quantity,
-			        SUM(c.quantity * p.price) OVER(PARTITION BY c.user_no) AS total_amount
+			SELECT
+			    c.cart_no,
+			    c.user_no,
+			    c.product_no,
+			    c.quantity,
+			    co.detailoption_no,
+			    p.title,
+			    p.price,
+			    p.brand,
+			    p.itemimg,
+			    p.shipping_cost,
+			    po.option_no,
+			    po.option_name,
+			    od.detailoption_name,
+			    (p.price * c.quantity) AS total_price,
+			    SUM(c.quantity) OVER (PARTITION BY c.user_no)              AS total_quantity,
+			    SUM(c.quantity * p.price) OVER (PARTITION BY c.user_no)    AS total_amount
 			FROM cart c
-			LEFT JOIN cart_option co ON c.cart_no = co.cart_no
-			LEFT JOIN product p ON c.product_no = p.product_no
-			LEFT JOIN product_option po ON c.product_no = po.product_no
-            LEFT JOIN option_detail od ON co.detailoption_no = od.detailoption_no
+			LEFT JOIN cart_option     co ON co.cart_no         = c.cart_no
+			LEFT JOIN product         p  ON p.product_no       = c.product_no
+			LEFT JOIN option_detail   od ON od.detailoption_no = co.detailoption_no
+			LEFT JOIN product_option  po ON po.option_no       = od.option_no
 			WHERE c.cart_no IN
 		]]>
 		<foreach collection="list" item="cartNos" open="(" close=")" separator=",">

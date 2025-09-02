@@ -94,5 +94,12 @@ public class InvitationFundingApiController {
 	public JsonResult cardsByFunding(@RequestParam("fundingNo") int fundingNo) {
 		return JsonResult.success(invitationFundingService.getCardsByFundingPublic(fundingNo));
 	}
+	
+	// 총합
+	@GetMapping("/api/funding/total")
+	public JsonResult totalPaid(@RequestParam("fundingNo") long fundingNo) {
+		long total = invitationFundingService.getTotalPaidByFundingNo(fundingNo);
+		return JsonResult.success(Map.of("fundingNo", fundingNo, "totalPaid", total));
+	}
 
 }
