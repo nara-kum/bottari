@@ -52,7 +52,7 @@
 
 	<!-- 친구펀딩: 내가 남의 펀딩에 낸 내역(상태 무관) -->
 	<select id="selectFriendFundingCards" parameterType="int" resultType="map">
-		  <![CDATA[
+	  <![CDATA[
 		  SELECT
 		      fp.funding_no         AS fundingNo
 		    , fp.user_no            AS ownerUserNo
@@ -67,22 +67,32 @@
 		    , p.title               AS title
 		    , p.price               AS price
 		    , p.itemimg             AS image
+		
+		    -- 그래프: paid만 합산
 		    , COALESCE(pay.sum_amount, 0) AS paidAmount
+		
+		    -- ★ 버튼 비활성 판단용: 펀딩중단 or 내 결제 cancel
+		    , CASE
+		        WHEN fp.funding_status = 'stop' THEN 0
+		        WHEN EXISTS (
+		               SELECT 1 FROM payment py2
+		               WHERE py2.funding_no = fp.funding_no
+		                 AND py2.user_no    = #{value}
+		                 AND py2.payment_status = 'cancel'
+		             ) THEN 0
+		        ELSE 1
+		      END AS cancelButtonEnabled
+		
 		    , opt.option_names      AS optionName
 		    , opt.detail_names      AS detailoptionName
 		  FROM (
-		    /* ★ 내가 참여한 펀딩(상태 무관) */
 		    SELECT DISTINCT funding_no
 		    FROM payment
-		    WHERE user_no = #{value}
+		    WHERE user_no = #{value}          -- ★ 상태 무관
 		  ) my_any
 		  JOIN funding_product fp ON fp.funding_no = my_any.funding_no
 		  JOIN product p          ON p.product_no  = fp.product_no
-		
-		  LEFT JOIN calender c
-		    ON c.event_no = fp.event_no
-		   AND c.user_no  = fp.user_no
-		
+		  LEFT JOIN calender c    ON c.event_no = fp.event_no AND c.user_no = fp.user_no
 		  LEFT JOIN (
 		    SELECT
 		      fo.funding_no,
@@ -93,26 +103,22 @@
 		    LEFT JOIN product_option po ON po.option_no = od.option_no
 		    GROUP BY fo.funding_no
 		  ) opt ON opt.funding_no = fp.funding_no
-		
-		  /* 그래프: paid만 합 */
 		  LEFT JOIN (
 		    SELECT funding_no, SUM(payment_amount) AS sum_amount
 		    FROM payment
 		    WHERE payment_status = 'paid'
 		    GROUP BY funding_no
 		  ) pay ON pay.funding_no = fp.funding_no
-		
 		  ORDER BY fp.funding_no DESC
-		  ]]>
+	  ]]>
 	</select>
+
 
 	<!-- 펀딩 중단 시 해당 펀딩의 모든 결제 cancel -->
 	<update id="cancelAllPaymentsByFunding" parameterType="long">
 	  <![CDATA[
 	    UPDATE payment
-	       SET payment_status = 'cancel',
-	           cancel_reason  = 'OWNER_STOP',
-	           cancel_dt      = NOW()
+	       SET payment_status = 'cancel'
 	     WHERE funding_no = #{value}
 	       AND payment_status <> 'cancel'
 	  ]]>

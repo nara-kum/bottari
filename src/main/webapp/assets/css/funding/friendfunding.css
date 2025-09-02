@@ -116,8 +116,6 @@
   width: auto;
 }
 
-/* ✅ 크기/패딩/모서리 등은 wishlist.css의 .btn-funding1에 맡기고
-      여기서는 '레이아웃만' 제어 (폭 100% 금지) */
 .card-box .action-buttons .btn-funding1{
   width: auto !important;        /* 꽉 채우기 해제 */
   min-width: unset !important;

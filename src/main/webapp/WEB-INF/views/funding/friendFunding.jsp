@@ -67,79 +67,96 @@
     return {text:'펀딩진행중', cls:'funding-ing'};
   }
 
-  function isFundingDone(vo, percent){
-  const s = String(vo.fundingStatus || vo.status || '').toLowerCase();
-  const name = String(vo.statusName || '').trim();
-  return s === 'done' || s === 'stop' || percent >= 100 || name.includes('완료');
+  function renderCard(vo){
+  const fundingNo   = Number(vo.fundingNo)||0;
+
+  // 금액 규칙: 카드 가격/분모 = product.price, 진행바 분자 = paidAmount(결제합계)
+  const price       = Number(vo.price)||0;                      // 분모/카드가격
+  const paidAmount  = Number(vo.paidAmount || 0);               // 분자(누적 결제합)
+  const percent     = price > 0 ? Math.min(100, Math.round(paidAmount / price * 100)) : 0;
+
+  // 상태/비활성 판정
+  const statusRaw   = String(vo.fundingStatus || vo.status || '').toLowerCase();
+  const statusName  = String(vo.statusName || '').trim();
+  const disabledByServer = Number(vo.cancelButtonEnabled) === 0; // 서버 플래그(0이면 비활성)
+  const doneOrStopped =
+      statusRaw === 'done' ||
+      statusRaw === 'stop' ||
+      percent >= 100 ||
+      statusName.includes('완료');
+
+  const cancelDisabled = doneOrStopped || disabledByServer;
+
+  // 오버레이 문구(이유)
+  const disabledReason =
+      statusRaw === 'stop' ? '펀딩 중단'
+    : (statusRaw === 'done' || percent >= 100 || statusName.includes('완료')) ? '펀딩 완료'
+    : (disabledByServer ? '참여 취소' : '');
+
+  const cancelAttr = cancelDisabled ? ' disabled aria-disabled="true" tabindex="-1"' : '';
+  const cancelCls  = cancelDisabled ? ' is-disabled' : '';
+
+  // sub-title: eventName(있으면) → fundingDate(없으면)
+  const eventName   = (vo.eventName ?? vo.event_name ?? '').toString().trim();
+  const fundingDate = vo.fundingDate || '';
+  const subTitle    = eventName || fundingDate;
+
+  const brand       = vo.brand || '';
+  const title       = vo.title || '';
+  const optionName  = vo.optionName ?? vo.option_name ?? '';
+  const detailOpt   = vo.detailoptionName ?? vo.detail_option_name ?? '';
+  const imgUrl      = resolveImage(vo);
+  const st          = statusView(vo, percent);
+  const esc         = s => $('<div>').text(s||'').html();
+
+  const cardCls     = cancelDisabled ? ' is-card-disabled' : '';
+  const cardData    = cancelDisabled && disabledReason ? ' data-disabled-reason="'+esc(disabledReason)+'"' : '';
+
+  return [
+    '<div class="card-box', cardCls, '" data-funding-no="', fundingNo, '" data-price="', price, '"', cardData, '>',
+      '<div class="product-header">',
+        '<div class="left-side"><span class="sub-title">', esc(subTitle), '</span></div>',
+        '<div class="right-side"><span class="funding-badge ', st.cls, '">', st.text, '</span></div>',
+      '</div>',
+
+      '<div class="product-body">',
+        '<div class="mf-left"><div class="mf-row">',
+          '<div class="thumbbox">',
+            '<img class="product-image" src="', imgUrl, '" alt="" onerror="this.src=\'', CTX, '/assets/images/eki.jpg\'">',
+          '</div>',
+          '<div class="product-info">',
+            '<div class="buy">', esc(brand), '</div>',
+            '<div class="product-row">',
+              '<span class="name">', esc(title), '</span>',
+              (optionName ? '<span class="opt-sep"> / </span><span class="option-name">'+esc(optionName)+'</span>' : ''),
+              (detailOpt ? '<span class="opt-sep"> / </span><span class="option-name">'+esc(detailOpt)+'</span>' : ''),
+            '</div>',
+            '<div class="product-price">', fmtKRW(price), '</div>',
+          '</div>',
+        '</div></div>',
+
+        '<div class="mf-meter with-goal">',
+          '<div class="bar"><div class="fill" style="width:', percent, '%;"></div></div>',
+          '<div class="goal">',
+            '<span class="curr">', fmtKRW(paidAmount), '</span>',
+            '<span class="sep"> / </span>',
+            '<span class="total">', fmtKRW(price), '</span>',
+          '</div>',
+          '<div class="achv"><span class="pct">', percent, '% 달성</span></div>',
+        '</div>',
+
+        '<div class="funding-action-wrapper">',
+          '<div class="action-buttons">',
+            '<button class="btn-funding2 btn-cancel-friend', cancelCls, '" data-funding-no="', fundingNo, '"', cancelAttr, '>펀딩취소</button>',
+            '<button class="btn-funding2 btn-history" data-funding-no="', fundingNo, '">구매내역</button>',
+          '</div>',
+        '</div>',
+      '</div>',
+    '</div>'
+  ].join('');
 }
 
-  function renderCard(vo){
-    const fundingNo   = Number(vo.fundingNo)||0;
 
-    // 금액 규칙: 카드 가격/분모 = product.price, 진행바 분자 = paidAmount(결제합계)
-    const price       = Number(vo.price)||0;                      // 분모/카드가격
-    const paidAmount  = Number(vo.paidAmount || 0);               // 분자(누적 결제합)
-    const percent     = price > 0 ? Math.min(100, Math.round(paidAmount / price * 100)) : 0;
-
-    const done = isFundingDone(vo, percent);
-    const cancelAttr = done ? ' disabled aria-disabled="true" tabindex="-1"' : '';
-    const cancelCls  = done ? ' is-disabled' : '';
-    // sub-title: eventName(있으면) → fundingDate(없으면)
-    const eventName   = (vo.eventName ?? vo.event_name ?? '').toString().trim();
-    const fundingDate = vo.fundingDate || '';
-    const subTitle    = eventName || fundingDate;
-
-    const brand       = vo.brand || '';
-    const title       = vo.title || '';
-    const optionName  = vo.optionName ?? vo.option_name ?? '';
-    const detailOpt   = vo.detailoptionName ?? vo.detail_option_name ?? '';
-    const imgUrl      = resolveImage(vo);
-    const st          = statusView(vo, percent);
-    const esc         = s => $('<div>').text(s||'').html();
-
-    return [
-      '<div class="card-box" data-funding-no="', fundingNo, '" data-price="', price, '">',
-        '<div class="product-header">',
-          '<div class="left-side"><span class="sub-title">', esc(subTitle), '</span></div>',
-          '<div class="right-side"><span class="funding-badge ', st.cls, '">', st.text, '</span></div>',
-        '</div>',
-
-        '<div class="product-body">',
-          '<div class="mf-left"><div class="mf-row">',
-            '<div class="thumbbox">',
-              '<img class="product-image" src="', imgUrl, '" alt="" onerror="this.src=\'', CTX, '/assets/images/eki.jpg\'">',
-            '</div>',
-            '<div class="product-info">',
-              '<div class="buy">', esc(brand), '</div>',
-              '<div class="product-row">',
-                '<span class="name">', esc(title), '</span>',
-                (optionName ? '<span class="opt-sep"> / </span><span class="option-name">'+esc(optionName)+'</span>' : ''),
-                (detailOpt ? '<span class="opt-sep"> / </span><span class="option-name">'+esc(detailOpt)+'</span>' : ''),
-              '</div>',
-              '<div class="product-price">', fmtKRW(price), '</div>',
-            '</div>',
-          '</div></div>',
-
-          '<div class="mf-meter with-goal">',
-            '<div class="bar"><div class="fill" style="width:', percent, '%;"></div></div>',
-            '<div class="goal">',
-              '<span class="curr">', fmtKRW(paidAmount), '</span>',
-              '<span class="sep"> / </span>',
-              '<span class="total">', fmtKRW(price), '</span>',
-            '</div>',
-            '<div class="achv"><span class="pct">', percent, '% 달성</span></div>',
-          '</div>',
-
-          '<div class="funding-action-wrapper">',
-            '<div class="action-buttons">',
-              '<button class="btn-funding2 btn-cancel-friend', cancelCls, '" data-funding-no="', fundingNo, '"', cancelAttr, '>펀딩취소</button>',
-              '<button class="btn-funding2 btn-history" data-funding-no="', fundingNo, '">구매내역</button>',
-            '</div>',
-          '</div>',
-        '</div>',
-      '</div>'
-    ].join('');
-  }
 
   function drawList(json){
     const list = pluckList(json);
@@ -187,12 +204,17 @@ $(document).on('click', '.btn-cancel-friend', function(e){
     data: { fundingNo }
   })
   .done(function(res){
-    if (res && res.result === 'success'){
-      reloadList();
-    } else {
-      alert((res && res.message) || '취소에 실패했습니다.');
-    }
-  })
+  if (res && res.result === 'success'){
+    // 1) 취소 버튼 잠그기
+    $btn.prop('disabled', true)
+        .attr('aria-disabled', 'true')
+        .addClass('is-disabled');
+    // 2) 최신 데이터 반영 (서버에서 cancel 상태 플래그 내려줌)
+    reloadList();
+  } else {
+    alert((res && res.message) || '취소에 실패했습니다.');
+  }
+})
   .fail(function(xhr){
     if (xhr.status === 401){
       const returnUrl = location.pathname + location.search;
