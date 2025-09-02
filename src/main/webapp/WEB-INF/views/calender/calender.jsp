@@ -463,7 +463,7 @@
 			    
 			    eventInfoDiv.innerHTML = '<div class="no-event">' +
 			                           '<img class="middle-icon" src="../../../assets/icon/icon-calendar-exclamation.svg" />' +
-			                           '<div class="text-18">등록된 기념일이 없어요</div>' +
+			                           '<div class="text-18">등록된 기념일이 없습니다.</div>' +
 			                           '<button class="btn-basic btn-orange size-normal create-event-btn">기념일 등록하기</button>' +
 			                           '</div>';
 			    eventInfoDiv.style.display = 'block';
@@ -493,8 +493,8 @@
 		    if (!data.invitationList || data.invitationList.length === 0) {
 		        html += ''
 		          + '<div class="column-flex-box celebrate-card-area row-align no-event">'
-		          + '  <img class="middle-icon" src="../../../assets/icon/icon-cross.svg" />'
-		          + '  <div class="text-18">초대장이 없어요</div>'
+		         /*  + '  <img class="middle-icon" src="../../../assets/icon/icon-cross.svg" />' */
+		          + '  <div class="text-18">등록된 초대장이 없습니다.</div>'
 		          + '  <button class="btn-basic btn-orange size-normal">초대장 만들기</button>'
 		          + '</div>';
 		    } else {
@@ -513,8 +513,8 @@
 		    if (!data.fundingList || data.fundingList.length === 0) {
 		        html += ''
 		          + '<div class="column-flex-box celebrate-card-area row-align no-event">'
-		          + '  <img class="middle-icon" src="../../../assets/icon/icon-cross.svg" />'
-		          + '  <div class="text-18">펀딩 리스트가 비었어요</div>'
+		          /* + '  <img class="middle-icon" src="../../../assets/icon/icon-cross.svg" />' */
+		          + '  <div class="text-18">등록된 펀딩이 없습니다.</div>'
 		          + '  <button class="btn-basic btn-orange size-normal">펀딩 관리하기</button>'
 		          + '</div>';
 		    } else {

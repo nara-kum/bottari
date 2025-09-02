@@ -458,7 +458,7 @@
 				let htmlStr = '';
 				htmlStr += '<div class="no-event">';
 				htmlStr += '	<img class="middle-icon" src="../../../assets/icon/icon-calendar-exclamation.svg" />';
-				htmlStr += '	<div class="text-18">등록된 기념일이 없어요</div>';
+				htmlStr += '	<div class="text-18">등록된 기념일이 없습니다.</div>';
 				htmlStr += '	<button class="btn-basic btn-orange size-normal create-event-btn">기념일 등록하기</button>';
 				htmlStr += '</div>';
 				
@@ -1097,8 +1097,8 @@
 			    if (!data.invitationList || data.invitationList.length === 0) {
 			        html += ''
 			          + '<div class="column-flex-box celebrate-card-area row-align no-event">'
-			          + '  <img class="middle-icon" src="../../../assets/icon/icon-cross.svg" />'
-			          + '  <div class="text-18">초대장이 없어요</div>'
+			          /* + '  <img class="middle-icon" src="../../../assets/icon/icon-cross.svg" />' */
+			          + '  <div class="text-18">등록된 초대장이 없습니다.</div>'
 			          + '  <a href="/invitation/list"><button class="btn-basic btn-orange size-normal">초대장 만들기</button></a>'
 			          + '</div>';
 			    } else {
@@ -1117,8 +1117,8 @@
 			    if (!data.fundingList || data.fundingList.length === 0) {
 			        html += ''
 			          + '<div class="column-flex-box celebrate-card-area row-align no-event">'
-			          + '  <img class="middle-icon" src="../../../assets/icon/icon-cross.svg" />'
-			          + '  <div class="text-18">펀딩 리스트가 비었어요</div>'
+			          /* + '  <img class="middle-icon" src="../../../assets/icon/icon-cross.svg" />' */
+			          + '  <div class="text-18">등록된 펀딩이 없습니다.</div>'
 			          + '  <a href="/funding/wish"><button class="btn-basic btn-orange size-normal">펀딩 관리하기</button></a>'
 			          + '</div>';
 			    } else {
