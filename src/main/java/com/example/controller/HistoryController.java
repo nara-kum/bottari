@@ -119,11 +119,21 @@ public class HistoryController {
 		System.out.println("service에서 데이터 받아오기 성공");
 		System.out.println("percentList: " + percentList);
 		
+		
+		int paid_percent = historyDetailList.get(0).getQuantity()*percentList.get(0).getPercent();
+		int total_percent = percentList.get(0).getTotal_percent();
+		int total_price = historyDetailList.get(0).getPayment_amount();
+		
+		System.out.println("total_price: " + total_price);
+		
 		System.out.println(historyDetailList);
 		System.out.println(percentList);
 		
 		model.addAttribute("hList", historyDetailList);
 		model.addAttribute("pList", percentList);
+		model.addAttribute("total_price", total_price);
+		model.addAttribute("total_percent", total_percent);
+		model.addAttribute("paid_percent", paid_percent);
 		
 		return "history/history_detail_funding";
 	}

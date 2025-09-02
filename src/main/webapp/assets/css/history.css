@@ -188,3 +188,23 @@ div.list-basic.list-1200.between-flex-box.detail {
     border-bottom: 1px solid #eee;
 }
 
+/* 펀딩 진행사항 바 */
+.bar-box {
+	height: 12px;
+	width: 275px;
+}
+
+.funding-bar {
+	height: 10px;
+	width: 200px;
+	background-color: #ddd;
+	border-radius: 10px;
+}
+
+.activated-funding-bar {
+	height: 10px;
+	background-color: #ef5327;
+	border-radius: 10px;
+}
+
+
