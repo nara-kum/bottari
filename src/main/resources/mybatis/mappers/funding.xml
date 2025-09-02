@@ -3,7 +3,8 @@
 <mapper namespace="funding">
 
 	<!-- 마이펀딩: 내가 만든 펀딩들 -->
-	<select id="selectMyFundingCards" parameterType="int" resultType="map">
+	<select id="selectMyFundingCards" parameterType="int"
+		resultType="map">
 	  <![CDATA[
 	    SELECT
 	        fp.funding_no         AS fundingNo
@@ -48,65 +49,76 @@
 	    ORDER BY fp.funding_no DESC
 	  ]]>
 	</select>
-	
-	<!-- 친구펀딩: 내가 남의 펀딩에 낸 내역 기준 -->
+
+	<!-- 친구펀딩: 내가 남의 펀딩에 낸 내역(상태 무관) -->
 	<select id="selectFriendFundingCards" parameterType="int" resultType="map">
-	  <![CDATA[
-	  SELECT
-	      fp.funding_no         AS fundingNo
-	    , fp.user_no            AS ownerUserNo
-	    , fp.event_no           AS eventNo
-	    , c.event_name          AS eventName      
-	    , fp.amount             AS targetAmount
-	    , fp.percent            AS percent
-	    , fp.funding_status     AS fundingStatus
-	    , fp.funding_date       AS fundingDate
-	    , p.product_no          AS productNo
-	    , p.brand               AS brand
-	    , p.title               AS title
-	    , p.price               AS price
-	    , p.itemimg             AS image
-	    , COALESCE(pay.sum_amount, 0) AS paidAmount 
-	    , COALESCE(myp.my_amount, 0)  AS myPaidAmount 
-	    , opt.option_names      AS optionName
-	    , opt.detail_names      AS detailoptionName
-	  FROM (
-	    SELECT funding_no, SUM(payment_amount) AS my_amount
-	    FROM payment
-	    WHERE user_no = #{value}
-	    and payment_status = 'paid'
-	    GROUP BY funding_no
-	  ) myp
-	  JOIN funding_product fp ON fp.funding_no = myp.funding_no
-	  JOIN product p        ON p.product_no = fp.product_no
-	
-	  LEFT JOIN calender c
-	    ON c.event_no = fp.event_no
-	   AND c.user_no  = fp.user_no
-	
-	  LEFT JOIN (
-	    SELECT
-	      fo.funding_no,
-	      GROUP_CONCAT(DISTINCT po.option_name ORDER BY po.option_no SEPARATOR ' / ') AS option_names,
-	      GROUP_CONCAT(DISTINCT od.detailoption_name ORDER BY od.detailoption_no SEPARATOR ' / ') AS detail_names
-	    FROM funding_option fo
-	    LEFT JOIN option_detail od ON od.detailoption_no = fo.detailoption_no
-	    LEFT JOIN product_option po ON po.option_no = od.option_no
-	    GROUP BY fo.funding_no
-	  ) opt ON opt.funding_no = fp.funding_no
-	
-	  LEFT JOIN (
-	    SELECT funding_no, SUM(payment_amount) AS sum_amount
-	    FROM payment
-	    WHERE payment_status = 'paid'
-	    GROUP BY funding_no
-	  ) pay ON pay.funding_no = fp.funding_no
-	
-	  ORDER BY fp.funding_no DESC
-	  ]]>
+		  <![CDATA[
+		  SELECT
+		      fp.funding_no         AS fundingNo
+		    , fp.user_no            AS ownerUserNo
+		    , fp.event_no           AS eventNo
+		    , c.event_name          AS eventName
+		    , fp.amount             AS targetAmount
+		    , fp.percent            AS percent
+		    , fp.funding_status     AS fundingStatus
+		    , fp.funding_date       AS fundingDate
+		    , p.product_no          AS productNo
+		    , p.brand               AS brand
+		    , p.title               AS title
+		    , p.price               AS price
+		    , p.itemimg             AS image
+		    , COALESCE(pay.sum_amount, 0) AS paidAmount
+		    , opt.option_names      AS optionName
+		    , opt.detail_names      AS detailoptionName
+		  FROM (
+		    /* ★ 내가 참여한 펀딩(상태 무관) */
+		    SELECT DISTINCT funding_no
+		    FROM payment
+		    WHERE user_no = #{value}
+		  ) my_any
+		  JOIN funding_product fp ON fp.funding_no = my_any.funding_no
+		  JOIN product p          ON p.product_no  = fp.product_no
+		
+		  LEFT JOIN calender c
+		    ON c.event_no = fp.event_no
+		   AND c.user_no  = fp.user_no
+		
+		  LEFT JOIN (
+		    SELECT
+		      fo.funding_no,
+		      GROUP_CONCAT(DISTINCT po.option_name ORDER BY po.option_no SEPARATOR ' / ') AS option_names,
+		      GROUP_CONCAT(DISTINCT od.detailoption_name ORDER BY od.detailoption_no SEPARATOR ' / ') AS detail_names
+		    FROM funding_option fo
+		    LEFT JOIN option_detail od ON od.detailoption_no = fo.detailoption_no
+		    LEFT JOIN product_option po ON po.option_no = od.option_no
+		    GROUP BY fo.funding_no
+		  ) opt ON opt.funding_no = fp.funding_no
+		
+		  /* 그래프: paid만 합 */
+		  LEFT JOIN (
+		    SELECT funding_no, SUM(payment_amount) AS sum_amount
+		    FROM payment
+		    WHERE payment_status = 'paid'
+		    GROUP BY funding_no
+		  ) pay ON pay.funding_no = fp.funding_no
+		
+		  ORDER BY fp.funding_no DESC
+		  ]]>
 	</select>
 
-	
+	<!-- 펀딩 중단 시 해당 펀딩의 모든 결제 cancel -->
+	<update id="cancelAllPaymentsByFunding" parameterType="long">
+	  <![CDATA[
+	    UPDATE payment
+	       SET payment_status = 'cancel',
+	           cancel_reason  = 'OWNER_STOP',
+	           cancel_dt      = NOW()
+	     WHERE funding_no = #{value}
+	       AND payment_status <> 'cancel'
+	  ]]>
+	</update>
+
+
 	<select id="selectTotalPayByFundingNo" parameterType="long"
 		resultType="long">
 	  <![CDATA[
@@ -117,7 +129,8 @@
 	  ]]>
 	</select>
 
-	<select id="selectEventNoByInvitationNo" parameterType="int" resultType="int">
+	<select id="selectEventNoByInvitationNo" parameterType="int"
+		resultType="int">
 	  <![CDATA[
 		SELECT event_no
 		FROM invitation
@@ -126,7 +139,8 @@
 	</select>
 
 	<!-- 이벤트별 펀딩 카드 (공개) -->
-	<select id="selectGiftsPublicByEvent" parameterType="int" resultType="map">
+	<select id="selectGiftsPublicByEvent" parameterType="int"
+		resultType="map">
 	  <![CDATA[
 		SELECT
 		fp.funding_no AS fundingNo
@@ -170,7 +184,8 @@
 	</select>
 
 	<!-- 특정 펀딩 한 건 (앵커) -->
-	<select id="selectGiftsPublicByFunding" parameterType="int" resultType="map">
+	<select id="selectGiftsPublicByFunding" parameterType="int"
+		resultType="map">
 	  <![CDATA[
 		SELECT
 		fp.funding_no AS fundingNo
@@ -213,7 +228,8 @@
 	</select>
 
 	<!-- 결제 합계 -->
-	<select id="selectTotalPaidByFunding" parameterType="int" resultType="int">
+	<select id="selectTotalPaidByFunding" parameterType="int"
+		resultType="int">
 	  <![CDATA[
 		SELECT COALESCE(SUM(payment_amount),0) AS totalPaid
 		FROM payment
@@ -230,6 +246,27 @@
 	    WHERE user_no   = #{userNo}
 	      AND funding_no = #{fundingNo}
 	  ]]>
-	</delete>
+	</delete><!-- 펀딩 중단: 소유자만 -->
+
+
+	<update id="updateFundingStatusStop" parameterType="map">
+	  <![CDATA[
+	    UPDATE funding_product
+	       SET funding_status = 'stop'
+	     WHERE funding_no = #{fundingNo}
+	       AND user_no    = #{userNo}
+	  ]]>
+	</update>
+	
+	<!-- 펀딩 완료: 소유자만 (필요 시 percent 100 처리 등의 로직은 여기에) -->
+	<update id="updateFundingStatusDone" parameterType="map">
+	  <![CDATA[
+	    UPDATE funding_product
+	       SET funding_status = 'done'
+	     WHERE funding_no = #{fundingNo}
+	       AND user_no    = #{userNo}
+	  ]]>
+	</update>
+
 
 </mapper>

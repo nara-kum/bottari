@@ -85,6 +85,7 @@
 
     const imgUrl = resolveImage(vo);
     const st = statusView(vo, percent);
+    const disabled = (String(vo.fundingStatus||'').toLowerCase() === 'stop');
 
     return [
       '<div class="card-box" data-funding-no="', fundingNo, '" data-price="', price, '">',
@@ -120,8 +121,10 @@
 
           '<div class="funding-action-wrapper">',
             '<div class="action-buttons">',
-              '<button class="btn-funding2 btn-cancel"  data-funding-no="', fundingNo, '">펀딩중단</button>',
-              '<button class="btn-funding2 btn-complete" data-funding-no="', fundingNo, '">펀딩완료</button>',
+              '<button class="btn-funding2 btn-cancel"  data-funding-no="', fundingNo, '"',
+                  (disabled ? ' disabled aria-disabled="true"' : ''), '>펀딩중단</button>',
+              '<button class="btn-funding2 btn-complete" data-funding-no="', fundingNo, '"',
+                  (disabled ? ' disabled aria-disabled="true"' : ''), '>펀딩완료</button>',
             '</div>',
           '</div>',
         '</div>',
@@ -179,14 +182,23 @@
 
     $.ajax({ url: CTX + "/api/funding/stop", type: "POST", dataType: "json", data: { fundingNo: no } })
       .done(function(res){
-        if (res && res.result === 'success'){
-          const $card = $('.card-box[data-funding-no="'+no+'"]');
-          $card.find('.funding-badge').removeClass('funding-ing funding-done').addClass('funding-stop').text('펀딩중단');
-          alert('펀딩이 중단되었습니다.');
-        } else {
-          alert((res && res.message) || '중단에 실패했습니다.');
-        }
-      })
+      if (res && res.result === 'success'){
+        const $card = $('.card-box[data-funding-no="'+no+'"]');
+        $card.find('.funding-badge')
+             .removeClass('funding-ing funding-done')
+             .addClass('funding-stop').text('펀딩중단');
+
+        // ★ 모든 버튼 비활성
+        $card.find('.action-buttons .btn-funding2')
+             .prop('disabled', true)
+             .attr('aria-disabled','true')
+             .addClass('is-disabled');
+
+        alert('펀딩이 중단되었습니다.');
+      } else {
+        alert((res && res.message) || '중단에 실패했습니다.');
+      }
+    })
       .fail(function(xhr){
         if (xhr.status === 401){
           const returnUrl = location.pathname + location.search;

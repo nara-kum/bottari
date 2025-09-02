@@ -31,7 +31,12 @@ public class InvitationFundingService {
 
     @Transactional
     public int stopFunding(int userNo, int fundingNo){
-        return fundingQueryRepository.updateFundingStatusStop(userNo, fundingNo);
+        int n = fundingQueryRepository.updateFundingStatusStop(userNo, fundingNo);
+        if (n > 0) {
+            // 소유자 중단 성공 시, 참여자 결제 전부 cancel
+            fundingQueryRepository.cancelAllPaymentsByFunding(fundingNo);
+        }
+        return n;
     }
 
     @Transactional

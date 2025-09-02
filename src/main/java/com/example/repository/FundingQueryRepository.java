@@ -59,4 +59,9 @@ public class FundingQueryRepository {
 	public Long selectTotalPayByFundingNo(long fundingNo) {
 		return sqlSession.selectOne("funding.selectTotalPayByFundingNo", fundingNo);
 	}
+	
+	// 취소
+	public int cancelAllPaymentsByFunding(long fundingNo){
+	    return sqlSession.update(NS + "cancelAllPaymentsByFunding", fundingNo);
+	}
 }

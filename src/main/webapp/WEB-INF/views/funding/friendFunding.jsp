@@ -70,7 +70,7 @@
   function isFundingDone(vo, percent){
   const s = String(vo.fundingStatus || vo.status || '').toLowerCase();
   const name = String(vo.statusName || '').trim();
-  return s === 'done' || percent >= 100 || name.includes('완료');
+  return s === 'done' || s === 'stop' || percent >= 100 || name.includes('완료');
 }
 
   function renderCard(vo){

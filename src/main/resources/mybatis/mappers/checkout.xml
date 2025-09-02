@@ -137,22 +137,25 @@
 	
 	<select id="getPercent" resultType="com.example.vo.HistoryFundingDetailVO">
 		<![CDATA[
-			select	fp.funding_no,
-					fp.percent,
-			        pg.quantity,
-			        SUM(fp.percent * pg.quantity) OVER(partition by fp.funding_no) AS total_percent
-			from funding_product fp
-			left join payment p on fp.funding_no = p.funding_no
-			left join payment_goods pg on p.payment_no = pg.payment_no
-			where fp.funding_no = #{funding_no}
-			and p.payment_status = "paid"
+			SELECT
+			    fp.funding_no,
+			    fp.percent,
+			    pg.quantity,
+			    SUM(fp.percent * pg.quantity) OVER (PARTITION BY fp.funding_no) AS total_percent
+			FROM funding_product fp
+			LEFT JOIN payment p
+			  ON p.funding_no = fp.funding_no
+			 AND p.payment_status = 'paid'
+			LEFT JOIN payment_goods pg
+			  ON pg.payment_no = p.payment_no
+			WHERE fp.funding_no = #{funding_no};
 		]]>
 	</select>
 	
 	<update id="changeFundingStatus">
 		<![CDATA[
 			UPDATE funding_product
-			SET funding_status = "done"
+			SET funding_status = 'done'
 			WHERE funding_no = #{funding_no}
 		]]>
 	</update>
