@@ -217,19 +217,19 @@
 		
 								<!-- 위시리스트 폼 추가 -->
 								<form action="${pageContext.request.contextPath}/wishlist/wishlistadd" method="get" id="wishlistForm" style="display: inline;">
-									<input type="hidden" name="productNo"
-										value="${productViewVO.product_no}"> <input
-										type="hidden" name="quantity" id="wishlistQuantity" value="1">
-									<input type="hidden" name="selectedOptions"
-										id="wishlistSelectedOptions" value="">
+									<input type="hidden" name="productNo" value="${productViewVO.product_no}"> 
+									<input type="hidden" name="quantity" id="wishlistQuantity" value="1">
+									<input type="hidden" name="selectedOptions" id="wishlistSelectedOptions" value="">
 		
 									<button type="button" class="wishlist-btn"
 										onclick="submitWishlist()">찜 등록하기</button>
 								</form>
-		
-								<form
-									action="${pageContext.request.contextPath}/payment/checkout">
-									<button class="funding-btn">구매하기</button>
+								
+								
+								<!-- 구매하기 폼 추가 -->
+								<form action="${pageContext.request.contextPath}/payment/checkout?cartNo=${cartVO.cart_no}" method="get">
+								<input type="hidden" name="cartNo" value="${cartVO.cart_no}">
+									<button class="funding-btn" type="submit">구매하기</button>
 								</form>
 							</div>
 							 
@@ -571,42 +571,6 @@
 	    });
 	});
 
-	// 위시리스트 함수도 동일하게 수정
-	function submitWishlist() {
-	    console.log('위시리스트 함수 시작');
-	    
-	    // 옵션 검증
-	    var hasRequiredOptions = true;
-	    var selectedOptions = [];
-	    
-	    $('.option-select').each(function() {
-	        var selectedValue = $(this).val();
-	        console.log('옵션 값:', selectedValue);
-	        if (selectedValue && selectedValue !== '') {
-	            selectedOptions.push(selectedValue);
-	        } else if ($('.option-select').length > 0) {
-	            hasRequiredOptions = false;
-	        }
-	    });
-	    
-	    // 옵션이 있는 상품인데 선택하지 않은 경우
-	    if ($('.option-select').length > 0 && !hasRequiredOptions) {
-	        showOptionAlert();
-	        return false;
-	    }
-	    
-	    // 수량 설정
-	    var actualQuantity = document.getElementById('quantity').value;
-	    document.getElementById('wishlistQuantity').value = actualQuantity;
-	    console.log('설정된 수량:', actualQuantity);
-	    
-	    console.log('선택된 옵션들:', selectedOptions);
-	    document.getElementById('wishlistSelectedOptions').value = JSON.stringify(selectedOptions);
-	    console.log('설정된 JSON:', JSON.stringify(selectedOptions));
-	    
-	    // 폼 제출
-	    document.getElementById('wishlistForm').submit();
-	}
 	
 	
 	// 위시리스트 확인 알림창 표시 함수
@@ -700,15 +664,83 @@
 	    document.getElementById('wishlistSelectedOptions').value = JSON.stringify(selectedOptions);
 	    console.log('설정된 JSON:', JSON.stringify(selectedOptions));
 	    
-	    // 위시리스트 확인 알림창 표시
-	    showWishlistConfirm();
-	    
-	    // 실제 폼 제출을 위한 함수 (알림창에서 "이동하기" 클릭 시 호출됨)
-	    window.actualSubmitWishlist = function() {
-	        document.getElementById('wishlistForm').submit();
+	    // AJAX로 위시리스트에 즉시 등록
+	    var formData = {
+	        productNo: $('input[name="productNo"]').val(),
+	        quantity: actualQuantity,
+	        selectedOptions: JSON.stringify(selectedOptions)
 	    };
+	    
+	    $.ajax({
+	        url: "${pageContext.request.contextPath}/wishlist/wishlistadd",
+	        type: "GET",
+	        data: formData,
+	        success: function(response) {
+	            console.log('위시리스트 등록 성공');
+	            // 등록 성공 후 확인 알림창 표시
+	            showWishlistConfirm();
+	        },
+	        error: function(xhr, status, error) {
+	            console.error('위시리스트 등록 실패:', error);
+	            alert('위시리스트 등록에 실패했습니다. 다시 시도해주세요.');
+	        }
+	    });
 	}
-	
+
+	// 위시리스트로 이동 함수 (확인 버튼 클릭 시)
+	function goToWishlist() {
+	    closeWishlistConfirm();
+	    // 위시리스트 페이지로 이동 (이미 등록은 완료된 상태)
+	    window.location.href = "${pageContext.request.contextPath}/funding/wish";
+	}
+
+	// 수정된 showWishlistConfirm 함수 (등록 완료 메시지)
+	function showWishlistConfirm() {
+	    // 기존 알림창이 있다면 제거
+	    const existingAlert = document.getElementById('wishlistConfirmAlert');
+	    if (existingAlert) {
+	        existingAlert.remove();
+	    }
+
+	    // 알림창 HTML 생성 
+	    const alertHtml = `
+	        <div id="wishlistConfirmAlert" class="wishlist-confirm-overlay">
+	            <div class="wishlist-confirm-box">
+	                <div class="confirm-icon">🧡</div>
+	                <div class="confirm-title">위시리스트 등록 완료</div>
+	                <div class="confirm-message">위시리스트에 성공적으로 등록되었습니다.<br>위시리스트로 이동하시겠습니까?</div>
+	                <div class="confirm-buttons">
+	                    <button class="confirm-btn" onclick="goToWishlist()">이동하기</button>
+	                    <button class="cancel-btn" onclick="closeWishlistConfirm()">계속 쇼핑</button>
+	                </div>
+	            </div>
+	        </div>
+	    `;
+
+	    // body에 알림창 추가
+	    document.body.insertAdjacentHTML('beforeend', alertHtml);
+
+	    // 0.1초 후에 표시 (애니메이션 효과)
+	    setTimeout(() => {
+	        const alert = document.getElementById('wishlistConfirmAlert');
+	        if (alert) {
+	            alert.classList.add('show');
+	        }
+	    }, 100);
+	}
+
+	// 취소 버튼 클릭 시 - 알림창만 닫기 (이미 위시리스트에는 등록된 상태)
+	function closeWishlistConfirm() {
+	    const alert = document.getElementById('wishlistConfirmAlert');
+	    if (alert) {
+	        alert.classList.remove('show');
+	        setTimeout(() => {
+	            alert.remove();
+	        }, 300);
+	    }
+	    // 추가: 등록 완료 간단 알림 (선택사항)
+	    // alert('위시리스트에 등록되었습니다.');
+	}
 	
 	
 
