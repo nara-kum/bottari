@@ -58,18 +58,21 @@
 								                            <div class="column-flex-box">
 								                                <div class="text-14 detail">${product.brand}</div>
 								                                <div class="text-14 detail">${product.title}</div>
-								                                <div class="text-14 detail"><fmt:formatNumber value="${product.price}" type="currency" currencySymbol="" />원 | 비율: ${product.quantity * funding.percent}%</div>
+								                                <div class="text-14 detail"><span class="inv-badge" aria-label="펀딩 있음">🎁 펀딩</span></div>
 								                                <div class="text-16 bold detail"><fmt:formatNumber value="${product.payment_amount}" type="currency" currencySymbol="" />원</div>
 								                            </div>
 								                        </div>
 								                        <div class="column-flex-box">
 								                            <div class="show-detail text-align-right">주문번호: ${product.order_no}</div>
 								                            <div class="show-detail text-align-right">
-																<c:if test="${funding.funding_status == 'O'}">
+																<c:if test="${funding.funding_status == 'ing'}">
 																	펀딩 진행중
 																</c:if>
-																<c:if test="${funding.funding_status != 'O'}">
+																<c:if test="${funding.funding_status == 'done'}">
 																	펀딩 완료됨
+																</c:if>
+																<c:if test="${funding.funding_status != 'ing' && funding.funding_status != 'done'}">
+																	펀딩 취소됨
 																</c:if>
 															</div>
 								                            <div class="show-detail text-align-right detail"><a href="/history/detail?order_no=${product.order_no}">상세보기></a></div>

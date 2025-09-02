@@ -11,6 +11,7 @@ import com.example.vo.CheckOutVO;
 import com.example.vo.CheckoutFundingVO;
 import com.example.vo.DetailOptionVO;
 import com.example.vo.FundingOptionViewVO;
+import com.example.vo.HistoryFundingDetailVO;
 import com.example.vo.PaymentVO;
 
 @Repository
@@ -124,6 +125,26 @@ public class PaymentRepository {
 		System.out.println("PaymentRepository.deleteCartDetail()");
 		
 		int count = sqlsession.delete("checkout.deleteCartDetail", cartNos);
+		
+		return count;
+	}
+	
+	// 펀딩 퍼센테이지 확인하는 함수
+	public List<HistoryFundingDetailVO> getPercent(int funding_no) {
+		System.out.println("PaymentRepository.getPercent()");
+		
+		List<HistoryFundingDetailVO> checkPercentList = sqlsession.selectList("checkout.getPercent", funding_no);
+		
+		return checkPercentList;
+	}
+	
+	// 펀딩 상태 변경하는 함수
+	public int changeFundingStatus(int funding_no) {
+		System.out.println("PaymentRepository.changeFundingStatus()");
+		
+		int count = sqlsession.update("checkout.changeFundingStatus", funding_no);
+		System.out.println("PaymentRepository.changeFundingStatus()");
+		System.out.println("mybatis 업데이트 완료");
 		
 		return count;
 	}

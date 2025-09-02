@@ -78,6 +78,7 @@ public class PaymentController {
 		System.out.println("PaymentController.checkoutFundingList()");
 		
 		if(funding_no != 0 && count >= 1) {
+			
 			List<CheckoutFundingVO> checkoutFundingList = paymentservice.execheckoutFundingList(funding_no);
 			int percent = checkoutFundingList.get(0).getPercent();
 			int total_percent = percent*count;
@@ -170,6 +171,11 @@ public class PaymentController {
 	@RequestMapping(value = "/shop/success", method = {RequestMethod.GET,RequestMethod.POST})
 	public String success() {
 		return "shop/success";
+	}
+	
+	@RequestMapping(value = "/shop/error", method = {RequestMethod.GET,RequestMethod.POST})
+	public String error() {
+		return "shop/error";
 	}
 	
 }

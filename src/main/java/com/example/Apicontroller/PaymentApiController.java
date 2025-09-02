@@ -32,8 +32,19 @@ public class PaymentApiController {
 	public Map<String, Object> proccessFundingPayment(@RequestBody PaymentVO request, HttpSession session) {
 		System.out.println("PaymentController.proccessFundingPayment()");
 		
+		int funding_no = request.getFunding_no();
+		
+		String outcome = paymentservice.exegetPercent(funding_no);
+		
+		
 		UserVO authuser = (UserVO) session.getAttribute("authUser");
 		Map<String, Object> response = new HashMap<>();
+		
+		if(outcome.equals("error")) {
+			response.put("success", false);
+			
+			return response;
+		}
 		
 		int user_no = authuser.getUserNo();
 		request.setUser_no(user_no);
@@ -43,6 +54,8 @@ public class PaymentApiController {
 		try {
 	        // 결제 처리 로직
 			PaymentVO result = paymentservice.exeprocessFundingPayment(request);
+			
+			paymentservice.exeChangeFundingStatus(funding_no);
 	        
 	        response.put("success", true);
 	        response.put("message", "결제 완료");

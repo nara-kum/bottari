@@ -88,6 +88,7 @@
 			left join payment p on fp.funding_no = p.funding_no
 			left join payment_goods pg on p.payment_no = pg.payment_no
 			where fp.funding_no = #{funding_no}
+			and p.payment_status = "paid"
 		]]>
 	</select>
 
