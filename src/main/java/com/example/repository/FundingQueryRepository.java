@@ -54,4 +54,9 @@ public class FundingQueryRepository {
     public Integer selectTotalPaidByFunding(int fundingNo){
         return sqlSession.selectOne(NS + "selectTotalPaidByFunding", fundingNo);
     }
+    
+	//총합
+	public Long selectTotalPayByFundingNo(long fundingNo) {
+		return sqlSession.selectOne("funding.selectTotalPayByFundingNo", fundingNo);
+	}
 }
