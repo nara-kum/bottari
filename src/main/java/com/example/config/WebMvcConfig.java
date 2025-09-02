@@ -30,7 +30,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
                         "/manifest.json", "/service-worker.js",
                         "/robots.txt", "/sitemap.xml",
 
-                        // ✅ 공유 초대장 "뷰"만 공개
+                        // 공유 초대장 "뷰"만 공개
                         "/invitation/invitation", "/invitation/invitation/**",
 
                         // 라우팅·공유·상품 페이지(뷰)

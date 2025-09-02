@@ -30,10 +30,11 @@ public class LoginRequiredInterceptor implements HandlerInterceptor {
 		System.out.println("[INTC] uri=" + uri + " path=" + path + " auth=" + (auth != null) + " jsid="
 				+ (session != null ? session.getId() : "null") + " qs=" + qs);
 
-		/* ✅ 장바구니 전용 가드: 공개우회보다 먼저 처리 (비로그인 → 로그인폼로) */
+		/* 장바구니 전용 가드: 공개우회보다 먼저 처리 (비로그인 → 로그인폼로) */
 		if ("/shop/cart".equals(path)) {
 			if (auth == null) {
-				String loginUrl = ctx + "/user/loginForm?reason=auth&returnUrl=" + URLEncoder.encode(full, StandardCharsets.UTF_8);
+				String loginUrl = ctx + "/user/loginForm?reason=auth&returnUrl="
+						+ URLEncoder.encode(full, StandardCharsets.UTF_8);
 				System.out.println("[INTC] cart not logged-in → REDIRECT " + loginUrl);
 				res.sendRedirect(loginUrl);
 				return false;
@@ -69,40 +70,38 @@ public class LoginRequiredInterceptor implements HandlerInterceptor {
 		if (auth != null)
 			return true;
 
-		// === 미로그인 허용 API ===// src/main/java/com/example/config/LoginRequiredInterceptor.java
+		// === 미로그인 허용 API ===//
+		// src/main/java/com/example/config/LoginRequiredInterceptor.java
 
-if ("GET".equalsIgnoreCase(req.getMethod())) {
-    // ✅ 공유/보기 데이터: 항상 공개
-    if ("/api/invtview".equals(path)) {
-        System.out.println("[INTC] public GET /api/invtview → PASS");
-        return true;
-    }
+		if ("GET".equalsIgnoreCase(req.getMethod())) {
+			// 공유/보기 데이터: 항상 공개
+			if ("/api/invtview".equals(path)) {
+				System.out.println("[INTC] public GET /api/invtview → PASS");
+				return true;
+			}
 
-    // ✅ 초대장 펀딩 카드(그래프) 공개 허용 (신규 엔드포인트들)
-    if (path.equals("/api/inv/funding/cards-by-inv")
-     || path.equals("/api/inv/funding/cards-by-event")
-     || path.equals("/api/inv/funding/cards-by-anchor")) {
-        System.out.println("[INTC] public GET " + path + " → PASS");
-        return true;
-    }
+			// 초대장 펀딩 카드(그래프) 공개 허용 (신규 엔드포인트들)
+			if (path.equals("/api/inv/funding/cards-by-inv") || path.equals("/api/inv/funding/cards-by-event")
+					|| path.equals("/api/inv/funding/cards-by-anchor")) {
+				System.out.println("[INTC] public GET " + path + " → PASS");
+				return true;
+			}
 
-    // (선택) 진행바 보조 합계 API도 공개 허용
-    if ("/api/funding/total".equals(path)) {
-        System.out.println("[INTC] public GET /api/funding/total → PASS");
-        return true;
-    }
+			// (선택) 진행바 보조 합계 API도 공개 허용
+			if ("/api/funding/total".equals(path)) {
+				System.out.println("[INTC] public GET /api/funding/total → PASS");
+				return true;
+			}
 
-    // 기존 특례 유지
-    if ("/api/myfunding".equals(path)) {
-        String ev = req.getParameter("eventNo");
-        if (ev != null && !ev.isBlank()) {
-            System.out.println("[INTC] public GET /api/myfunding?eventNo=" + ev + " → PASS");
-            return true;
-        }
-    }
-}
-
-		
+			// 기존 특례 유지
+			if ("/api/myfunding".equals(path)) {
+				String ev = req.getParameter("eventNo");
+				if (ev != null && !ev.isBlank()) {
+					System.out.println("[INTC] public GET /api/myfunding?eventNo=" + ev + " → PASS");
+					return true;
+				}
+			}
+		}
 
 		// 헤더가 호출하는 내 초대장 목록은, 공유 뷰에서만 조용히 200 빈 목록
 		if ("/api/invtlist".equals(path)) {

@@ -114,7 +114,7 @@ public class UserController {
         }
 
         // 기본 목적지 (컨텍스트 포함)
-        return "redirect:" + ctx + "/funding/my";
+        return "redirect:" + ctx + "/shop/bottarimall";
     }
 
     /* =========================== 로그아웃 =========================== */
@@ -148,6 +148,6 @@ public class UserController {
         userVO.setUserNo(no);
         userService.exeEdit(userVO);
         authUser.setName(userVO.getName());
-        return "redirect:/user/bottarimall";
+        return "redirect:/shop/bottarimall";
     }
 }

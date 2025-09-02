@@ -15,11 +15,6 @@ import jakarta.servlet.http.HttpSession;
 @Controller
 public class RouteController {
 
-    /**
-     * 초대장 카드 클릭 시 호출:
-     * - 로그인 O → 상품 상세로
-     * - 로그인 X → 로그인 폼(returnUrl=초대장 화면)으로
-     */
     @GetMapping("/r/go-detail")
     public String goDetail(@RequestParam("productNo") int productNo,
                            @RequestParam("fundingNo") int fundingNo,
