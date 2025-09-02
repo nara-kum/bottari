@@ -41,7 +41,7 @@
 	    LEFT JOIN (
 	      SELECT funding_no, SUM(payment_amount) AS sum_amount
 	      FROM payment
-		  WHERE payment_status = 'paid'
+	      WHERE payment_status = 'paid'
 	      GROUP BY funding_no
 	    ) pay ON pay.funding_no = fp.funding_no
 	    WHERE fp.user_no = #{value}
@@ -74,7 +74,7 @@
 	    SELECT funding_no, SUM(payment_amount) AS my_amount
 	    FROM payment
 	    WHERE user_no = #{value}
-	      AND payment_status = 'paid'
+	    and payment_status = 'paid'
 	    GROUP BY funding_no
 	  ) myp
 	  JOIN funding_product fp ON fp.funding_no = myp.funding_no
@@ -113,7 +113,7 @@
 	    SELECT IFNULL(SUM(p.payment_amount), 0) AS totalpay
 	    FROM payment p
 	    WHERE p.funding_no = #{value}
-	      AND payment_status = 'paid'
+	    AND payment_status = 'paid'
 	  ]]>
 	</select>
 
@@ -218,7 +218,7 @@
 		SELECT COALESCE(SUM(payment_amount),0) AS totalPaid
 		FROM payment
 		WHERE funding_no = #{value}
-	      AND payment_status = 'paid'
+		AND payment_status = 'paid'
 	  ]]>
 	</select>
 
@@ -229,7 +229,6 @@
         set payment_status = 'cancel'
 	    WHERE user_no   = #{userNo}
 	      AND funding_no = #{fundingNo}
-	      AND payment_status = 'paid'
 	  ]]>
 	</delete>
 

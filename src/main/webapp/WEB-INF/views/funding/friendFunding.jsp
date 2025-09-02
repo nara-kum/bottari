@@ -67,14 +67,23 @@
     return {text:'펀딩진행중', cls:'funding-ing'};
   }
 
+  function isFundingDone(vo, percent){
+  const s = String(vo.fundingStatus || vo.status || '').toLowerCase();
+  const name = String(vo.statusName || '').trim();
+  return s === 'done' || percent >= 100 || name.includes('완료');
+}
+
   function renderCard(vo){
     const fundingNo   = Number(vo.fundingNo)||0;
 
-    // ✅ 금액 규칙: 카드 가격/분모 = product.price, 진행바 분자 = paidAmount(결제합계)
+    // 금액 규칙: 카드 가격/분모 = product.price, 진행바 분자 = paidAmount(결제합계)
     const price       = Number(vo.price)||0;                      // 분모/카드가격
     const paidAmount  = Number(vo.paidAmount || 0);               // 분자(누적 결제합)
     const percent     = price > 0 ? Math.min(100, Math.round(paidAmount / price * 100)) : 0;
 
+    const done = isFundingDone(vo, percent);
+    const cancelAttr = done ? ' disabled aria-disabled="true" tabindex="-1"' : '';
+    const cancelCls  = done ? ' is-disabled' : '';
     // sub-title: eventName(있으면) → fundingDate(없으면)
     const eventName   = (vo.eventName ?? vo.event_name ?? '').toString().trim();
     const fundingDate = vo.fundingDate || '';
@@ -107,12 +116,10 @@
                 (optionName ? '<span class="opt-sep"> / </span><span class="option-name">'+esc(optionName)+'</span>' : ''),
                 (detailOpt ? '<span class="opt-sep"> / </span><span class="option-name">'+esc(detailOpt)+'</span>' : ''),
               '</div>',
-              // ✅ 제품명 아래는 항상 "상품가격(price)"
               '<div class="product-price">', fmtKRW(price), '</div>',
             '</div>',
           '</div></div>',
 
-          // ✅ 진행바: paidAmount(분자) / price(분모)
           '<div class="mf-meter with-goal">',
             '<div class="bar"><div class="fill" style="width:', percent, '%;"></div></div>',
             '<div class="goal">',
@@ -125,7 +132,8 @@
 
           '<div class="funding-action-wrapper">',
             '<div class="action-buttons">',
-              '<button class="btn-funding2 btn-cancel-friend" data-funding-no="', fundingNo, '">펀딩 취소</button>',
+              '<button class="btn-funding2 btn-cancel-friend', cancelCls, '" data-funding-no="', fundingNo, '"', cancelAttr, '>펀딩취소</button>',
+              '<button class="btn-funding2 btn-history" data-funding-no="', fundingNo, '">구매내역</button>',
             '</div>',
           '</div>',
         '</div>',
@@ -161,35 +169,41 @@
   $(function(){ reloadList(); });
 
   // (옵션) 펀딩 취소 – 서버에 맞춰 엔드포인트 조정 가능
-  $(document).on('click', '.btn-cancel-friend', function(){
-    const fundingNo = Number($(this).data('fundingNo'))||0;
-    if (!fundingNo){ alert('펀딩 번호가 없습니다.'); return; }
-    if (!confirm('펀딩을 취소하시겠습니까?')) return;
+$(document).on('click', '.btn-cancel-friend', function(e){
+  const $btn = $(this);
+  if ($btn.prop('disabled') || $btn.hasClass('is-disabled')) {
+    e.preventDefault();
+    return; // 완료건은 무시
+  }
+  // ↓ 기존 취소 로직 그대로
+  const fundingNo = Number($btn.data('fundingNo'))||0;
+  if (!fundingNo){ alert('펀딩 번호가 없습니다.'); return; }
+  if (!confirm('펀딩을 취소하시겠습니까?')) return;
 
-    $.ajax({
-      url: CTX + "/api/funding/friend/cancel",   // 필요 시 서버 엔드포인트에 맞춰 변경
-      type: "POST",
-      dataType: "json",
-      data: { fundingNo }
-    })
-    .done(function(res){
-      if (res && res.result === 'success'){
-        reloadList();
-      } else {
-        alert((res && res.message) || '취소에 실패했습니다.');
-      }
-    })
-    .fail(function(xhr){
-      if (xhr.status === 401){
-        const returnUrl = location.pathname + location.search;
-        alert('로그인이 필요합니다.');
-        location.href = CTX + "/user/loginForm?reason=auth&returnUrl=" + encodeURIComponent(returnUrl);
-        return;
-      }
-      alert('처리 중 오류가 발생했습니다.');
-      console.error('[POST /api/funding/friend/cancel] fail', xhr.status, (xhr.responseText||'').slice(0,200));
-    });
+  $.ajax({
+    url: CTX + "/api/funding/friend/cancel",
+    type: "POST",
+    dataType: "json",
+    data: { fundingNo }
+  })
+  .done(function(res){
+    if (res && res.result === 'success'){
+      reloadList();
+    } else {
+      alert((res && res.message) || '취소에 실패했습니다.');
+    }
+  })
+  .fail(function(xhr){
+    if (xhr.status === 401){
+      const returnUrl = location.pathname + location.search;
+      alert('로그인이 필요합니다.');
+      location.href = CTX + "/user/loginForm?reason=auth&returnUrl=" + encodeURIComponent(returnUrl);
+      return;
+    }
+    alert('처리 중 오류가 발생했습니다.');
+    console.error('[POST /api/funding/friend/cancel] fail', xhr.status, (xhr.responseText||'').slice(0,200));
   });
+});
 
 })();
 </script>

@@ -42,8 +42,9 @@ public class InvitationFundingApiController {
         return (cnt > 0) ? JsonResult.success(Map.of("fundingNo", fundingNo, "status","STOP"))
                          : JsonResult.fail("중단 실패 또는 권한 없음");
     }
-
-    /** 펀딩완료 (소유자) */
+    /****
+    /****펀딩완료하면, 펀딩 남은금액 계산해서 구매하기 페이지로 보내버려****/
+    /****펀딩완료 (소유자)****/
     @PostMapping("/api/funding/complete")
     public JsonResult complete(@RequestParam("fundingNo") int fundingNo, HttpSession session){
         UserVO auth = (UserVO) session.getAttribute("authUser");

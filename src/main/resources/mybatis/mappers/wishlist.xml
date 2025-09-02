@@ -61,7 +61,7 @@
 		VALUES
 		(NULL, #{eventNo}, #{wishlistNo}, #{userNo},
 		#{productNo}, #{percent},
-		#{amount}, 'O', NOW())
+		#{amount}, 'ing', NOW())
 	</insert>
 
 	<!-- 펀딩 옵션 등록 (funding_no, detailoption_no) -->
