@@ -412,7 +412,7 @@
   function addDeleteButtonIfEdit(){
     if (!editNo) return;
     if (!$(".footer-row .delete-btn").length){
-      $(".footer-row").append('<button type="button" class="delete-btn" style="margin-left:8px;">삭제</button>');
+      $(".footer-row").append('<button type="button" class="delete-btn" style="margin-left:8px;">삭 제</button>');
     }
   }
   $(document).on("click", ".delete-btn", function(){

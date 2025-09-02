@@ -199,8 +199,7 @@ textarea {
 /* ==== 작성 화면 버튼: 흰색 + 눌림 효과 ==== */
 .category-buttons button,
 .option-group .btn,
-.option-group button,
-.save-btn{
+.option-group button {
   background: #fff;
   color: #333;
   border: 1px solid #ddd;
@@ -209,6 +208,41 @@ textarea {
   margin-right: 10px;
   cursor: pointer;
   transition: box-shadow .15s ease, transform .05s ease, border-color .15s ease;
+}
+
+
+.save-btn {
+  width: 80px;
+  background-color: #c9a37e;
+  color: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin: 0px 10px 15px 0px;
+  cursor: pointer;
+  transition: box-shadow .15s ease, transform .05s ease, border-color .15s ease;
+}
+
+
+.delete-btn{
+  width: 80px;
+  background-color: #ddd;
+  color: #333;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin: 0px 10px 15px 0px;
+  cursor: pointer;
+  transition: box-shadow .15s ease, transform .05s ease, border-color .15s ease;
+}
+
+.save-btn:hover {
+	background-color: #856b51;
+	color: white;
+}
+
+.delete-btn:hover {
+	background-color:  #bbb;
 }
 
 .template-card.is-active,
