@@ -88,7 +88,7 @@ public class PaymentService {
 		String detailAddress = addressList.get(0).getDetail_address();
 		String zipcode = addressList.get(0).getZipcode();
 		String shipping_yn = addressList.get(0).getShipping_yn();
-		request.setPayment_status("완료");
+		request.setPayment_status("paid");
 		
 		if(shipping_yn.equals("n")) {
 			System.out.println("shipping_yn == n");

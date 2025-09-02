@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="/assets/css/Global.css"> <!-- 본인 파일의 경로에 맞게 수정해야함 -->
     <link rel="stylesheet" href="/assets/css/moduler.css"> <!-- 본인 파일의 경로에 맞게 수정해야함 -->
     <link rel="stylesheet" href="/assets/css/shop/check_out.css">
+    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 </head>
 
 <body class="family">

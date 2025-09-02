@@ -139,10 +139,10 @@ public class PaymentController {
         	paymentvo.setUser_no(user_no);
         	paymentvo.setProduct_no(product_no[i]);
         	paymentvo.setPayment_method(paymentMethod);
-        	paymentvo.setPayment_status("완료");
+        	paymentvo.setPayment_status("paid");
         	paymentvo.setDelivery_status("준비중");
         	paymentvo.setPayment_amount(item_total[i]);
-        	paymentvo.setService_type("n(" + cashReceiptRequested + ")");
+        	paymentvo.setService_type("normal(" + cashReceiptRequested + ")");
         	paymentvo.setQuantity(quantity[i]);
         	paymentvo.setDetailoption_no(detailoption_no[i]);
         	
