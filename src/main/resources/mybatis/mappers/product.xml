@@ -264,6 +264,7 @@
 			select ifnull(sum(p.payment_amount),0) totalpay
 			from payment p
 			where p.funding_no =  #{fundingNo}
+			and p.payment_status = 'paid'
 		]]>
 	</select>
 
