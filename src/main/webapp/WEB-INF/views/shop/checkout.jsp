@@ -172,9 +172,9 @@
 		// 상품 정보 배열 생성
 		const productItems = [];
 		
-		<c:forEach items="${requestScope.cList}" var="vo">
+		<c:forEach items="${requestScope.cList}" var="vo" varStatus="status">
 			productItems.push({
-				cart_no: parseInt('${paramValues.cart_no[status.index]}'),
+				cart_no: ${vo.cart_no},
 				product_no: ${vo.product_no},
 				quantity: ${vo.quantity},
 				item_total: ${vo.total_price},

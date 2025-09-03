@@ -236,6 +236,8 @@ public class PaymentService {
 			paymentList.add(paymentvo);
 		}
 		
+		PaymentVO firstPayment = null;
+		
 		// repository로 전달
 		for(int i = 0 ; i<paymentList.size() ; i++) {
 			PaymentVO vo =  paymentList.get(i);
@@ -245,6 +247,11 @@ public class PaymentService {
 			System.out.println(vo.getPayment_goods_no());
 			paymentrepository.insertPaymentGoodsOptionTable(vo);
 			System.out.println(vo);
+			
+			// 첫 번째 결제 정보를 저장 (반환용)
+	        if (i == 0) {
+	            firstPayment = vo;
+	        }
 		}
 		
 		System.out.println("PaymentService.exeprocessNormalPayment()");
@@ -254,22 +261,36 @@ public class PaymentService {
 		
 		for(Map<String, Object> item : items) {
 			int cartNo = (Integer) item.get("cart_no");
+			System.out.println("cartNo: " + cartNo);
 			
 			cartNos.add(cartNo);
 		}
 		
 		System.out.println("cartNos: " + cartNos);
 		
-		int count = paymentrepository.deleteCart(cartNos);
+		try {
+	        // 장바구니 삭제 (수정된 부분)
+	        int deletedCartCount = paymentrepository.deleteCart(cartNos);
+	        System.out.println("삭제된 장바구니 항목 수: " + deletedCartCount);
+	        
+	        // 삭제가 성공했을 때만 상세 옵션도 삭제
+	        if (deletedCartCount > 0) {
+	            int deletedDetailCount = paymentrepository.deleteCartDetail(cartNos);
+	            System.out.println("삭제된 장바구니 상세 항목 수: " + deletedDetailCount);
+	            System.out.println("장바구니 삭제 완료");
+	        } else {
+	            System.out.println("장바구니 삭제 실패 - 삭제된 항목이 없음");
+	        }
+	    } catch (Exception e) {
+	        System.out.println("장바구니 삭제 중 오류 발생: " + e.getMessage());
+	        e.printStackTrace();
+	        // 장바구니 삭제 실패해도 결제는 완료된 상태이므로 예외를 던지지 않음
+	    }
 		
-		if(count == 1) {
-			paymentrepository.deleteCartDetail(cartNos);
-		}
-		
-		return (PaymentVO) paymentData;
+		return firstPayment != null ? firstPayment : new PaymentVO();
 	}
 
-	// 결제 완료 후 결제된 상품의 장바구니 테이블 삭헤
+	// 결제 완료 후 결제된 상품의 장바구니 테이블 삭제
 	public int exeDeleteCart(List<Integer> cartNos) {
 		System.out.println("PaymentService.exeDeleteCart()");
 
