@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import com.example.vo.CalenderVO;
 import com.example.vo.InvitationVO;
-import com.example.vo.ProductVO;
+import com.example.vo.WishlistVO;
 
 @Repository
 public class CalenderRepository {
@@ -42,10 +42,10 @@ public class CalenderRepository {
 	}
 
 	// 캘린더 펀딩리스트 호출
-	public List<ProductVO> getProductList(int event_id) {
+	public List<WishlistVO> getProductList(int event_id) {
 		System.out.println("CalenderRepository.getproductList()");
 		
-		List<ProductVO> productList = sqlsession.selectList("calender.getProductList", event_id);
+		List<WishlistVO> productList = sqlsession.selectList("calender.getProductList", event_id);
 		
 		return productList;
 	}

@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.service.CalenderService;
 import com.example.vo.CalenderVO;
 import com.example.vo.InvitationVO;
-import com.example.vo.ProductVO;
 import com.example.vo.UserVO;
+import com.example.vo.WishlistVO;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -43,7 +43,7 @@ public class CalenderApiController {
 		try {
 			// DB에서 가져오기
 			List<InvitationVO> invitationList = calenderservice.exegetInvitationList(event_no);
-			List<ProductVO> productList = calenderservice.exegetProductList(event_no);
+			List<WishlistVO> productList = calenderservice.exegetProductList(event_no);
 
 			result.put("success", true);
 			result.put("fundingList", productList);
@@ -53,8 +53,10 @@ public class CalenderApiController {
 			for(int i = 0 ; i<invitationList.size() ; i++) {
 				System.out.println(invitationList.get(i));
 			}
-			
 			System.out.println("fundingList Count:" + productList.size());
+			for(int i = 0 ; i<productList.size() ; i++) {
+				System.out.println(productList.get(i));
+			}
 
 			return ResponseEntity.ok(result);
 

@@ -17,18 +17,23 @@
 	<!-- 캘린더 초대장 리스트 -->
 	<select id="getInvitationList" resultType="com.example.vo.InvitationVO">
 			<![CDATA[
-			select	invitation_no AS invitationNo,
-					event_no AS eventNo,
-					photo_url AS photoUrl
-			from invitation
-			where event_no = #{event_id}
+			select	i.invitation_no AS invitationNo,
+					i.event_no AS eventNo,
+					i.photo_url AS photoUrl,
+                    i.celebrate_date AS celebrateDate,
+                    c.event_name AS eventName
+			from invitation i
+				, calender c
+			where i.event_no = c.event_no
+			and c.event_no = #{event_id}
 		]]>
 	</select>
 	
 	<!-- 캘린더 펀딩 리스트 -->
-	<select id="getProductList" resultType="com.example.vo.ProductVO">
+	<select id="getProductList" resultType="com.example.vo.WishlistVO">
 		<![CDATA[
-			select	p.product_no,
+			select	fp.funding_no fundingNo,
+				    p.product_no productNo,
 				    p.title,
 				    p.price,
 				    p.brand,
