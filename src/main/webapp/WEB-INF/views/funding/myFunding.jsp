@@ -73,6 +73,7 @@
 
   function renderCard(vo){
     const fundingNo   = Number(vo.fundingNo)||0;
+    const productNo   = Number(vo.productNo)||0;   // ★ 추가
     const fundingDate = vo.fundingDate || '';
     const eventName   = vo.eventName || '';
     const brand       = vo.brand || '';
@@ -88,7 +89,7 @@
     const disabled = (String(vo.fundingStatus||'').toLowerCase() === 'stop');
 
     return [
-      '<div class="card-box" data-funding-no="', fundingNo, '" data-price="', price, '">',
+      '<div class="card-box" data-funding-no="', fundingNo, '" data-price="', price, '" data-product-no="', productNo, '">',
         '<div class="product-header">',
           '<div class="left-side"><span class="sub-title">', esc(eventName), '</span></div>',
           '<div class="right-side"><span class="funding-badge ', st.cls, '">', st.text, '</span></div>',
@@ -217,14 +218,22 @@
 
     $.ajax({ url: CTX + "/api/funding/complete", type: "POST", dataType: "json", data: { fundingNo: no } })
       .done(function(res){
-        if (res && res.result === 'success'){
-          const $card = $('.card-box[data-funding-no="'+no+'"]');
-          $card.find('.funding-badge').removeClass('funding-ing funding-stop').addClass('funding-done').text('펀딩완료');
-          alert('완료 처리되었습니다.');
-        } else {
-          alert((res && res.message) || '완료 처리에 실패했습니다.');
-        }
-      })
+      if (res && res.result === 'success'){
+        const $card = $('.card-box[data-funding-no="'+no+'"]');
+        $card.find('.funding-badge')
+             .removeClass('funding-ing funding-stop')
+             .addClass('funding-done').text('펀딩완료');
+
+        alert('완료 처리되었습니다.');  // ★ 기존 알림 유지
+
+        // ★ 상세로 이동 (남은 금액 자동 선택 힌트 포함)
+        const productNo = Number($card.data('productNo'))||0;
+        const url = CTX + '/shop/productPage2?productNo=' + productNo + '&fundingNo=' + no + '&auto=remaining';
+        location.href = url;
+      } else {
+        alert((res && res.message) || '완료 처리에 실패했습니다.');
+      }
+    })
       .fail(function(xhr){
         if (xhr.status === 401){
           const returnUrl = location.pathname + location.search;

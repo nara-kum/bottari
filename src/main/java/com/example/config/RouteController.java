@@ -7,10 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.example.vo.UserVO;
-
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class RouteController {
@@ -19,20 +16,21 @@ public class RouteController {
     public String goDetail(@RequestParam("productNo") int productNo,
                            @RequestParam("fundingNo") int fundingNo,
                            @RequestParam(value = "back", required = false) String back,
-                           HttpServletRequest req,
-                           HttpSession session) {
+                           HttpServletRequest req) {
 
-        UserVO auth = (UserVO) (session == null ? null : session.getAttribute("authUser"));
         String ctx = req.getContextPath();
 
-        if (auth != null) {
-            String target = ctx + "/shop/productPage2?productNo=" + productNo + "&fundingNo=" + fundingNo;
-            return "redirect:" + target;
+        // 로그인 여부 무관하게 상세 페이지로 이동
+        StringBuilder target = new StringBuilder()
+                .append(ctx).append("/shop/productPage2")
+                .append("?productNo=").append(productNo)
+                .append("&fundingNo=").append(fundingNo);
+
+        // 내부 경로만 back으로 전달 (선택)
+        if (back != null && back.startsWith("/")) {
+            target.append("&back=").append(URLEncoder.encode(back, StandardCharsets.UTF_8));
         }
 
-        // 내부 경로만 허용, 아니면 기본값
-        String returnUrl = (back != null && back.startsWith("/")) ? back : "/invitation/list";
-        String loginUrl = ctx + "/user/loginForm?returnUrl=" + URLEncoder.encode(returnUrl, StandardCharsets.UTF_8);
-        return "redirect:" + loginUrl;
+        return "redirect:" + target.toString();
     }
 }

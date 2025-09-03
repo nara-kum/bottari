@@ -53,19 +53,6 @@ public class LoginRequiredInterceptor implements HandlerInterceptor {
 			return true;
 		}
 
-		// productPage2 특례(기존 유지)
-		if ("/shop/productPage2".equals(path)) {
-			String fundingNo = req.getParameter("fundingNo");
-			if (fundingNo == null || fundingNo.isBlank())
-				return true;
-			if (auth != null)
-				return true;
-			String loginUrl = ctx + "/user/loginForm?reason=auth&returnUrl="
-					+ URLEncoder.encode(full, StandardCharsets.UTF_8);
-			res.sendRedirect(loginUrl);
-			return false;
-		}
-
 		// 로그인 상태면 전부 통과
 		if (auth != null)
 			return true;

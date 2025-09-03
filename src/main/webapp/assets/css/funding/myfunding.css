@@ -33,7 +33,7 @@
   color:#444;
 }
 .product-header .funding-ing  { color:#ef5327; font-weight:700; }
-.product-header .funding-done { color:#888; }
+.product-header .funding-done { color:#444; }
 
 /* 본문(가로 한 줄) */
 .product-body{
@@ -77,6 +77,8 @@
   min-width:0; /* 안쪽도 줄어들 수 있게 */
 }
 .product-info .product-row .name{
+  flex:1 1 auto;            /* ← 이놈이 줄어들며 ellipsis */
+  min-width:0;              /* ← 부모도 줄어들 수 있게 */
   white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
 }
 .product-info .opt-sep,
@@ -89,7 +91,7 @@
    ─────────────────────────────────────────── */
 /* --- 초대장형 진행바: bar 고정 + goal/achv 한 줄 (마이펀딩 전용) --- */
 .product-body .mf-meter.with-goal{
-  /* 기존 오른쪽 영역 총폭 유지(바 368px) */
+  flex: 0 0 368px;      /* ← 폭 고정 + shrink 방지 */
   width: 368px;
   display: grid;
   /* 1행: bar, 2행: goal | achv */
@@ -145,6 +147,7 @@
    ◼ 버튼 영역 — 기존 크기 유지(고정폭 160px)
    ─────────────────────────────────────────── */
 .funding-action-wrapper{
+  flex: 0 0 160px;      /* ← 버튼 영역 고정 */
   width:160px; flex:0 0 160px; padding-right:0;
   display:flex; justify-content:flex-end;
 }
@@ -160,4 +163,34 @@
   .product-body{ flex-wrap:wrap; }
   .product-body > .mf-meter.with-goal{ order:3; width:100%; max-width:none; flex:1 1 100%; }
   .funding-action-wrapper{ order:2; }
+}
+
+.product-info .product-row .opt-sep,
+.product-info .product-row .option-name{
+  flex:0 0 auto;            /* ← 옵션은 내용만큼만 */
+  white-space:nowrap;
+}
+
+/* 4) 진행바/수치 줄바꿈 방지(가독성) */
+.product-body .mf-meter.with-goal .goal,
+.product-body .mf-meter.with-goal .achv{
+  white-space:nowrap;
+}
+
+/* (보너스) 썸네일도 진짜 고정 */
+.mf-left .thumbbox{ flex:0 0 100px; width:100px; height:100px; }
+/* 상품명은 왼쪽 정렬 + 남는폭 채우지 않도록 */
+.product-info .product-row{ 
+  justify-content: flex-start;   /* 왼쪽에 붙여 배치 */
+}
+.product-info .product-row .name{
+  flex: 0 1 auto;                /* ← grow(1) 제거: 펼쳐지지 않음 */
+  min-width: 0;
+}
+
+/* 옵션은 내용만큼만 차지(보너스: 이름 안 밀림) */
+.product-info .product-row .opt-sep,
+.product-info .product-row .option-name{
+  flex: 0 0 auto;
+  white-space: nowrap;
 }

@@ -1,5 +1,6 @@
 package com.example.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.RedirectViewControllerRegistration;
@@ -11,6 +12,10 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebMvcConfig implements WebMvcConfigurer {
 
     private final LoginRequiredInterceptor loginRequiredInterceptor;
+    
+    // file.upload-dir 값을 프로퍼티에서 주입 (프로필별로 값이 달라짐)
+    @Value("${file.upload-dir}")
+    private String uploadDir; // 예) "C:/javaStudy/upload" 또는 "/data/upload"
 
     public WebMvcConfig(LoginRequiredInterceptor loginRequiredInterceptor) {
         this.loginRequiredInterceptor = loginRequiredInterceptor;
@@ -45,12 +50,18 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 );
     }
 
-    @Override
+    
+    @Override // 정적 리소스 핸들러 등록
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        String os = System.getProperty("os.name").toLowerCase();
-        String loc = os.contains("win") ? "file:///C:/javaStudy/upload/" : "file:/data/upload/";
-        registry.addResourceHandler("/upload/**").addResourceLocations(loc);
+        String p = uploadDir.replace("\\", "/");               // 윈도우 호환
+        if (!p.endsWith("/")) p = p + "/";                     // 끝 슬래시 보장
+        String loc = p.startsWith("file:") ? p : "file:" + p;  // file: 접두사 부여
+
+        registry.addResourceHandler("/upload/**")              // 브라우저 경로
+                .addResourceLocations(loc)                     // 실제 파일 위치
+                .setCachePeriod(3600);                         // 선택: 캐시
     }
+    
 
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
