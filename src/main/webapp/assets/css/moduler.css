@@ -161,6 +161,11 @@
     justify-self: center;
 }
 
+.align-left {
+    align-items: flex-start !important;
+    justify-self: flex-start;
+}
+
 .align-right {
     align-items: flex-end;
     justify-self: flex-end;
@@ -174,4 +179,8 @@
 .column-align {
     justify-content: center;
     margin: auto 0px;
+}
+
+.margin-top-10 {
+    margin-top: 10px;
 }

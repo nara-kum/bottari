@@ -42,7 +42,8 @@ public class HistoryService {
 			// 일반 결제 데이터 처리
 			List<Integer> paymentNoList = historyPaymentList.stream().map(HistoryListVO::getPayment_no)
 					.collect(Collectors.toList());
-
+			
+			System.out.println(paymentNoList);
 			List<HistoryProductDetailVO> productDetailList = historyrepository.selectDetailList(paymentNoList);
 			System.out.println("repository에서 리스트 받아오기 성공");
 			System.out.println("productDetailList: " + productDetailList);

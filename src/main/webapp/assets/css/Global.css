@@ -3,10 +3,12 @@
 /* 전체 설정 */
 html {
   overflow-y: scroll;  /* 스크롤이 필요 없을 때도 항상 세로 스크롤바를 차지 */
+  height: 100%;
 }
 
 body {
     font-family: 'inter';
+    height: 100%;
 }
 
 a {
@@ -16,8 +18,8 @@ a {
 
 /* header | content | footer css */
 
-.controller {
-    width: 100%;
+section {
+    flex: 1;
 }
 
 header {
@@ -25,8 +27,15 @@ header {
 }
 
 footer {
+    margin-top: auto;
     border-top: 1px solid #ccc;
     background-color: #F9F7F4;
+}
+
+.screen-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* 화면 전체 높이 */
 }
 
 

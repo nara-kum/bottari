@@ -1,5 +1,8 @@
 @charset "utf-8";
 
+.gap-10 {
+    gap: 10px;
+}
 
 .left-main {
     width: 816px !important;
@@ -14,7 +17,7 @@
 .list-basic {
     width: 90%;
     padding: 5px 5px;
-    
+
 }
 
 .payment-method-box {
@@ -31,13 +34,13 @@
 }
 
 .gray {
-	color: gray;
-	width: 100% !important;
+    color: gray;
+    width: 100% !important;
 }
 
 .detail-list .column-flex-box {
-	gap: 5px;
-	margin-left: 5px;
+    gap: 5px;
+    margin-left: 5px;
 }
 
 .margin-10 {
@@ -52,7 +55,7 @@
 }
 
 .detail-list {
-    
+
     padding: 5px 0px;
 }
 
@@ -61,5 +64,20 @@
 }
 
 #cashReceipt {
-	margin-right: 23px;
+    margin-right: 23px;
+}
+
+/* 우편번호 api section */
+
+.input-commonness {
+    margin-top: 10px;
+    font-size: 16px;
+    height: 30px;
+    border-radius: 10px;
+    border: 1px solid #d9d9d9;
+    padding: 0 10px;
+}
+
+.address-box {
+    width: 290px;
 }
