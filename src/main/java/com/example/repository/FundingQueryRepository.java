@@ -64,4 +64,13 @@ public class FundingQueryRepository {
 	public int cancelAllPaymentsByFunding(long fundingNo){
 	    return sqlSession.update(NS + "cancelAllPaymentsByFunding", fundingNo);
 	}
+	
+	public List<Map<String,Object>> selectParticipantsByFundingNo(long fundingNo){
+	    return sqlSession.selectList("funding.selectParticipantsByFundingNo", fundingNo);
+	}
+
+	public Integer selectFundingOwnerUserNo(long fundingNo){
+	    return sqlSession.selectOne("funding.selectFundingOwnerUserNo", fundingNo);
+	}
+
 }

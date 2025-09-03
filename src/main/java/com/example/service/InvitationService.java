@@ -159,7 +159,7 @@ public class InvitationService {
 		return out;
 	}
 
-	// ✅ 공유/공개용: 소유자 제약 없이 '전체 필드' 반환
+	// 공유/공개용: 소유자 제약 없이 '전체 필드' 반환
 	public Map<String, Object> getInvitationViewBundleAny(int invitationNo) {
 		Map<String, Object> detail = invitationRepository.selectInvitationFullAny(invitationNo);
 		if (detail == null || detail.isEmpty())
@@ -170,7 +170,7 @@ public class InvitationService {
 		return bundle;
 	}
 
-	/** ✅ 공개: 이벤트별 펀딩 카드 목록 */
+	/** 공개: 이벤트별 펀딩 카드 목록 */
 	public List<Map<String, Object>> getGiftsPublicByEvent(int eventNo) {
 		return invitationRepository.selectGiftsPublicByEvent(eventNo);
 	}

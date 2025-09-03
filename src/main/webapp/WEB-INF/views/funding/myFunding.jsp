@@ -33,6 +33,17 @@
 
     <c:import url="/WEB-INF/views/include/Footer.jsp"></c:import>
   </div>
+
+  <!-- 참여자 랭킹 모달 (한 번만 선언) -->
+<div id="mfContribModal" class="mf-modal" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="panel" role="document">
+    <div class="head">
+      <div class="title">참여자 랭킹</div>
+      <button type="button" class="close" aria-label="닫기">&times;</button>
+    </div>
+    <div class="list" id="mfContribList"></div>
+  </div>
+</div>
 <script>
 (function(){
   const CTX = "${pageContext.request.contextPath}";
@@ -245,6 +256,77 @@
       });
   });
 })();
+
+// ===== [추가] 참여자 랭킹 =====
+(function(){
+  const CTX = "${pageContext.request.contextPath}";
+  const $modal = $('#mfContribModal');
+  const $list  = $('#mfContribList');
+
+  function fmtKRW(n){ return (Number(n)||0).toLocaleString('ko-KR') + '원'; }
+  function pctOf(n, base){
+    const p = (base>0) ? Math.round((Number(n)||0)/base*100) : 0;
+    return Math.max(0, Math.min(100, p));
+  }
+  function esc(s){ return $('<div>').text(s==null?'':String(s)).html(); }
+
+  // 모달 열기/닫기
+  function openModal(){ $modal.css('display','flex').attr('aria-hidden','false'); }
+  function closeModal(){ $modal.css('display','none').attr('aria-hidden','true'); }
+  $modal.on('click', function(e){ if(e.target === this) closeModal(); });
+  $modal.find('.close').on('click', closeModal);
+  $(document).on('keydown', function(e){ if(e.key==='Escape') closeModal(); });
+
+  // 서버 요청 → 리스트 렌더
+  function loadParticipants(fundingNo, price){
+    $list.html('<div style="padding:18px 10px;color:#666;">불러오는 중...</div>');
+    $.getJSON(CTX + '/api/funding/participants', { fundingNo })
+      .done(function(res){
+        const rows = (res && (res.data||res.apiData||res.list||res)) || [];
+        if(!Array.isArray(rows) || rows.length===0){
+          $list.html('<div style="padding:20px;color:#666;">아직 참여한 친구가 없습니다.</div>');
+          return;
+        }
+        // 정렬: 금액 desc
+        rows.sort(function(a,b){ return (Number(b.amount||0) - Number(a.amount||0)); });
+        // 렌더
+        let html = '';
+        for(let i=0;i<rows.length;i++){
+          const r = rows[i] || {};
+          const rank = (i+1);
+          const name = r.userName || r.name || ('친구#'+(r.userNo||'?'));
+          const photo = r.profileImg || r.profileUrl || r.profile || '';
+          const amt = Number(r.amount||0);
+          const pct = pctOf(amt, Number(price||0));
+          html += ''
+            + '<div class="row" data-user="'+esc(r.userNo||'')+'">'
+            +   '<div class="rank">'+rank+'</div>'
+            +   '<div class="name">'+esc(name)+'</div>'
+            +   '<div class="right"><span class="amt">'+fmtKRW(amt)+'</span><span class="pct">'+pct+'%</span></div>'
+            + '</div>';
+        }
+        $list.html(html);
+      })
+      .fail(function(xhr){
+        let msg = '목록을 불러오지 못했습니다.';
+        if(xhr.status===401){
+          msg = '로그인이 필요합니다.';
+        }
+        $list.html('<div style="padding:18px 10px;color:#c00;">'+esc(msg)+'</div>');
+      });
+  }
+
+  // 카드의 진행바 클릭 시 모달 오픈
+  $(document).on('click', '.card-box .mf-meter', function(){
+    const $card = $(this).closest('.card-box');
+    const fundingNo = Number($card.data('fundingNo'))||0;
+    const price     = Number($card.data('price'))||0;
+    if(!fundingNo){ return; }
+    openModal();
+    loadParticipants(fundingNo, price);
+  });
+})();
+
 </script>
 </body>
 </html>

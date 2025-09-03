@@ -89,4 +89,13 @@ public class InvitationFundingService {
 		Long v = fundingQueryRepository.selectTotalPayByFundingNo(fundingNo);
 		return (v == null ? 0L : v);
 	}
+	
+	public List<Map<String,Object>> getParticipantsByFundingNo(long fundingNo){
+	    return fundingQueryRepository.selectParticipantsByFundingNo(fundingNo);
+	}
+
+	public Integer getFundingOwnerUserNo(long fundingNo){
+	    return fundingQueryRepository.selectFundingOwnerUserNo(fundingNo);
+	}
+
 }

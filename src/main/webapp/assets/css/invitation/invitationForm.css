@@ -76,6 +76,7 @@
   display: flex;
   gap: 12px;
   flex-wrap: wrap;
+  margin-top: 5px;
   margin-bottom: 5px;
 }
 
@@ -248,4 +249,57 @@ textarea {
 .template-card.is-active,
 .category-buttons .cat.is-active{
   outline: 2px solid #ef5327;
+}
+
+/* 초대장 작성 폼 내부에서만 적용 */
+.template-section .grid-2 > div { 
+  display: flex; 
+  flex-direction: column; 
+}
+.template-section .grid-2 > div .small-label { 
+  margin-top: 0; 
+  margin-bottom: 6px; 
+}
+
+/* 텍스트/날짜/시간/셀렉트/텍스트에어리어를 동일 스타일로 */
+.template-section input[type="text"],
+.template-section input[type="date"],
+.template-section input[type="time"],
+.template-section select,
+.template-section textarea {
+  font-size: 14px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background: #fff;
+  width: 100%;
+  box-sizing: border-box;
+  line-height: 1.2;
+}
+
+/* 같은 줄에서 늘어나도록 (기존과 동일 동작) */
+.template-section input[type="text"] { flex: 1; }
+
+/* 날짜/시간 높이 보정 → 텍스트 인풋과 동일해 보이게 */
+.template-section input[type="date"],
+.template-section input[type="time"] {
+  height: 40px; /* 필요 시 38~44px로 조정 */
+}
+
+/* 포커스 스타일도 폼 내부에만 */
+.template-section input[type="text"]:focus,
+.template-section input[type="date"]:focus,
+template-section input[type="time"]:focus,
+.template-section select:focus,
+.template-section textarea:focus {
+  outline: 2px solid #ef5327;
+  outline-offset: 1px;
+  border-color: #ef5327;
+}
+
+/* (선택) 캘린더/시계 아이콘 클릭 범위 살짝 넓히기 */
+.template-section input[type="date"]::-webkit-calendar-picker-indicator,
+.template-section input[type="time"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  opacity: .85;
 }

@@ -197,7 +197,7 @@
             const optionName = esc(vo.optionName ?? vo.option_name ?? '');
             const detailOptionName = esc(vo.detailoptionName ?? vo.detail_option_name ?? '');
 
-            // ✅ 분모/분자: "상품가격(price)"와 "결제합계(paidAmount)"
+            // 분모/분자: "상품가격(price)"와 "결제합계(paidAmount)"
             const price = extractPrice(vo);          // ← 분모 (상품가격)
             const paid = extractPaid(vo);           // ← 분자 (누적 결제합계)
             const pct = price > 0 ? Math.min(100, Math.round(paid / price * 100)) : 0;
@@ -218,7 +218,7 @@
               (optionName ? '<span class="opt-sep"> / </span><span class="opt">' + optionName + '</span>' : ''),
               (detailOptionName ? '<span class="opt-sep"> / </span><span class="opt">' + detailOptionName + '</span>' : ''),
               '</div>',
-              // ✅ 상품명 아래는 "상품 가격" 표시
+              // 상품명 아래는 "상품 가격" 표시
               '<div class="price">', fmtKRW(price), '</div>',
               '</div>',
               '</div></div>',

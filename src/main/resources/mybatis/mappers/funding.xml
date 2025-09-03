@@ -273,6 +273,27 @@
 	       AND user_no    = #{userNo}
 	  ]]>
 	</update>
+	
+	<!-- 펀딩 소유자 확인 -->
+	<select id="selectFundingOwnerUserNo" parameterType="long" resultType="int">
+	  SELECT user_no
+	  FROM funding_product
+	  WHERE funding_no = #{fundingNo}
+	</select>
+	
+	<!-- 참여자 목록(금액 합계) -->
+	<select id="selectParticipantsByFundingNo" parameterType="long" resultType="map">
+	  SELECT
+	    p.user_no              AS userNo,
+	    u.name,
+	    SUM(p.payment_amount)      AS amount
+	  FROM payment p
+	  JOIN users u ON u.user_no = p.user_no
+	  WHERE p.funding_no = #{fundingNo}
+		AND p.payment_status = 'paid'
+	  GROUP BY p.user_no, u.name
+	  ORDER BY amount DESC
+	</select>
 
 
 </mapper>

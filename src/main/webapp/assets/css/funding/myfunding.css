@@ -1,48 +1,55 @@
 /* 카드 리스트 래퍼 */
-.content{
-  width:1280px;
-  max-width:1280px;
-  margin:0 auto;
-  display:flex;
-  flex-direction:column;
-  gap:16px;
-  padding:16px 0;
+.content {
+	width: 1280px;
+	max-width: 1280px;
+	margin: 0 auto;
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+	padding: 16px 0;
 }
 
 /* 카드 */
-.card-box{
-  width:100%;
-  background:#fcfcfc;
-  border:1px solid #e0e0e0;
-  border-radius:12px;
-  box-shadow:0 4px 12px rgba(0,0,0,.05);
-  display:flex;
-  flex-direction:column;
-  overflow:hidden;
+.card-box {
+	width: 100%;
+	background: #fcfcfc;
+	border: 1px solid #e0e0e0;
+	border-radius: 12px;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, .05);
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
 }
 
 /* 헤더 */
-.product-header{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:15px 30px 7px 30px;
-  border-bottom:.5px solid #929292;
-  font-size:16px;
-  font-weight:700;
-  color:#444;
+.product-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 15px 30px 7px 30px;
+	border-bottom: .5px solid #929292;
+	font-size: 16px;
+	font-weight: 700;
+	color: #444;
 }
-.product-header .funding-ing  { color:#ef5327; font-weight:700; }
-.product-header .funding-done { color:#444; }
+
+.product-header .funding-ing {
+	color: #ef5327;
+	font-weight: 700;
+}
+
+.product-header .funding-done {
+	color: #444;
+}
 
 /* 본문(가로 한 줄) */
-.product-body{
-  display:flex;
-  align-items:center;
-  gap:16px;
-  padding:10px 30px;
-  flex-wrap:nowrap;
-  overflow:hidden;
+.product-body {
+	display: flex;
+	align-items: center;
+	gap: 16px;
+	padding: 10px 30px;
+	flex-wrap: nowrap;
+	overflow: hidden;
 }
 
 /* ───────────────────────────────────────────
@@ -50,147 +57,316 @@
    - 실제 마크업은 .product-info 이므로 여기에 규칙 적용
    - 긴 이름이 우측을 밀지 않도록 min-width:0 과 ellipsis
    ─────────────────────────────────────────── */
-.mf-left{ flex:1 1 auto; min-width:0; }  /* 좌측 전체는 유동폭 */
-.mf-left .mf-row{
-  display:grid;
-  grid-template-columns:100px 1fr; /* 썸네일 | 정보 */
-  gap:12px;
-  align-items:stretch;
-  min-height:100px;
+.mf-left {
+	flex: 1 1 auto;
+	min-width: 0;
+} /* 좌측 전체는 유동폭 */
+.mf-left .mf-row {
+	display: grid;
+	grid-template-columns: 100px 1fr; /* 썸네일 | 정보 */
+	gap: 12px;
+	align-items: stretch;
+	min-height: 100px;
 }
-.mf-left .thumbbox{ width:100px; height:100px; border-radius:10px; overflow:hidden; background:#eee; }
-.mf-left .thumbbox img{ width:100%; height:100%; object-fit:cover; display:block; }
+
+.mf-left .thumbbox {
+	width: 100px;
+	height: 100px;
+	border-radius: 10px;
+	overflow: hidden;
+	background: #eee;
+}
+
+.mf-left .thumbbox img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: block;
+}
 
 /* ← 기존엔 .product-details였던 부분을 실제 클래스(.product-info)로 */
-.product-info{
-  display:flex;
-  flex-direction:column;
-  gap:4px;
-  min-width:0; /* 중요: 좌 영역이 줄어들 수 있게 */
+.product-info {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	min-width: 0; /* 중요: 좌 영역이 줄어들 수 있게 */
 }
-.product-info .buy{
-  font-size:14px; color:#929292;
-  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+
+.product-info .buy {
+	font-size: 14px;
+	color: #929292;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
-.product-info .product-row{
-  display:flex; gap:4px; align-items:baseline;
-  min-width:0; /* 안쪽도 줄어들 수 있게 */
+
+.product-info .product-row {
+	display: flex;
+	gap: 4px;
+	align-items: baseline;
+	min-width: 0; /* 안쪽도 줄어들 수 있게 */
 }
-.product-info .product-row .name{
-  flex:1 1 auto;            /* ← 이놈이 줄어들며 ellipsis */
-  min-width:0;              /* ← 부모도 줄어들 수 있게 */
-  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+
+.product-info .product-row .name {
+	flex: 1 1 auto; /* ← 이놈이 줄어들며 ellipsis */
+	min-width: 0; /* ← 부모도 줄어들 수 있게 */
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
-.product-info .opt-sep,
-.product-info .option-name{ color:#666; }
-.product-info .product-price{ font-size:16px; font-weight:700; white-space:nowrap; }
+
+.product-info .opt-sep, .product-info .option-name {
+	color: #666;
+}
+
+.product-info .product-price {
+	font-size: 16px;
+	font-weight: 700;
+	white-space: nowrap;
+}
 
 /* ───────────────────────────────────────────
    ◼ 우측 진행바(초대장형) — 고정폭 368px
    (기존 오른쪽 3칸: 바200 + %48 + 금액120 = 368)
    ─────────────────────────────────────────── */
 /* --- 초대장형 진행바: bar 고정 + goal/achv 한 줄 (마이펀딩 전용) --- */
-.product-body .mf-meter.with-goal{
-  flex: 0 0 368px;      /* ← 폭 고정 + shrink 방지 */
-  width: 368px;
-  display: grid;
-  /* 1행: bar, 2행: goal | achv */
-  grid-template-rows: auto auto;
-  /* 2행은 고정 너비로 나눠서 흔들림 방지 */
-  grid-template-columns: 200px 100px; /* ← 합 356 + gap(12) = 368 느낌으로 맞춤 */
-  column-gap: 12px;
-  row-gap: 6px;
-  align-items: center;
+.product-body .mf-meter.with-goal {
+	flex: 0 0 368px; /* ← 폭 고정 + shrink 방지 */
+	width: 368px;
+	display: grid;
+	/* 1행: bar, 2행: goal | achv */
+	grid-template-rows: auto auto;
+	/* 2행은 고정 너비로 나눠서 흔들림 방지 */
+	grid-template-columns: 200px 100px;
+	/* ← 합 356 + gap(12) = 368 느낌으로 맞춤 */
+	column-gap: 12px;
+	row-gap: 6px;
+	align-items: center;
 }
 
 /* bar = 1행 전체 고정 */
-.product-body .mf-meter.with-goal .bar{
-  grid-column: 1 / -1; /* 전체 칸 차지 */
-  grid-row: 1;
-  height: 10px;
-  background: #929292;
-  border-radius: 999px;
-  overflow: hidden;
+.product-body .mf-meter.with-goal .bar {
+	grid-column: 1/-1; /* 전체 칸 차지 */
+	grid-row: 1;
+	height: 10px;
+	background: #929292;
+	border-radius: 999px;
+	overflow: hidden;
 }
-.product-body .mf-meter.with-goal .fill{
-  height: 100%;
-  background: #ef5327;
+
+.product-body .mf-meter.with-goal .fill {
+	height: 100%;
+	background: #ef5327;
 }
 
 /* 2행 왼쪽: goal(현재/총액) — 고정 폭 내에서 말줄임 */
-.product-body .mf-meter.with-goal .goal{
-  grid-column: 1;
-  grid-row: 2;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  font-weight: 700;
-  font-size: 14px;
+.product-body .mf-meter.with-goal .goal {
+	grid-column: 1;
+	grid-row: 2;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	font-weight: 700;
+	font-size: 14px;
 }
-.product-body .mf-meter.with-goal .goal .curr{ color:#ef5327; font-weight:800; }
-.product-body .mf-meter.with-goal .goal .sep{ color:#aaa; margin:0 6px; }
-.product-body .mf-meter.with-goal .goal .total{ color:#666; }
+
+.product-body .mf-meter.with-goal .goal .curr {
+	color: #ef5327;
+	font-weight: 800;
+}
+
+.product-body .mf-meter.with-goal .goal .sep {
+	color: #aaa;
+	margin: 0 6px;
+}
+
+.product-body .mf-meter.with-goal .goal .total {
+	color: #666;
+}
 
 /* 2행 오른쪽: achv(% 달성) — 항상 오른쪽 정렬, 고정 폭 */
-.product-body .mf-meter.with-goal .achv{
-  grid-column: 2;
-  grid-row: 2;
-  justify-self: end;      /* 오른쪽 정렬 */
-  white-space: nowrap;
-  font-weight: 700;
-  font-size: 14px;
+.product-body .mf-meter.with-goal .achv {
+	grid-column: 2;
+	grid-row: 2;
+	justify-self: end; /* 오른쪽 정렬 */
+	white-space: nowrap;
+	font-weight: 700;
+	font-size: 14px;
 }
-.product-body .mf-meter.with-goal .achv .pct{ display:inline-block; }
 
+.product-body .mf-meter.with-goal .achv .pct {
+	display: inline-block;
+}
 
 /* ───────────────────────────────────────────
    ◼ 버튼 영역 — 기존 크기 유지(고정폭 160px)
    ─────────────────────────────────────────── */
-.funding-action-wrapper{
-  flex: 0 0 160px;      /* ← 버튼 영역 고정 */
-  width:160px; flex:0 0 160px; padding-right:0;
-  display:flex; justify-content:flex-end;
+.funding-action-wrapper {
+	flex: 0 0 160px; /* ← 버튼 영역 고정 */
+	width: 160px;
+	flex: 0 0 160px;
+	padding-right: 0;
+	display: flex;
+	justify-content: flex-end;
 }
-.action-buttons{ display:flex; flex-direction:column; gap:8px; align-items:flex-end; }
+
+.action-buttons {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	align-items: flex-end;
+}
 
 /* (예전 마크업의 오른쪽 3칸이 남아 있으면 가려 중복 방지) */
-.product-body > .left-price-right-price,
-.product-body > .percent,
-.product-body > .price-participation{ display:none !important; }
-
-/* 반응형(선택) */
-@media (max-width:880px){
-  .product-body{ flex-wrap:wrap; }
-  .product-body > .mf-meter.with-goal{ order:3; width:100%; max-width:none; flex:1 1 100%; }
-  .funding-action-wrapper{ order:2; }
+.product-body>.left-price-right-price, .product-body>.percent,
+	.product-body>.price-participation {
+	display: none !important;
 }
 
-.product-info .product-row .opt-sep,
-.product-info .product-row .option-name{
-  flex:0 0 auto;            /* ← 옵션은 내용만큼만 */
-  white-space:nowrap;
+/* 반응형(선택) */
+@media ( max-width :880px) {
+	.product-body {
+		flex-wrap: wrap;
+	}
+	.product-body>.mf-meter.with-goal {
+		order: 3;
+		width: 100%;
+		max-width: none;
+		flex: 1 1 100%;
+	}
+	.funding-action-wrapper {
+		order: 2;
+	}
+}
+
+.product-info .product-row .opt-sep, .product-info .product-row .option-name
+	{
+	flex: 0 0 auto; /* ← 옵션은 내용만큼만 */
+	white-space: nowrap;
 }
 
 /* 4) 진행바/수치 줄바꿈 방지(가독성) */
-.product-body .mf-meter.with-goal .goal,
-.product-body .mf-meter.with-goal .achv{
-  white-space:nowrap;
+.product-body .mf-meter.with-goal .goal, .product-body .mf-meter.with-goal .achv
+	{
+	white-space: nowrap;
 }
 
 /* (보너스) 썸네일도 진짜 고정 */
-.mf-left .thumbbox{ flex:0 0 100px; width:100px; height:100px; }
-/* 상품명은 왼쪽 정렬 + 남는폭 채우지 않도록 */
-.product-info .product-row{ 
-  justify-content: flex-start;   /* 왼쪽에 붙여 배치 */
+.mf-left .thumbbox {
+	flex: 0 0 100px;
+	width: 100px;
+	height: 100px;
 }
-.product-info .product-row .name{
-  flex: 0 1 auto;                /* ← grow(1) 제거: 펼쳐지지 않음 */
-  min-width: 0;
+/* 상품명은 왼쪽 정렬 + 남는폭 채우지 않도록 */
+.product-info .product-row {
+	justify-content: flex-start; /* 왼쪽에 붙여 배치 */
+}
+
+.product-info .product-row .name {
+	flex: 0 1 auto; /* ← grow(1) 제거: 펼쳐지지 않음 */
+	min-width: 0;
 }
 
 /* 옵션은 내용만큼만 차지(보너스: 이름 안 밀림) */
-.product-info .product-row .opt-sep,
-.product-info .product-row .option-name{
-  flex: 0 0 auto;
-  white-space: nowrap;
+.product-info .product-row .opt-sep, .product-info .product-row .option-name
+	{
+	flex: 0 0 auto;
+	white-space: nowrap;
+}
+
+/* 참여자 랭킹 모달 */
+.mf-modal {
+	position: fixed;
+	inset: 0;
+	background: rgba(0, 0, 0, .45);
+	display: none;
+	align-items: center;
+	justify-content: center;
+	z-index: 9999;
+}
+
+.mf-modal .panel {
+	width: 400px;
+	max-height: 80vh;
+	background: #fff;
+	border: 1px solid #eaeaea;
+	border-radius: 12px;
+	box-shadow: 0 20px 60px rgba(0, 0, 0, .25);
+	overflow: hidden;
+	display: flex;
+	flex-direction: column;
+}
+
+.mf-modal .head {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 14px 16px;
+	border-bottom: 1px solid #eee;
+	font-weight: 700;
+}
+
+.mf-modal .close {
+	appearance: none;
+	border: none;
+	background: transparent;
+	font-size: 20px;
+	line-height: 1;
+	cursor: pointer;
+}
+
+.mf-modal .list {
+	overflow: auto;
+	padding: 8px 12px;
+}
+
+.mf-modal .row {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	padding: 10px 6px;
+	border-bottom: 1px solid #f5f5f5;
+}
+
+.mf-modal .rank {
+	width: 28px;
+	text-align: center;
+	font-weight: 800;
+	color: #ef5327;
+}
+
+.mf-modal .avatar {
+	width: 32px;
+	height: 32px;
+	border-radius: 50%;
+	object-fit: cover;
+	background: #eee;
+	flex: 0 0 32px;
+}
+
+.mf-modal .name {
+	flex: 1 1 auto;
+	min-width: 0;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	font-weight: 600;
+}
+
+.mf-modal .right {
+	text-align: right;
+}
+
+.mf-modal .amt {
+	font-weight: 800;
+}
+
+.mf-modal .pct {
+	margin-left: 6px;
+	color: #ef5327;
+	font-weight: 800;
+}
+/* 그래프를 클릭 가능하게 표시 */
+.mf-meter {
+	cursor: pointer;
 }

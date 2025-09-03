@@ -102,5 +102,22 @@ public class InvitationFundingApiController {
 		long total = invitationFundingService.getTotalPaidByFundingNo(fundingNo);
 		return JsonResult.success(Map.of("fundingNo", fundingNo, "totalPaid", total));
 	}
+	
+	// 참여자 랭킹
+	@GetMapping("/api/funding/participants")
+	public JsonResult participants(HttpSession session,
+	                               @RequestParam("fundingNo") long fundingNo){
+	    UserVO auth = (UserVO) session.getAttribute("authUser");
+	    if (auth == null) return JsonResult.fail("로그인이 필요합니다.");
+
+	    // (선택) 소유자 검증: 내 펀딩만 조회 허용
+	    Integer ownerUserNo = invitationFundingService.getFundingOwnerUserNo(fundingNo);
+	    if (ownerUserNo == null || ownerUserNo != auth.getUserNo()) {
+	        return JsonResult.fail("권한이 없습니다.");
+	    }
+
+	    List<Map<String,Object>> list = invitationFundingService.getParticipantsByFundingNo(fundingNo);
+	    return JsonResult.success(list);
+	}
 
 }
