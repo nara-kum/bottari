@@ -20,8 +20,8 @@
 				<c:import url="/WEB-INF/views/include/Header.jsp"></c:import>
 				<!-- ---------------------------------------------------- -->
 
-				<content class="controller">
-					<div class="screen-wrapper">
+				<div class="screen-wrapper">
+					<content class="controller">
 						<div id="sec-content" class="sector">
 							<div class="sec-sub-title">
 								<!-- 여기부터 코딩 시작!! -->
@@ -139,10 +139,10 @@
 								</c:forEach>
 							</div>
 						</div>
-				</content>
-				<!------------------------ Footer호출 ----------------------->
-				<c:import url="/WEB-INF/views/include/Footer.jsp"></c:import>
-				<!-- ---------------------------------------------------- -->
+					</content>
+					<!------------------------ Footer호출 ----------------------->
+					<c:import url="/WEB-INF/views/include/Footer.jsp"></c:import>
+					<!-- ---------------------------------------------------- -->
 				</div>
 			</body>
 

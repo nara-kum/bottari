@@ -14,7 +14,7 @@
 
 <body class="family">
   <c:import url="/WEB-INF/views/include/Header.jsp"></c:import>
-
+<div class="screen-wrapper">
   <content class="controller">
     <div id="sec-content" class="sector">
       <div class="sec-sub-title">
@@ -32,7 +32,7 @@
   </content>
 
   <c:import url="/WEB-INF/views/include/Footer.jsp"></c:import>
-
+</div>
 <script>
 (function(){
   const CTX = "${pageContext.request.contextPath}";

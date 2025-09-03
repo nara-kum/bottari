@@ -22,6 +22,10 @@ section {
     flex: 1;
 }
 
+content {
+    flex: 1;
+}
+
 header {
     border-bottom: 1px solid #ccc;
 }

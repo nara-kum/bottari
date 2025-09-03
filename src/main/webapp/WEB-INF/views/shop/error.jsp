@@ -14,7 +14,7 @@
 </head>
 <body>
 <div class="sec-content">
-	<div class="column-flex-box align-center column-align" style="margin-top: 540px">
+	<div class="column-flex-box align-center column-align gap-10" style="margin-top: 540px">
 		<img class="header-logo" alt="bottari_logo" src="/assets/icon/Logo_colored.svg">
 		<div class=text-18>이런 뭔가 잘못되었습니다!</div>
 		<a href="/shop/bottarimall">

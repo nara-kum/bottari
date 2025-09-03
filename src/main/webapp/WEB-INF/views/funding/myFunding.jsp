@@ -14,25 +14,25 @@
 
 <body class="family">
   <c:import url="/WEB-INF/views/include/Header.jsp"></c:import>
+  <div class="screen-wrapper">
+    <content class="controller">
+      <div id="sec-content" class="sector">
+        <div class="sec-sub-title">
+          <div class="tab-row" role="navigation">
+            <h2 class="header-sub"><a href="${pageContext.request.contextPath}/funding/wish">펀딩 관리</a></h2>
+            <h2 class="header-sub is-active"><a href="${pageContext.request.contextPath}/funding/my" aria-current="page">마이 펀딩</a></h2>
+            <h2 class="header-sub"><a href="${pageContext.request.contextPath}/funding/friend">친구 펀딩</a></h2>
+          </div>
+        </div>
 
-  <content class="controller">
-    <div id="sec-content" class="sector">
-      <div class="sec-sub-title">
-        <div class="tab-row" role="navigation">
-          <h2 class="header-sub"><a href="${pageContext.request.contextPath}/funding/wish">펀딩 관리</a></h2>
-          <h2 class="header-sub is-active"><a href="${pageContext.request.contextPath}/funding/my" aria-current="page">마이 펀딩</a></h2>
-          <h2 class="header-sub"><a href="${pageContext.request.contextPath}/funding/friend">친구 펀딩</a></h2>
+        <div class="sec-content-main">
+          <div id="myFundingList" class="content"></div>
         </div>
       </div>
+    </content>
 
-      <div class="sec-content-main">
-        <div id="myFundingList" class="content"></div>
-      </div>
-    </div>
-  </content>
-
-  <c:import url="/WEB-INF/views/include/Footer.jsp"></c:import>
-
+    <c:import url="/WEB-INF/views/include/Footer.jsp"></c:import>
+  </div>
 <script>
 (function(){
   const CTX = "${pageContext.request.contextPath}";
