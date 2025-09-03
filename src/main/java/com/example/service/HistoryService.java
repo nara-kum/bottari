@@ -36,6 +36,7 @@ public class HistoryService {
 		System.out.println("historyPaymentList: " + historyPaymentList);
 
 		if (historyPaymentList.isEmpty()) {
+			System.out.println("출력할 히스토리 리스트 없음");
 			return Collections.emptyMap();
 		} else {
 			// 일반 결제 데이터 처리
@@ -89,6 +90,7 @@ public class HistoryService {
 		List<HistoryVO> historyDetailList = historyrepository.historyDetailAdd(order_no);
 		System.out.println("HistoryService.exeHistoryDetail()");
 		System.out.println("repository에서 데이터 전달 받음");
+		System.out.println("historyDetailList: " + historyDetailList);
 
 		int funding_no = historyDetailList.get(0).getFunding_no();
 		System.out.println("funding_no: " +funding_no);

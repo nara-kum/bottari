@@ -103,6 +103,9 @@ public class HistoryController {
 		model.addAttribute("shipping_cost", historyDetailList.get(0).getShipping_cost());
 		model.addAttribute("delivery_status", shippingStatus);
 		model.addAttribute("total_price", totalPrice);
+		model.addAttribute("zipcode", historyDetailList.get(0).getZipcode());
+		model.addAttribute("address", historyDetailList.get(0).getAddress());
+		model.addAttribute("detail_address", historyDetailList.get(0).getDetail_address());
 		
 		
 		return "history/history_detail";

@@ -68,6 +68,16 @@
                 		<img class="popup-icon" alt="택배차" src="/assets/icon/icon-truck-box.svg">
                 	</div>
                 	<div class="between-flex-box">
+                		<div class="text-14">배송지 정보</div>
+                		<div class="column-flex-box">
+                			<div class="text-align-right text-14">우편번호 | ${zipcode}</div>
+                			<div class="row-flex-box">
+	                			<div class="text-14">도로명(지번) 주소 | ${address} &nbsp;&nbsp;</div>
+	                			<div class="text-14">상세주소 | ${detail_address}</div>
+                			</div>
+                		</div>
+                	</div>
+                	<div class="between-flex-box">
                 		<div class="text-14">배송상태</div>
                 		<div>${delivery_status}</div>
                 	</div>

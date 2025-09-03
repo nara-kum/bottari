@@ -253,7 +253,7 @@
 				}
 				
 				// 입력된 주소정보 가져오기
-				const zipcode = document.getElementById('zipcode').value;
+				const zipcode = document.getElementById('zipcode').value.toString();
 				const address = document.getElementById('address').value;
 				const detailAddress = document.getElementById('detailAddress').value;
 				

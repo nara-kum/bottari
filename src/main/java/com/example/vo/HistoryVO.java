@@ -6,7 +6,7 @@ public class HistoryVO {
 	private int order_no;
 	private int funding_no;
 	private int product_no;
-	private String zip_code;
+	private String zipcode;
 	private String address;
 	private String detail_address;
 	private String payment_date;
@@ -25,14 +25,14 @@ public class HistoryVO {
 	// total section
 	private int total_percent;
 	//editor
-	public HistoryVO(int order_no, int funding_no, int product_no, String zip_code, String address, String detail_address,
+	public HistoryVO(int order_no, int funding_no, int product_no, String zipcode, String address, String detail_address,
 			String payment_date, String payment_method, String payment_status, String delivery_status,
 			int payment_amount, int quantity, String title, String brand, int price, String itemimg, int shipping_cost, int total_percent) {
 		super();
 		this.order_no = order_no;
 		this.funding_no = funding_no;
 		this.product_no = product_no;
-		this.zip_code = zip_code;
+		this.zipcode = zipcode;
 		this.address = address;
 		this.detail_address = detail_address;
 		this.payment_date = payment_date;
@@ -70,11 +70,11 @@ public class HistoryVO {
 	public void setProduct_no(int product_no) {
 		this.product_no = product_no;
 	}
-	public String getZip_code() {
-		return zip_code;
+	public String getZipcode() {
+		return zipcode;
 	}
-	public void setZip_code(String zip_code) {
-		this.zip_code = zip_code;
+	public void setZipcode(String zip_code) {
+		this.zipcode = zip_code;
 	}
 	public String getAddress() {
 		return address;
@@ -164,7 +164,7 @@ public class HistoryVO {
 	@Override
 	public String toString() {
 		return "HistoryVO [order_no=" + order_no + ", funding_no=" + funding_no + ", product_no=" + product_no
-				+ ", zip_code=" + zip_code + ", address=" + address + ", detail_address=" + detail_address
+				+ ", zipcode=" + zipcode + ", address=" + address + ", detail_address=" + detail_address
 				+ ", payment_date=" + payment_date + ", payment_method=" + payment_method + ", payment_status="
 				+ payment_status + ", delivery_status=" + delivery_status + ", payment_amount=" + payment_amount
 				+ ", quantity=" + quantity + ", title=" + title + ", brand=" + brand + ", price=" + price + ", itemimg="

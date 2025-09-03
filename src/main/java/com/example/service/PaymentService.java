@@ -342,7 +342,7 @@ public class PaymentService {
 
 		// order_no 생성 (int 범위 내)
 		System.out.println("order_no 생성 시작");
-		long timestamp = Instant.now().getEpochSecond();
+		long timestamp = Instant.now().toEpochMilli();
 		String timestampStr = String.valueOf(timestamp);
 
 		// timestamp 6자리만 사용
