@@ -239,19 +239,19 @@
 }
 
 .celebrate-card-area {
-    width: 360px;
+    width: 380px;
     height: auto;
     margin-top: 40px !important;
-    padding: 0px 10px 40px 10px;
+    /* padding: 0px 10px 20px 10px; */
     border-bottom: 1px solid #eee;
 }
 
 .celebrate-card-img {
-    width: 318px;
+    width: 360px;
     height: 179px;
     display: block;
     border-radius: 4px;
-    margin: 20px auto;
+    margin: 10px auto;
 }
 
 .celebrate-guestcard {
@@ -266,10 +266,10 @@
 }
 
 .funding-area {
-    width: 360px;
+    width: 380px;
     height: auto;
     margin-top: 20px;
-    padding: 0px 10px 20px 10px;
+    /* padding: 0px 10px 20px 10px; */
     gap: 10px;
     border-bottom: 1px solid #eee;
 }
@@ -348,4 +348,63 @@
 
 .disable {
     border: none;
+}
+
+/* === Right Pane 초대장: 리스트 카드 스타일 그대로 (스코프 제한) === */
+#event-details-info .celebrate-card--use-list-style{ width:100%; box-sizing:border-box; }
+
+#event-details-info .celebrate-card--use-list-style .inv-card{
+  position:relative;
+  background:#fcfbf8;
+  border:1px solid #e7e3db;
+  border-radius:12px;
+  padding:12px;
+  margin: 10px;
+  min-height:350px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  box-shadow:0 6px 18px rgba(0,0,0,.05);
+  box-sizing:border-box;
+}
+
+#event-details-info .celebrate-card--use-list-style .inv-thumbbox{
+  height:260px;               /* ✅ 리스트와 동일한 썸네일 높이 */
+  background:#eee;
+  border-radius:10px;
+  overflow:hidden;
+}
+#event-details-info .celebrate-card--use-list-style .inv-thumb{
+  width:100%; height:100%;
+  object-fit:cover; display:block; cursor:pointer;
+}
+#event-details-info .celebrate-card--use-list-style .inv-thumb--ph{ background:#f4f4f4; }
+
+#event-details-info .celebrate-card--use-list-style .inv-badge{
+  position:absolute; top:8px; left:8px;
+  padding:4px 8px; border-radius:999px;
+  background:#ffedd5; color:#ef5327;
+  font-weight:700; font-size:12px;
+}
+
+#event-details-info .celebrate-card--use-list-style .inv-info{
+  text-align:center; padding:8px 4px 0;
+}
+#event-details-info .celebrate-card--use-list-style .inv-title{
+  font-weight:700; font-size:20px;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+#event-details-info .celebrate-card--use-list-style .inv-date{
+  font-size:16px; color:#666; margin-top:2px;
+}
+#event-details-info .celebrate-card--use-list-style .inv-actions{
+  display:flex; gap:8px; justify-content:center; padding-top:8px;
+}
+#event-details-info .celebrate-card--use-list-style .inv-btn{
+  appearance:none; background:#fff; color:#333;
+  border:1px solid #ddd; border-radius:8px; padding:2px 2px;
+  font-weight:600; cursor:pointer;
+}
+#event-details-info .celebrate-card--use-list-style .inv-link{
+  text-decoration:none; color:inherit;
 }

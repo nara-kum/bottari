@@ -1082,7 +1082,42 @@
 			}
          
          // -----------------------------------------------------------------------------------------------------------------------
-         
+         // 초대장 카드모양 변경
+			function cardTplRight(row){
+				function esc(s){ return String(s==null?"":s)
+					.replaceAll("&","&amp;").replaceAll("<","&lt;")
+					.replaceAll(">","&gt;").replaceAll('"',"&quot;")
+					.replaceAll("'","&#039;"); }
+
+				// 리스트 페이지와 동일하게 ?no= 사용
+				var viewHref = '/invitation/invitation' + (row.id ? ('?no=' + encodeURIComponent(row.id)) : '');
+
+				var html = '';
+				html += '<div class="inv-card" data-id="' + esc(row.id || '') + '">';
+
+				// 썸네일 (리스트와 동일 마크업/클래스)
+				html += '<a class="inv-link" href="' + esc(viewHref) + '">';
+				html += '  <div class="inv-thumbbox">';
+				if (row.photo) html += '    <img class="inv-thumb" src="' + esc(row.photo) + '" alt="초대장 썸네일">';
+				else html += '    <div class="inv-thumb inv-thumb--ph" aria-hidden="true"></div>';
+				if (row.hasFunding) html += '    <span class="inv-badge" aria-label="펀딩 있음">🎁 펀딩</span>';
+				html += '  </div>';
+				html += '</a>';
+
+				// 정보 (리스트와 동일)
+				html += ' <div class="inv-info">';
+				html += '   <div class="inv-title"><a class="inv-link" href="' + esc(viewHref) + '">'
+						+       esc(row.title || "초대장") + '</a></div>';
+				html += '   <div class="inv-date">' + esc(row.date || "") + '</div>';
+				html += '   <div class="inv-actions">';
+				html += '   </div>';
+				html += ' </div>';
+
+				html += '</div>';
+				return html;
+			}
+
+
          	// 펀드리스트, 초대장 호출 함수
          	function updateEventDetailsUI(data, selectedEventId) {
 			    var eventDetailDiv = document.getElementById('event-details-info');
@@ -1094,25 +1129,34 @@
 			    var html = '';
 			
 			    // 초대장 영역
-			    if (!data.invitationList || data.invitationList.length === 0) {
-			        html += ''
-			          + '<div class="column-flex-box celebrate-card-area row-align no-event">'
-			          /* + '  <img class="middle-icon" src="../../../assets/icon/icon-cross.svg" />' */
-			          + '  <div class="text-18">등록된 초대장이 없습니다.</div>'
-			          + '  <a href="/invitation/list"><button class="btn-basic btn-orange size-normal">초대장 만들기</button></a>'
-			          + '</div>';
-			    } else {
-			        var inv = data.invitationList[0]; // 필요한 만큼 루프 돌려도 됨
-			        html += ''
-			          + '<div class="celebrate-card-area">'
-			          + '  <div class="text-16 bold">내가 만든 초대장</div>'
-			          + '  <img class="celebrate-card-img" src="' + (inv.photoUrl || '') + '">'
-			          + '  <div class="show-detail">'
-			          + '    <a href="/invitation/invitation?invitation_no=' + (inv.invitationNo || '') + '">자세히보기&gt;</a>'
-			          + '  </div>'
-			          + '</div>';
-			    }
-			
+				if (!data.invitationList || data.invitationList.length === 0) {
+				html += ''
+					+ '<div class="column-flex-box celebrate-card-area row-align no-event">'
+					+ '  <div class="text-18">등록된 초대장이 없습니다.</div>'
+					+ '  <a href="/invitation/list"><button class="btn-basic btn-orange size-normal">초대장 만들기</button></a>'
+					+ '</div>';
+				} else {
+				var inv = data.invitationList[0] || {};
+				// 응답 필드 → 리스트 카드용 필드로 매핑
+				var row = {
+					id:    inv.invitationNo || inv.invitation_no || inv.id || '',
+					photo: inv.photoUrl || inv.photo || inv.photo_url || '',
+					title: inv.eventName || inv.event_name || inv.title || '초대장',
+					date:  (inv.celebrateDate ? String(inv.celebrateDate).slice(0,10).replace(/-/g,'.')
+						: (inv.event_date || inv.date || '')),
+					hasFunding: Array.isArray(data.fundingList) && data.fundingList.length > 0
+				};
+
+				html += ''
+					+ '<div class="celebrate-card-area celebrate-card--use-list-style">'
+					+ '  <div class="text-16 bold">내가 만든 초대장</div>'
+					+ '  <div class="show-detail">'
+					+ '    <a href="/invitation/list">초대장 보러가기 &gt;</a>'
+					+ '  </div>'
+					+        cardTplRight(row)   // 리스트 카드와 동일 마크업
+					+ '</div>';
+				}
+
 			    // 펀딩 영역
 			    if (!data.fundingList || data.fundingList.length === 0) {
 			        html += ''
@@ -1124,11 +1168,14 @@
 			    } else {
 			        html += ''
 			          + '<div class="funding-area column-flex-box">'
-			          + '  <div class="text-16 bold">진행중인 펀딩</div>';
+			          + '  <div class="text-16 bold">진행중인 펀딩</div>'
+			          + '  <div class="show-detail">'
+			          + '    <a href="/funding/my">펀딩 보러가기 &gt;</a>'
+			          + '  </div>';
 			
 			        data.fundingList.forEach(function (product) {
 			            html += ''
-			              + '  <a href="">'
+			              + '  <a href="/shop/productPage2?productNo=' + (product.productNo || '') + '&fundingNo=' + (product.fundingNo || '') + '">'
 			              + '    <div class="list-basic list-360 row-flex-box">'
 			              + '      <img class="list-img-50 column-align" src="' + (product.itemimg || '') + '">'
 			              + '      <div class="column-flex-box column-align funding-detail">'
@@ -1139,12 +1186,6 @@
 			              + '    </div>'
 			              + '  </a>';
 			        });
-			
-			        html += ''
-			          + '  <div class="show-detail">'
-			          + '    <a href="/funding/myfunding">전체보기&gt;</a>'
-			          + '  </div>'
-			          + '</div>';
 			    }
 			
 			    eventDetailDiv.innerHTML = html;

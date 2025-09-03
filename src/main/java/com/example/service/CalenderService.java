@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import com.example.repository.CalenderRepository;
 import com.example.vo.CalenderVO;
 import com.example.vo.InvitationVO;
-import com.example.vo.ProductVO;
+import com.example.vo.WishlistVO;
 
 @Service
 public class CalenderService {
@@ -40,10 +40,10 @@ public class CalenderService {
 	}
 
 	// 펀딩리스트 가져오기
-	public List<ProductVO> exegetProductList(int event_id) {
+	public List<WishlistVO> exegetProductList(int event_id) {
 		System.out.println("CalenderService.exeProductList()");
 		
-		List<ProductVO> productList = calenderrepository.getProductList(event_id);
+		List<WishlistVO> productList = calenderrepository.getProductList(event_id);
 		
 		return productList;
 	}
