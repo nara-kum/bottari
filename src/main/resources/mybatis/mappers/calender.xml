@@ -17,7 +17,8 @@
 	<!-- 캘린더 초대장 리스트 -->
 	<select id="getInvitationList" resultType="com.example.vo.InvitationVO">
 			<![CDATA[
-			select	event_no AS eventNo,
+			select	invitation_no AS invitationNo,
+					event_no AS eventNo,
 					photo_url AS photoUrl
 			from invitation
 			where event_no = #{event_id}

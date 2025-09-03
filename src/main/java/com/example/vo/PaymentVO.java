@@ -4,7 +4,7 @@ public class PaymentVO {
 	//field
 	private int payment_no;				//결제 내역 번호
 	private int user_no;				//회원 번호
-	private int funding_no;		//펀딩 상품 번호
+	private int funding_no;				//펀딩 상품 번호
 	private int product_no;				//상품 번호
 	private int order_no;				//주문번호
 	private String zipcode;				//배송지 우편번호

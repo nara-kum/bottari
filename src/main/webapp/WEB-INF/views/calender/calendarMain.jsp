@@ -1106,9 +1106,9 @@
 			        html += ''
 			          + '<div class="celebrate-card-area">'
 			          + '  <div class="text-16 bold">내가 만든 초대장</div>'
-			          + '  <img class="celebrate-card-img" src="' + (inv.photo_url || '') + '">'
+			          + '  <img class="celebrate-card-img" src="' + (inv.photoUrl || '') + '">'
 			          + '  <div class="show-detail">'
-			          + '    <a href="/invitation/invitation?invitation_no=' + (inv.invitation_no || '') + '">자세히보기&gt;</a>'
+			          + '    <a href="/invitation/invitation?invitation_no=' + (inv.invitationNo || '') + '">자세히보기&gt;</a>'
 			          + '  </div>'
 			          + '</div>';
 			    }

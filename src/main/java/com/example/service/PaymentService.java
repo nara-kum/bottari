@@ -3,13 +3,13 @@ package com.example.service;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.repository.PaymentRepository;
-import com.example.vo.CartListVO;
 import com.example.vo.CheckAddressVO;
 import com.example.vo.CheckOutVO;
 import com.example.vo.CheckoutFundingVO;
@@ -28,6 +28,24 @@ public class PaymentService {
 	// method g/s
 
 	// method normal
+	// 일반 결제 리스트 조회(리뉴얼)
+	public List<CheckOutVO> exeNormalCheckOutList(List<Integer> cartNos) {
+		System.out.println("PaymentService.exeNormalCheckOutList()");
+		
+		List<CheckOutVO> checkoutList = paymentrepository.checkoutList(cartNos);
+		System.out.println("PaymentService.exeNormalCheckOutList()");
+		System.out.println("repository에서 데이터 받아오기 성공");
+		System.out.println("checkoutList: " + checkoutList);
+		
+		if(checkoutList.isEmpty()) {
+			return checkoutList;
+		} else {
+			
+		}
+		
+		return checkoutList;
+	}
+	
 	// 일반 결제 리스트 조회
 	public List<CheckOutVO> execheckoutList(List<Integer> cartNos) {
 		System.out.println("PaymentService.execheckoutList()");
@@ -37,12 +55,6 @@ public class PaymentService {
 		System.out.println("repository에서 데이터 건네받기 성공");
 		
 		System.out.println("checkoutList: " + checkoutList);
-		
-		List<CartListVO> paymentMainList = new ArrayList<>();
-		
-		for(int i = 0 ; i<checkoutList.size() ; i++) {
-			paymentMainList.get(i).getCart_no();
-		}
 
 		return checkoutList;
 	}
@@ -172,76 +184,61 @@ public class PaymentService {
 		}
 
 	}
-
-	// 일반결제 결제버튼 클릭했을 때
-	public int exepayment(List<PaymentVO> paymentList) {
-		System.out.println("PaymentService.exepayment()");
-
-		// order_no 생성 (int 범위 내)
+	
+	// 일반 결제 프로세스 (리뉴얼)
+	public PaymentVO exeprocessNormalPayment(Map<String, Object> paymentData, int user_no) {
+		System.out.println("PaymentService.exeprocessNormalPayment()");
+		
+		// user_no 확인
+		System.out.println("user_no: " + user_no);
+		
+		// order_no 생성
 		int order_no = generatedOrderNum();
 		System.out.println("order_no: " + order_no);
-
-		System.out.println("Before: " + paymentList);
-
-		for (int i = 0; i < paymentList.size(); i++) {
-			paymentList.get(i).setOrder_no(order_no);
+		
+		// Map에서 공통 데이터 추출
+		String payment_method = (String) paymentData.get("payment_method");
+		String service_type = (String) paymentData.get("service_type");
+		String zipcode = (String) paymentData.get("zipcode");
+		String address = (String) paymentData.get("address");
+		String detailAddress = (String) paymentData.get("detail_address");
+		String payment_status = "paid";
+		String delivery_status = "준비중";
+		int funding_no = 0;
+		
+		
+		// Map에서 배열 데이터 추출
+		List<Map<String, Object>> items = (List<Map<String, Object>>) paymentData.get("productItems");
+		
+		// PaymentVO 리스트 생성
+		List<PaymentVO> paymentList = new ArrayList<>();
+		
+		for(Map<String, Object> item : items) {
+			PaymentVO paymentvo = new PaymentVO();
+			
+			// 단일 데이터 대입
+			paymentvo.setUser_no(user_no);
+			paymentvo.setFunding_no(funding_no);
+			paymentvo.setOrder_no(order_no);
+			paymentvo.setPayment_method(payment_method);
+			paymentvo.setService_type(service_type);
+			paymentvo.setZipcode(zipcode);
+			paymentvo.setAddress(address);
+			paymentvo.setDetail_address(detailAddress);
+			paymentvo.setPayment_status(payment_status);
+			paymentvo.setDelivery_status(delivery_status);
+			// 배열 데이터 대입
+			paymentvo.setProduct_no((Integer) item.get("product_no"));
+			paymentvo.setPayment_amount((Integer) item.get("item_total"));
+			paymentvo.setQuantity((Integer) item.get("quantity"));
+			paymentvo.setDetailoption_no((Integer) item.get("detailoption_no"));
+			
+			paymentList.add(paymentvo);
 		}
-
-		System.out.println("order_no 대입 완료");
-
-		// ===============================================================================================
-
-		List<Integer> productIdList = new ArrayList<>();
-
-		System.out.println("product_no 추출 시작...");
-
-		for (int i = 0; i < paymentList.size(); i++) {
-			int product_no = paymentList.get(i).getProduct_no();
-
-			productIdList.add(product_no);
-		}
-
-		System.out.println("product_no 추출 완료");
-		System.out.println("productIdList: " + productIdList);
-
-		// ===============================================================================================
-
-		System.out.println("주소 추출 준비 repository로 이동...");
-		List<CheckAddressVO> addressList = paymentrepository.selectAddress(productIdList);
-
-		System.out.println("주소 추출 완료");
-		System.out.println("주소 대입 시작...");
-
-		for (int i = 0; i < paymentList.size(); i++) {
-			int main = paymentList.get(i).getProduct_no();
-			for (int j = 0; j < addressList.size(); j++) {
-				int sub = addressList.get(j).getProduct_no();
-				if (main == sub) {
-					String shipping_yn = addressList.get(j).getShipping_yn();
-					String zipcode = addressList.get(j).getZipcode();
-					String address = addressList.get(j).getAddress();
-					String detailAddress = addressList.get(j).getDetail_address();
-
-					if (shipping_yn.equals("n")) {
-						zipcode = null;
-						address = null;
-						detailAddress = null;
-					} else {
-						paymentList.get(i).setZipcode(zipcode);
-						paymentList.get(i).setAddress(address);
-						paymentList.get(i).setDetail_address(detailAddress);
-
-						break;
-					}
-				}
-			}
-		}
-
-		System.out.println("주소대입 완료");
-		System.out.println("paymentList: " + paymentList);
-
-		for (int i = 0; i < paymentList.size(); i++) {
-			PaymentVO vo = paymentList.get(i);
+		
+		// repository로 전달
+		for(int i = 0 ; i<paymentList.size() ; i++) {
+			PaymentVO vo =  paymentList.get(i);
 			paymentrepository.insertPaymentTable(vo);
 			System.out.println(vo);
 			paymentrepository.insertPaymentgoodsTable(vo);
@@ -249,8 +246,27 @@ public class PaymentService {
 			paymentrepository.insertPaymentGoodsOptionTable(vo);
 			System.out.println(vo);
 		}
-
-		return 0;
+		
+		System.out.println("PaymentService.exeprocessNormalPayment()");
+		System.out.println("결제프로세스 완료 / 장바구니 삭제 시작");
+		
+		List<Integer> cartNos = new ArrayList<>();
+		
+		for(Map<String, Object> item : items) {
+			int cartNo = (Integer) item.get("cart_no");
+			
+			cartNos.add(cartNo);
+		}
+		
+		System.out.println("cartNos: " + cartNos);
+		
+		int count = paymentrepository.deleteCart(cartNos);
+		
+		if(count == 1) {
+			paymentrepository.deleteCartDetail(cartNos);
+		}
+		
+		return (PaymentVO) paymentData;
 	}
 
 	// 결제 완료 후 결제된 상품의 장바구니 테이블 삭헤

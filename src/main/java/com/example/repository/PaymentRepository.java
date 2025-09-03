@@ -84,7 +84,7 @@ public class PaymentRepository {
 		return addressList;
 	}
 	
-	// 데이터베이스에 저장
+	// 데이터베이스에 저장(payment table)
 	public PaymentVO insertPaymentTable(PaymentVO vo) {
 		System.out.println("PaymentRepository.insertPaymentTable()");
 		
@@ -96,6 +96,7 @@ public class PaymentRepository {
 		return vo;
 	}
 	
+	// 데이터베이스에 저장(payment_goods table)
 	public PaymentVO insertPaymentgoodsTable(PaymentVO vo) {
 		System.out.println("PaymentRepository.insertPaymentgoodsTable()");
 		
@@ -104,6 +105,7 @@ public class PaymentRepository {
 		return vo;
 	}
 	
+	// 데이터베이스에 저장(payment_goods_option table)
 	public PaymentVO insertPaymentGoodsOptionTable(PaymentVO vo) {
 		System.out.println("PaymentRepository.insertPaymentGoodsOptionTable()");
 		

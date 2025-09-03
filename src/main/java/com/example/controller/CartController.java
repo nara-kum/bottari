@@ -58,6 +58,13 @@ public class CartController {
 		}
 	}
 	
+	@RequestMapping(value = "/shop/no_cart", method = { RequestMethod.GET, RequestMethod.POST })
+	public String noCart() {
+		System.out.println("CartController.noCart()");
+		
+		return "shop/no_cart";
+	}
+	
 	
 
 	// 장바구니등록

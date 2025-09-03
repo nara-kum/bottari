@@ -28,6 +28,8 @@ public class PaymentApiController {
 	//method g/s
 	
 	//method normal
+	
+	// 펀딩결제 프로세스
 	@RequestMapping(value = "/funding", method = {RequestMethod.GET,RequestMethod.POST})
 	public Map<String, Object> proccessFundingPayment(@RequestBody PaymentVO request, HttpSession session) {
 		System.out.println("PaymentController.proccessFundingPayment()");
@@ -67,5 +69,41 @@ public class PaymentApiController {
 	    }
 	    
 	    return response;
+	}
+	
+	// 일반 결제 프로세스
+	@RequestMapping(value = "/processing", method = {RequestMethod.GET,RequestMethod.POST})
+	public Map<String, Object> processingNormalPayment(@RequestBody Map<String, Object> paymentData, HttpSession session){
+		System.out.println("PaymentApicontroller.processiongNormalPayment()");
+		
+		
+		UserVO authuser = (UserVO) session.getAttribute("authUser");
+		
+		Map<String, Object> response = new HashMap<>();
+		
+		if(authuser == null) {
+			response.put("success", false);
+			response.put("message", "로그인오류");
+			
+			return response;
+		}
+		
+		int user_no = authuser.getUserNo();
+		
+		System.out.println("request: " + paymentData);
+		
+		try {
+			PaymentVO result = paymentservice.exeprocessNormalPayment(paymentData, user_no);
+			
+			response.put("success", true);
+			response.put("message", "결제완료");
+			response.put("payment_no", result.getPayment_no());
+		} catch (Exception e) {
+			response.put("success", false);
+			response.put("message", "결제실패" + e.getMessage());
+		}
+		
+		return response;
+		
 	}
 }
