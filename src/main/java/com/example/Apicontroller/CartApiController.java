@@ -119,7 +119,7 @@ public class CartApiController {
 				if (updateCartList.isEmpty()) {
 					result.put("success", true);
 					result.put("isEmpty", true);
-					result.put("redirectUrl", "/no_cart");
+					result.put("redirectUrl", "/shop/no_cart");
 				} else {
 
 					CartListVO firstItem = updateCartList.get(0);
@@ -180,7 +180,7 @@ public class CartApiController {
 			if (updateCartList == null || updateCartList.isEmpty()) {
 				result.put("success", true);
 				result.put("isEmpty", true);
-				result.put("redirectUrl", "/no_cart");
+				result.put("redirectUrl", "/shop/no_cart");
 			} else {
 				CartListVO firstItem = updateCartList.get(0);
 				result.put("success", true);

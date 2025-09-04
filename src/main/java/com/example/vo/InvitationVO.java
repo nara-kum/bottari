@@ -337,7 +337,7 @@ public class InvitationVO {
 		return eventName;
 	}
 
-	public void getEventName(String eventName) {
+	public void setEventName(String eventName) {
 		this.eventName = eventName;
 	}
 	//메소드-일반

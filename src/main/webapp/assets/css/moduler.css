@@ -158,7 +158,7 @@
 
 .align-center {
     align-items: center;
-    justify-self: center;
+    justify-content: center;
 }
 
 .align-left {
@@ -168,7 +168,7 @@
 
 .align-right {
     align-items: flex-end;
-    justify-self: flex-end;
+    justify-content: flex-end;
 }
 
 .row-align {

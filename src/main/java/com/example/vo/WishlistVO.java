@@ -38,7 +38,7 @@ public class WishlistVO {
 		super();
 		this.userNo = userNo;
 		this.wishlistNo = wishlistNo;
-		this.brand = image;
+		this.image = image;
 		this.brand = brand;
 		this.title = title;
 		this.price = price;
