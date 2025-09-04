@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html lang="ko">
@@ -7,27 +6,26 @@
 <head>
 <meta charset="utf-8">
 <!-- CDN(외부 사이트 프리셋) 리셋 css 대용-->
-<link rel="stylesheet"
-	href="https://cdn.jsdelivr.net/npm/reset-css@4.0.1/reset.min.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reset-css@4.0.1/reset.min.css" />
 
 <!-- global.css호출 -->
 <link rel="stylesheet" href="/assets/css/Global.css">
 <!-- 본인 파일의 경로에 맞게 수정해야함 -->
 
 <!-- sweetalert cdn 호출 -->
-<link rel="stylesheet"
-	href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <!-- full_calender 호출 -->
 <link href='/assets/css/calender/main.css' rel='stylesheet' />
 <script src='/assets/js/main.js'></script>
 
 <!-- local css 호출-->
-<link rel="stylesheet"
-	href="/assets/css/calender/calender_stylesheet.css">
+<link rel="stylesheet" href="/assets/css/calender/calender_stylesheet.css">
 <link rel="stylesheet" href="/assets/css/calender/all_in_one.css">
 <!-- 본인 파일의 경로에 맞게 수정해야함 -->
 <link rel="stylesheet" href="/assets/css/moduler.css">
+
+
 
 <title>보따리몰</title>
 </head>
@@ -80,6 +78,21 @@
 			
 			let lastClickedDate = null;
 			let selectedEventId = null;
+
+			/*********************/
+			// 오늘 날짜 "YYYY-MM-DD" (로컬 기준)
+			function ymdLocal(d){
+			const y = d.getFullYear();
+			const m = ('0'+(d.getMonth()+1)).slice(-2);
+			const dd = ('0'+d.getDate()).slice(-2);
+			return `${y}-${m}-${dd}`;
+			}
+			const TODAY_STR = ymdLocal(new Date());
+
+			// 오늘 칸 프레임을 보관해 둘 변수
+			let todayCellFrame = null;
+			/*********************/
+
 			
 			var calendarEl = document.getElementById('calendar');
             var calendar = new FullCalendar.Calendar(calendarEl, {
@@ -104,6 +117,34 @@
                 navLinks: false,
                 
                 editable: false,
+
+
+				//********************************************************************************************************//
+				dayCellDidMount: function(info) {
+					
+					// 왼쪽
+					if (info.el.matches('tr > *:first-child')) {
+					info.el.style.borderLeft = '2px solid #e7e3db';
+					}
+					// 위쪽 (헤더가 따로라 daygrid body의 첫 줄만)
+					if (info.el.parentElement && info.el.parentElement.matches('.fc-daygrid-body tr:first-child')) {
+					info.el.style.borderTop = '2px solid #e7e3db';
+					}
+
+					// 오늘 칸 배경/테두리/숫자색
+					if (info.isToday) {
+						const frame = info.el.querySelector('.fc-daygrid-day-frame');
+						if (frame) {
+						frame.style.background = '#fff6ed';
+						frame.style.boxShadow = 'inset 0 0 0 2px #ef5327'; // ← 기존 유지
+						todayCellFrame = frame; // ← 추가: 오늘 프레임 보관**
+						}
+						const num = info.el.querySelector('.fc-daygrid-day-number');
+						if (num) num.style.color = '#ef5327';
+					}
+				},
+				//********************************************************************************************************//
+
                 
             	 // 이벤트 렌더링 커스터마이징
                 eventContent: function (arg) {
@@ -458,7 +499,7 @@
 				let htmlStr = '';
 				htmlStr += '<div class="no-event">';
 				htmlStr += '	<img class="middle-icon" src="../../../assets/icon/icon-calendar-exclamation.svg" />';
-				htmlStr += '	<div class="text-18">등록된 기념일이 없습니다.</div>';
+				htmlStr += '	<div class="text-14">등록된 기념일이 없습니다.</div>';
 				htmlStr += '	<button class="btn-basic btn-orange size-normal create-event-btn">기념일 등록하기</button>';
 				htmlStr += '</div>';
 				
@@ -508,27 +549,74 @@
          // -----------------------------------------------------------------------------------------------------------------------
             
             // 날짜칸의 색을 바꾸는 함수 //
-            function highlightDateCell(dateStr) {
+            // function highlightDateCell(dateStr) {
             	
-            	console.log("dateStr: " + dateStr);
+            // 	console.log("dateStr: " + dateStr);
             	
-                document.querySelectorAll('.fc-daygrid-day').forEach(cell => {
-                    cell.style.backgroundColor = '';
-                    cell.querySelector('.fc-daygrid-day-number').style.color = '';
-                });
+            //     document.querySelectorAll('.fc-daygrid-day').forEach(cell => {
+            //         cell.style.backgroundColor = '';
+            //         cell.querySelector('.fc-daygrid-day-number').style.color = '';
+            //     });
 
                 
-                const clickedCell = document.querySelector('.fc-daygrid-day[data-date="' + dateStr + '"]');
-                if (clickedCell) {
-                    console.log('detected highlightDateCell()');
-                    clickedCell.style.backgroundColor = '#EF5327';
-                    const dayNumber = clickedCell.querySelector('.fc-daygrid-day-number');
-                    if (dayNumber) {
-                        dayNumber.style.color = '#fff';
-                    }
-                }
-            }
-         
+            //     const clickedCell = document.querySelector('.fc-daygrid-day[data-date="' + dateStr + '"]');
+            //     if (clickedCell) {
+            //         console.log('detected highlightDateCell()');
+            //         clickedCell.style.backgroundColor = '#EF5327';
+            //         // clickedCell.style.backgroundColor = '#EF5327';
+            //         const dayNumber = clickedCell.querySelector('.fc-daygrid-day-number');
+            //         if (dayNumber) {
+            //             dayNumber.style.color = '#fff';
+            //         }
+            //     }
+            // }
+
+			
+			function highlightDateCell(dateStr) {
+				if (!dateStr) return;
+
+				// 'YYYY-MM-DDTHH...' 로 들어오는 경우 대비
+				if (dateStr.length > 10) dateStr = dateStr.slice(0, 10);
+
+				// 1) 이전 선택/오버레이 제거
+				document.querySelectorAll('#calendar .fc-daygrid-day.is-selected')
+					.forEach(el => el.classList.remove('is-selected'));
+				document.querySelectorAll('#calendar .fc-selected-ring')
+					.forEach(el => el.remove());
+
+				// 2) 오늘 테두리 on/off
+				if (todayCellFrame) {
+					if (dateStr !== TODAY_STR) {
+					// 다른 날을 선택하면 오늘 테두리 제거
+					todayCellFrame.style.boxShadow = '';
+					} else {
+					// 오늘을 선택하면 오늘 테두리 복구 (원래 값)
+					todayCellFrame.style.boxShadow = 'inset 0 0 0 2px #ef5327';
+					}
+				}
+
+				// 3) 선택 칸 찾아서 링 추가
+				let cell = document.querySelector(`#calendar .fc-daygrid-day[data-date="${dateStr}"]`);
+				if (!cell) {
+					cell = [...document.querySelectorAll('#calendar .fc-daygrid-day')]
+					.find(el => (el.getAttribute('data-date') || '').slice(0, 10) === dateStr);
+					if (!cell) return;
+				}
+				cell.classList.add('is-selected');
+
+				const frame = cell.querySelector('.fc-daygrid-day-frame') || cell;
+				frame.style.position = 'relative';
+				const ring = document.createElement('div');
+				ring.className = 'fc-selected-ring';
+				ring.style.position = 'absolute';
+				ring.style.inset = '0px';                 // 내부선과 겹치지 않게 살짝 안쪽
+				ring.style.border = '2px solid #ef5327';  // 테두리 색/두께
+				ring.style.pointerEvents = 'none';
+				ring.style.zIndex = '9999';               // 이벤트 글자/아이콘보다 위
+				frame.appendChild(ring);
+				}
+
+
          // -----------------------------------------------------------------------------------------------------------------------
          
          
@@ -1132,7 +1220,7 @@
 				if (!data.invitationList || data.invitationList.length === 0) {
 				html += ''
 					+ '<div class="column-flex-box celebrate-card-area row-align no-event">'
-					+ '  <div class="text-18">등록된 초대장이 없습니다.</div>'
+					+ '  <div class="text-14">등록된 초대장이 없습니다.</div>'
 					+ '  <a href="/invitation/list"><button class="btn-basic btn-orange size-normal">초대장 만들기</button></a>'
 					+ '</div>';
 				} else {
@@ -1162,8 +1250,8 @@
 			        html += ''
 			          + '<div class="column-flex-box celebrate-card-area row-align no-event">'
 			          /* + '  <img class="middle-icon" src="../../../assets/icon/icon-cross.svg" />' */
-			          + '  <div class="text-18">등록된 펀딩이 없습니다.</div>'
-			          + '  <a href="/funding/wish"><button class="btn-basic btn-orange size-normal">펀딩 관리하기</button></a>'
+			          + '  <div class="text-14">등록된 펀딩이 없습니다.</div>'
+			          + '  <a href="/funding/my"><button class="btn-basic btn-orange size-normal">펀딩 관리하기</button></a>'
 			          + '</div>';
 			    } else {
 			        html += ''

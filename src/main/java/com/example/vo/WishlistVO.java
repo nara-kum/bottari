@@ -6,7 +6,7 @@ public class WishlistVO {
 	// 위시
 	private int userNo;
 	private int wishlistNo;
-	private String image;
+//	private String image;
 	private String brand;
 	private String title;
 	private int price;
@@ -23,22 +23,27 @@ public class WishlistVO {
 	private int amount;
 	private String fundingStatus;
 	private String fundingDate;
-	//장바구니
+	// 장바구니
 	private int categoryNo;
 
-	
+	// 금액 합계 표시용
+	private Integer paidAmount; // 총 모금(나+남)
+	private Integer myPaidAmount; // 내가 낸 금액
+	private Integer othersAmount; // 남들이 낸 금액
+
 	// 생성자
 	public WishlistVO() {
 		super();
 	}
 
 	public WishlistVO(int userNo, int wishlistNo, String image, String brand, String title, int price, int quantity,
-			int wishlistoptionNo, int detailoptionNo, String optionName, String detailoptionName, int fundingNo, int eventNo,
-			int productNo, int percent, int amount, String fundingStatus, String fundingDate, int categoryNo) {
+			int wishlistoptionNo, int detailoptionNo, String optionName, String detailoptionName, int fundingNo,
+			int eventNo, int productNo, int percent, int amount, String fundingStatus, String fundingDate,
+			int categoryNo) {
 		super();
 		this.userNo = userNo;
 		this.wishlistNo = wishlistNo;
-		this.image = image;
+//		this.image = image;
 		this.brand = brand;
 		this.title = title;
 		this.price = price;
@@ -57,9 +62,7 @@ public class WishlistVO {
 		this.categoryNo = categoryNo;
 	}
 
-	
-	
-	//메소드gs
+	// 메소드gs
 	public int getUserNo() {
 		return userNo;
 	}
@@ -76,13 +79,13 @@ public class WishlistVO {
 		this.wishlistNo = wishlistNo;
 	}
 
-	public String getImage() {
-		return image;
-	}
-
-	public void setImage(String image) {
-		this.image = image;
-	}
+//	public String getImage() {
+//		return image;
+//	}
+//
+//	public void setImage(String image) {
+//		this.image = image;
+//	}
 
 	public String getBrand() {
 		return brand;
@@ -212,29 +215,39 @@ public class WishlistVO {
 		this.categoryNo = categoryNo;
 	}
 
-	
-	//메소드일반
-	@Override
-	public String toString() {
-		return "WishlistVO [userNo=" + userNo + ", wishlistNo=" + wishlistNo + ", image=" + image + ", brand=" + brand + ", title=" + title
-				+ ", price=" + price + ", quantity=" + quantity + ", wishlistoptionNo=" + wishlistoptionNo
-				+ ", detailoptionNo=" + detailoptionNo + ", optionName=" + optionName + ", detailoptionName=" + detailoptionName + ", fundingNo="
-				+ fundingNo + ", eventNo=" + eventNo + ", productNo=" + productNo + ", percent=" + percent + ", amount="
-				+ amount + ", fundingStatus=" + fundingStatus + ", fundingDate=" + fundingDate + ", categoryNo=" + categoryNo+ "]";
+	public Integer getPaidAmount() {
+		return paidAmount;
 	}
 
-	// 금액 합계 표시용
-	private Integer paidAmount;     // 총 모금(나+남)
-	private Integer myPaidAmount;   // 내가 낸 금액
-	private Integer othersAmount;   // 남들이 낸 금액
+	public void setPaidAmount(Integer paidAmount) {
+		this.paidAmount = paidAmount;
+	}
 
-	public Integer getPaidAmount() { return paidAmount; }
-	public void setPaidAmount(Integer paidAmount) { this.paidAmount = paidAmount; }
+	public Integer getMyPaidAmount() {
+		return myPaidAmount;
+	}
 
-	public Integer getMyPaidAmount() { return myPaidAmount; }
-	public void setMyPaidAmount(Integer myPaidAmount) { this.myPaidAmount = myPaidAmount; }
+	public void setMyPaidAmount(Integer myPaidAmount) {
+		this.myPaidAmount = myPaidAmount;
+	}
 
-	public Integer getOthersAmount() { return othersAmount; }
-	public void setOthersAmount(Integer othersAmount) { this.othersAmount = othersAmount; }
+	public Integer getOthersAmount() {
+		return othersAmount;
+	}
+
+	public void setOthersAmount(Integer othersAmount) {
+		this.othersAmount = othersAmount;
+	}
+
+	// 메소드일반
+	@Override
+	public String toString() {
+		return "WishlistVO [userNo=" + userNo + ", wishlistNo=" + wishlistNo + ", brand=" + brand + ", title=" + title
+				+ ", price=" + price + ", quantity=" + quantity + ", wishlistoptionNo=" + wishlistoptionNo
+				+ ", detailoptionNo=" + detailoptionNo + ", optionName=" + optionName + ", detailoptionName="
+				+ detailoptionName + ", fundingNo=" + fundingNo + ", eventNo=" + eventNo + ", productNo=" + productNo
+				+ ", percent=" + percent + ", amount=" + amount + ", fundingStatus=" + fundingStatus + ", fundingDate="
+				+ fundingDate + ", categoryNo=" + categoryNo + "]";
+	}
 
 }
