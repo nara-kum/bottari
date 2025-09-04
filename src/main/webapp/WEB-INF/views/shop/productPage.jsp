@@ -225,10 +225,19 @@
 								
 								
 								<!-- 구매하기 폼 추가 -->
-								<form action="${pageContext.request.contextPath}/payment/checkout?cartNo=${cartVO.cart_no}" method="get">
-								<input type="hidden" name="cartNo" value="${cartVO.cart_no}">
-									<button class="funding-btn" type="submit">구매하기</button>
-								</form>
+									<form action="${pageContext.request.contextPath}/cart/cartadd" method="get" id="cartForm">
+										<input type="hidden" name="productNo"
+											value="${productViewVO.product_no}"> <input
+											type="hidden" name="categoryNo"
+											value="${productViewVO.category_no}"> <input
+											type="hidden" name="quantity" id="hiddenQuantity" value="1">
+										<!-- 새로 추가: 선택된 옵션들을 저장할 숨겨진 필드 -->
+										<input type="hidden" name="selectedOptions"
+											id="selectedOptionsInput" value="">
+				
+										<button type="submit" class="funding-btn"
+											onclick="setSelectedOptions()">구매하기</button>
+									</form>
 							</div>
 							 
 							 
