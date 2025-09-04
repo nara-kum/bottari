@@ -11,6 +11,8 @@
     <link rel="stylesheet" href="/assets/css/Global.css"> <!-- 본인 파일의 경로에 맞게 수정해야함 -->
     <link rel="stylesheet" href="/assets/css/moduler.css"> <!-- 본인 파일의 경로에 맞게 수정해야함 -->
     <link rel="stylesheet" href="/assets/css/shop/check_out.css">
+
+    <title>보따리몰</title>
 </head>
 <body>
 <div class="sec-content">

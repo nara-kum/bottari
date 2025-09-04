@@ -5,17 +5,14 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<title>bottari 초대장 관리</title>
 
 <!-- 공통 스타일 -->
-<link rel="stylesheet"
-	href="${pageContext.request.contextPath}/assets/css/reset.css">
-<link rel="stylesheet"
-	href="${pageContext.request.contextPath}/assets/css/Global.css">
-<link rel="stylesheet"
-	href="${pageContext.request.contextPath}/assets/css/invitation/invitationList.css">
-<script
-	src="${pageContext.request.contextPath}/assets/js/jquery/jquery-3.7.1.js"></script>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/reset.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/Global.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/invitation/invitationList.css">
+<script 	src="${pageContext.request.contextPath}/assets/js/jquery/jquery-3.7.1.js"></script>
+
+  <title>보따리몰</title>
 </head>
 <body class="family">
 

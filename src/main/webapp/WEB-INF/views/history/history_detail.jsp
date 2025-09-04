@@ -10,6 +10,8 @@
                 <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/Global.css">
                 <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/history.css">
                 <link rel="stylesheet" href="/assets/css/moduler.css">
+
+                <title>보따리몰</title>
             </head>
 
             <body class="family">

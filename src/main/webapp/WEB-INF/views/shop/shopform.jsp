@@ -12,6 +12,8 @@
 	
 	<!-- Daum 우편번호 API -->
 	<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+
+	<title>보따리몰</title>
 </head>
 
 <!-- js -->

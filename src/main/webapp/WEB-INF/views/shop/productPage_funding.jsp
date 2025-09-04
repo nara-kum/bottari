@@ -9,12 +9,11 @@
 
 <head>
 <meta charset="utf-8">
-<link rel="stylesheet"
-	href="${pageContext.request.contextPath}/assets/css/reset.css">
-<link rel="stylesheet"
-	href="${pageContext.request.contextPath}/assets/css/Global.css">
-<link rel="stylesheet"
-	href="${pageContext.request.contextPath}/assets/css/shop/productPage_funding.css">
+<link rel="stylesheet" 	href="${pageContext.request.contextPath}/assets/css/reset.css">
+<link rel="stylesheet" 	href="${pageContext.request.contextPath}/assets/css/Global.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/shop/productPage_funding.css">
+
+	<title>보따리몰</title>
 </head>
 
 <!-- js -->

@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="../../../assets/css/Global.css">
     <link rel="stylesheet" href="../../../assets/css/shop/emptyCart.css">
 
+	<title>보따리몰</title>
 </head>
 
 <body class="family">

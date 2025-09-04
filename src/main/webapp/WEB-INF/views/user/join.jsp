@@ -13,6 +13,7 @@
 <!--js-->
 <script src="${pageContext.request.contextPath}/assets/js/jquery/jquery-3.7.1.js">
 	
+	<title>보따리몰</title>
 </script>
 </head>
 <body class="family">

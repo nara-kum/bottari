@@ -11,6 +11,7 @@
 				<link rel="stylesheet" href="../../../assets/css/shop/cart.css">
 				<link rel="stylesheet" href="../../../assets/css/moduler.css">
 
+				<title>보따리몰</title>
 			</head>
 
 			<body class="family">

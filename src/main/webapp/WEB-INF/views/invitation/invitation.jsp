@@ -13,8 +13,7 @@
       <script src="${pageContext.request.contextPath}/assets/js/jquery/jquery-3.7.1.js"></script>
       <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js" crossorigin="anonymous"></script>
       <style>
-        /* 초대장 영역에서 진행바 가리는 오버레이/유틸을 비활성화 */
-        #giftPreview .mf-meter .bar::before,
+        /* #giftPreview .mf-meter .bar::before,
         #giftPreview .mf-meter .bar::after {
           display: none !important;
         }
@@ -22,8 +21,10 @@
         #giftPreview .mf-meter .bar .fill {
           flex: 0 0 auto !important;
           min-width: 0 !important;
-        }
+        } */
       </style>
+
+      <title>보따리몰</title>
     </head>
 
     <body class="family">

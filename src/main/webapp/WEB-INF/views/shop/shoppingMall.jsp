@@ -9,6 +9,8 @@
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/reset.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/Global.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/shop/shoppingMall.css">
+
+	<title>보따리몰</title>
 </head>
 
 <body class="family">

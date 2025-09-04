@@ -29,7 +29,7 @@
 <!-- 본인 파일의 경로에 맞게 수정해야함 -->
 <link rel="stylesheet" href="/assets/css/moduler.css">
 
-<title>캘린더 ver.0.5.2</title>
+<title>보따리몰</title>
 </head>
 
 <body class="family">

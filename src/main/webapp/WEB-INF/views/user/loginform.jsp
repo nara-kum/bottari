@@ -11,6 +11,8 @@
 			<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/Global.css">
 			<link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/user/login.css">
 			<script src="${pageContext.request.contextPath}/assets/js/jquery/jquery-3.7.1.js"></script>
+
+			<title>보따리몰</title>
 		</head>
 
 		<body class="family">
