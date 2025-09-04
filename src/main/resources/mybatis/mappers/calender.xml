@@ -37,7 +37,7 @@
 				    p.title,
 				    p.price,
 				    p.brand,
-				    p.itemimg
+				    p.itemimg image
 			from funding_product fp
 			join product p ON fp.product_no = p.product_no
 			where fp.event_no = #{event_id}

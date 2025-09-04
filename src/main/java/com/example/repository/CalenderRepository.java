@@ -46,7 +46,7 @@ public class CalenderRepository {
 		System.out.println("CalenderRepository.getproductList()");
 		
 		List<WishlistVO> productList = sqlsession.selectList("calender.getProductList", event_id);
-		
+		System.out.println(productList);
 		return productList;
 	}
 

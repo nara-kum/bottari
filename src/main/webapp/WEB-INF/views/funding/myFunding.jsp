@@ -86,7 +86,7 @@
 
   function renderCard(vo){
     const fundingNo   = Number(vo.fundingNo)||0;
-    const productNo   = Number(vo.productNo)||0;   // ★ 추가
+    const productNo   = Number(vo.productNo)||0;
     const fundingDate = vo.fundingDate || '';
     const eventName   = vo.eventName || '';
     const brand       = vo.brand || '';
@@ -94,7 +94,7 @@
     const optionName  = vo.optionName ?? vo.option_name ?? '';
     const detailOpt   = vo.detailoptionName ?? vo.detail_option_name ?? '';
     const price       = Number(vo.price)||0;
-    const paidAmount  = Number(vo.paidAmount||0);   // 초기분자 (서버 집계)
+    const paidAmount  = Number(vo.paidAmount||0);
     const percent     = price>0 ? Math.min(100, Math.round(paidAmount/price*100)) : 0;
 
     const imgUrl = resolveImage(vo);

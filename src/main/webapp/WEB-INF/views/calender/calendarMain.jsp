@@ -1265,7 +1265,7 @@
 			            html += ''
 			              + '  <a href="/shop/productPage2?productNo=' + (product.productNo || '') + '&fundingNo=' + (product.fundingNo || '') + '">'
 			              + '    <div class="list-basic list-360 row-flex-box">'
-			              + '      <img class="list-img-50 column-align" src="' + (product.itemimg || '') + '">'
+			              + '      <img class="list-img-50 column-align" src="/upload/' + (product.image || '') + '">'
 			              + '      <div class="column-flex-box column-align funding-detail">'
 			              + '        <div class="text-12">' + (product.brand || '') + '</div>'
 			              + '        <div class="text-12">' + (product.title || '') + '</div>'
