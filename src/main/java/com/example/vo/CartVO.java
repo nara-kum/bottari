@@ -58,7 +58,7 @@ public class CartVO {
 	}
 
 
-	public int getCategoty_no() {
+	public int getCategotry_no() {
 		return category_no;
 	}
 

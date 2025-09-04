@@ -43,6 +43,8 @@ public class CartApiController {
 			if (authuser == null) {
 				result.put("success", false);
 				result.put("message", "로그인이 필요합니다");
+				
+				return result;
 			}
 
 			int user_no = authuser.getUserNo();
@@ -106,6 +108,7 @@ public class CartApiController {
 			if (authuser == null) {
 				result.put("success", false);
 				result.put("message", "로그인이 필요합니다");
+				return result;
 			}
 
 			int user_no = authuser.getUserNo();

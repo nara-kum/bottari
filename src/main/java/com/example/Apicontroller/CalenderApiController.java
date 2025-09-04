@@ -1,5 +1,6 @@
 package com.example.Apicontroller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,12 +39,22 @@ public class CalenderApiController {
 
 		Map<String, Object> result = new HashMap<>();
 
-		System.out.println(event_no);
+		System.out.println("event_no: " + event_no);
 
 		try {
+			// 입력값 검증
+			if (event_no <= 0) {
+	            result.put("success", false);
+	            result.put("error", "잘못된 이벤트 번호입니다.");
+	            return ResponseEntity.badRequest().body(result);
+	        }
 			// DB에서 가져오기
 			List<InvitationVO> invitationList = calenderservice.exegetInvitationList(event_no);
 			List<WishlistVO> productList = calenderservice.exegetProductList(event_no);
+			
+			// null 체크 추가
+	        if (invitationList == null) invitationList = new ArrayList<>();
+	        if (productList == null) productList = new ArrayList<>();
 
 			result.put("success", true);
 			result.put("fundingList", productList);
@@ -65,7 +76,7 @@ public class CalenderApiController {
 			e.printStackTrace();
 
 			result.put("success", false);
-			result.put("error", e.getMessage());
+			result.put("error", "서버 오류가 발생했습니다: " + e.getMessage());
 
 			return ResponseEntity.status(500).body(result);
 		}
