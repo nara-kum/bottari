@@ -2,7 +2,6 @@ package com.example.service;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -42,7 +41,7 @@ public class HistoryService {
 			// 일반 결제 데이터 처리
 			List<Integer> paymentNoList = historyPaymentList.stream().map(HistoryListVO::getPayment_no)
 					.collect(Collectors.toList());
-			
+
 			System.out.println(paymentNoList);
 			List<HistoryProductDetailVO> productDetailList = historyrepository.selectDetailList(paymentNoList);
 			System.out.println("repository에서 리스트 받아오기 성공");
@@ -84,29 +83,91 @@ public class HistoryService {
 
 		return groupedByDate;
 	}
-	
-	public List<HistoryVO> exeHistoryDetail(int order_no){
+
+	public List<HistoryVO> exeHistoryDetail(int order_no) {
 		System.out.println("HistoryService.exeHistoryDetail()");
-		
+
 		List<HistoryVO> historyDetailList = historyrepository.historyDetailAdd(order_no);
 		System.out.println("HistoryService.exeHistoryDetail()");
 		System.out.println("repository에서 데이터 전달 받음");
 		System.out.println("historyDetailList: " + historyDetailList);
 
 		int funding_no = historyDetailList.get(0).getFunding_no();
-		System.out.println("funding_no: " +funding_no);
-		
+		System.out.println("funding_no: " + funding_no);
+
 		return historyDetailList;
 	}
-	
+
 	public List<HistoryFundingCheckVO> execheckFundingData(int funding_no) {
 		System.out.println("HistoryService.execheckFundingData()");
-		
+
 		List<HistoryFundingCheckVO> percentList = historyrepository.selectFundingPercent(funding_no);
 		System.out.println("HistoryService.execheckFundingData()");
 		System.out.println("repository에서 데이터 받아오기 성공");
+		System.out.println("percentList: " + percentList);
+
+		String funding_status = percentList.get(0).getFunding_status();
+
+		HistoryFundingCheckVO percentvo = new HistoryFundingCheckVO();
+		List<HistoryFundingCheckVO> finalpercentList = new ArrayList<>();
+
+		switch (funding_status) {
 		
+		//펀딩이 완료된 경우
+		case "done":
+			for (int i = 0; i < percentList.size(); i++) {
+				if (percentList.get(i).getPayment_status().equals("paid")) {
+					percentvo.setFunding_no(percentList.get(i).getFunding_no());
+					percentvo.setFunding_status(percentList.get(i).getFunding_status());
+					percentvo.setPercent(percentList.get(i).getPercent());
+					percentvo.setQuantity(percentList.get(i).getQuantity());
+					percentvo.setTotal_percent(percentList.get(i).getTotal_percent());
+				}
+
+				finalpercentList.add(percentvo);
+			}
+			System.out.println("finalpercentList에 답기 성공");
+			System.out.println("finalpercentList: " + finalpercentList);
+
+			break;
 		
-		return percentList;
+		// 펀딩이 중단된 경우
+		case "stop":
+			for (int i = 0; i < percentList.size(); i++) {
+				percentvo.setFunding_no(percentList.get(i).getFunding_no());
+				percentvo.setFunding_status(percentList.get(i).getFunding_status());
+				percentvo.setPercent(percentList.get(i).getPercent());
+				percentvo.setQuantity(percentList.get(i).getQuantity());
+				percentvo.setTotal_percent(percentList.get(i).getTotal_percent());
+
+				finalpercentList.add(percentvo);
+			}
+
+			System.out.println("finalpercentList에 답기 성공");
+			System.out.println("finalpercentList: " + finalpercentList);
+
+			break;
+
+		// 펀딩이 진행중인 경우
+		case "ing":
+			for (int i = 0; i < percentList.size(); i++) {
+
+				if (percentList.get(i).getPayment_status().equals("paid")) {
+					percentvo.setFunding_no(percentList.get(i).getFunding_no());
+					percentvo.setFunding_status(percentList.get(i).getFunding_status());
+					percentvo.setPercent(percentList.get(i).getPercent());
+					percentvo.setQuantity(percentList.get(i).getQuantity());
+					percentvo.setTotal_percent(percentList.get(i).getTotal_percent());
+				}
+
+				finalpercentList.add(percentvo);
+			}
+			System.out.println("finalpercentList에 답기 성공");
+			System.out.println("finalpercentList: " + finalpercentList);
+
+			break;
+		}
+
+		return finalpercentList;
 	}
 }

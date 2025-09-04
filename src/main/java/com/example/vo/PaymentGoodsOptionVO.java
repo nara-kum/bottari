@@ -4,13 +4,13 @@ public class PaymentGoodsOptionVO {
 	//field
 	private int payment_goods_option_no;
 	private int payment_goods_no;
-	private int detailoprion_no;
+	private int detailoption_no;
 	//editor
 	public PaymentGoodsOptionVO(int payment_goods_option_no, int payment_goods_no, int detailoprion_no) {
 		super();
 		this.payment_goods_option_no = payment_goods_option_no;
 		this.payment_goods_no = payment_goods_no;
-		this.detailoprion_no = detailoprion_no;
+		this.detailoption_no = detailoprion_no;
 	}
 	public PaymentGoodsOptionVO() {
 		super();
@@ -28,16 +28,16 @@ public class PaymentGoodsOptionVO {
 	public void setPayment_goods_no(int payment_goods_no) {
 		this.payment_goods_no = payment_goods_no;
 	}
-	public int getDetailoprion_no() {
-		return detailoprion_no;
+	public int getDetailoption_no() {
+		return detailoption_no;
 	}
-	public void setDetailoprion_no(int detailoprion_no) {
-		this.detailoprion_no = detailoprion_no;
+	public void setDetailoption_no(int detailoprion_no) {
+		this.detailoption_no = detailoprion_no;
 	}
 	//method normal
 	@Override
 	public String toString() {
 		return "PaymentGoodsOptionVO [payment_goods_option_no=" + payment_goods_option_no + ", payment_goods_no="
-				+ payment_goods_no + ", detailoprion_no=" + detailoprion_no + "]";
+				+ payment_goods_no + ", detailoption_no=" + detailoption_no + "]";
 	}
 }

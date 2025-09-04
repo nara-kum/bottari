@@ -57,11 +57,13 @@
 																	test="${product.funding_no == funding.funding_no}">
 																	<div class="list-basic list-1200 between-flex-box">
 																		<div class="row-flex-box">
-																			<img class="list-img-100"
-																				src="${product.itemimg}">
+																			<a href="/shop/productPage?productNo=${product.product_no}">
+																				<img class="list-img-100" src="${product.itemimg}">
+																			</a>
 																			<div class="column-flex-box">
-																				<div class="text-14 detail">
-																					${product.brand}</div>
+																				<a href="/shop/productPage?productNo=${product.product_no}">
+																					<div class="text-14 detail">${product.brand}</div>
+																				</a>
 																				<div class="text-14 detail">
 																					${product.title}</div>
 																				<div class="text-14 detail"><span

@@ -82,13 +82,14 @@
 		<![CDATA[
 			select	fp.funding_no,
 					fp.percent,
+					fp.funding_status,
+					p.payment_status,
 			        pg.quantity,
 			        SUM(fp.percent * pg.quantity) OVER(partition by fp.funding_no) AS total_percent
 			from funding_product fp
 			left join payment p on fp.funding_no = p.funding_no
 			left join payment_goods pg on p.payment_no = pg.payment_no
 			where fp.funding_no = #{funding_no}
-			and p.payment_status = "paid"
 		]]>
 	</select>
 

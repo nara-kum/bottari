@@ -336,7 +336,8 @@ public class PaymentService {
 		
 		return 0;
 	}
-
+	
+	// 주문번호를 생성하는 함수
 	private int generatedOrderNum() {
 		System.out.println("PaymentService.generatedOrderNum()");
 
@@ -354,6 +355,11 @@ public class PaymentService {
 		int order_no = Integer.parseInt(shortTimestamp + randomSuffix);
 		System.out.println("order_no 생성완료");
 		System.out.println("order_no= " + order_no);
+		
+		// int 범위 초과 방지
+        if (order_no < 0) {
+        	order_no = Math.abs(order_no) % 1000000000; // 10억 이하로 조정
+        }
 
 		return order_no;
 	}

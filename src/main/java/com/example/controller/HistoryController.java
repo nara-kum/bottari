@@ -95,7 +95,7 @@ public class HistoryController {
 		
 		if(funding_no != 0) {
 			return checkFundingData(historyDetailList, funding_no, model);
-		}
+		} 
 		
 		model.addAttribute("hList", historyDetailList);
 		model.addAttribute("total_quantity", totalQuantity);
@@ -116,26 +116,28 @@ public class HistoryController {
 			Model model) {
 		System.out.println("HistoryController.checkFundingData()");
 		
-		List<HistoryFundingCheckVO> percentList = historyservice.execheckFundingData(funding_no);
+		List<HistoryFundingCheckVO> finalpercentList = historyservice.execheckFundingData(funding_no);
 		System.out.println("HistoryController.checkFundingData()");
 		System.out.println("service에서 데이터 받아오기 성공");
-		System.out.println("percentList: " + percentList);
+		System.out.println("percentList: " + finalpercentList);
 		
 		
-		int paid_percent = historyDetailList.get(0).getQuantity()*percentList.get(0).getPercent();
-		int total_percent = percentList.get(0).getTotal_percent();
+		int paid_percent = historyDetailList.get(0).getQuantity()*finalpercentList.get(0).getPercent();
+		int total_percent = finalpercentList.get(0).getTotal_percent();
 		int total_price = historyDetailList.get(0).getPayment_amount();
+		String funding_status = finalpercentList.get(0).getFunding_status();
 		
 		System.out.println("total_price: " + total_price);
 		
 		System.out.println(historyDetailList);
-		System.out.println(percentList);
+		System.out.println(finalpercentList);
 		
 		model.addAttribute("hList", historyDetailList);
-		model.addAttribute("pList", percentList);
+		model.addAttribute("pList", finalpercentList);
 		model.addAttribute("total_price", total_price);
 		model.addAttribute("total_percent", total_percent);
 		model.addAttribute("paid_percent", paid_percent);
+		model.addAttribute("funding_status", funding_status);
 		
 		return "history/history_detail_funding";
 	}

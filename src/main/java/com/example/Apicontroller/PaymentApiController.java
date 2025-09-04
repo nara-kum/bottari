@@ -36,24 +36,43 @@ public class PaymentApiController {
 		
 		int funding_no = request.getFunding_no();
 		
-		String outcome = paymentservice.exegetPercent(funding_no);
-		
-		
-		UserVO authuser = (UserVO) session.getAttribute("authUser");
 		Map<String, Object> response = new HashMap<>();
 		
-		if(outcome.equals("error")) {
-			response.put("success", false);
-			
-			return response;
-		}
-		
-		int user_no = authuser.getUserNo();
-		request.setUser_no(user_no);
-		
-		System.out.println("request: " + request);
-		
 		try {
+			// 로그인 체크
+			UserVO authuser = (UserVO) session.getAttribute("authUser");
+			if (authuser == null) {
+				response.put("success", false);
+				response.put("message", "로그인이 필요합니다.");
+				return response;
+			}
+			
+			// 입력값 검증
+			if (request.getFunding_no() <= 0) {
+				response.put("success", false);
+				response.put("message", "유효하지 않은 펀딩 번호입니다.");
+				return response;
+			}
+			
+			if (request.getPayment_amount() <= 0) {
+				response.put("success", false);
+				response.put("message", "결제 금액이 올바르지 않습니다.");
+				return response;
+			}
+			
+			int user_no = authuser.getUserNo();
+			request.setUser_no(user_no);
+			
+			String outcome = paymentservice.exegetPercent(funding_no);
+			if("error".equals(outcome)) {
+				response.put("success", false);
+				response.put("message", "이미 완료된 펀딩입니다.");
+				return response;
+			}
+			
+			
+			System.out.println("request: " + request);
+			
 	        // 결제 처리 로직
 			PaymentVO result = paymentservice.exeprocessFundingPayment(request);
 			

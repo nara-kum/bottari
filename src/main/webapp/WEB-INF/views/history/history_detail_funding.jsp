@@ -76,7 +76,18 @@
                                         <img class="popup-icon" alt="택배차" src="/assets/icon/icon-truck-box.svg">
                                     </div>
                                     <div class="between-flex-box">
-                                        <div class="text-14">펀딩진행상황</div>
+                                        <div class="text-14">
+                                        	펀딩진행상황 | 
+                                        	<c:if test="${funding_status eq 'ing'}">
+                                        		펀딩 진행중
+                                        	</c:if>
+                                        	<c:if test="${funding_status eq 'stop'}">
+                                        		펀딩 중단됨
+                                        	</c:if>
+                                        	<c:if test="${funding_status eq 'done'}">
+                                        		펀딩 완료됨
+                                        	</c:if>
+                                        </div>
                                         <div class="bar-box row-flex-box align-center gap-10">
                                             <div class="funding-bar">
                                                 <div class="activated-funding-bar" style="width: ${total_percent}%">
