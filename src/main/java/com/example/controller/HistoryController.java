@@ -111,6 +111,7 @@ public class HistoryController {
 		return "history/history_detail";
 	}
 	
+	// 펀딩된 상품 상세보기
 	@RequestMapping(value="/history/detail/funding", method= {RequestMethod.GET, RequestMethod.POST})
 	public String checkFundingData(List<HistoryVO> historyDetailList, int funding_no,
 			Model model) {

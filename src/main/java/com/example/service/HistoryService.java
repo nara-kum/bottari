@@ -98,6 +98,7 @@ public class HistoryService {
 		return historyDetailList;
 	}
 
+	// 펀딩된 상품 상세보기
 	public List<HistoryFundingCheckVO> execheckFundingData(int funding_no) {
 		System.out.println("HistoryService.execheckFundingData()");
 

@@ -31,10 +31,14 @@
                                 <c:forEach items="${requestScope.hList}" var="vo">
                                     <div class="list-basic list-1200 between-flex-box">
                                         <div class="row-flex-box">
-                                            <img class="list-img-100" src="${vo.itemimg}">
+                                            <a href="/shop/productPage?productNo=${vo.product_no}">
+                                            	<img class="list-img-100" src="${vo.itemimg}">
+                                            </a>
                                             <div class="column-flex-box">
-                                                <div class="text-14 detail">${vo.brand}</div>
-                                                <div class="text-14 detail">${vo.title} | ${vo.quantity}개</div>
+                                            	<a href="/shop/productPage?productNo=${vo.product_no}">
+                                                	<div class="text-14 detail">${vo.brand}</div>
+                                                	<div class="text-14 detail">${vo.title} | ${vo.quantity}개</div>
+                                            	</a>
                                                 <div class="text-16 bold detail">
                                                     <fmt:formatNumber value="${vo.price}" type="currency"
                                                         currencySymbol="" />원
@@ -53,7 +57,7 @@
                                 <div class="list-basic list-1200 column-flex-box detail">
                                     <div class="between-flex-box box-line">
                                         <div class="text-16 bold">결제정보</div>
-                                        <img class="popup-icon" src="">
+                                        <img class="popup-icon" src="/assets/icon/free-icon-font-wallet-7653271.svg">
                                     </div>
                                     <div class="between-flex-box">
                                         <div class="text-14">상품금액(${paid_percent}%)</div>
@@ -100,7 +104,7 @@
                                 <div class="list-basic list-1200 column-flex-box detail">
                                     <div class="between-flex-box box-line">
                                         <div class="text-16 bold">취소 및 교환/환불 안내</div>
-                                        <img class="popup-icon" src="/assts/icon/icon-edit.svg">
+                                        <img class="popup-icon" src="/assets/icon/free-icon-font-info.svg">
                                     </div>
                                     <div class="text-12">구매하신 배송상품의 취소/환불 또는 교환/반품을 원하실 경우에는 다음 내용을 참고해 주세요.<br><br>
                                         > 물품 배송 전 청약 철회 (취소/환불)상품(재화)을 판매자가 배송하기 이전에는 취소 및 환불 가능유효기간 이내에 배송지를 입력하지 않을 경우
