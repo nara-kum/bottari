@@ -6,7 +6,7 @@ public class WishlistVO {
 	// 위시
 	private int userNo;
 	private int wishlistNo;
-//	private String image;
+	private String image;
 	private String brand;
 	private String title;
 	private int price;
@@ -43,7 +43,7 @@ public class WishlistVO {
 		super();
 		this.userNo = userNo;
 		this.wishlistNo = wishlistNo;
-//		this.image = image;
+		this.image = image;
 		this.brand = brand;
 		this.title = title;
 		this.price = price;
@@ -79,13 +79,13 @@ public class WishlistVO {
 		this.wishlistNo = wishlistNo;
 	}
 
-//	public String getImage() {
-//		return image;
-//	}
-//
-//	public void setImage(String image) {
-//		this.image = image;
-//	}
+	public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
+	}
 
 	public String getBrand() {
 		return brand;

@@ -19,7 +19,9 @@ public class WishlistService {
 	// 위시리스트
 	public List<WishlistVO> exeWishList(int no) {
 		System.out.println("WishService.exeWishList()");
+		
 		List<WishlistVO> wList = wishlistRepository.selectWishList(no);
+		
 		return wList;
 	}
 

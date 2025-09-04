@@ -27,7 +27,7 @@ public class WishlistApiController {
 	@Autowired
 	private ShopService shopService;
 
-	// 리스트 보는 화면
+	// 위시리스트
 	@GetMapping("/api/wishlist")
 	public JsonResult Wishlist(HttpSession session) {
 		System.out.println("WishlistApiController.Wishlist()");

@@ -20,7 +20,9 @@ public class WishlistRepository {
 	// 위시리스트
 	public List<WishlistVO> selectWishList(int no) {
 		System.out.println("WishRepository.selectWishList()");
+		
 		List<WishlistVO> wList = sqlSession.selectList("wishlist.selectList", no);
+		
 		return wList;
 	}
 
